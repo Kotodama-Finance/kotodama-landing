@@ -411,13 +411,24 @@ export function initCube(stage, opts) {
   el.addEventListener('pointerup', onUp);
   el.addEventListener('pointerleave', onUp);
 
-  /* ---- Tamaño ---- */
+  /* ---- Tamaño ----
+     lastRx/lastRy son la caché del render bajo demanda (ver el loop). Se
+     declaran acá arriba porque resize() tiene que invalidarlas. */
+  let lastRx = null, lastRy = null;
+
   function resize() {
     const w = stage.clientWidth || 1;
     const h = Math.max((stage.clientHeight || 1) - 44, 1);
     renderer.setSize(w, h, true);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+    // setSize reasigna y limpia el drawing buffer: sin esto, si el ángulo no
+    // cambia nadie redibuja y el canvas queda vacío hasta la próxima
+    // interacción. Es lo que hacía que el cubo no apareciera hasta el click.
+    lastRx = null;
+    // Y redibujamos ya, sin esperar al próximo tick, que puede estar pausado
+    // por visibilidad. (La escena ya está construida cuando corre el resize.)
+    renderer.render(scene, camera);
   }
   const ro = new ResizeObserver(resize);
   ro.observe(stage);
@@ -440,7 +451,6 @@ export function initCube(stage, opts) {
      frame: al soltar, el tiro decae de forma continua hasta la autorrotación. */
   const now = () => performance.now();
   let last = 0;
-  let lastRx = null, lastRy = null;
   function tick(ts) {
     requestAnimationFrame(tick);
     if (!enabled || !visible || document.hidden) return;
