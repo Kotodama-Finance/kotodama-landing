@@ -45,6 +45,20 @@ const CUBIE = CELL - GAP;          // 0.978
 const RADIUS = 0.03;               // bisel: chico, para no abrir rombos
 const PLATE = CUBIE - 2 * RADIUS;  // zona plana de la cara del cubie
 
+/* Esquema de iluminación. Los COLORES salen de los tokens; acá solo van
+   intensidades y posiciones, que son forma, no paleta.
+   Medido: dentro de la familia navy el color base del cubie no separa del
+   fondo (todas las variantes caen en ~4 unidades sRGB). Lo que separa es la
+   luz: el rango entre cara iluminada y cara en sombra, y el contraluz, que
+   dibuja el borde de la silueta.
+   Se puede sobrescribir por cara vía initCube(stage, { lighting: {...} }). */
+export const LIGHT_DEFAULTS = {
+  hemi: 1.3,                        // ambiente: levanta el piso de las sombras
+  key: 2.4,   keyPos: [-3, 5, 4],   // clave, arriba-izquierda (como las fotos)
+  rim: 1.25,  rimPos: [4.5, 0.5, 2.5],   // relleno frontal derecho, tinte oro
+  back: 0,    backPos: [2.5, 1.5, -4],   // contraluz: separa por silueta
+};
+
 /* Velocidad de autorrotación (grados por tick de ~30fps) */
 const AUTO_RX = 0.09;
 const AUTO_RY = 0.28;
@@ -235,18 +249,31 @@ export function initCube(stage, opts) {
      desatura a gris. La luz blanca sube el brillo conservando el hue navy; el
      oro entra solo por el material del trazo incrustado. Un rim dorado tenue
      aporta calidez en los biseles sin lavar el cuerpo. */
+  const LI = Object.assign({}, LIGHT_DEFAULTS, opts && opts.lighting);
+
   const hemi = new THREE.HemisphereLight(
-    new THREE.Color(keyLightHex), new THREE.Color(navyDeepHex), 1.3
+    new THREE.Color(keyLightHex), new THREE.Color(navyDeepHex), LI.hemi
   );
   scene.add(hemi);
-  const key = new THREE.DirectionalLight(new THREE.Color(keyLightHex), 2.4);
-  key.position.set(-3, 5, 4);           // arriba-izquierda, como en las fotos
+
+  const key = new THREE.DirectionalLight(new THREE.Color(keyLightHex), LI.key);
+  key.position.set(...LI.keyPos);       // arriba-izquierda, como en las fotos
   scene.add(key);
+
   // Relleno desde la derecha: sin él, en la vista 3/4 la cara derecha cae a
-  // negro y el cubo se funde con el fondo. Tinte oro = calidez de marca.
-  const rim = new THREE.DirectionalLight(new THREE.Color(goldSoftHex), 1.25);
-  rim.position.set(4.5, 0.5, 2.5);
+  // negro. Tinte oro = calidez de marca.
+  const rim = new THREE.DirectionalLight(new THREE.Color(goldSoftHex), LI.rim);
+  rim.position.set(...LI.rimPos);
   scene.add(rim);
+
+  // Contraluz opcional: pega en los biseles del contorno y recorta la silueta
+  // contra el fondo. Es la vía para separar un objeto oscuro sobre fondo oscuro
+  // sin tocar la paleta.
+  if (LI.back > 0) {
+    const back = new THREE.DirectionalLight(new THREE.Color(goldSoftHex), LI.back);
+    back.position.set(...LI.backPos);
+    scene.add(back);
+  }
 
   /* ---- 26 cubies redondeados, TODOS idénticos ---- */
   const group = new THREE.Group();
