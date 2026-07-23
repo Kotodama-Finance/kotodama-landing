@@ -53,10 +53,15 @@ const PLATE = CUBIE - 2 * RADIUS;  // zona plana de la cara del cubie
    dibuja el borde de la silueta.
    Se puede sobrescribir por cara vía initCube(stage, { lighting: {...} }). */
 export const LIGHT_DEFAULTS = {
-  hemi: 0.4,                        // ambiente bajo: deja respirar el rango
-  key: 3.2,   keyPos: [-3, 5, 4],   // clave fuerte, arriba-izquierda (como las fotos)
-  rim: 0.5,   rimPos: [4.5, 0.5, 2.5],   // relleno frontal derecho, tinte oro
-  back: 2.2,  backPos: [2.5, 1.5, -4],   // contraluz: recorta la silueta
+  // Luz difusa y pareja, como la de las fotos del cubo físico en _ref/.
+  // Lo que importa no es la relación key/hemi sino la del ambiente contra el
+  // TOTAL direccional (key+rim+back): con tres direccionales, bajar sólo la key
+  // deja el reparto casi igual. Acá el ambiente domina y el resultado es un
+  // degradé suave, sin el highlight duro que leía metálico.
+  hemi: 2.2,                        // ambiente: la fuente principal
+  key: 1.8,   keyPos: [-3, 5, 4],   // clave suave, arriba-izquierda (como las fotos)
+  rim: 0.4,   rimPos: [4.5, 0.5, 2.5],   // relleno frontal derecho, tinte oro
+  back: 0.8,  backPos: [2.5, 1.5, -4],   // relleno trasero (no es un rim: ver abajo)
 };
 
 /* Material del cubie. roughness alto = degradé suave en el bisel; roughness
@@ -64,8 +69,8 @@ export const LIGHT_DEFAULTS = {
    environment map además oscurece, así que se mantiene bajo.
    Sobrescribible con initCube(stage, { material: {...} }). */
 export const MATERIAL_DEFAULTS = {
-  roughness: 0.46,
-  metalness: 0.08,
+  roughness: 0.72,      // plástico mate: degradé suave en el bisel, sin punto de brillo
+  metalness: 0.02,
 };
 
 /* Velocidad de autorrotación (grados por tick de ~30fps) */
