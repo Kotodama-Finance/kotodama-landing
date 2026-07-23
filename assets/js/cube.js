@@ -25,12 +25,12 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from '../vendor/RoundedBoxGeometry.js';
 
 const FACE_DEFS = {
-  hajime: { kanji: '肇',   normal: [0, 0, 1],  target: { rx: 0,   ry: 0 } },
-  sugao:  { kanji: '素顔', normal: [1, 0, 0],  target: { rx: 0,   ry: -90 } },
-  tosei:  { kanji: '渡世', normal: [0, 0, -1], target: { rx: 0,   ry: 180 } },
-  kamon:  { kanji: '家紋', normal: [-1, 0, 0], target: { rx: 0,   ry: 90 } },
-  torii:  { kanji: '鳥居', normal: [0, 1, 0],  target: { rx: 90,  ry: 0 } },
-  kizuna: { kanji: '絆',   normal: [0, -1, 0], target: { rx: -90, ry: 0 } },
+  hajime: { kanji: '肇',   romaji: 'Hajime', normal: [0, 0, 1],  target: { rx: 0,   ry: 0 } },
+  sugao:  { kanji: '素顔', romaji: 'Sugao',  normal: [1, 0, 0],  target: { rx: 0,   ry: -90 } },
+  tosei:  { kanji: '渡世', romaji: 'Tosei',  normal: [0, 0, -1], target: { rx: 0,   ry: 180 } },
+  kamon:  { kanji: '家紋', romaji: 'Kamon',  normal: [-1, 0, 0], target: { rx: 0,   ry: 90 } },
+  torii:  { kanji: '鳥居', romaji: 'Torii',  normal: [0, 1, 0],  target: { rx: 90,  ry: 0 } },
+  kizuna: { kanji: '絆',   romaji: 'Kizuna', normal: [0, -1, 0], target: { rx: -90, ry: 0 } },
 };
 
 const DEG = Math.PI / 180;
@@ -89,37 +89,63 @@ function newCanvas(size) {
   return c;
 }
 
-/* Ajusta el tamaño de fuente para que el kanji abarque casi toda la cara. */
-function fitFont(ctx, text, size, targetW) {
-  let px = size * 0.82;
-  ctx.font = `500 ${px}px 'Zen Kaku Gothic New', sans-serif`;
+/* Reparto de la cara -------------------------------------------------------
+   Las juntas caen a 1/3 y 2/3 de la cara y ocultan una franja de ~21px de la
+   textura (de 768). Un kanji grande la absorbe: el corte se lee como parte del
+   objeto. El romaji NO: es texto latino chico, de trazo fino, y una junta le
+   borraría un asta entera o un travesaño y lo volvería ilegible.
+   Por eso el romaji va CONFINADO al cubie inferior central — su ancho es menor
+   a un tercio de la cara, así que ninguna junta lo cruza — y el kanji se achica
+   y sube para dejarle lugar. */
+const FACE_LAYOUT = {
+  kanjiSize: 0.72,       // alto máximo del kanji, en fracción de la cara
+  kanjiWidth: 0.86,      // ancho máximo
+  kanjiCenterY: 0.40,
+  romajiCenterY: 0.835,  // centro de la fila inferior de cubies
+  romajiWidth: 0.28,     // < 1/3: entra en el cubie central sin tocar juntas
+  romajiSize: 0.11,
+};
+
+const FONT_KANJI = (px) => `500 ${px}px 'Zen Kaku Gothic New', sans-serif`;
+const FONT_ROMAJI = (px) => `italic 500 ${px}px 'Cormorant Garamond', serif`;
+
+/* Achica el cuerpo hasta que el texto entre en maxW. */
+function fitFont(ctx, text, font, startPx, maxW) {
+  let px = startPx;
+  ctx.font = font(px);
   const w = ctx.measureText(text).width;
-  if (w > targetW) px *= targetW / w;
+  if (w > maxW) px *= maxW / w;
   return px;
 }
 
-/* Máscara nítida del glifo (blanco = trazo) sobre negro.
-   OJO: negro y blanco acá NO son colores de paleta y nunca se ven en pantalla.
-   Son la codificación de un campo de alturas (0 = plano, 1 = trazo) del que se
-   derivan las normales del grabado. Por eso no salen de un token. */
-function drawGlyphMask(size, kanji) {
-  const cv = newCanvas(size);
-  const ctx = cv.getContext('2d');
-  ctx.fillStyle = '#000';        // altura 0
-  ctx.fillRect(0, 0, size, size);
-  ctx.fillStyle = '#fff';        // altura 1
+/* Pinta el contenido de una cara. La usan TANTO el mapa de color (navy + oro)
+   COMO la máscara del grabado (negro + blanco): así el relieve calza exacto con
+   el trazo, sin poder desincronizarse.
+   OJO: en la máscara, negro y blanco no son colores de paleta y nunca se ven.
+   Codifican un campo de alturas (0 = plano, 1 = trazo) del que se derivan las
+   normales del grabado. Por eso no salen de un token. */
+function paintFace(ctx, S, kanji, romaji, bg, fg) {
+  const L = FACE_LAYOUT;
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, S, S);
+  ctx.fillStyle = fg;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  const px = fitFont(ctx, kanji, size, size * 0.88);
-  ctx.font = `500 ${px}px 'Zen Kaku Gothic New', sans-serif`;
-  ctx.fillText(kanji, size / 2, size / 2 + px * 0.04);
-  return cv;
+
+  const kpx = fitFont(ctx, kanji, FONT_KANJI, S * L.kanjiSize, S * L.kanjiWidth);
+  ctx.font = FONT_KANJI(kpx);
+  ctx.fillText(kanji, S / 2, S * L.kanjiCenterY + kpx * 0.04);
+
+  const rpx = fitFont(ctx, romaji, FONT_ROMAJI, S * L.romajiSize, S * L.romajiWidth);
+  ctx.font = FONT_ROMAJI(rpx);
+  ctx.fillText(romaji, S / 2, S * L.romajiCenterY);
 }
 
 /* Normal map de un surco: se difumina la máscara y se derivan normales.
    El trazo baja (grabado), de ahí el signo negativo en el gradiente. */
-function buildNormalMap(size, kanji, strength) {
-  const mask = drawGlyphMask(size, kanji);
+function buildNormalMap(size, kanji, romaji, strength) {
+  const mask = newCanvas(size);
+  paintFace(mask.getContext('2d'), size, kanji, romaji, '#000', '#fff');
   const blurCv = newCanvas(size);
   const bctx = blurCv.getContext('2d');
   bctx.filter = `blur(${Math.round(size * 0.012)}px)`;
@@ -156,26 +182,17 @@ function buildNormalMap(size, kanji, strength) {
   return { normalCanvas: cv, maskCanvas: mask };
 }
 
-/* Mapas de una cara: color (navy, con el trazo en oro si es incrustado),
-   normal (surco) y máscara (para el brillo metálico del oro). */
-function makeFaceMaps(kanji, { navy, gold, inlay }) {
+/* Mapas de una cara: color (navy, con el trazo en oro si es incrustado) y
+   normal (el surco del grabado). */
+function makeFaceMaps(kanji, romaji, { navy, gold, inlay }) {
   const CS = 768;    // color: alto, el trazo tiene que quedar nítido
   const NS = 384;    // normal: alcanza y es mucho más barato de calcular
 
   const color = newCanvas(CS);
-  const cctx = color.getContext('2d');
-  cctx.fillStyle = navy;
-  cctx.fillRect(0, 0, CS, CS);
-  if (inlay) {
-    cctx.fillStyle = gold;
-    cctx.textAlign = 'center';
-    cctx.textBaseline = 'middle';
-    const px = fitFont(cctx, kanji, CS, CS * 0.88);
-    cctx.font = `500 ${px}px 'Zen Kaku Gothic New', sans-serif`;
-    cctx.fillText(kanji, CS / 2, CS / 2 + px * 0.04);
-  }
+  // Sin incrustación: el trazo no lleva oro, sólo queda el relieve del grabado.
+  paintFace(color.getContext('2d'), CS, kanji, romaji, navy, inlay ? gold : navy);
 
-  const { normalCanvas, maskCanvas } = buildNormalMap(NS, kanji, 2.6);
+  const { normalCanvas } = buildNormalMap(NS, kanji, romaji, 2.6);
 
   const colorTex = new THREE.CanvasTexture(color);
   colorTex.colorSpace = THREE.SRGBColorSpace;
@@ -184,10 +201,7 @@ function makeFaceMaps(kanji, { navy, gold, inlay }) {
   const normalTex = new THREE.CanvasTexture(normalCanvas);
   normalTex.anisotropy = 4;
 
-  const maskTex = new THREE.CanvasTexture(maskCanvas);
-  maskTex.anisotropy = 4;
-
-  return { colorTex, normalTex, maskTex, redraw: null };
+  return { colorTex, normalTex };
 }
 
 /* Placa de una cara: 9 quads, uno por cubie, cada uno mapeando su sub-rect de
@@ -314,7 +328,7 @@ export function initCube(stage, opts) {
   const faceMats = [];
   Object.values(FACE_DEFS).forEach((def) => {
     const [nx, ny, nz] = def.normal;
-    const maps = makeFaceMaps(def.kanji, { navy: bodyHex, gold: goldHex, inlay });
+    const maps = makeFaceMaps(def.kanji, def.romaji, { navy: bodyHex, gold: goldHex, inlay });
     const mat = new THREE.MeshStandardMaterial({
       map: maps.colorTex,
       normalMap: maps.normalTex,
@@ -325,7 +339,7 @@ export function initCube(stage, opts) {
       roughness: MT.roughness,
       metalness: MT.metalness,
     });
-    faceMats.push({ mat, maps, kanji: def.kanji });
+    faceMats.push({ mat, maps, kanji: def.kanji, romaji: def.romaji });
 
     const plate = buildFacePlate(mat);
     if (nz === -1) plate.rotation.y = Math.PI;
@@ -342,7 +356,7 @@ export function initCube(stage, opts) {
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(() => {
       faceMats.forEach((f) => {
-        const m = makeFaceMaps(f.kanji, { navy: bodyHex, gold: goldHex, inlay });
+        const m = makeFaceMaps(f.kanji, f.romaji, { navy: bodyHex, gold: goldHex, inlay });
         f.mat.map = m.colorTex;
         f.mat.normalMap = m.normalTex;
         f.mat.needsUpdate = true;
