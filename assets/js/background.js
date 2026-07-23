@@ -3,6 +3,28 @@
    Shader y parámetros = versión de PRODUCCIÓN (fbm de 5 octavas), calibrada y
    aprobada. NO tocar el GLSL ni los valores SPEED/BREATH.
 
+   ---------------------------------------------------------------------------
+   PALETA DEL MAR: VIVE EN EL GLSL, NO EN :root
+   ---------------------------------------------------------------------------
+   Es la única excepción al sistema de tokens del proyecto. Los colores del
+   océano son constantes dentro del fragment shader, porque forman parte del
+   código calibrado a mano que está cerrado. Cambiar el color del mar exige
+   editar el shader acá abajo; tocar :root no tiene ningún efecto sobre él.
+
+   Las constantes son tres, en la función main() (~línea 107), y se mezclan
+   según la altura de ola H:
+     deep  = vec3(0.001, 0.009, 0.024)   ~#000206   senos, la parte más honda
+     mid   = vec3(0.024, 0.075, 0.130)   ~#061321   cuerpo del agua
+     crest = vec3(0.075, 0.150, 0.215)   ~#132637   crestas iluminadas
+   Más un realce vertical aditivo: col += uv.y * vec3(0.010, 0.020, 0.030),
+   que aclara levemente hacia el horizonte.
+
+   Los valores van directo a gl_FragColor sin corrección de gamma, así que se
+   leen como sRGB. Quedan dentro de la familia navy de la marca (mid es casi
+   idéntico al fondo de sección), pero NO están sincronizados con los tokens:
+   si la paleta cambia en :root, estos hay que actualizarlos a mano.
+   ---------------------------------------------------------------------------
+
    Estrategia de rendimiento:
    - Desktop: resolución completa (DPR hasta 2), sin cap de FPS.
    - Móvil (pointer:coarse): media resolución (DPR*0.5) + cap de 25 fps.
