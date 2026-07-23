@@ -1,0 +1,499 @@
+/* =========================================================================
+   Cubo de navegación en Three.js.
+
+   Por qué Three.js y no CSS 3D: el cubo CSS sufría z-fighting y bleed-through
+   (se veían kanji de caras traseras, el núcleo asomaba por las juntas) porque
+   CSS 3D no tiene z-buffer. Acá la oclusión la resuelve el depth buffer del GPU
+   sobre geometría real: 26 cubies sólidos y opacos que llenan el volumen 3x3x3.
+
+   Paleta: navy + oro, nada más. Las luces van tintadas en oro para que el navy
+   se despegue del fondo sin introducir un tercer color.
+
+   Kanji: NO va en el cubie central. Se extiende sobre los 9 cubies de la cara
+   (una textura por cara; cada quad mapea su sub-rect por UV, recortado por la
+   junta, así el trazo alinea entre cubies y se corta solo en las juntas).
+   Efecto grabado por normalMap (sin desplazar geometría). Dos variantes:
+     - 'inlay'    (default): surco relleno en oro, estilo 象嵌.
+     - 'engraved'          : grabado puro, solo profundidad, sin oro.
+   Se alterna con ?kanji=engraved en la URL.
+
+   Física portada del objeto CUBE de la referencia. Los signos de rotación en X
+   se invierten respecto de CSS porque CSS usa Y-abajo y Three.js Y-arriba.
+   ========================================================================= */
+
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from '../vendor/RoundedBoxGeometry.js';
+
+const FACE_DEFS = {
+  hajime: { kanji: '肇',   normal: [0, 0, 1],  target: { rx: 0,   ry: 0 } },
+  sugao:  { kanji: '素顔', normal: [1, 0, 0],  target: { rx: 0,   ry: -90 } },
+  tosei:  { kanji: '渡世', normal: [0, 0, -1], target: { rx: 0,   ry: 180 } },
+  kamon:  { kanji: '家紋', normal: [-1, 0, 0], target: { rx: 0,   ry: 90 } },
+  torii:  { kanji: '鳥居', normal: [0, 1, 0],  target: { rx: 90,  ry: 0 } },
+  kizuna: { kanji: '絆',   normal: [0, -1, 0], target: { rx: -90, ry: 0 } },
+};
+
+const DEG = Math.PI / 180;
+
+/* --- Geometría de las juntas -------------------------------------------------
+   Junta fina de Rubik real. El gap y el radio del bisel se suman en el vacío
+   que se abre donde concurren cuatro esquinas redondeadas, así que los dos van
+   chicos: la cara se lee como unidad y la junta sigue visible. */
+const CELL = 1;
+const GAP = 0.022;                 // separación entre cubies
+const CUBIE = CELL - GAP;          // 0.978
+const RADIUS = 0.03;               // bisel: chico, para no abrir rombos
+const PLATE = CUBIE - 2 * RADIUS;  // zona plana de la cara del cubie
+
+/* Velocidad de autorrotación (grados por tick de ~30fps) */
+const AUTO_RX = 0.09;
+const AUTO_RY = 0.28;
+/* Lerp de VELOCIDAD: converge en ~1s a 30fps -> sin saltos de velocidad. */
+const VEL_LERP = 0.095;
+
+function nearest(cur, target) {
+  return target + 360 * Math.round((cur - target) / 360);
+}
+
+function newCanvas(size) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  return c;
+}
+
+/* Ajusta el tamaño de fuente para que el kanji abarque casi toda la cara. */
+function fitFont(ctx, text, size, targetW) {
+  let px = size * 0.82;
+  ctx.font = `500 ${px}px 'Zen Kaku Gothic New', sans-serif`;
+  const w = ctx.measureText(text).width;
+  if (w > targetW) px *= targetW / w;
+  return px;
+}
+
+/* Máscara nítida del glifo (blanco = trazo) sobre negro.
+   OJO: negro y blanco acá NO son colores de paleta y nunca se ven en pantalla.
+   Son la codificación de un campo de alturas (0 = plano, 1 = trazo) del que se
+   derivan las normales del grabado. Por eso no salen de un token. */
+function drawGlyphMask(size, kanji) {
+  const cv = newCanvas(size);
+  const ctx = cv.getContext('2d');
+  ctx.fillStyle = '#000';        // altura 0
+  ctx.fillRect(0, 0, size, size);
+  ctx.fillStyle = '#fff';        // altura 1
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  const px = fitFont(ctx, kanji, size, size * 0.88);
+  ctx.font = `500 ${px}px 'Zen Kaku Gothic New', sans-serif`;
+  ctx.fillText(kanji, size / 2, size / 2 + px * 0.04);
+  return cv;
+}
+
+/* Normal map de un surco: se difumina la máscara y se derivan normales.
+   El trazo baja (grabado), de ahí el signo negativo en el gradiente. */
+function buildNormalMap(size, kanji, strength) {
+  const mask = drawGlyphMask(size, kanji);
+  const blurCv = newCanvas(size);
+  const bctx = blurCv.getContext('2d');
+  bctx.filter = `blur(${Math.round(size * 0.012)}px)`;
+  bctx.drawImage(mask, 0, 0);
+  bctx.filter = 'none';
+
+  const src = bctx.getImageData(0, 0, size, size).data;
+  // altura en un Float32Array plano: más rápido que leer el ImageData por pixel
+  const h = new Float32Array(size * size);
+  for (let i = 0, n = size * size; i < n; i++) h[i] = src[i * 4] / 255;
+
+  const out = bctx.createImageData(size, size);
+  const o = out.data;
+  const at = (x, y) => h[Math.min(size - 1, Math.max(0, y)) * size + Math.min(size - 1, Math.max(0, x))];
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      // grabado: la altura DISMINUYE donde hay trazo -> -h
+      const dx = -(at(x + 1, y) - at(x - 1, y));
+      const dy = -(at(x, y + 1) - at(x, y - 1));
+      let nx = -dx * strength;
+      let ny = dy * strength;   // canvas Y va hacia abajo; Three espera verde arriba
+      const nz = 1;
+      const len = Math.hypot(nx, ny, nz);
+      nx /= len; ny /= len;
+      const i = (y * size + x) * 4;
+      o[i] = (nx * 0.5 + 0.5) * 255;
+      o[i + 1] = (ny * 0.5 + 0.5) * 255;
+      o[i + 2] = (nz / len * 0.5 + 0.5) * 255;
+      o[i + 3] = 255;
+    }
+  }
+  const cv = newCanvas(size);
+  cv.getContext('2d').putImageData(out, 0, 0);
+  return { normalCanvas: cv, maskCanvas: mask };
+}
+
+/* Mapas de una cara: color (navy, con el trazo en oro si es incrustado),
+   normal (surco) y máscara (para el brillo metálico del oro). */
+function makeFaceMaps(kanji, { navy, gold, inlay }) {
+  const CS = 768;    // color: alto, el trazo tiene que quedar nítido
+  const NS = 384;    // normal: alcanza y es mucho más barato de calcular
+
+  const color = newCanvas(CS);
+  const cctx = color.getContext('2d');
+  cctx.fillStyle = navy;
+  cctx.fillRect(0, 0, CS, CS);
+  if (inlay) {
+    cctx.fillStyle = gold;
+    cctx.textAlign = 'center';
+    cctx.textBaseline = 'middle';
+    const px = fitFont(cctx, kanji, CS, CS * 0.88);
+    cctx.font = `500 ${px}px 'Zen Kaku Gothic New', sans-serif`;
+    cctx.fillText(kanji, CS / 2, CS / 2 + px * 0.04);
+  }
+
+  const { normalCanvas, maskCanvas } = buildNormalMap(NS, kanji, 2.6);
+
+  const colorTex = new THREE.CanvasTexture(color);
+  colorTex.colorSpace = THREE.SRGBColorSpace;
+  colorTex.anisotropy = 8;
+
+  const normalTex = new THREE.CanvasTexture(normalCanvas);
+  normalTex.anisotropy = 4;
+
+  const maskTex = new THREE.CanvasTexture(maskCanvas);
+  maskTex.anisotropy = 4;
+
+  return { colorTex, normalTex, maskTex, redraw: null };
+}
+
+/* Placa de una cara: 9 quads, uno por cubie, cada uno mapeando su sub-rect de
+   la textura de la cara. El recorte por la junta hace que el trazo alinee entre
+   cubies y se interrumpa solo en la junta. */
+function buildFacePlate(material) {
+  const g = new THREE.Group();
+  const du = PLATE / (3 * CELL);   // fracción de textura que cubre un quad
+  for (let r = 0; r < 3; r++) {
+    for (let c = 0; c < 3; c++) {
+      const geo = new THREE.PlaneGeometry(PLATE, PLATE);
+      const uc = (c + 0.5) / 3;
+      const vc = 1 - (r + 0.5) / 3;
+      const u0 = uc - du / 2;
+      const v0 = vc - du / 2;
+      const uv = geo.attributes.uv;
+      for (let i = 0; i < uv.count; i++) {
+        uv.setXY(i, u0 + uv.getX(i) * du, v0 + uv.getY(i) * du);
+      }
+      uv.needsUpdate = true;
+      const m = new THREE.Mesh(geo, material);
+      m.position.set((c - 1) * CELL, (1 - r) * CELL, 0);
+      g.add(m);
+    }
+  }
+  return g;
+}
+
+/**
+ * Monta el cubo dentro del elemento `stage`.
+ * @param {HTMLElement} stage
+ * @param {{reduce:boolean, onSelect:(key:string)=>void}} opts
+ */
+export function initCube(stage, opts) {
+  const { reduce = false, onSelect = () => {} } = opts || {};
+
+  const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+
+  // Variante del kanji: incrustado en oro (default) o grabado puro.
+  const params = new URLSearchParams(location.search);
+  const inlay = params.get('kanji') !== 'engraved';
+
+  /* Colores: SIEMPRE desde los tokens de :root. Sin fallback hardcodeado —
+     un hex de repuesto hace que un token faltante parezca funcionar (fue lo que
+     ocultó el azul pizarra). Si falta, esto revienta con el nombre del token y
+     el catch de hydrateCube deja la grilla como navegación. */
+  const cs = getComputedStyle(document.documentElement);
+  const tok = (n) => {
+    const v = cs.getPropertyValue(n).trim();
+    if (!v) throw new Error(`[cube] falta el token CSS ${n} en :root`);
+    return v;
+  };
+  const bodyHex = tok('--c-cube-body');       // cuerpo del cubie
+  const goldHex = tok('--c-gold');
+  const goldSoftHex = tok('--c-gold-soft');
+  const navyDeepHex = tok('--c-navy');
+  const keyLightHex = tok('--c-cube-key-light');
+
+  /* ---- Escena, cámara, renderer ---- */
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(24, 1, 0.1, 100);
+  camera.position.set(0, 0, 11);
+  camera.lookAt(0, 0, 0);
+
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: !coarse });
+  renderer.setClearColor(0x000000, 0);   // alfa 0: transparente, no es un color
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, coarse ? 1.5 : 2));
+  renderer.domElement.setAttribute('aria-hidden', 'true');
+  stage.insertBefore(renderer.domElement, stage.firstChild);
+
+  /* ---- Luces ----
+     Neutras a propósito: tintarlas de oro le come el canal azul al navy y lo
+     desatura a gris. La luz blanca sube el brillo conservando el hue navy; el
+     oro entra solo por el material del trazo incrustado. Un rim dorado tenue
+     aporta calidez en los biseles sin lavar el cuerpo. */
+  const hemi = new THREE.HemisphereLight(
+    new THREE.Color(keyLightHex), new THREE.Color(navyDeepHex), 1.3
+  );
+  scene.add(hemi);
+  const key = new THREE.DirectionalLight(new THREE.Color(keyLightHex), 2.4);
+  key.position.set(-3, 5, 4);           // arriba-izquierda, como en las fotos
+  scene.add(key);
+  // Relleno desde la derecha: sin él, en la vista 3/4 la cara derecha cae a
+  // negro y el cubo se funde con el fondo. Tinte oro = calidez de marca.
+  const rim = new THREE.DirectionalLight(new THREE.Color(goldSoftHex), 1.25);
+  rim.position.set(4.5, 0.5, 2.5);
+  scene.add(rim);
+
+  /* ---- 26 cubies redondeados, TODOS idénticos ---- */
+  const group = new THREE.Group();
+  group.rotation.order = 'YXZ';         // replica el orden rotateX·rotateY de CSS
+  scene.add(group);
+
+  const geo = new RoundedBoxGeometry(CUBIE, CUBIE, CUBIE, 3, RADIUS);
+  const bodyMat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(bodyHex), roughness: 0.46, metalness: 0.08,
+  });
+
+  const cubies = [];
+  for (let x = -1; x <= 1; x++)
+    for (let y = -1; y <= 1; y++)
+      for (let z = -1; z <= 1; z++) {
+        if (x === 0 && y === 0 && z === 0) continue;   // núcleo: nunca visible
+        const m = new THREE.Mesh(geo, bodyMat);
+        m.position.set(x * CELL, y * CELL, z * CELL);
+        group.add(m);
+        cubies.push(m);
+      }
+
+  /* ---- Kanji abarcando la cara entera ---- */
+  const faceMats = [];
+  Object.values(FACE_DEFS).forEach((def) => {
+    const [nx, ny, nz] = def.normal;
+    const maps = makeFaceMaps(def.kanji, { navy: bodyHex, gold: goldHex, inlay });
+    const mat = new THREE.MeshStandardMaterial({
+      map: maps.colorTex,
+      normalMap: maps.normalTex,
+      normalScale: new THREE.Vector2(1.3, 1.3),
+      // metalness alto oscurecería el oro: sin environment map un metal no
+      // tiene difusa y sólo refleja el entorno (inexistente acá). Se mantiene
+      // bajo para que el oro rinda su color real.
+      roughness: 0.42,
+      metalness: 0.1,
+    });
+    faceMats.push({ mat, maps, kanji: def.kanji });
+
+    const plate = buildFacePlate(mat);
+    if (nz === -1) plate.rotation.y = Math.PI;
+    else if (nx === 1) plate.rotation.y = Math.PI / 2;
+    else if (nx === -1) plate.rotation.y = -Math.PI / 2;
+    else if (ny === 1) plate.rotation.x = -Math.PI / 2;
+    else if (ny === -1) plate.rotation.x = Math.PI / 2;
+    const d = CELL + CUBIE / 2 + 0.006;
+    plate.position.set(nx * d, ny * d, nz * d);
+    group.add(plate);
+  });
+
+  // Si la fuente Zen no estaba lista, rehacer los mapas de cada cara.
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+      faceMats.forEach((f) => {
+        const m = makeFaceMaps(f.kanji, { navy: bodyHex, gold: goldHex, inlay });
+        f.mat.map = m.colorTex;
+        f.mat.normalMap = m.normalTex;
+        f.mat.needsUpdate = true;
+      });
+    });
+  }
+
+  /* ---- Estado de rotación ---- */
+  const C = {
+    rx: 18, ry: -26,          // vista 3/4 inicial
+    trx: 0, try: 0,
+    velRx: 0, velRy: 0,
+    snapping: false, dragging: false, moved: false,
+    holdUntil: 0,
+    // parked: al SELECCIONAR una cara el cubo se detiene y se queda quieto
+    // indefinidamente. Solo un drag nuevo lo revive.
+    parked: false,
+    // Dirección heredada del último drag: la autorrotación conserva su magnitud
+    // pero toma el signo con el que el usuario soltó.
+    signRx: 1, signRy: 1,
+  };
+
+  function applyRotation() {
+    group.rotation.x = C.rx * DEG;
+    group.rotation.y = C.ry * DEG;
+  }
+  applyRotation();
+
+  function snapTo(key) {
+    const def = FACE_DEFS[key];
+    if (!def) return;
+    // Seleccionar una cara detiene el cubo: hace el snap y se queda ahí.
+    C.parked = true;
+    if (reduce) {
+      C.rx = nearest(C.rx, def.target.rx);
+      C.ry = nearest(C.ry, def.target.ry);
+      C.trx = C.rx; C.try = C.ry;
+      C.snapping = false;
+      applyRotation();
+      return;
+    }
+    C.trx = nearest(C.rx, def.target.rx);
+    C.try = nearest(C.ry, def.target.ry);
+    C.snapping = true;
+  }
+
+  /* ---- Raycast: click en una cara la selecciona ---- */
+  const raycaster = new THREE.Raycaster();
+  const ndc = new THREE.Vector2();
+  function faceKeyFromNormal(n) {
+    const ax = Math.abs(n.x), ay = Math.abs(n.y), az = Math.abs(n.z);
+    let sel;
+    if (ax >= ay && ax >= az) sel = [Math.sign(n.x), 0, 0];
+    else if (ay >= ax && ay >= az) sel = [0, Math.sign(n.y), 0];
+    else sel = [0, 0, Math.sign(n.z)];
+    return Object.keys(FACE_DEFS).find((k) => {
+      const nn = FACE_DEFS[k].normal;
+      return nn[0] === sel[0] && nn[1] === sel[1] && nn[2] === sel[2];
+    });
+  }
+  function pickFace(clientX, clientY) {
+    const r = renderer.domElement.getBoundingClientRect();
+    ndc.x = ((clientX - r.left) / r.width) * 2 - 1;
+    ndc.y = -((clientY - r.top) / r.height) * 2 + 1;
+    raycaster.setFromCamera(ndc, camera);
+    const hits = raycaster.intersectObjects(cubies, false);
+    if (!hits.length || !hits[0].face) return null;
+    return faceKeyFromNormal(hits[0].face.normal);
+  }
+
+  /* ---- Drag (Pointer Events, sin librería de controles) ---- */
+  const el = renderer.domElement;
+  function onDown(e) {
+    C.dragging = true; C.snapping = false; C.moved = false;
+    C.parked = false;                 // arrastrar revive el cubo
+    C.velRx = 0; C.velRy = 0;
+    stage.classList.add('is-dragging');
+    try { el.setPointerCapture(e.pointerId); } catch (err) {}
+  }
+  function onMove(e) {
+    if (!C.dragging) return;
+    const dx = e.movementX || 0, dy = e.movementY || 0;
+    if (Math.abs(dx) + Math.abs(dy) > 3) C.moved = true;
+    C.ry += dx * 0.45;
+    C.rx += dy * 0.45;
+    if (!reduce) { C.velRy = dx * 0.45; C.velRx = dy * 0.45; }
+  }
+  function onUp(e) {
+    if (!C.dragging) return;
+    C.dragging = false;
+    stage.classList.remove('is-dragging');
+    C.holdUntil = 0;
+    const wasClick = !C.moved;
+    setTimeout(() => { C.moved = false; }, 40);
+    if (wasClick) {
+      // Click limpio: selecciona la cara; snapTo deja el cubo detenido (parked).
+      const key = pickFace(e.clientX, e.clientY);
+      if (key) { onSelect(key); snapTo(key); }
+    } else {
+      // Soltó arrastrando: la autorrotación hereda el sentido del tiro.
+      if (Math.abs(C.velRy) > 0.01) C.signRy = Math.sign(C.velRy);
+      if (Math.abs(C.velRx) > 0.01) C.signRx = Math.sign(C.velRx);
+    }
+  }
+  el.addEventListener('pointerdown', onDown);
+  el.addEventListener('pointermove', onMove);
+  el.addEventListener('pointerup', onUp);
+  el.addEventListener('pointerleave', onUp);
+
+  /* ---- Tamaño ---- */
+  function resize() {
+    const w = stage.clientWidth || 1;
+    const h = Math.max((stage.clientHeight || 1) - 44, 1);
+    renderer.setSize(w, h, true);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  const ro = new ResizeObserver(resize);
+  ro.observe(stage);
+  resize();
+
+  /* ---- Visibilidad ---- */
+  let enabled = true;      // false en modo grilla: el loop se pausa
+  let visible = true;      // false cuando la sección sale del viewport
+  const sectionCube = document.getElementById('cube');
+  if (sectionCube && 'IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      entries.forEach((e) => { visible = e.isIntersecting; });
+    }, { threshold: 0.02 }).observe(sectionCube);
+  }
+
+  /* ---- Loop: física a ~30 fps (para que los valores de damping calcen) ----
+     El movimiento libre es UNA sola velocidad angular que se interpola hacia su
+     objetivo (0 durante el hold, autorrotación después). No hay rama separada
+     de inercia vs autorrotación, así que no hay salto de velocidad en ningún
+     frame: al soltar, el tiro decae de forma continua hasta la autorrotación. */
+  const now = () => performance.now();
+  let last = 0;
+  let lastRx = null, lastRy = null;
+  function tick(ts) {
+    requestAnimationFrame(tick);
+    if (!enabled || !visible || document.hidden) return;
+    if (ts - last < 32) return;
+    last = ts;
+
+    if (!C.dragging) {
+      if (C.snapping) {
+        C.rx += (C.trx - C.rx) * 0.12;
+        C.ry += (C.try - C.ry) * 0.12;
+        C.velRx = 0; C.velRy = 0;
+        if (Math.abs(C.trx - C.rx) < 0.2 && Math.abs(C.try - C.ry) < 0.2) {
+          C.rx = C.trx; C.ry = C.try; C.snapping = false;
+          C.holdUntil = now() + 2600;
+        }
+      } else if (!reduce) {
+        // parked (cara seleccionada) => objetivo 0: se detiene y espera.
+        // Si no, hold => 0 y después autorrotación EN EL SENTIDO heredado.
+        const idle = C.parked || now() < C.holdUntil;
+        const tRx = idle ? 0 : AUTO_RX * C.signRx;
+        const tRy = idle ? 0 : AUTO_RY * C.signRy;
+        C.velRx += (tRx - C.velRx) * VEL_LERP;
+        C.velRy += (tRy - C.velRy) * VEL_LERP;
+        C.rx += C.velRx;
+        C.ry += C.velRy;
+      }
+    }
+
+    // Render bajo demanda: quieto (parked) no redibuja, ahorra GPU y batería.
+    if (lastRx === null || Math.abs(C.rx - lastRx) > 0.002 || Math.abs(C.ry - lastRy) > 0.002) {
+      lastRx = C.rx; lastRy = C.ry;
+      applyRotation();
+      renderer.render(scene, camera);
+    }
+  }
+  requestAnimationFrame(tick);
+
+  return {
+    snapTo,
+    /* Pausa/reanuda el loop. En modo grilla el cubo se oculta y no debe seguir
+       consumiendo GPU. */
+    setEnabled(v) {
+      enabled = !!v;
+      if (enabled) { lastRx = null; resize(); }   // fuerza un redibujo al volver
+    },
+    /* Fuerza un cuadro. El loop se apoya en rAF, que no corre con la pestaña
+       oculta; esto permite dibujar bajo demanda. */
+    render() { renderer.render(scene, camera); },
+    setRotation(rx, ry) { C.rx = rx; C.ry = ry; C.snapping = false; applyRotation(); },
+    dispose() {
+      ro.disconnect();
+      renderer.dispose();
+      el.remove();
+    },
+  };
+}

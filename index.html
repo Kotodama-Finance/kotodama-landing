@@ -3,388 +3,337 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kotodama Finance — Coming soon</title>
-<meta name="description" content="Japan's economy, made legible. Data, analysis and context for everyone. Open access.">
+<title>Kotodama Finance — Japan's financial system, made legible</title>
+<meta name="description" content="An open, free reading of how capital actually moves through Japan — built entirely from primary sources, traceable to the document.">
 <meta property="og:title" content="Kotodama Finance">
-<meta property="og:description" content="Where Japan's economic currents become visible — data, analysis and context for everyone.">
+<meta property="og:description" content="Where Japan's economic currents become visible — data, analysis and context for everyone. Open access.">
 <meta property="og:type" content="website">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --ink: #0a1628;
-    --ink-2: #0d1f3c;
-    --gold: #c8a85a;
-    --mist: #8aabcc;
-    --line: rgba(200, 168, 90, 0.35);
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html, body { height: 100%; }
-
-  body {
-    background: linear-gradient(to bottom, #0a1c30 0%, #07172a 50%, #040d18 100%);
-    background-attachment: fixed;
-    color: var(--mist);
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 2rem 1.5rem;
-    overflow: hidden;
-    position: relative;
-  }
-
-  #sea { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; pointer-events: none; }
-  .vignette { position: fixed; inset: 0; z-index: 1; pointer-events: none;
-    background: radial-gradient(ellipse 62% 52% at 50% 45%, rgba(4,13,24,0.5) 0%, rgba(4,13,24,0.12) 48%, rgba(4,13,24,0) 75%); }
-
-
-  /* Kanji del núcleo, marca de agua de fondo */
-  .kanji-bg {
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: clamp(1rem, 6vw, 5rem);
-    font-family: 'Zen Kaku Gothic New', sans-serif;
-    font-size: clamp(4rem, 16vw, 13rem);
-    color: var(--gold);
-    opacity: 0.05;
-    user-select: none;
-    white-space: nowrap;
-  }
-
-  .content {
-    position: relative;
-    z-index: 2;
-    max-width: 620px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    animation: rise 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  }
-
-  @keyframes rise {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .mark {
-    font-family: 'Zen Kaku Gothic New', sans-serif;
-    font-size: clamp(2.6rem, 9vw, 3.6rem);
-    font-weight: 500;
-    color: var(--gold);
-    letter-spacing: 0.12em;
-    line-height: 1;
-    margin-bottom: 1.5rem;
-  }
-
-  .wordmark {
-    font-family: 'Inter', sans-serif;
-    font-size: clamp(0.95rem, 3.5vw, 1.15rem);
-    font-weight: 500;
-    letter-spacing: 0.42em;
-    text-indent: 0.42em;
-    color: var(--gold);
-    margin-bottom: 2.2rem;
-  }
-
-  .rule {
-    width: 64px;
-    height: 1px;
-    background: var(--line);
-    margin: 0 auto 2.2rem;
-  }
-
-  .tagline {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.5rem, 5.5vw, 2.1rem);
-    font-weight: 500;
-    line-height: 1.3;
-    color: #e7eef6;
-    margin-bottom: 1.1rem;
-  }
-
-  .sub {
-    font-size: clamp(0.9rem, 3vw, 1rem);
-    font-weight: 400;
-    line-height: 1.6;
-    color: var(--mist);
-    max-width: 30rem;
-    margin-bottom: 2.6rem;
-  }
-
-  .status {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 2.8rem;
-  }
-  .status .dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--gold);
-    animation: pulse 2.4s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.35; transform: scale(0.7); }
-  }
-
-  .links {
-    display: flex;
-    gap: 0.9rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: 2.4rem;
-  }
-  .links a {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.7rem 1.4rem;
-    border: 1px solid var(--line);
-    border-radius: 2px;
-    color: #e7eef6;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    letter-spacing: 0.02em;
-    transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
-  }
-  .links a:hover,
-  .links a:focus-visible {
-    border-color: var(--gold);
-    color: var(--gold);
-    background: rgba(200, 168, 90, 0.06);
-    outline: none;
-  }
-  .links svg { width: 16px; height: 16px; fill: currentColor; }
-
-  .contact {
-    font-size: 0.85rem;
-    letter-spacing: 0.04em;
-  }
-  .contact a {
-    color: var(--mist);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: color 0.25s ease, border-color 0.25s ease;
-  }
-  .contact a:hover,
-  .contact a:focus-visible {
-    color: var(--gold);
-    border-color: var(--line);
-    outline: none;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .currents .layer-1,
-    .currents .layer-2,
-    .currents .layer-3 { animation: none; }
-    .content { animation: none; }
-    .status .dot { animation: none; }
-  }
-</style>
+<meta property="og:url" content="https://kotodamafinance.com/">
+<link rel="canonical" href="https://kotodamafinance.com/">
+<link rel="stylesheet" href="./assets/css/styles.css">
 </head>
 <body>
 
+  <!-- Fondo: océano WebGL. El degradado de piso vive en el background del body,
+       así que si el contexto no arranca nunca queda un hueco. -->
   <canvas id="sea" aria-hidden="true"></canvas>
   <div class="vignette" aria-hidden="true"></div>
 
-
-  <!-- Núcleo conceptual: 産霊 河川 言霊 -->
-  <div class="kanji-bg" aria-hidden="true">産霊　河川　言霊</div>
-
-  <main class="content">
-    <div class="mark">言霊</div>
-    <div class="wordmark">KOTODAMA FINANCE</div>
-    <div class="rule"></div>
-    <h1 class="tagline">Where Japan's economic currents become visible</h1>
-    <p class="sub">Data, analysis and context for everyone. Open access.</p>
-
-    <div class="status"><span class="dot"></span>Coming soon</div>
-
-    <nav class="links" aria-label="Social links">
-      <a href="https://x.com/KotodamaFinance" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        Follow on X
-      </a>
-      <a href="https://www.linkedin.com/company/kotodamafinance" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        Connect on LinkedIn
-      </a>
+  <!-- NAV -->
+  <header id="nav" class="nav">
+    <a class="nav__brand" href="#top">
+      <span class="nav__mark" lang="ja">言霊</span>
+      <span class="nav__word">Kotodama Finance</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#cube">The Cube</a>
+      <a href="#about">About</a>
+      <a href="#method">Method</a>
+      <a href="#footer">Contact</a>
     </nav>
+  </header>
 
-    <p class="contact"><a href="mailto:contact@kotodamafinance.com">contact@kotodamafinance.com</a></p>
+  <main>
+
+    <!-- HERO -->
+    <section id="top" class="hero">
+      <div class="hero__inner">
+        <p class="badge"><span class="badge__dot" aria-hidden="true"></span>First analysis on the way</p>
+        <h1 class="hero__title">Japan&rsquo;s financial system,<br>made legible &mdash; <em>from the source</em>.</h1>
+        <div class="rule"></div>
+        <p class="hero__lead">An open, free reading of how capital actually moves through Japan &mdash; built entirely from primary sources, traceable to the document.</p>
+        <div class="hero__cta">
+          <a class="btn btn--solid" href="#cube">Enter the cube <span aria-hidden="true">&darr;</span></a>
+          <a class="btn btn--ghost" href="#method">Read the method</a>
+        </div>
+      </div>
+      <a class="hero__scroll" href="#cube" aria-label="Scroll to the cube"><span aria-hidden="true">&darr;</span></a>
+    </section>
+
+    <!-- THE CUBE -->
+    <section id="cube" class="cube">
+      <div class="cube__wrap">
+        <div class="cube__head">
+          <div>
+            <p class="eyebrow">The Cube &middot; <span lang="ja">立方体</span></p>
+            <h2 class="section-title">Six faces, one level. The backbone of the whole platform.</h2>
+            <p class="section-lead">Each face is a way into the system. None sits above another. One is live today; the rest carry an honest status &mdash; the map is real even where the ground is not yet built.</p>
+          </div>
+          <!-- Toggle: mejora progresiva; oculto sin JS -->
+          <div class="cube__toggle" role="tablist" aria-label="Cube view" hidden>
+            <button type="button" role="tab" id="tab-3d" aria-selected="true" data-view="3d">3D cube</button>
+            <button type="button" role="tab" id="tab-grid" aria-selected="false" data-view="grid">Grid of six</button>
+          </div>
+        </div>
+
+        <div class="cube__layout">
+
+          <!-- Navegación de caras -->
+          <div class="cube__nav">
+            <!-- Escenario 3D: lo monta el JS. aria-hidden porque la nav accesible es la grilla. -->
+            <div id="cube-stage" class="cube__stage" aria-hidden="true" hidden>
+              <p class="cube__hint">Drag to turn &middot; click a face to enter</p>
+            </div>
+
+            <!-- BASELINE: grilla de seis como lista semántica (nav real sin JS) -->
+            <ul class="face-grid" aria-label="The six faces">
+              <li>
+                <a class="face-card" href="#face-hajime" data-face="hajime" data-state="active">
+                  <span class="face-card__top">
+                    <span class="face-card__kanji" lang="ja">肇</span>
+                    <span class="dot" data-state="active" aria-hidden="true"></span>
+                  </span>
+                  <span class="face-card__meta">
+                    <span class="face-card__romaji">Hajime</span>
+                    <span class="face-card__domain">Data / Analysis</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a class="face-card" href="#face-sugao" data-face="sugao" data-state="light">
+                  <span class="face-card__top">
+                    <span class="face-card__kanji" lang="ja">素顔</span>
+                    <span class="dot" data-state="light" aria-hidden="true"></span>
+                  </span>
+                  <span class="face-card__meta">
+                    <span class="face-card__romaji">Sugao</span>
+                    <span class="face-card__domain">The human behind</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a class="face-card" href="#face-tosei" data-face="tosei" data-state="soon">
+                  <span class="face-card__top">
+                    <span class="face-card__kanji" lang="ja">渡世</span>
+                    <span class="dot" data-state="soon" aria-hidden="true"></span>
+                  </span>
+                  <span class="face-card__meta">
+                    <span class="face-card__romaji">Tosei</span>
+                    <span class="face-card__domain">Personal finance in Japan</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a class="face-card" href="#face-kamon" data-face="kamon" data-state="soon">
+                  <span class="face-card__top">
+                    <span class="face-card__kanji" lang="ja">家紋</span>
+                    <span class="dot" data-state="soon" aria-hidden="true"></span>
+                  </span>
+                  <span class="face-card__meta">
+                    <span class="face-card__romaji">Kamon</span>
+                    <span class="face-card__domain">Connect</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a class="face-card" href="#face-torii" data-face="torii" data-state="soon">
+                  <span class="face-card__top">
+                    <span class="face-card__kanji" lang="ja">鳥居</span>
+                    <span class="dot" data-state="soon" aria-hidden="true"></span>
+                  </span>
+                  <span class="face-card__meta">
+                    <span class="face-card__romaji">Torii</span>
+                    <span class="face-card__domain">Learn / Resources</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a class="face-card" href="#face-kizuna" data-face="kizuna" data-state="soon">
+                  <span class="face-card__top">
+                    <span class="face-card__kanji" lang="ja">絆</span>
+                    <span class="dot" data-state="soon" aria-hidden="true"></span>
+                  </span>
+                  <span class="face-card__meta">
+                    <span class="face-card__romaji">Kizuna</span>
+                    <span class="face-card__domain">Act / Business</span>
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Detalle de las seis caras: todo el contenido en el fuente, cada bloque es el ancla de su cara -->
+          <div class="cube__detail">
+            <article id="face-hajime" class="face-detail" data-face="hajime" data-state="active">
+              <p class="eyebrow">Data / Analysis</p>
+              <p class="face-detail__head">
+                <span class="face-detail__kanji" lang="ja">肇</span>
+                <span class="face-detail__romaji">Hajime</span>
+              </p>
+              <p class="face-detail__gloss">&ldquo;the beginning&rdquo;</p>
+              <p class="face-detail__line">Primary-source data and analysis of Japan&rsquo;s financial system.</p>
+              <p class="status" data-state="active"><span class="dot" data-state="active" aria-hidden="true"></span>First analysis on the way</p>
+              <p class="face-detail__cta"><a class="btn btn--solid btn--sm" href="#face-hajime">Open Hajime <span aria-hidden="true">&rarr;</span></a></p>
+            </article>
+
+            <article id="face-sugao" class="face-detail" data-face="sugao" data-state="light">
+              <p class="eyebrow">The human behind</p>
+              <p class="face-detail__head">
+                <span class="face-detail__kanji" lang="ja">素顔</span>
+                <span class="face-detail__romaji">Sugao</span>
+              </p>
+              <p class="face-detail__gloss">&ldquo;the true face&rdquo;</p>
+              <p class="face-detail__line">Who is doing this, and why &mdash; origins now, personal profiles later.</p>
+              <p class="status" data-state="light"><span class="dot" data-state="light" aria-hidden="true"></span>Intro live &middot; profiles deferred</p>
+              <p class="face-detail__cta"><a class="btn btn--solid btn--sm" href="#face-sugao">Open Sugao <span aria-hidden="true">&rarr;</span></a></p>
+            </article>
+
+            <article id="face-tosei" class="face-detail" data-face="tosei" data-state="soon">
+              <p class="eyebrow">Personal finance in Japan</p>
+              <p class="face-detail__head">
+                <span class="face-detail__kanji" lang="ja">渡世</span>
+                <span class="face-detail__romaji">Tosei</span>
+              </p>
+              <p class="face-detail__gloss">&ldquo;making one&rsquo;s way in the world&rdquo;</p>
+              <p class="face-detail__line">Navigating money as a resident of Japan.</p>
+              <p class="status" data-state="soon"><span class="dot" data-state="soon" aria-hidden="true"></span>Coming soon</p>
+            </article>
+
+            <article id="face-kamon" class="face-detail" data-face="kamon" data-state="soon">
+              <p class="eyebrow">Connect</p>
+              <p class="face-detail__head">
+                <span class="face-detail__kanji" lang="ja">家紋</span>
+                <span class="face-detail__romaji">Kamon</span>
+              </p>
+              <p class="face-detail__gloss">&ldquo;the family crest&rdquo;</p>
+              <p class="face-detail__line">People, institutions and networks across the system.</p>
+              <p class="status" data-state="soon"><span class="dot" data-state="soon" aria-hidden="true"></span>Coming soon</p>
+            </article>
+
+            <article id="face-torii" class="face-detail" data-face="torii" data-state="soon">
+              <p class="eyebrow">Learn / Resources</p>
+              <p class="face-detail__head">
+                <span class="face-detail__kanji" lang="ja">鳥居</span>
+                <span class="face-detail__romaji">Torii</span>
+              </p>
+              <p class="face-detail__gloss">&ldquo;the gateway&rdquo;</p>
+              <p class="face-detail__line">Foundations for reading the system for yourself.</p>
+              <p class="status" data-state="soon"><span class="dot" data-state="soon" aria-hidden="true"></span>Coming soon</p>
+            </article>
+
+            <article id="face-kizuna" class="face-detail" data-face="kizuna" data-state="soon">
+              <p class="eyebrow">Act / Business</p>
+              <p class="face-detail__head">
+                <span class="face-detail__kanji" lang="ja">絆</span>
+                <span class="face-detail__romaji">Kizuna</span>
+              </p>
+              <p class="face-detail__gloss">&ldquo;the bond&rdquo;</p>
+              <p class="face-detail__line">Where analysis meets institutions and enterprise.</p>
+              <p class="status" data-state="soon"><span class="dot" data-state="soon" aria-hidden="true"></span>Coming soon</p>
+            </article>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="about">
+      <div class="about__watermark" aria-hidden="true" lang="ja">産霊　河川　言霊</div>
+      <div class="about__inner">
+        <p class="eyebrow">About</p>
+        <p class="about__statement">Capital moves through Japan in currents most people never see. Kotodama Finance exists to make those currents visible &mdash; and to keep them open to everyone.</p>
+        <div class="about__body">
+          <p>The cube is our map. Six faces, held at the same level, because understanding a financial system means holding data, people, learning and action together &mdash; not ranking one over the rest.</p>
+          <p>Japan is the first node, not the frontier. We start here because it is where the questions are sharpest and the sources richest. The method is meant to travel.</p>
+          <p>We lead with meaning; the Japanese is the flavour. Each face carries a word &mdash; <span lang="ja">肇</span>, <span lang="ja">素顔</span>, <span lang="ja">絆</span> &mdash; but the promise is written plainly, in language anyone can read.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- METHOD -->
+    <section id="method" class="method">
+      <div class="method__wrap">
+        <div class="method__head">
+          <p class="eyebrow">Method &middot; <span lang="ja">一次資料</span></p>
+          <h2 class="section-title">Everything here traces back to the source.</h2>
+          <p class="section-lead">Not summaries of summaries. We read the filings, releases and datasets themselves, cite where every figure came from, and publish the method alongside the finding. This is the moat &mdash; and the reason to trust the map.</p>
+        </div>
+
+        <div class="method__cards">
+          <div class="method-card">
+            <p class="method-card__kanji" lang="ja">一次資料</p>
+            <h3 class="method-card__title">Primary source</h3>
+            <p class="method-card__text">Every claim starts at the origin document &mdash; a BOJ release, an MOF table, a JPX disclosure &mdash; never a second-hand retelling.</p>
+          </div>
+          <div class="method-card">
+            <p class="method-card__kanji" lang="ja">追跡可能</p>
+            <h3 class="method-card__title">Traceability</h3>
+            <p class="method-card__text">Each number carries its origin, its date and its revision. Follow any figure back to the exact release it came from.</p>
+          </div>
+          <div class="method-card">
+            <p class="method-card__kanji" lang="ja">公開</p>
+            <h3 class="method-card__title">Transparency</h3>
+            <p class="method-card__text">The methodology is published, the access is free, and there are no paywalls. If it cannot be shown openly, it does not ship.</p>
+          </div>
+        </div>
+
+        <div class="method__cols">
+          <div class="method__how">
+            <p class="eyebrow eyebrow--muted">How we work</p>
+            <ol class="steps">
+              <li><span class="steps__n">01</span><span><strong>Collect</strong> the primary release the moment it publishes.</span></li>
+              <li><span class="steps__n">02</span><span><strong>Verify</strong> figures against the issuing body&rsquo;s own tables.</span></li>
+              <li><span class="steps__n">03</span><span><strong>Cite</strong> the origin, date and revision on every number.</span></li>
+              <li><span class="steps__n">04</span><span><strong>Publish</strong> the analysis and its method, openly and for free.</span></li>
+            </ol>
+          </div>
+          <div class="method__sources">
+            <p class="eyebrow eyebrow--muted">Sources we read directly</p>
+            <ul class="sources">
+              <li><span class="sources__ja" lang="ja">日本銀行</span><span class="sources__en"><span>Bank of Japan (BOJ)</span><span class="sources__note">Monetary policy, flow of funds</span></span></li>
+              <li><span class="sources__ja" lang="ja">財務省</span><span class="sources__en"><span>Ministry of Finance (MOF)</span><span class="sources__note">Fiscal, public debt, FX</span></span></li>
+              <li><span class="sources__ja" lang="ja">金融庁</span><span class="sources__en"><span>Financial Services Agency (FSA)</span><span class="sources__note">Regulation, disclosure</span></span></li>
+              <li><span class="sources__ja" lang="ja">日本取引所</span><span class="sources__en"><span>Japan Exchange Group (JPX)</span><span class="sources__note">Markets, listings, filings</span></span></li>
+              <li><span class="sources__ja" lang="ja">内閣府</span><span class="sources__en"><span>Cabinet Office</span><span class="sources__note">National accounts, GDP</span></span></li>
+              <li><span class="sources__ja" lang="ja">e-Stat / 総務省</span><span class="sources__en"><span>Statistics Bureau (e-Stat)</span><span class="sources__note">Official statistics portal</span></span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
+  <!-- FOOTER -->
+  <footer id="footer" class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <p class="footer__mark">
+          <span lang="ja">言霊</span>
+          <span class="footer__word">Kotodama Finance</span>
+        </p>
+        <p class="footer__tag">Where Japan&rsquo;s economic currents become visible. Open access.</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <p class="footer__label">Reach us</p>
+          <a href="mailto:contact@kotodamafinance.com">contact@kotodamafinance.com</a>
+          <a href="https://kotodamafinance.com/" target="_blank" rel="noopener">kotodamafinance.com</a>
+        </div>
+        <div class="footer__col">
+          <p class="footer__label">Follow</p>
+          <a href="https://x.com/KotodamaFinance" target="_blank" rel="noopener">X / @KotodamaFinance</a>
+          <a href="https://www.linkedin.com/company/kotodamafinance/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+        <div class="footer__col">
+          <p class="footer__label">Platform</p>
+          <a href="#cube">The Cube</a>
+          <a href="#method">Method</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>&copy; 2026 Kotodama Finance &middot; Open access</span>
+      <span>English &middot; <span class="footer__soon"><span lang="ja">日本語</span> &mdash; coming</span></span>
+    </div>
+  </footer>
 
-<script>
-(function(){
-  const c = document.getElementById('sea');
-  const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
-  if(!gl){ c.style.display='none'; return; }
-  const vs = `attribute vec2 p; void main(){ gl_Position=vec4(p,0.0,1.0); }`;
-  const fs = `
-    precision highp float;
-    uniform vec2 u_res; uniform float u_time;
-    uniform float u_speed;   // velocidad del viaje de las olas
-    uniform float u_breath;  // respiracion del swell (independiente)
-
-    // --- simplex noise 3D (Ashima / Stefan Gustavson) ---
-    vec4 mod289(vec4 x){return x-floor(x*(1.0/289.0))*289.0;}
-    vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
-    vec4 permute(vec4 x){return mod289(((x*34.0)+1.0)*x);}
-    vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
-    float snoise(vec3 v){
-      const vec2 C=vec2(1.0/6.0,1.0/3.0); const vec4 D=vec4(0.0,0.5,1.0,2.0);
-      vec3 i=floor(v+dot(v,C.yyy)); vec3 x0=v-i+dot(i,C.xxx);
-      vec3 g=step(x0.yzx,x0.xyz); vec3 l=1.0-g; vec3 i1=min(g.xyz,l.zxy); vec3 i2=max(g.xyz,l.zxy);
-      vec3 x1=x0-i1+C.xxx; vec3 x2=x0-i2+C.yyy; vec3 x3=x0-D.yyy;
-      i=mod289(i);
-      vec4 pp=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));
-      float n_=0.142857142857; vec3 ns=n_*D.wyz-D.xzx;
-      vec4 j=pp-49.0*floor(pp*ns.z*ns.z);
-      vec4 x_=floor(j*ns.z); vec4 y_=floor(j-7.0*x_);
-      vec4 x=x_*ns.x+ns.yyyy; vec4 y=y_*ns.x+ns.yyyy; vec4 h=1.0-abs(x)-abs(y);
-      vec4 b0=vec4(x.xy,y.xy); vec4 b1=vec4(x.zw,y.zw);
-      vec4 s0=floor(b0)*2.0+1.0; vec4 s1=floor(b1)*2.0+1.0; vec4 sh=-step(h,vec4(0.0));
-      vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy; vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
-      vec3 p0=vec3(a0.xy,h.x); vec3 p1=vec3(a0.zw,h.y); vec3 p2=vec3(a1.xy,h.z); vec3 p3=vec3(a1.zw,h.w);
-      vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
-      p0*=norm.x; p1*=norm.y; p2*=norm.z; p3*=norm.w;
-      vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0); m=m*m;
-      return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
-    }
-
-    // fbm 3D: el eje z es el TIEMPO => el campo EVOLUCIONA (no se traslada)
-    float fbm(vec3 p){
-      float s=0.0,a=0.55;
-      for(int i=0;i<5;i++){ s+=a*snoise(p); p*=2.02; a*=0.5; }
-      return s;
-    }
-
-    // Anisotropia: las olas se ESTIRAN perpendicular a la direccion de avance (olas alargadas = agua, no nubes)
-    // matriz que comprime un eje y estira el otro, alineada a la diagonal del flujo
-    vec2 anis(vec2 p){
-      // rotar 45° (alinear con diagonal) y estirar: crestas largas cruzando la diagonal
-      vec2 q = vec2(p.x+p.y, p.y-p.x)*0.7071;
-      q.x *= 0.45;          // eje a lo largo de la cresta: comprimido => crestas largas
-      q.y *= 1.55;          // eje perpendicular: estirado => surcos definidos
-      return q;
-    }
-
-    // altura del oceano con escalas ANIDADAS (cada una monta sobre la anterior, siguiendo su pendiente)
-    // y crestas redondeadas/asimetricas como el mar real (no ruido simetrico)
-    float ocean(vec2 uvp, float t){
-      vec2 V = normalize(vec2(1.0,-1.0));
-      vec2 base = uvp + V * (u_time * u_speed);   // viaje diagonal
-
-      // ESCALA 1 - swell: ondas grandes y suaves que forman la base. dan la pendiente general.
-      float swell = fbm(vec3(base*0.7, u_time*u_breath)) * 2.0;
-      vec2 slope = vec2(
-        fbm(vec3(base*0.7+vec2(0.15,0.0), u_time*u_breath)) - swell/2.0,
-        fbm(vec3(base*0.7+vec2(0.0,0.15), u_time*u_breath)) - swell/2.0
-      );
-
-      // ESCALA 2 - olas medianas: MONTAN sobre el swell (se desplazan segun su pendiente => anidadas)
-      vec2 wp = anis(base*1.6 + slope*0.6);
-      float wn = fbm(vec3(wp, u_time*u_breath*1.3));
-      // cresta redondeada y ASIMETRICA: pow distinto segun signo => lomo suave / caida marcada
-      float crest = wn>0.0 ? pow(wn, 0.7) : -pow(-wn, 1.5);
-      float waves = crest * 2.1;
-
-      // ESCALA 3 - rizado fino: monta sobre las olas medianas, sutil
-      vec2 cp = anis(base*3.8 + slope*0.4);
-      float ripple = fbm(vec3(cp, u_time*u_breath*1.8));
-      ripple = ripple>0.0 ? pow(ripple,0.8) : -pow(-ripple,1.3);
-      float chop = ripple * 0.30;
-
-      return swell + waves + chop;
-    }
-
-    float oceanSmooth(vec2 uvp, float t){
-      vec2 V = normalize(vec2(1.0,-1.0));
-      vec2 base = uvp + V * (u_time * u_speed);
-      float swell = fbm(vec3(base*0.7, u_time*u_breath)) * 2.0;
-      vec2 slope = vec2(
-        fbm(vec3(base*0.7+vec2(0.15,0.0), u_time*u_breath)) - swell/2.0,
-        fbm(vec3(base*0.7+vec2(0.0,0.15), u_time*u_breath)) - swell/2.0
-      );
-      vec2 wp = anis(base*1.6 + slope*0.6);
-      float wn = fbm(vec3(wp, u_time*u_breath*1.3));
-      float crest = wn>0.0 ? pow(wn, 0.7) : -pow(-wn, 1.5);
-      float waves = crest * 2.1;
-      return swell + waves;
-    }
-
-    void main(){
-      vec2 uv = gl_FragCoord.xy/u_res.xy;
-      float aspect = u_res.x/u_res.y;
-      vec2 p = vec2(uv.x*aspect, uv.y);
-      float t = u_time * 0.09;                 // tiempo del oleaje
-
-      // perspectiva de superficie: comprimido arriba (lejos), grande abajo (cerca)
-      float persp = mix(1.5, 3.2, uv.y);
-      vec2 sp = p*persp;
-
-      float H = ocean(sp, t);
-
-      // normal por derivadas (volumen / relieve de las olas)
-      float e = 0.008*persp;   // epsilon: capta mas forma de la ola, sigue sin parpadeo (usa oceanSmooth)
-      float hx = oceanSmooth(sp+vec2(e,0.0), t) - oceanSmooth(sp-vec2(e,0.0), t);
-      float hy = oceanSmooth(sp+vec2(0.0,e), t) - oceanSmooth(sp-vec2(0.0,e), t);
-      vec3 n = normalize(vec3(-hx*5.2, -hy*5.2, 0.13));
-
-      // paleta navy mar oscuro
-      vec3 deep  = vec3(0.001,0.009,0.024);
-      vec3 mid   = vec3(0.024,0.075,0.130);
-      vec3 crest = vec3(0.075,0.150,0.215);
-      vec3 col = mix(deep, mid, smoothstep(-0.7,0.8,H));
-      col = mix(col, crest, smoothstep(0.20,0.95,H)*0.85);
-      col += uv.y*vec3(0.010,0.020,0.030);
-
-      // Sin destellos: el relieve del oleaje viene del contraste de altura (swell que se hincha),
-      // mas una sombra difusa MUY tenue por inclinacion, sin ningun brillo que distraiga.
-      vec3 L = normalize(vec3(-0.35,0.65,0.6));
-      float shade = dot(n, L) * 0.5 + 0.5;        // 0..1 suave
-      col *= mix(0.62, 1.20, smoothstep(0.12, 0.94, shade));  // modula luz/sombra del propio color, sin agregar brillo
-
-      gl_FragColor = vec4(col,1.0);
-    }`;
-  function sh(t,s){const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);
-    if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))console.error(gl.getShaderInfoLog(o));return o;}
-  const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,vs));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,fs));
-  gl.linkProgram(pr);gl.useProgram(pr);
-  const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);
-  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
-  const lp=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(lp);gl.vertexAttribPointer(lp,2,gl.FLOAT,false,0,0);
-  const uR=gl.getUniformLocation(pr,'u_res'),uT=gl.getUniformLocation(pr,'u_time');
-  const uSpeed=gl.getUniformLocation(pr,'u_speed'),uBreath=gl.getUniformLocation(pr,'u_breath');
-  function rz(){const d=Math.min(devicePixelRatio||1,2);c.width=innerWidth*d|0;c.height=innerHeight*d|0;gl.viewport(0,0,c.width,c.height);}
-  addEventListener('resize',rz);rz();
-  const SPEED=0.040, BREATH=0.050;   // valores calibrados
-  const s0=performance.now();
-  (function f(now){
-    gl.uniform2f(uR,c.width,c.height);gl.uniform1f(uT,(now-s0)*0.001);
-    gl.uniform1f(uSpeed,SPEED);gl.uniform1f(uBreath,BREATH);
-    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(f);})(s0);
-})();
-</script>
+  <!-- Three.js vendoreado localmente; sin CDN en runtime -->
+  <script type="importmap">
+  { "imports": { "three": "./assets/vendor/three.module.js" } }
+  </script>
+  <script type="module" src="./assets/js/main.js"></script>
 
 </body>
 </html>
