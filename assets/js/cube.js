@@ -53,10 +53,10 @@ const PLATE = CUBIE - 2 * RADIUS;  // zona plana de la cara del cubie
    dibuja el borde de la silueta.
    Se puede sobrescribir por cara vía initCube(stage, { lighting: {...} }). */
 export const LIGHT_DEFAULTS = {
-  hemi: 1.3,                        // ambiente: levanta el piso de las sombras
-  key: 2.4,   keyPos: [-3, 5, 4],   // clave, arriba-izquierda (como las fotos)
-  rim: 1.25,  rimPos: [4.5, 0.5, 2.5],   // relleno frontal derecho, tinte oro
-  back: 0,    backPos: [2.5, 1.5, -4],   // contraluz: separa por silueta
+  hemi: 0.4,                        // ambiente bajo: deja respirar el rango
+  key: 3.2,   keyPos: [-3, 5, 4],   // clave fuerte, arriba-izquierda (como las fotos)
+  rim: 0.5,   rimPos: [4.5, 0.5, 2.5],   // relleno frontal derecho, tinte oro
+  back: 2.2,  backPos: [2.5, 1.5, -4],   // contraluz: recorta la silueta
 };
 
 /* Velocidad de autorrotación (grados por tick de ~30fps) */
