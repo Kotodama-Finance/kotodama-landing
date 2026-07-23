@@ -116,4 +116,29 @@ async function hydrateCube() {
     console.warn('[cube] no se pudo hidratar; se mantiene la grilla.', err);
   }
 }
-hydrateCube();
+
+/* Lazy-init: el cubo no crea su contexto WebGL hasta que su sección se acerca
+   al viewport. Lo que se difiere NO es el costo de dibujar (geometría trivial)
+   sino el de CREAR el segundo contexto: memoria de GPU, compilación de shaders
+   y armado del pipeline. Ese costo se paga una sola vez al inicializar y no lo
+   evitan ni el render bajo demanda ni la pausa por visibilidad, porque para
+   pausar un contexto primero hay que crearlo.
+   En todas las plataformas: en desktop no cuesta nada y es lo correcto igual. */
+function hydrateCubeWhenNear() {
+  if (!stage) return;
+  const section = document.getElementById('cube');
+  if (!section || !('IntersectionObserver' in window)) { hydrateCube(); return; }
+  const io = new IntersectionObserver((entries) => {
+    if (!entries.some((e) => e.isIntersecting)) return;
+    io.disconnect();
+    hydrateCube();
+    // Sin rootMargin a propósito: el hero mide 100vh, así que la sección del
+    // cubo arranca apenas ~20px debajo del fold. Cualquier margen de anticipación
+    // la haría intersectar ya en la carga y no se diferiría nada. Con margen 0
+    // el contexto se crea recién al scrollear, fuera del pico de carga inicial
+    // (compilación del shader del mar + fuentes). El margen de maniobra lo da el
+    // padding de la sección: el cubo queda bastante más abajo del borde.
+  }, { rootMargin: '0px' });
+  io.observe(section);
+}
+hydrateCubeWhenNear();
