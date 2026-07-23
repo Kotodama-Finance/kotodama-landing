@@ -59,6 +59,15 @@ export const LIGHT_DEFAULTS = {
   back: 2.2,  backPos: [2.5, 1.5, -4],   // contraluz: recorta la silueta
 };
 
+/* Material del cubie. roughness alto = degradé suave en el bisel; roughness
+   bajo concentra el reflejo en un punto y lee metálico/pulido. metalness sin
+   environment map además oscurece, así que se mantiene bajo.
+   Sobrescribible con initCube(stage, { material: {...} }). */
+export const MATERIAL_DEFAULTS = {
+  roughness: 0.46,
+  metalness: 0.08,
+};
+
 /* Velocidad de autorrotación (grados por tick de ~30fps) */
 const AUTO_RX = 0.09;
 const AUTO_RY = 0.28;
@@ -266,14 +275,13 @@ export function initCube(stage, opts) {
   rim.position.set(...LI.rimPos);
   scene.add(rim);
 
-  // Contraluz opcional: pega en los biseles del contorno y recorta la silueta
-  // contra el fondo. Es la vía para separar un objeto oscuro sobre fondo oscuro
-  // sin tocar la paleta.
-  if (LI.back > 0) {
-    const back = new THREE.DirectionalLight(new THREE.Color(goldSoftHex), LI.back);
-    back.position.set(...LI.backPos);
-    scene.add(back);
-  }
+  // Cuarta luz, desde atrás-derecha. Medido: con RADIUS en 0.03 casi no queda
+  // curva donde aterrice luz rasante, así que NO produce un rim de contorno;
+  // funciona como relleno de la cara que apunte en esa dirección. Por eso su
+  // efecto depende mucho de la pose.
+  const back = new THREE.DirectionalLight(new THREE.Color(goldSoftHex), LI.back);
+  back.position.set(...LI.backPos);
+  scene.add(back);
 
   /* ---- 26 cubies redondeados, TODOS idénticos ---- */
   const group = new THREE.Group();
@@ -281,8 +289,9 @@ export function initCube(stage, opts) {
   scene.add(group);
 
   const geo = new RoundedBoxGeometry(CUBIE, CUBIE, CUBIE, 3, RADIUS);
+  const MT = Object.assign({}, MATERIAL_DEFAULTS, opts && opts.material);
   const bodyMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(bodyHex), roughness: 0.46, metalness: 0.08,
+    color: new THREE.Color(bodyHex), roughness: MT.roughness, metalness: MT.metalness,
   });
 
   const cubies = [];
@@ -308,8 +317,8 @@ export function initCube(stage, opts) {
       // metalness alto oscurecería el oro: sin environment map un metal no
       // tiene difusa y sólo refleja el entorno (inexistente acá). Se mantiene
       // bajo para que el oro rinda su color real.
-      roughness: 0.42,
-      metalness: 0.1,
+      roughness: MT.roughness,
+      metalness: MT.metalness,
     });
     faceMats.push({ mat, maps, kanji: def.kanji });
 
@@ -526,6 +535,21 @@ export function initCube(stage, opts) {
     /* Fuerza un cuadro. El loop se apoya en rAF, que no corre con la pestaña
        oculta; esto permite dibujar bajo demanda. */
     render() { renderer.render(scene, camera); },
+    /* Retocar luz y material sin reconstruir texturas (que es lo caro).
+       Pensado para comparar esquemas lado a lado. */
+    setLighting(p) {
+      if (p.hemi != null) hemi.intensity = p.hemi;
+      if (p.key != null) key.intensity = p.key;
+      if (p.rim != null) rim.intensity = p.rim;
+      if (p.back != null) back.intensity = p.back;
+    },
+    setMaterial(p) {
+      [bodyMat, ...faceMats.map((f) => f.mat)].forEach((m) => {
+        if (p.roughness != null) m.roughness = p.roughness;
+        if (p.metalness != null) m.metalness = p.metalness;
+        m.needsUpdate = true;
+      });
+    },
     setRotation(rx, ry) { C.rx = rx; C.ry = ry; C.snapping = false; applyRotation(); },
     dispose() {
       ro.disconnect();
