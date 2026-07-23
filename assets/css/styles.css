@@ -70,20 +70,22 @@
 :root {
   /* Superficies (cada sección tiene la suya en la referencia) */
   --c-navy: #040d18;            /* body, footer, base */
-  /* Fondo de la sección del cubo. Se oscureció (era #06121f) para separarlo del
-     cuerpo del cubie: la separación tiene que estar en el material, no suplida
-     por iluminación. Mismo hue navy (~210°). */
-  --c-surface-cube: #04101c;
+  /* Fondo de la sección del cubo: casi negro. La separación del cubo se busca
+     oscureciendo el fondo, no aclarando el cubie (que se queda en el navy de
+     marca). Mismo hue navy (~214°). */
+  --c-surface-cube: #020509;
   --c-surface-about: #07172a;
   --c-surface-method: #061320;
   --c-cubie-grid: #0b1a2e;      /* fondo de la grilla de caras */
   --c-plate: #0a1728;
   --c-sea-hi: #0a1c30;          /* realce superior del degradado del mar */
 
-  /* Cuerpo del cubie. Navy más claro y MÁS SATURADO que el viejo #0a1728
-     (S≈0.70 vs 0.58 del pizarra rechazado), para que lea navy y no gris.
-     Hue ~213°: misma familia que el fondo, sin introducir un tercer hue. */
-  --c-cube-body: #0e2b4e;
+  /* Cuerpo del cubie = el navy de marca, sin deriva.
+     Medido: dentro de la familia navy a esta profundidad, todas las variantes
+     posibles caen dentro de ~4 unidades sRGB una de otra, o sea que el color
+     base NO es una palanca perceptible acá. La separación contra el fondo la
+     dan la iluminación y el borde de silueta, no el tono. */
+  --c-cube-body: #040d18;
   /* Luz clave del cubo: neutra a propósito — tintarla de oro desatura el navy. */
   --c-cube-key-light: #ffffff;
 
@@ -106,7 +108,7 @@
   --rgb-navy: 4 13 24;
   --rgb-mist: 138 171 204;
   --rgb-white: 255 255 255;
-  --rgb-surface-cube: 4 16 28;  /* = --c-surface-cube, para alfa */
+  --rgb-surface-cube: 2 5 9;    /* = --c-surface-cube, para alfa */
   --rgb-card: 9 20 34;          /* fondo de las face-card */
 
   /* Líneas / overlays derivados */
