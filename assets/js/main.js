@@ -38,35 +38,72 @@ if (sea && sea.setHeroVisible) {
   }
 }
 
-/* ---- Caras: sincronía grilla ⇄ detalle ---------------------------------- */
+/* ---- Caras: grilla, estado y botón de entrada ---------------------------- */
 // Declarado antes de setActiveFace: esta lo referencia y se llama en la carga.
 let cube = null;
-const FACE_KEYS = ['hajime', 'sugao', 'tosei', 'kamon', 'torii', 'kizuna'];
+
+/* El estado de cada cara venía del panel lateral, que se quitó. No puede
+   desaparecer de la vista 3D: alguien navegando en modo cubo entraría a una
+   cara sin saber que está vacía. Ahora viaja con el botón de entrada. */
+const FACES = {
+  hajime: { romaji: 'Hajime', state: 'active', status: 'First analysis on the way' },
+  sugao:  { romaji: 'Sugao',  state: 'light',  status: 'Intro live · profiles deferred' },
+  tosei:  { romaji: 'Tosei',  state: 'soon',   status: 'Coming soon' },
+  kamon:  { romaji: 'Kamon',  state: 'soon',   status: 'Coming soon' },
+  torii:  { romaji: 'Torii',  state: 'soon',   status: 'Coming soon' },
+  kizuna: { romaji: 'Kizuna', state: 'soon',   status: 'Coming soon' },
+};
+const FACE_KEYS = Object.keys(FACES);
+
 const cards = Array.from(document.querySelectorAll('.face-card'));
-const details = new Map(
-  FACE_KEYS.map((k) => [k, document.getElementById('face-' + k)])
-);
+const elStatus = document.getElementById('cube-status');
+const elStatusText = document.getElementById('cube-status-text');
+const elOpen = document.getElementById('cube-open');
 
-let activeFace = 'hajime';
+let activeFace = null;
 
-/** Marca una cara como activa (resalta la card y muestra su detalle). */
+/** Selecciona una cara: resalta su tarjeta y revela estado + botón. */
 function setActiveFace(key) {
-  if (!FACE_KEYS.includes(key)) return;
+  const face = FACES[key];
+  if (!face) return;
   activeFace = key;
   cards.forEach((c) => c.classList.toggle('is-active', c.dataset.face === key));
-  details.forEach((el, k) => { if (el) el.classList.toggle('is-shown', k === key); });
-  // aviso al cubo 3D si está montado
+
+  if (elStatus) {
+    elStatus.dataset.state = face.state;
+    elStatus.querySelector('.dot').dataset.state = face.state;
+    elStatusText.textContent = face.status;
+    elStatus.hidden = false;
+  }
+  if (elOpen) {
+    // El botón navega SIEMPRE, incluso en las caras "coming soon": su
+    // subpágina existe y ahí el placeholder lo dice de frente.
+    elOpen.href = '/' + key + '/';
+    elOpen.textContent = 'Open ' + face.romaji + ' →';
+    elOpen.hidden = false;
+  }
   if (cube && cube.snapTo) cube.snapTo(key);
 }
 
+/** Arrastrar revive el cubo: se deshace la selección y el botón se va. */
+function clearSelection() {
+  activeFace = null;
+  cards.forEach((c) => c.classList.remove('is-active'));
+  if (elStatus) elStatus.hidden = true;
+  if (elOpen) elOpen.hidden = true;
+}
+
 cards.forEach((card) => {
-  // el click resalta y muestra el detalle; el href ancla al bloque (baseline)
-  card.addEventListener('click', () => setActiveFace(card.dataset.face));
-  // Teclado: al tabular hasta una cara, el cubo hace snap a esa cara, así lo
-  // que se ve y lo que tiene el foco coinciden.
+  // el click resalta y prepara el botón; el href sigue siendo la ruta real
+  card.addEventListener('click', (e) => {
+    // con JS, seleccionar no navega: navega el botón
+    e.preventDefault();
+    setActiveFace(card.dataset.face);
+    if (elOpen) elOpen.focus();
+  });
+  // Teclado: al tabular hasta una cara, el cubo hace snap y aparece el botón.
   card.addEventListener('focus', () => setActiveFace(card.dataset.face));
 });
-setActiveFace('hajime');
 
 /* ---- Toggle 3D / grilla (aparece solo si el cubo hidrata) --------------- */
 const toggle = document.querySelector('.cube__toggle');
@@ -99,6 +136,7 @@ async function hydrateCube() {
       faces: FACE_KEYS,
       reduce,
       onSelect: (key) => setActiveFace(key),
+      onDragStart: () => clearSelection(),
     });
     if (!cube) return;
     // el cubo cargó: mostramos el escenario y el toggle

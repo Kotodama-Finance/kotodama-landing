@@ -19,17 +19,19 @@
   <canvas id="sea" aria-hidden="true"></canvas>
   <div class="vignette" aria-hidden="true"></div>
 
-  <!-- NAV -->
+  <!-- NAV — rutas absolutas para que el bloque sea idéntico en las ocho páginas.
+       tools/check-ready.py verifica que no derive. -->
   <header id="nav" class="nav">
-    <a class="nav__brand" href="#top">
+    <a class="nav__brand" href="/">
       <span class="nav__mark" lang="ja">言霊</span>
       <span class="nav__word">Kotodama Finance</span>
     </a>
     <nav class="nav__links" aria-label="Primary">
-      <a href="#cube">The Cube</a>
-      <a href="#about">About</a>
-      <a href="#method">Method</a>
-      <a href="#footer">Contact</a>
+      <a href="/#cube">The Cube</a>
+      <a href="/naming/"><span class="todo">TODO: rótulo</span></a>
+      <a href="/#about">About</a>
+      <a href="/#method">Method</a>
+      <a href="/#footer">Contact</a>
     </nav>
   </header>
 
@@ -71,14 +73,12 @@
           <!-- Navegación de caras -->
           <div class="cube__nav">
             <!-- Escenario 3D: lo monta el JS. aria-hidden porque la nav accesible es la grilla. -->
-            <div id="cube-stage" class="cube__stage" aria-hidden="true" hidden>
-              <p class="cube__hint">Drag to turn &middot; click a face to enter</p>
-            </div>
+            <div id="cube-stage" class="cube__stage" aria-hidden="true" hidden></div>
 
             <!-- BASELINE: grilla de seis como lista semántica (nav real sin JS) -->
             <ul class="face-grid" aria-label="The six faces">
               <li>
-                <a class="face-card" href="#face-hajime" data-face="hajime" data-state="active">
+                <a class="face-card" href="/hajime/" data-face="hajime" data-state="active">
                   <span class="face-card__top">
                     <span class="face-card__kanji" lang="ja">肇</span>
                     <span class="dot" data-state="active" aria-hidden="true"></span>
@@ -90,7 +90,7 @@
                 </a>
               </li>
               <li>
-                <a class="face-card" href="#face-sugao" data-face="sugao" data-state="light">
+                <a class="face-card" href="/sugao/" data-face="sugao" data-state="light">
                   <span class="face-card__top">
                     <span class="face-card__kanji" lang="ja">素顔</span>
                     <span class="dot" data-state="light" aria-hidden="true"></span>
@@ -102,7 +102,7 @@
                 </a>
               </li>
               <li>
-                <a class="face-card" href="#face-tosei" data-face="tosei" data-state="soon">
+                <a class="face-card" href="/tosei/" data-face="tosei" data-state="soon">
                   <span class="face-card__top">
                     <span class="face-card__kanji" lang="ja">渡世</span>
                     <span class="dot" data-state="soon" aria-hidden="true"></span>
@@ -114,7 +114,7 @@
                 </a>
               </li>
               <li>
-                <a class="face-card" href="#face-kamon" data-face="kamon" data-state="soon">
+                <a class="face-card" href="/kamon/" data-face="kamon" data-state="soon">
                   <span class="face-card__top">
                     <span class="face-card__kanji" lang="ja">家紋</span>
                     <span class="dot" data-state="soon" aria-hidden="true"></span>
@@ -126,7 +126,7 @@
                 </a>
               </li>
               <li>
-                <a class="face-card" href="#face-torii" data-face="torii" data-state="soon">
+                <a class="face-card" href="/torii/" data-face="torii" data-state="soon">
                   <span class="face-card__top">
                     <span class="face-card__kanji" lang="ja">鳥居</span>
                     <span class="dot" data-state="soon" aria-hidden="true"></span>
@@ -138,7 +138,7 @@
                 </a>
               </li>
               <li>
-                <a class="face-card" href="#face-kizuna" data-face="kizuna" data-state="soon">
+                <a class="face-card" href="/kizuna/" data-face="kizuna" data-state="soon">
                   <span class="face-card__top">
                     <span class="face-card__kanji" lang="ja">絆</span>
                     <span class="dot" data-state="soon" aria-hidden="true"></span>
@@ -152,145 +152,21 @@
             </ul>
           </div>
 
-          <!-- Detalle de las seis caras: todo el contenido en el fuente, cada bloque es el ancla de su cara -->
-          <div class="cube__detail">
-            <article id="face-hajime" class="face-detail" data-face="hajime" data-state="active">
-              <p class="eyebrow">Data / Analysis</p>
-              <p class="face-detail__head">
-                <span class="face-detail__kanji" lang="ja">肇</span>
-                <span class="face-detail__romaji">Hajime</span>
-              </p>
-              <p class="face-detail__gloss">&ldquo;the beginning&rdquo;</p>
-              <p class="face-detail__line">Primary-source data and analysis of Japan&rsquo;s financial system.</p>
-              <p class="status" data-state="active"><span class="dot" data-state="active" aria-hidden="true"></span>First analysis on the way</p>
-              <p class="face-detail__cta"><a class="btn btn--solid btn--sm" href="#face-hajime">Open Hajime <span aria-hidden="true">&rarr;</span></a></p>
-            </article>
-
-            <article id="face-sugao" class="face-detail" data-face="sugao" data-state="light">
-              <p class="eyebrow">The human behind</p>
-              <p class="face-detail__head">
-                <span class="face-detail__kanji" lang="ja">素顔</span>
-                <span class="face-detail__romaji">Sugao</span>
-              </p>
-              <p class="face-detail__gloss">&ldquo;the true face&rdquo;</p>
-              <p class="face-detail__line">Who is doing this, and why &mdash; origins now, personal profiles later.</p>
-              <p class="status" data-state="light"><span class="dot" data-state="light" aria-hidden="true"></span>Intro live &middot; profiles deferred</p>
-              <p class="face-detail__cta"><a class="btn btn--solid btn--sm" href="#face-sugao">Open Sugao <span aria-hidden="true">&rarr;</span></a></p>
-            </article>
-
-            <article id="face-tosei" class="face-detail" data-face="tosei" data-state="soon">
-              <p class="eyebrow">Personal finance in Japan</p>
-              <p class="face-detail__head">
-                <span class="face-detail__kanji" lang="ja">渡世</span>
-                <span class="face-detail__romaji">Tosei</span>
-              </p>
-              <p class="face-detail__gloss">&ldquo;making one&rsquo;s way in the world&rdquo;</p>
-              <p class="face-detail__line">Navigating money as a resident of Japan.</p>
-              <p class="status" data-state="soon"><span class="dot" data-state="soon" aria-hidden="true"></span>Coming soon</p>
-            </article>
-
-            <article id="face-kamon" class="face-detail" data-face="kamon" data-state="soon">
-              <p class="eyebrow">Connect</p>
-              <p class="face-detail__head">
-                <span class="face-detail__kanji" lang="ja">家紋</span>
-                <span class="face-detail__romaji">Kamon</span>
-              </p>
-              <p class="face-detail__gloss">&ldquo;the family crest&rdquo;</p>
-              <p class="face-detail__line">People, institutions and networks across the system.</p>
-              <p class="status" data-state="soon"><span class="dot" data-state="soon" aria-hidden="true"></span>Coming soon</p>
-            </article>
-
-            <article id="face-torii" class="face-detail" data-face="torii" data-state="soon">
-              <p class="eyebrow">Learn / Resources</p>
-              <p class="face-detail__head">
-                <span class="face-detail__kanji" lang="ja">鳥居</span>
-                <span class="face-detail__romaji">Torii</span>
-              </p>
-              <p class="face-detail__gloss">&ldquo;the gateway&rdquo;</p>
-              <p class="face-detail__line">Foundations for reading the system for yourself.</p>
-              <p class="status" data-state="soon"><span class="dot" data-state="soon" aria-hidden="true"></span>Coming soon</p>
-            </article>
-
-            <article id="face-kizuna" class="face-detail" data-face="kizuna" data-state="soon">
-              <p class="eyebrow">Act / Business</p>
-              <p class="face-detail__head">
-                <span class="face-detail__kanji" lang="ja">絆</span>
-                <span class="face-detail__romaji">Kizuna</span>
-              </p>
-              <p class="face-detail__gloss">&ldquo;the bond&rdquo;</p>
-              <p class="face-detail__line">Where analysis meets institutions and enterprise.</p>
-              <p class="status" data-state="soon"><span class="dot" data-state="soon" aria-hidden="true"></span>Coming soon</p>
-            </article>
+          <!-- Entrada: ayuda, estado y botón. El espacio se reserva desde el
+               inicio (min-height en CSS) para que no salte el layout cuando
+               aparecen el estado y el botón al seleccionar una cara. -->
+          <div class="cube__enter">
+            <p class="cube__hint"><span class="todo">TODO: línea de ayuda — el gesto real es arrastrar para girar, clic para seleccionar, botón para entrar</span></p>
+            <p class="status" id="cube-status" data-state="active" hidden>
+              <span class="dot" data-state="active" aria-hidden="true"></span><span id="cube-status-text"></span>
+            </p>
+            <a class="btn btn--solid btn--sm cube__open" id="cube-open" href="/hajime/" hidden></a>
           </div>
 
         </div>
-      </div>
-    </section>
 
-    <!-- SISTEMA DE NOMBRES ------------------------------------------------
-         Registro de referencia que anota las seis caras del cubo: por qué cada
-         una se llama como se llama. Va acá, pegado al cubo, porque es donde el
-         lector se hace la pregunta. Es un bloque autónomo: para moverlo, se
-         mueve entero.
-         El texto de las razones lo escribe el autor: acá sólo va la estructura.
-         Se usa <dl> y no <table>: la relación es término -> explicación, y así
-         no hay que inventar encabezados de columna. -->
-    <section id="naming" class="naming" aria-labelledby="naming-title">
-      <div class="naming__wrap">
-        <!-- Si el eyebrow lleva japonés, hay que regenerar el subset de Zen Kaku
-             (ver el comentario de @font-face en styles.css). -->
-        <p class="eyebrow"><span class="todo">TODO: eyebrow</span></p>
-        <h2 id="naming-title" class="section-title">
-          <span class="todo">TODO: título del bloque</span>
-        </h2>
-        <p class="section-lead">
-          <span class="todo">TODO: una o dos frases que enmarquen el criterio general de los nombres.</span>
-        </p>
+          <p class="cube__more"><a href="/naming/"><span class="todo">TODO: rótulo del enlace al sistema de nombres</span> &rarr;</a></p>
 
-        <dl class="naming__list">
-          <div class="naming__row">
-            <dt class="naming__term">
-              <span class="naming__kanji" lang="ja">肇</span>
-              <span class="naming__reading">Hajime</span>
-            </dt>
-            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 肇.</span></dd>
-          </div>
-          <div class="naming__row">
-            <dt class="naming__term">
-              <span class="naming__kanji" lang="ja">素顔</span>
-              <span class="naming__reading">Sugao</span>
-            </dt>
-            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 素顔.</span></dd>
-          </div>
-          <div class="naming__row">
-            <dt class="naming__term">
-              <span class="naming__kanji" lang="ja">渡世</span>
-              <span class="naming__reading">Tosei</span>
-            </dt>
-            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 渡世.</span></dd>
-          </div>
-          <div class="naming__row">
-            <dt class="naming__term">
-              <span class="naming__kanji" lang="ja">家紋</span>
-              <span class="naming__reading">Kamon</span>
-            </dt>
-            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 家紋.</span></dd>
-          </div>
-          <div class="naming__row">
-            <dt class="naming__term">
-              <span class="naming__kanji" lang="ja">鳥居</span>
-              <span class="naming__reading">Torii</span>
-            </dt>
-            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 鳥居.</span></dd>
-          </div>
-          <div class="naming__row">
-            <dt class="naming__term">
-              <span class="naming__kanji" lang="ja">絆</span>
-              <span class="naming__reading">Kizuna</span>
-            </dt>
-            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 絆.</span></dd>
-          </div>
-        </dl>
       </div>
     </section>
 

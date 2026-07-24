@@ -242,7 +242,7 @@ function buildFacePlate(material) {
  * @param {{reduce:boolean, onSelect:(key:string)=>void}} opts
  */
 export function initCube(stage, opts) {
-  const { reduce = false, onSelect = () => {} } = opts || {};
+  const { reduce = false, onSelect = () => {}, onDragStart = () => {} } = opts || {};
 
   const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
 
@@ -439,6 +439,7 @@ export function initCube(stage, opts) {
     C.dragging = true; C.snapping = false; C.moved = false;
     C.parked = false;                 // arrastrar revive el cubo
     C.velRx = 0; C.velRy = 0;
+    onDragStart();                    // y deshace la selección: el botón se va
     stage.classList.add('is-dragging');
     try { el.setPointerCapture(e.pointerId); } catch (err) {}
   }

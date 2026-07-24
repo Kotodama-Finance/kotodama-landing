@@ -87,6 +87,36 @@ def revisar_subset():
     return faltan
 
 
+def revisar_chrome():
+    """El nav y el footer están duplicados en las ocho páginas: no hay build step
+    que los comparta. La duplicación es aceptable si está vigilada, así que en
+    vez de templetizar se verifica que no derive: los bloques tienen que ser
+    idénticos carácter por carácter en todas las páginas."""
+    def bloque(html, ini, fin):
+        try:
+            a = html.index(ini); b = html.index(fin, a) + len(fin)
+            return html[a:b]
+        except ValueError:
+            return None
+
+    ref = {}
+    problemas = []
+    for p in htmls():
+        html = p.read_text(encoding="utf-8")
+        nombre = p.relative_to(RAIZ).as_posix()
+        for etiqueta, ini, fin in (("nav", "<header id=\"nav\"", "</header>"),
+                                   ("footer", "<footer id=\"footer\"", "</footer>")):
+            b = bloque(html, ini, fin)
+            if b is None:
+                problemas.append(f"{nombre}: no tiene {etiqueta}")
+                continue
+            if etiqueta not in ref:
+                ref[etiqueta] = (nombre, b)
+            elif b != ref[etiqueta][1]:
+                problemas.append(f"{nombre}: el {etiqueta} difiere del de {ref[etiqueta][0]}")
+    return problemas
+
+
 def main():
     print("Placeholders de redacción")
     pendientes = revisar_todos()
@@ -102,7 +132,16 @@ def main():
             print(f"  {nombre}: faltan {''.join(glifos)}")
         print("  -> regenerar el subset (ver README, «Tipografías»)")
 
-    ok = pendientes == 0 and not faltan
+    print("\nNav y footer compartidos")
+    problemas = revisar_chrome()
+    paginas = len(list(htmls()))
+    if problemas:
+        for x in problemas:
+            print(f"  {x}")
+    else:
+        print(f"  idénticos en las {paginas} páginas")
+
+    ok = pendientes == 0 and not faltan and not problemas
     print("\nLISTO PARA PUBLICAR" if ok else "\nNO PUBLICAR TODAVÍA")
     return 0 if ok else 1
 

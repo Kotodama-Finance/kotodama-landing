@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TODO: título — Kotodama Finance</title>
+<meta name="description" content="TODO: descripción del sistema de nombres.">
+<link rel="canonical" href="https://kotodamafinance.com/naming/">
+<link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body class="page">
+
+<!-- Página de texto: no carga el shader del mar ni Three.js. -->
+  <!-- NAV — rutas absolutas para que el bloque sea idéntico en las ocho páginas.
+       tools/check-ready.py verifica que no derive. -->
+  <header id="nav" class="nav">
+    <a class="nav__brand" href="/">
+      <span class="nav__mark" lang="ja">言霊</span>
+      <span class="nav__word">Kotodama Finance</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="/#cube">The Cube</a>
+      <a href="/naming/"><span class="todo">TODO: rótulo</span></a>
+      <a href="/#about">About</a>
+      <a href="/#method">Method</a>
+      <a href="/#footer">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- SISTEMA DE NOMBRES ------------------------------------------------
+         Registro de referencia que anota las seis caras del cubo: por qué cada
+         una se llama como se llama. Va acá, pegado al cubo, porque es donde el
+         lector se hace la pregunta. Es un bloque autónomo: para moverlo, se
+         mueve entero.
+         El texto de las razones lo escribe el autor: acá sólo va la estructura.
+         Se usa <dl> y no <table>: la relación es término -> explicación, y así
+         no hay que inventar encabezados de columna. -->
+    <article class="naming" aria-labelledby="naming-title">
+      <div class="naming__wrap">
+        <!-- Si el eyebrow lleva japonés, hay que regenerar el subset de Zen Kaku
+             (ver el comentario de @font-face en styles.css). -->
+        <p class="eyebrow"><span class="todo">TODO: eyebrow</span></p>
+        <h2 id="naming-title" class="section-title">
+          <span class="todo">TODO: título del bloque</span>
+        </h2>
+        <p class="section-lead">
+          <span class="todo">TODO: una o dos frases que enmarquen el criterio general de los nombres.</span>
+        </p>
+
+        <dl class="naming__list">
+          <div class="naming__row">
+            <dt class="naming__term">
+              <span class="naming__kanji" lang="ja">肇</span>
+              <span class="naming__reading">Hajime</span>
+            </dt>
+            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 肇.</span></dd>
+          </div>
+          <div class="naming__row">
+            <dt class="naming__term">
+              <span class="naming__kanji" lang="ja">素顔</span>
+              <span class="naming__reading">Sugao</span>
+            </dt>
+            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 素顔.</span></dd>
+          </div>
+          <div class="naming__row">
+            <dt class="naming__term">
+              <span class="naming__kanji" lang="ja">渡世</span>
+              <span class="naming__reading">Tosei</span>
+            </dt>
+            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 渡世.</span></dd>
+          </div>
+          <div class="naming__row">
+            <dt class="naming__term">
+              <span class="naming__kanji" lang="ja">家紋</span>
+              <span class="naming__reading">Kamon</span>
+            </dt>
+            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 家紋.</span></dd>
+          </div>
+          <div class="naming__row">
+            <dt class="naming__term">
+              <span class="naming__kanji" lang="ja">鳥居</span>
+              <span class="naming__reading">Torii</span>
+            </dt>
+            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 鳥居.</span></dd>
+          </div>
+          <div class="naming__row">
+            <dt class="naming__term">
+              <span class="naming__kanji" lang="ja">絆</span>
+              <span class="naming__reading">Kizuna</span>
+            </dt>
+            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 絆.</span></dd>
+          </div>
+        </dl>
+      </div>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer" class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <p class="footer__mark">
+          <span lang="ja">言霊</span>
+          <span class="footer__word">Kotodama Finance</span>
+        </p>
+        <p class="footer__tag">Where Japan&rsquo;s economic currents become visible. Open access.</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <p class="footer__label">Reach us</p>
+          <a href="mailto:contact@kotodamafinance.com">contact@kotodamafinance.com</a>
+          <a href="https://kotodamafinance.com/" target="_blank" rel="noopener">kotodamafinance.com</a>
+        </div>
+        <div class="footer__col">
+          <p class="footer__label">Follow</p>
+          <a href="https://x.com/KotodamaFinance" target="_blank" rel="noopener">X / @KotodamaFinance</a>
+          <a href="https://www.linkedin.com/company/kotodamafinance/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+        <div class="footer__col">
+          <p class="footer__label">Platform</p>
+          <a href="#cube">The Cube</a>
+          <a href="#method">Method</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>&copy; 2026 Kotodama Finance &middot; Open access</span>
+      <span>English &middot; <span class="footer__soon"><span lang="ja">日本語</span> &mdash; coming</span></span>
+    </div>
+  </footer>
+
+</body>
+</html>
