@@ -18,7 +18,7 @@ es un estado válido:
 check-ready.py no puede hacer esto: son estilos computados y eventos, no texto
 en un archivo. Hace falta un navegador de verdad.
 """
-import json, os, shutil, subprocess, sys, time, urllib.request
+import base64, io, json, os, shutil, subprocess, sys, time, urllib.request
 
 try:
     import websocket
@@ -154,6 +154,39 @@ def main():
         revisar("Kizuna" in e["botonTexto"], "el botón se actualiza a la nueva cara", e["botonTexto"])
         revisar(e["botonHref"] == "/kizuna/", "y su enlace también", str(e["botonHref"]))
 
+        # --- Repintado con el cubo detenido ---------------------------------
+        # El cubo usa render bajo demanda: si nada cambia el ángulo, no
+        # redibuja. Pero renderer.setSize() limpia el buffer, así que un resize
+        # con el cubo detenido (parked) dejaría el canvas vacío si resize() no
+        # forzara un cuadro. Se verifica sobre la captura COMPOSITADA: leer un
+        # canvas WebGL desde JS fuera de su frame devuelve vacío y daría un
+        # falso negativo.
+        def cubo_visible(etiqueta):
+            from PIL import Image
+            r = js("""(() => {const c = document.querySelector('#cube-stage canvas');
+                      const b = c.getBoundingClientRect();
+                      return {x:Math.round(b.left),y:Math.round(b.top),
+                              w:Math.round(b.width),h:Math.round(b.height)};})()""")
+            shot = cmd("Page.captureScreenshot", format="png", fromSurface=True)
+            im = Image.open(io.BytesIO(base64.b64decode(shot["data"]))).convert("RGB")
+            caja = im.crop((r["x"], r["y"], r["x"] + r["w"], r["y"] + r["h"]))
+            px = list(caja.getdata())
+            fondo = 0.2126 * 5 + 0.7152 * 17 + 0.0722 * 29   # --c-surface-cube
+            claros = sum(1 for R, G, B in px if 0.2126 * R + 0.7152 * G + 0.0722 * B > fondo + 8)
+            pct = 100.0 * claros / max(len(px), 1)
+            revisar(pct > 3, etiqueta, f"sólo {pct:.1f}% de píxeles de cubo")
+
+        print("\nRepintado con el cubo detenido (parked)")
+        js("document.querySelectorAll('.face-card')[0].click(); true")
+        time.sleep(1.6)      # que termine el snap y quede parked
+        cmd("Emulation.setDeviceMetricsOverride", width=1100, height=900,
+            deviceScaleFactor=1, mobile=False)
+        time.sleep(1.3)
+        cubo_visible("se repinta después de un resize")
+        cmd("Emulation.setDeviceMetricsOverride", width=1440, height=1000,
+            deviceScaleFactor=1, mobile=False)
+        time.sleep(1.3)
+
         print("\nModo grilla")
         js("document.querySelector('.cube__toggle button[data-view=\"grid\"]').click(); true")
         time.sleep(0.5)
@@ -167,6 +200,8 @@ def main():
         e = js(estado)
         revisar(e["gridRecortada"], "la grilla vuelve a recortarse")
         revisar(e["stageDisplay"] != "none", "el escenario vuelve")
+        time.sleep(0.8)
+        cubo_visible("y se repinta al volver de modo grilla")
 
         ws.close()
     finally:

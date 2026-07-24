@@ -58,10 +58,13 @@ export const LIGHT_DEFAULTS = {
   // TOTAL direccional (key+rim+back): con tres direccionales, bajar sólo la key
   // deja el reparto casi igual. Acá el ambiente domina y el resultado es un
   // degradé suave, sin el highlight duro que leía metálico.
-  hemi: 2.2,                        // ambiente: la fuente principal
-  key: 1.8,   keyPos: [-3, 5, 4],   // clave suave, arriba-izquierda (como las fotos)
-  rim: 0.4,   rimPos: [4.5, 0.5, 2.5],   // relleno frontal derecho, tinte oro
-  back: 0.8,  backPos: [2.5, 1.5, -4],   // relleno trasero (no es un rim: ver abajo)
+  // Subidas al aclarar el fondo de sección (#020509 -> #05111d): la separación
+  // del cubo contra su fondo se sostiene con LUZ, no oscureciendo la página.
+  // El reparto entre ellas no cambia, así que el carácter difuso se conserva.
+  hemi: 3.5,                        // ambiente: la fuente principal
+  key: 2.9,   keyPos: [-3, 5, 4],   // clave suave, arriba-izquierda (como las fotos)
+  rim: 0.65,  rimPos: [4.5, 0.5, 2.5],   // relleno frontal derecho, tinte oro
+  back: 1.3,  backPos: [2.5, 1.5, -4],   // relleno trasero (no es un rim: ver abajo)
 };
 
 /* Material del cubie. roughness alto = degradé suave en el bisel; roughness

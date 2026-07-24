@@ -77,14 +77,13 @@
 :root {
   /* Superficies (cada sección tiene la suya en la referencia) */
   --c-navy: #040d18;            /* body, footer, base */
-  /* Fondo de la sección del cubo: casi negro. La separación del cubo se busca
-     oscureciendo el fondo, no aclarando el cubie (que se queda en el navy de
-     marca). Mismo hue navy (~214°). */
-  --c-surface-cube: #020509;
+  /* Fondos de sección. Forman una rampa suave: el salto duro de un casi negro
+     (#020509) contra el about hacía leer la página como tres páginas pegadas.
+     La separación del cubo contra su fondo la da la LUZ, que está
+     parametrizada, no un fondo casi negro. */
+  --c-surface-cube: #05111d;
   --c-surface-about: #07172a;
   --c-surface-method: #061320;
-  --c-cubie-grid: #0b1a2e;      /* fondo de la grilla de caras */
-  --c-plate: #0a1728;
   --c-sea-hi: #0a1c30;          /* realce superior del degradado del mar */
 
   /* Cuerpo del cubie = el navy de marca, sin deriva.
@@ -114,15 +113,13 @@
   --rgb-gold: 200 168 90;
   --rgb-navy: 4 13 24;
   --rgb-mist: 138 171 204;
-  --rgb-white: 255 255 255;
-  --rgb-surface-cube: 2 5 9;    /* = --c-surface-cube, para alfa */
+  --rgb-surface-cube: 5 17 29;  /* = --c-surface-cube, para alfa */
   --rgb-card: 9 20 34;          /* fondo de las face-card */
 
   /* Líneas / overlays derivados */
   --line-gold: rgb(var(--rgb-gold) / 0.35);
   --line-gold-soft: rgb(var(--rgb-gold) / 0.18);
   --line-gold-faint: rgb(var(--rgb-gold) / 0.12);
-  --line-mist: rgb(var(--rgb-mist) / 0.2);
   --nav-scrim: rgb(var(--rgb-navy) / 0.82);
 
   /* Tipografías */
@@ -570,7 +567,10 @@ button:focus-visible {
 .about {
   position: relative;
   z-index: 3;
-  background: var(--c-surface-about);
+  /* Abre fundiendo desde el color de la sección anterior: la costura deja de
+     ser un escalón. Mismo recurso que ya usaba la sección del cubo. */
+  background: linear-gradient(to bottom,
+    var(--c-surface-cube) 0%, var(--c-surface-about) 16%, var(--c-surface-about) 100%);
   padding: clamp(90px, 13vw, 170px) clamp(20px, 5vw, 64px);
   overflow: hidden;
 }
@@ -616,7 +616,8 @@ button:focus-visible {
 .method {
   position: relative;
   z-index: 3;
-  background: var(--c-surface-method);
+  background: linear-gradient(to bottom,
+    var(--c-surface-about) 0%, var(--c-surface-method) 16%, var(--c-surface-method) 100%);
   border-top: 1px solid var(--line-gold-faint);
   padding: clamp(90px, 12vw, 160px) clamp(20px, 5vw, 64px);
 }
@@ -862,6 +863,7 @@ button:focus-visible {
   position: relative;
   z-index: 3;
   background: var(--c-surface-method);
+  /* misma familia que method: la costura entre ambas no necesita fundido */
   border-top: 1px solid var(--line-gold-faint);
   padding: clamp(80px, 11vw, 140px) clamp(20px, 5vw, 64px);
 }
@@ -921,7 +923,8 @@ button:focus-visible {
 .footer {
   position: relative;
   z-index: 3;
-  background: var(--c-navy);
+  background: linear-gradient(to bottom,
+    var(--c-surface-method) 0%, var(--c-navy) 18%, var(--c-navy) 100%);
   border-top: 1px solid rgb(var(--rgb-gold) / 0.14);
   padding: clamp(70px, 9vw, 110px) clamp(20px, 5vw, 64px) 48px;
 }
