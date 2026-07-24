@@ -467,6 +467,9 @@ button:focus-visible {
 
 .cube__stage {
   height: clamp(420px, 52vw, 620px);
+  /* Nunca más alto que lo que queda bajo la nav fija: a 1280x720 el cubo
+     entero tiene que entrar en pantalla sin que la nav le tape la punta. */
+  max-height: calc(100vh - var(--nav-h) - 48px);
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -532,6 +535,11 @@ button:focus-visible {
   color: var(--c-text);
 }
 .face-card__meta { display: flex; flex-direction: column; gap: 3px; }
+/* Cormorant, a diferencia del romaji DEL CUBO, que va en Inter.
+   No es un descuido: son medios distintos. Acá es texto del DOM a 1.05rem,
+   plano y de frente. En el cubo es una textura horneada a ~12px de altura de
+   mayúscula, con relieve grabado y escorzo, y ahí Cormorant se deshace (medido).
+   Si algún día se unifica, que sea por decisión, no por "corregir" esto. */
 .face-card__romaji { font-family: var(--font-display); font-size: 1.05rem; color: var(--c-gold); }
 .face-card__domain {
   font-size: 0.66rem;
@@ -689,6 +697,28 @@ button:focus-visible {
   text-wrap: pretty;
 }
 .face-page__body { display: flex; flex-direction: column; gap: 22px; font-size: 1.02rem; line-height: 1.8; color: var(--c-text-soft); }
+.face-page__ref {
+  margin-top: 28px;
+  padding: 16px 18px;
+  border-left: 2px solid var(--line-gold);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--c-text-dim);
+}
+.face-page__deferred {
+  margin-top: clamp(44px, 6vw, 64px);
+  padding-top: clamp(28px, 4vw, 40px);
+  border-top: 1px solid var(--line-gold-faint);
+}
+.face-page__deferred .status { margin: 12px 0 18px; }
+.face-page__deferred p { font-size: 1.02rem; line-height: 1.8; color: var(--c-text-soft); }
+.face-page__subtitle {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: var(--c-text);
+}
+
 .face-page__back { margin-top: clamp(48px, 6vw, 72px); font-size: 0.9rem; }
 
 /* La subpágina del sistema de nombres reusa .naming, que ya no vive en la portada */

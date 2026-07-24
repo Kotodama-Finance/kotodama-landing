@@ -269,8 +269,27 @@ export function initCube(stage, opts) {
   /* ---- Escena, cámara, renderer ---- */
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(24, 1, 0.1, 100);
-  camera.position.set(0, 0, 11);
   camera.lookAt(0, 0, 0);
+
+  /* Encuadre calculado, no una distancia fija.
+     La esfera envolvente del cubo tiene radio sqrt(3)*(CELL + CUBIE/2) ~ 2.58:
+     la diagonal del cuerpo mide 1.73 veces el lado, así que al girar el cubo
+     "crece" mucho más allá de su cara. Con la cámara clavada a z=11 y FOV
+     vertical de 24°, la media altura visible es 11*tan(12°) ~ 2.34 < 2.58, y el
+     cubo se recortaba en toda rotación con un vértice cerca de la vertical.
+     Usar la esfera envolvente garantiza que no toque un borde en NINGÚN ángulo,
+     y recalcularlo en cada resize lo hace inmune a cambios de tamaño o aspecto. */
+  const CUBE_RADIUS = Math.sqrt(3) * (CELL + CUBIE / 2);
+  const FIT_MARGIN = 1.06;
+
+  function frameCamera() {
+    const halfV = (camera.fov / 2) * DEG;
+    const halfH = Math.atan(Math.tan(halfV) * camera.aspect);
+    // el lado más angosto manda: en un canvas apaisado, la vertical
+    const half = Math.min(halfV, halfH);
+    camera.position.z = (CUBE_RADIUS * FIT_MARGIN) / Math.sin(half);
+    camera.updateProjectionMatrix();
+  }
 
   const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: !coarse });
   renderer.setClearColor(0x000000, 0);   // alfa 0: transparente, no es un color
@@ -480,10 +499,10 @@ export function initCube(stage, opts) {
 
   function resize() {
     const w = stage.clientWidth || 1;
-    const h = Math.max((stage.clientHeight || 1) - 44, 1);
+    const h = Math.max(stage.clientHeight || 1, 1);
     renderer.setSize(w, h, true);
     camera.aspect = w / h;
-    camera.updateProjectionMatrix();
+    frameCamera();
     // setSize reasigna y limpia el drawing buffer: sin esto, si el ángulo no
     // cambia nadie redibuja y el canvas queda vacío hasta la próxima
     // interacción. Es lo que hacía que el cubo no apareciera hasta el click.
