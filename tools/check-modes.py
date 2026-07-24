@@ -188,11 +188,21 @@ def main():
         time.sleep(1.3)
 
         print("\nModo grilla")
+        # El toggle no puede moverse al usarlo: si estuviera DEBAJO del
+        # escenario, al pasar a grilla el escenario desaparece, la grilla mide
+        # menos y el control saltaría hacia arriba justo cuando lo estás tocando.
+        # Se mide pegado al cambio de modo: cualquier resize en el medio
+        # reflowea el encabezado y la comparación deja de ser válida.
+        pos_toggle = js("Math.round(document.querySelector('.cube__toggle')"
+                        ".getBoundingClientRect().top + window.scrollY)")
         js("document.querySelector('.cube__toggle button[data-view=\"grid\"]').click(); true")
         time.sleep(0.5)
         e = js(estado)
         revisar(e["stageDisplay"] == "none", "el escenario computa display:none", e["stageDisplay"])
         revisar(not e["gridRecortada"], "la grilla se ve completa")
+        pos2 = js("Math.round(document.querySelector('.cube__toggle').getBoundingClientRect().top + window.scrollY)")
+        revisar(abs(pos2 - pos_toggle) <= 2, "el toggle NO se mueve al cambiar de modo",
+                f"saltó {pos2 - pos_toggle}px")
 
         print("\nVuelta a modo cubo")
         js("document.querySelector('.cube__toggle button[data-view=\"3d\"]').click(); true")

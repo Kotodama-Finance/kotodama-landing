@@ -452,6 +452,7 @@ button:focus-visible {
 
 .cube__toggle {
   display: inline-flex;
+  margin-bottom: 22px;   /* va arriba del escenario, dentro de .cube__layout */
   border: 1px solid rgb(var(--rgb-gold) / 0.3);
   border-radius: var(--radius);
   overflow: hidden;
@@ -757,20 +758,49 @@ button:focus-visible {
 }
 /* Al tabular hasta una cara, la grilla se revela como panel SOBRE el escenario
    del cubo: el foco queda visible sin provocar salto de layout. */
+/* Al recibir foco el panel se corre AL COSTADO del escenario, no encima.
+   Cubrir el cubo escondía justo lo que el usuario de teclado necesita ver: que
+   el cubo hace snap a la cara enfocada. Y un panel translúcido tampoco servía —
+   tarjetas con kanji blanco y romaji dorado sobre un cubo con kanji dorado en
+   movimiento quedan ilegibles, que es lo contrario de lo buscado. */
 .face-grid.is-sr:focus-within {
-  inset: 0;
-  width: auto; height: auto;
+  top: 0;
+  left: calc(100% + 12px);
+  width: 200px;
+  height: auto;
   margin: 0;
-  padding: 12px;
+  padding: 10px;
   overflow: visible;
   clip: auto;
   clip-path: none;
   white-space: normal;
   z-index: 5;
-  background: rgb(var(--rgb-navy) / 0.92);
+  grid-template-columns: 1fr;
+  gap: 6px;
+  background: rgb(var(--rgb-navy) / 0.96);
   border: 1px solid var(--line-gold);
   border-radius: var(--radius);
-  align-content: center;
+}
+/* Tarjetas compactas: en una sola columna angosta no entran como en la grilla */
+.face-grid.is-sr:focus-within .face-card {
+  min-height: 0;
+  gap: 4px;
+  padding: 8px 10px;
+}
+.face-grid.is-sr:focus-within .face-card__kanji { font-size: 1.15rem; }
+.face-grid.is-sr:focus-within .face-card__domain { display: none; }
+
+/* Sin lugar al costado: el panel cae DEBAJO del escenario. Empuja el contenido,
+   pero sigue siendo mejor que tapar el cubo. */
+@media (max-width: 1180px) {
+  .face-grid.is-sr:focus-within {
+    position: static;
+    left: auto;
+    width: auto;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 16px;
+  }
+  .face-grid.is-sr:focus-within .face-card__domain { display: block; }
 }
 
 /* Enlace discreto a /naming/ al pie de la sección del cubo */

@@ -61,14 +61,18 @@
             <h2 class="section-title">Six faces, one level. The backbone of the whole platform.</h2>
             <p class="section-lead">Each face is a way into the system. None sits above another. One is live today; the rest carry an honest status &mdash; the map is real even where the ground is not yet built.</p>
           </div>
-          <!-- Toggle: mejora progresiva; oculto sin JS -->
+        </div>
+
+        <div class="cube__layout">
+
+          <!-- Toggle ARRIBA del escenario. Debajo saltaría: al pasar a modo
+               grilla el escenario computa display:none y la grilla mide menos,
+               así que el control se movería justo cuando lo estás tocando.
+               Acá lo que tiene encima no cambia entre modos. -->
           <div class="cube__toggle" role="tablist" aria-label="Cube view" hidden>
             <button type="button" role="tab" id="tab-3d" aria-selected="true" data-view="3d">3D cube</button>
             <button type="button" role="tab" id="tab-grid" aria-selected="false" data-view="grid">Grid of six</button>
           </div>
-        </div>
-
-        <div class="cube__layout">
 
           <!-- Navegación de caras -->
           <div class="cube__nav">

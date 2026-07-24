@@ -102,12 +102,49 @@ def main():
                 f"excursión {max(rxs)-min(rxs):.1f}°")
         rys = [d["ry"] for d in m]
         revisar(abs(rys[-1] - rys[0]) > 5, "ry sigue girando libre",
-                f"{abs(rys[-1]-rys[0]):.1f}° en 25s")
+                f"{abs(rys[-1]-rys[0]):.1f}°")
+
+        # No se puede exigir el rango completo por reloj: en headless el loop
+        # corre a ~7 ticks/s y no a 30, así que una ventana de minutos apenas
+        # barre media oscilación y el mínimo teórico nunca llega a verse.
+        # Se deduce cuántos ticks pasaron (ry avanza AUTO_RY por tick) y se
+        # compara contra la envolvente del tramo de fase REALMENTE barrido.
+        AUTO_RY = 0.28
+        import math
+        ticks = abs(rys[-1] - rys[0]) / AUTO_RY
+        fase = ticks * (PEND_PEAK / PEND_AMP)
+        muestras = [PEND_CENTER + PEND_AMP * math.sin(fase * i / 400) for i in range(401)]
+        esp_min, esp_max = min(muestras), max(muestras)
+        print(f"     barrido {fase/(2*math.pi):.2f} períodos ({ticks:.0f} ticks)")
+        print(f"     esperado [{esp_min:.1f}, {esp_max:.1f}]  medido [{min(rxs):.1f}, {max(rxs):.1f}]")
+        # Tolerancia amplia por diseño: velRx persigue su objetivo con un lerp,
+        # así que rx va con retardo y sobrepasa un poco cada extremo. Eso es
+        # deseable (un péndulo real no frena en seco); lo que se verifica es que
+        # NO se vaya lejos ni se quede corto.
+        revisar(abs(min(rxs) - esp_min) < 9 and abs(max(rxs) - esp_max) < 9,
+                "rx sigue la envolvente del péndulo en el tramo barrido",
+                f"desvío {abs(min(rxs)-esp_min):.1f} / {abs(max(rxs)-esp_max):.1f}")
+
+        print("\n1b. El extremo inferior no se pasa de largo")
+        js(f"window.__cube.setRotation({PEND_CENTER - PEND_AMP}, 0); true")
+        time.sleep(0.3)
+        bajo = [d["rx"] for d in muestrear(12)]
+        revisar(min(bajo) > PEND_CENTER - PEND_AMP - 6,
+                "no se hunde por debajo del límite inferior", f"mínimo {min(bajo):.1f}°")
 
         print("\n2. Vuelta desde una rotación extrema (rx=180)")
         js("window.__cube.setRotation(180, 0); true")
         time.sleep(0.3)
-        m2 = muestrear(22)
+        # Por ticks y no por reloj: en headless el loop corre a un ritmo
+        # variable (~7-15 ticks/s), y una ventana fija daba falsos negativos.
+        m2 = []
+        limite = time.time() + 90
+        while time.time() < limite:
+            d = js("window.__cube.getRotation()")
+            m2.append(d)
+            if d["rx"] <= PEND_CENTER + PEND_AMP:
+                break
+            time.sleep(0.1)
         rx2 = [d["rx"] for d in m2]
         vel2 = [d["velRx"] for d in m2]
         revisar(rx2[-1] < rx2[0], "rx vuelve hacia el rango", f"{rx2[0]:.1f}° -> {rx2[-1]:.1f}°")

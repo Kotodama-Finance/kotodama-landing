@@ -92,10 +92,11 @@ const PEND_CENTER = 18;    // grados: la vista 3/4 inicial
 const PEND_AMP = 20;       // grados de excursión a cada lado
 const PEND_PEAK = 0.09;    // velocidad máxima, la misma que tenía la deriva libre
 const PEND_RATE = PEND_PEAK / PEND_AMP;   // radianes de fase por tick
-/* Retorno al rango desde una rotación extrema: más rápido cuanto más lejos,
-   pero igual al pico del péndulo en el borde (continuidad) y con techo. */
-const RETURN_GAIN = 0.006;   // por grado de exceso
-const RETURN_MAX = 0.6;      // grados por tick (~18°/s)
+/* Cuánto tira rx hacia la posición ideal del péndulo. Cerca del ideal es casi
+   nulo (queda un péndulo puro); lejos —el usuario arrastró a rx=180— satura en
+   el techo y trae el cubo de vuelta en ~8 s. */
+const TRACK_GAIN = 0.004;    // por grado de desvío
+const RETURN_MAX = 0.6;      // techo de velocidad, grados por tick (~18°/s)
 /* Lerp de VELOCIDAD: converge en ~1s a 30fps -> sin saltos de velocidad. */
 const VEL_LERP = 0.095;
 
@@ -580,23 +581,25 @@ export function initCube(stage, opts) {
            una rotación extrema. */
         let tRx = 0;
         if (!idle) {
-          const off = C.rx - PEND_CENTER;
-          if (Math.abs(off) > PEND_AMP) {
-            /* Fuera de rango (p. ej. el usuario arrastró hasta rx=180 y soltó).
-               La velocidad de retorno crece con la distancia, pero vale
-               EXACTAMENTE el pico del péndulo justo en el borde: así el empalme
-               al reentrar es continuo por construcción, no por casualidad.
-               A la velocidad del péndulo sola, volver desde 180° tomaba ~52 s
-               y se sentía colgado. */
-            const exceso = Math.abs(off) - PEND_AMP;
-            const vel = Math.min(PEND_PEAK + exceso * RETURN_GAIN, RETURN_MAX);
-            tRx = -Math.sign(off) * vel;
-            // y se entra en la fase que corresponde a ese sentido de marcha
-            C.pendPhase = off > 0 ? Math.PI : 0;
-          } else {
-            C.pendPhase += PEND_RATE;
-            tRx = PEND_PEAK * Math.cos(C.pendPhase);
-          }
+          /* La fase avanza SIEMPRE y describe un péndulo ideal. La velocidad
+             objetivo es la de ese péndulo (feed) más una corrección que arrastra
+             rx hacia la posición ideal. Sin ramas ni clamps.
+
+             La versión anterior recortaba rx en el límite y reseteaba la fase a
+             π, que es velocidad máxima negativa: el MEDIO de una bajada, no un
+             extremo, donde la velocidad es cero. El resultado era un péndulo que
+             oscilaba entre el límite y el centro — media excursión (medido: 25°
+             de 40). Siguiendo la posición ideal el problema no existe, porque no
+             hay ningún punto donde se reinicie el movimiento.
+
+             La corrección también resuelve el retorno desde una rotación
+             extrema: a rx=180 vale -162*ganancia, o sea el techo, y se apaga
+             sola a medida que rx se acerca. */
+          C.pendPhase += PEND_RATE;
+          const ideal = PEND_CENTER + PEND_AMP * Math.sin(C.pendPhase);
+          const feed = PEND_PEAK * Math.cos(C.pendPhase);
+          const corr = (ideal - C.rx) * TRACK_GAIN;
+          tRx = Math.max(-RETURN_MAX, Math.min(RETURN_MAX, feed + corr));
         }
         C.velRx += (tRx - C.velRx) * VEL_LERP;
         C.velRy += (tRy - C.velRy) * VEL_LERP;

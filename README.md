@@ -41,6 +41,32 @@ estático y no lo necesita. Además evita un problema silencioso — Jekyll igno
 todo path que empiece con `_`, así que sin ese archivo un directorio así
 simplemente no se publicaría.
 
+## Flujo de trabajo (obligatorio)
+
+**Antes de cada commit** corré las guardas. Si alguna falla, no commitees:
+arreglá, o revertí al último commit verde. El objetivo es que todo commit del
+historial sea un punto de restauración seguro por construcción, no por suerte.
+
+| Guarda | Cuándo | Costo |
+|---|---|---|
+| `tools/check-ready.py` | siempre | instantánea, sin navegador |
+| `tools/check-modes.py` | siempre | ~40 s |
+| `tools/check-pendulum.py` | antes de push, o al tocar la física del cubo | ~2–4 min |
+
+`check-pendulum.py` es la única demasiado lenta para cada commit: mide dos
+períodos de una oscilación real en un navegador, y encima el loop corre a un
+ritmo variable en headless (~7–15 ticks/s), así que no se puede acortar sin
+perder lo que verifica. Las otras dos sí van siempre.
+
+Las dos que usan navegador necesitan el sitio servido en `:8000`.
+
+**Si un cambio rompe algo y no se puede arreglar en el momento**, revertir al
+último commit verde en vez de dejar el árbol roto, y decir qué se revirtió y
+por qué.
+
+**Tags**: sólo en hitos, no cada tanto. El próximo natural es cuando el
+andamiaje esté completo, antes del pase de redacción.
+
 ## Antes de publicar
 
 Antes de cualquier merge a `main`, correr:
