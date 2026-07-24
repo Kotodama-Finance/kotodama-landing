@@ -161,11 +161,21 @@ antes del pase de redacción.
 
 ## Cabos abiertos (lista viva)
 
-- **Luz en el extremo superior del péndulo.** Prioritario. A rx=38° la silueta
-  fundida salta a **38.3%** y el décimo más oscuro del cubo (9.7) cae por debajo
-  del fondo (15.3). En el centro y el extremo inferior está bien (5.1% y 3.3%).
-  Causa probable: la cara frontal se aleja de la clave y nada la compensa.
-  Candidatos: subir el ambiente, o mover la clave para cubrir el arco completo.
+- **Luz a lo largo del arco del péndulo.** Prioritario. Barrido completo medido
+  y guardado en **`docs/mediciones/luz-arco.md`** (+ los JSON crudos). No
+  remedir: leer eso primero. Resumen:
+  - El peor punto es **rx≈26 con 54.5%** de silueta fundida, no rx=38.
+  - **El centro del péndulo no aguanta**: 33.3% a rx=18. Sólo `rx ∈ [-4, 4]`
+    queda bajo 8%.
+  - El `ry` que peor cae **cambia con `rx`**, así que ninguna pose fija lo
+    encuentra. Medir siempre barriendo los dos ejes.
+  - **Subir el ambiente NO sirve** (medido: de hemi 3.5 a 8.0 el peor caso pasa
+    de 51.8% a 53.6%). Mover la clave quedó sin medir y es lo más prometedor.
+    Achicar la amplitud sola tampoco alcanza: obligaría a centro ≈ 0 y amplitud
+    ≈ 0, matando el péndulo y la vista 3/4.
+  - **Salvedad pendiente**: la métrica excluye el dorado y puede estar inflando
+    el número en poses donde el kanji domina el encuadre. Confirmar con una
+    captura a rx=26 / ry=0 **antes** de tocar la luz.
 - **Móvil sin medir en dispositivo real.** Incluye: degradación del cubo, y que
   con escenario más alto que ancho manda el FOV horizontal, la cámara se aleja y
   queda aire vertical desperdiciado. El shader ya va a media resolución y 25 fps.
