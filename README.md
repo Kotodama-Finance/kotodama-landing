@@ -203,4 +203,16 @@ igual, y sin el archivo cada carga deja un 404 en la consola.
 - **`prefers-reduced-motion`** se respeta: el mar dibuja un único cuadro fijo y
   el cubo queda estático pero arrastrable. El degradado atmosférico vive en el
   `background` del `body`, siempre presente, para que nunca quede un hueco si el
-  contexto WebGL no arranca.
+  contexto WebGL no arranca. También queda sin efecto el folio de entrada (que
+  aparece de una) y la transición entre páginas (que ni se declara).
+
+- **Entrar a una cara atraviesa una transición entre documentos** (el
+  «maelstrom»), hecha sólo con `@view-transition` — sin SPA ni router. La página
+  gira, escala y se desenfoca; la nueva entra girada y se acomoda. Es progresiva:
+  un navegador sin soporte navega normal. En pantallas táctiles es más liviana
+  (sin desenfoque). Bajo `prefers-reduced-motion` no se declara.
+
+- **El bloque de estado + botón bajo el cubo es un folio que se despliega.**
+  Arranca con altura cero y se abre animado al seleccionar una cara; se cierra al
+  arrastrar. No empuja nada visible porque está debajo del cubo. Verlo en detalle
+  en `CLAUDE.md`.

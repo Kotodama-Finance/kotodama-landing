@@ -95,43 +95,73 @@ def main():
         js("document.getElementById('cube').scrollIntoView({behavior:'auto'}); true")
         time.sleep(3)
 
+        # El estado y el botón viven en un FOLIO que se despliega al seleccionar
+        # (grid-template-rows 0fr->1fr) y se repliega al arrastrar. Antes se
+        # mostraban/ocultaban con el atributo `hidden`; ahora lo observable es:
+        #   desplegado = clase is-open + sin `inert` + altura real
+        #   plegado    = sin is-open + `inert` + altura ~0
+        # No se mide por `hidden` porque display:none no anima, que es justo lo
+        # que este folio evita. Ver .cube__folio en el CSS y la entrada de
+        # CLAUDE.md que revierte «espacio reservado».
         estado = """(() => {
           const g = document.querySelector('.face-grid');
           const st = document.getElementById('cube-stage');
+          const f = document.getElementById('cube-folio');
           const cs = getComputedStyle(g);
+          const fcs = getComputedStyle(f);
           return {
             hidratado: !!document.querySelector('#cube-stage canvas'),
             gridRecortada: cs.clipPath !== 'none' || g.getBoundingClientRect().width <= 2,
             gridEnDom: document.contains(g),
             gridDisplay: cs.display,
             stageDisplay: getComputedStyle(st).display,
+            stageTop: Math.round(st.getBoundingClientRect().top + window.scrollY),
             activas: document.querySelectorAll('.face-card.is-active').length,
-            statusVisible: !document.getElementById('cube-status').hidden,
-            botonVisible: !document.getElementById('cube-open').hidden,
+            folioDesplegado: f.classList.contains('is-open') && !f.hasAttribute('inert'),
+            folioAlto: Math.round(f.getBoundingClientRect().height),
+            folioTransicion: fcs.transitionProperty,
+            folioDuracion: fcs.transitionDuration,
             botonTexto: document.getElementById('cube-open').textContent.trim(),
             botonHref: document.getElementById('cube-open').getAttribute('href'),
           };})()"""
 
+        # tras abrir/cerrar el folio hay que esperar la transición (0.42s) para
+        # que la altura llegue a su valor final; is-open/inert son instantáneos.
+        ESPERA_FOLIO = 0.7
+
         print("Modo cubo, recién cargado")
         e = js(estado)
+        alto_plegado = e["folioAlto"]
+        top_stage = e["stageTop"]
         revisar(e["hidratado"], "el cubo hidrató")
         revisar(e["gridRecortada"], "la grilla está recortada (no en flujo)", f"clip/ancho: {e['gridDisplay']}")
         revisar(e["gridEnDom"], "la grilla sigue en el DOM (capa semántica)")
         revisar(e["gridDisplay"] != "none", "la grilla NO usa display:none")
         revisar(e["stageDisplay"] != "none", "el escenario está visible")
         revisar(e["activas"] == 0, "ninguna cara resaltada", f"{e['activas']} activas")
-        revisar(not e["statusVisible"], "sin línea de estado")
-        revisar(not e["botonVisible"], "sin botón")
+        revisar(not e["folioDesplegado"], "el folio arranca plegado")
+        revisar(e["folioAlto"] <= 6, "el folio plegado no ocupa alto", f"{e['folioAlto']}px")
+        # El despliegue tiene que ser ANIMADO: instantáneo se lee como página
+        # rota. Se verifica que la transición esté declarada sobre la propiedad
+        # correcta y con duración real; que interpole visualmente se comprobó a
+        # ojo (headless corre el reloj de animación a un ritmo poco fiable).
+        revisar("grid-template-rows" in e["folioTransicion"] and e["folioDuracion"] not in ("0s", "0.01ms"),
+                "el despliegue del folio está animado",
+                f"{e['folioTransicion']} / {e['folioDuracion']}")
 
         print("\nClic en una cara (渡世 Tosei)")
         js("document.querySelectorAll('.face-card')[2].click(); true")
-        time.sleep(0.4)
+        time.sleep(ESPERA_FOLIO)
         e = js(estado)
         revisar(e["activas"] == 1, "exactamente una cara resaltada", f"{e['activas']}")
-        revisar(e["statusVisible"], "aparece la línea de estado")
-        revisar(e["botonVisible"], "aparece el botón")
+        revisar(e["folioDesplegado"], "el folio se despliega")
+        revisar(e["folioAlto"] > alto_plegado + 20, "el folio ganó alto real", f"{e['folioAlto']}px")
         revisar("Tosei" in e["botonTexto"], "el botón nombra la cara", e["botonTexto"])
         revisar(e["botonHref"] == "/tosei/", "el botón apunta a su subpágina", str(e["botonHref"]))
+        # Lo que hace seguro desplegar en vez de reservar: el folio está DEBAJO
+        # del cubo, así que abrirlo no mueve el escenario ni la cara clickeada.
+        revisar(e["stageTop"] == top_stage, "el cubo NO se mueve al desplegarse el folio",
+                f"saltó {e['stageTop'] - top_stage}px")
 
         print("\nArrastrar el cubo")
         r = js("""(() => {const c = document.querySelector('#cube-stage canvas');
@@ -141,16 +171,17 @@ def main():
             cmd("Input.dispatchMouseEvent", type=tipo, x=r["x"] + dx, y=r["y"],
                 button="left", clickCount=1, buttons=1)
             time.sleep(0.15)
-        time.sleep(0.4)
+        time.sleep(ESPERA_FOLIO)
         e = js(estado)
         revisar(e["activas"] == 0, "se deselecciona al arrastrar", f"{e['activas']} activas")
-        revisar(not e["botonVisible"], "el botón desaparece al arrastrar")
-        revisar(not e["statusVisible"], "el estado desaparece al arrastrar")
+        revisar(not e["folioDesplegado"], "el folio se repliega al arrastrar")
+        revisar(e["folioAlto"] <= 6, "y vuelve a no ocupar alto", f"{e['folioAlto']}px")
 
         print("\nClic en otra cara (絆 Kizuna)")
         js("document.querySelectorAll('.face-card')[5].click(); true")
-        time.sleep(0.4)
+        time.sleep(ESPERA_FOLIO)
         e = js(estado)
+        revisar(e["folioDesplegado"], "el folio se vuelve a desplegar")
         revisar("Kizuna" in e["botonTexto"], "el botón se actualiza a la nueva cara", e["botonTexto"])
         revisar(e["botonHref"] == "/kizuna/", "y su enlace también", str(e["botonHref"]))
 

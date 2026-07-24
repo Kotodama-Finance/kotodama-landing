@@ -110,6 +110,70 @@ La duplicación es aceptable **si está vigilada**: `check-ready.py` verifica qu
 los bloques sean idénticos carácter por carácter. Por eso el nav usa rutas
 absolutas.
 
+### El bloque de estado + botón es un folio que se despliega
+**Esto REVIERTE una decisión anterior.** Antes el bloque de entrada reservaba
+su altura desde el inicio con `min-height`, para que aparecer el estado y el
+botón al seleccionar una cara no empujara el layout. Ahora el folio arranca con
+**altura cero** y se **despliega animado** al seleccionar; se repliega al
+arrastrar (deseleccionar).
+
+Por qué se pudo revertir sin traer de vuelta el salto de layout: el folio está
+**debajo** del cubo y de la grilla. Lo que se desplaza al abrirlo es el enlace
+al sistema de nombres y lo que sigue —nunca el cubo ni la cara que el usuario
+acaba de tocar—, así que **nada se mueve bajo el cursor**. Reservar el espacio
+dejaba un hueco vacío permanente para algo que la mayor parte del tiempo no
+está; el folio sólo ocupa lugar cuando hay algo que mostrar.
+
+Detalles que ya se probó que importan:
+- **Animado, no instantáneo.** Un cambio de altura de golpe se lee como página
+  rota; con transición se lee como despliegue. Es condición, no adorno.
+- **Se anima `grid-template-rows` de `0fr` a `1fr`**, no `height` a `auto`
+  (`auto` no interpola sin `interpolate-size`, sólo-Chromium) ni una altura fija
+  en px (número mágico: el texto del estado no está redactado y el botón cambia
+  de ancho con cada cara). `1fr` resuelve a la altura real del contenido. Su
+  modo de fallo es el correcto: un motor que no interpole `fr` salta de 0 a la
+  altura final, que es justo lo que se pide con `prefers-reduced-motion`.
+- La separación superior va como **margen del primer hijo**, no `padding` del
+  contenedor con overflow: con `border-box` el padding es un piso de altura que
+  no colapsa y el folio plegado medía 16px en vez de 0.
+- `inert` viaja con el estado plegado: no basta con invisible, tampoco tabulable
+  ni leído por lector de pantalla.
+
+`check-modes.py` lo verifica: plegado al cargar, desplegado al seleccionar,
+replegado al arrastrar, transición declarada sobre `grid-template-rows`, y **el
+cubo no se mueve** al abrirse (que es la propiedad que hace seguro el cambio).
+
+### La transición entre páginas (maelstrom) es CSS puro
+Entrar a una cara usa **`@view-transition { navigation: auto }`** —transición
+entre documentos, sin SPA ni router—, dentro de
+`@media (prefers-reduced-motion: no-preference)` para que bajo reduced-motion no
+haya nada que desactivar: la regla ni se declara. Hoy es sólo `transform` +
+`filter: blur` + `opacity` sobre `::view-transition-old/new(root)`: la página
+que se va gira/escala/desenfoca, la que llega entra girada desde el otro lado y
+se acomoda, las dos en el **mismo sentido** para que se lea un solo remolino.
+
+- `mix-blend-mode: normal` pisa el `plus-lighter` que el navegador pone por
+  defecto: como las capas además se mueven y escalan, sumarlas daba un fogonazo
+  claro donde se solapan.
+- **Táctil** (`pointer: coarse`): escala + fundido, **sin blur** — el desenfoque
+  a pantalla completa es lo caro y lo que peor escala en GPU de teléfono.
+- Precarga (`rel=prefetch`) **al seleccionar la cara, no al pulsar el botón**:
+  el gesto entre una cosa y otra es el tiempo que hace falta para que el
+  documento ya esté en caché. Respeta `saveData` y 2G.
+- **`feTurbulence` no se usa todavía**: es el escalón caro y la versión barata
+  alcanza. Si hiciera falta más remolino, el próximo paso es darle
+  `view-transition-name` propio a la nav para que quede quieta.
+
+### Volver atrás restaura el cubo por dos caminos
+Los dos hacen falta. **bfcache**: la página vuelve viva y entera sin ejecutar
+nada; lo único que puede romperse es el contexto WebGL (el navegador libera la
+GPU mientras está congelada), así que en `pageshow` con `persisted` se comprueba
+`isContextLost()` y, si se perdió, se rehidrata. **Sin bfcache** (Chrome lo
+descartó por memoria, o `Cache-Control: no-store` lo deshabilita —ojo, el
+servidor de desarrollo manda `no-store`): la selección se restaura desde
+`sessionStorage`, y **sólo** si la navegación fue `back_forward` — llegar a la
+portada normalmente no debe elegir una cara en tu nombre.
+
 ### El shader del mar es código cerrado
 El GLSL de `assets/js/background.js` está calibrado a mano y **no se toca**. Su
 paleta (`deep`, `mid`, `crest`) vive en constantes del fragment shader, **fuera
@@ -174,11 +238,13 @@ antes del pase de redacción.
 - **Móvil sin medir en dispositivo real.** Incluye: degradación del cubo, y que
   con escenario más alto que ancho manda el FOV horizontal, la cámara se aleja y
   queda aire vertical desperdiciado. El shader ya va a media resolución y 25 fps.
-- **`favicon.ico` 404** — único error de consola en carga limpia.
+  El maelstrom táctil (escala + fundido, sin blur) tampoco se vio en un teléfono.
+- ~~`favicon.ico` 404~~ — **CERRADO**. Hay `favicon.ico` (16/32/48), `favicon.svg`
+  y `apple-touch-icon.png`, generados por `tools/make-favicon.py` a partir del
+  mismo subset de la marca (言, oro sobre navy). Consola limpia.
+- ~~Animación maelstrom~~ — **IMPLEMENTADA**, ver decisión cerrada arriba. Falta
+  sólo verla en un teléfono real (arriba, con lo demás de móvil).
 - **~70 placeholders `TODO`** pendientes de redacción.
-- **Animación maelstrom**: plan entregado (View Transitions cross-document,
-  precarga al seleccionar, bfcache para el botón atrás, sin remolino con
-  `prefers-reduced-motion`), **sin implementar**.
 - **Vista explotada del cubo: sin plan.** Mencionada como pendiente; no hay
   registro de que se haya discutido ni decidido nada al respecto.
 - **`/naming/`**: los siete bloques están como andamiaje; falta el texto.

@@ -644,6 +644,10 @@ export function initCube(stage, opts) {
       });
     },
     getRotation() { return { rx: C.rx, ry: C.ry, velRx: C.velRx, velRy: C.velRy }; },
+    /* ¿el contexto sigue vivo? Al volver por el botón atrás la página puede
+       venir del bfcache, y mientras estuvo congelada el navegador tiene
+       permitido liberar la GPU. El canvas queda ahí, pero en negro. */
+    isContextLost() { return renderer.getContext().isContextLost(); },
     setRotation(rx, ry) { C.rx = rx; C.ry = ry; C.snapping = false; applyRotation(); },
     dispose() {
       ro.disconnect();

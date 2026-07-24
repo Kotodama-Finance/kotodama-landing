@@ -497,18 +497,66 @@ button:focus-visible {
 .cube__stage[hidden] { display: none; }
 .cube__stage canvas { touch-action: none; cursor: grab; }
 .cube__stage.is-dragging canvas { cursor: grabbing; }
-/* Bloque de entrada: ayuda + estado + botón.
-   min-height reserva el espacio del estado y el botón desde el inicio, para
-   que aparecer no empuje el layout. */
+/* Bloque de entrada: ayuda + folio. */
 .cube__enter {
-  min-height: 148px;
   margin-top: 22px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
 }
 .cube__open { text-decoration: none; }
+
+/* FOLIO — estado + botón. Altura cero al cargar; se despliega al seleccionar
+   una cara y se repliega al arrastrar.
+
+   Sustituye al espacio reservado con min-height. Reservarlo dejaba un hueco
+   vacío permanente bajo el cubo para algo que la mayoría del tiempo no está.
+   Se puede desplegar sin que moleste porque el folio está DEBAJO del cubo y de
+   la grilla: lo que se corre hacia abajo es el enlace al sistema de nombres y
+   lo que sigue. Nada se mueve bajo el cursor.
+
+   TÉCNICA: se anima grid-template-rows de 0fr a 1fr, no height de 0 a auto.
+   - `auto` no interpola sin interpolate-size / calc-size(), que hoy sólo están
+     en Chromium: en Firefox y Safari no habría transición.
+   - Una altura fija en px sí anima, pero es un número mágico con fecha de
+     vencimiento: el texto del estado todavía no está redactado y el botón
+     cambia de ancho (y puede cambiar de alto) con el nombre de cada cara.
+   - 1fr resuelve a la altura REAL del contenido: ni número mágico ni recorte
+     si el texto crece.
+   Y su modo de fallo es justo el correcto: un navegador que no interpole `fr`
+   salta de 0 a la altura final — que es lo que se pide con reduced-motion.
+   Nunca se ve roto, sólo instantáneo. */
+.cube__folio {
+  width: 100%;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.42s var(--ease-rise);
+}
+/* min-height:0 y overflow:hidden en el hijo: sin los dos, el contenido impone
+   su altura mínima y la fila nunca llega a cero.
+   La separación con el hint va como MARGEN DEL CONTENIDO y no como padding de
+   este elemento: con box-sizing:border-box el padding es un piso de altura que
+   no colapsa, y el folio plegado medía 16px en vez de 0 (medido). El margen,
+   en cambio, es contenido y lo recorta el overflow. */
+.cube__folio-in {
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.cube__folio-in > :first-child { margin-top: 16px; }
+.cube__folio.is-open { grid-template-rows: 1fr; }
+/* El contenido aparece cuando ya hay lugar, no mientras se abre el hueco. */
+.cube__folio.is-open > .cube__folio-in { opacity: 1; transition-delay: 0.14s; }
+
+/* Restaurar al volver atrás: el folio aparece ya desplegado, sin animar. Se
+   pone y se quita en el mismo turno desde el JS. */
+.cube__folio.no-anim,
+.cube__folio.no-anim > .cube__folio-in { transition: none; }
 
 .cube__hint {
   font-size: 0.7rem;
@@ -999,6 +1047,75 @@ button:focus-visible {
 }
 .footer__soon :lang(ja) { color: var(--c-text-muted-2); }
 .footer__soon { opacity: 0.8; }
+
+/* -------------------------------------------------------------------------
+   MAELSTROM — transición entre documentos
+
+   Entrar a una cara no es cambiar de página: es atravesar el cubo. La página
+   que se deja gira, crece y se desenfoca hasta perderse; la que llega aparece
+   girada al otro lado y se acomoda. Las dos rotaciones van EN EL MISMO SENTIDO
+   (la de salida hacia +14°, la de entrada desde -12° hasta 0), así que se lee
+   como un solo remolino continuo y no como dos animaciones distintas.
+
+   Es una transición ENTRE DOCUMENTOS: no hay SPA ni router. Todo el mecanismo
+   es @view-transition; el navegador saca la foto de la página que se va, carga
+   la nueva y anima entre las dos. Sin JS.
+
+   Dentro de @media (prefers-reduced-motion: no-preference) a propósito: bajo
+   reduced-motion no se atenúa la animación, no se declara la transición y la
+   navegación es la de siempre. Nada que desactivar después.
+
+   Por ahora sólo transform, filter y opacity sobre el snapshot de root — que
+   es la versión barata y la que corre en el compositor. Si hace falta más
+   remolino, el siguiente escalón es darle view-transition-name propio a la nav
+   para que quede quieta mientras el resto gira; el turbulence del SVG es el
+   escalón caro y todavía no se justificó.
+   ------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+}
+
+@keyframes kf-maelstrom-out {
+  from { transform: rotate(0) scale(1);        filter: blur(0);    opacity: 1; }
+  to   { transform: rotate(14deg) scale(1.3);  filter: blur(16px); opacity: 0; }
+}
+@keyframes kf-maelstrom-in {
+  from { transform: rotate(-12deg) scale(0.88); filter: blur(12px); opacity: 0; }
+  to   { transform: rotate(0) scale(1);         filter: blur(0);    opacity: 1; }
+}
+
+/* mix-blend-mode: normal pisa el plus-lighter que el navegador pone por
+   defecto. Ese modo existe para que un fundido cruzado sume exactamente 1 de
+   opacidad entre las dos capas; acá las capas además se mueven y se escalan,
+   así que la zona donde se solapan se sumaría y aparecería un fogonazo claro
+   en mitad de la transición. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+  transform-origin: 50% 50%;
+}
+::view-transition-old(root) {
+  animation: kf-maelstrom-out 0.5s cubic-bezier(0.5, 0, 0.9, 0.4) both;
+}
+::view-transition-new(root) {
+  animation: kf-maelstrom-in 0.62s 0.06s var(--ease-rise) both;
+}
+
+/* Táctil: el desenfoque de una capa a pantalla completa es lo caro de todo
+   esto, y es justo lo que peor escala en una GPU de teléfono. Ahí queda escala
+   + fundido, más corto. El gesto se sigue leyendo; lo que se va es el costo. */
+@media (pointer: coarse) {
+  @keyframes kf-maelstrom-out {
+    from { transform: scale(1);    opacity: 1; }
+    to   { transform: scale(1.12); opacity: 0; }
+  }
+  @keyframes kf-maelstrom-in {
+    from { transform: scale(0.94); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+  }
+  ::view-transition-old(root) { animation-duration: 0.34s; }
+  ::view-transition-new(root) { animation-duration: 0.4s; animation-delay: 0.04s; }
+}
 
 /* -------------------------------------------------------------------------
    KEYFRAMES

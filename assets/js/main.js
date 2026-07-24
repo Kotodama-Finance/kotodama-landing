@@ -59,10 +59,28 @@ const cards = Array.from(document.querySelectorAll('.face-card'));
 const elStatus = document.getElementById('cube-status');
 const elStatusText = document.getElementById('cube-status-text');
 const elOpen = document.getElementById('cube-open');
+const elFolio = document.getElementById('cube-folio');
+
+/* Cara seleccionada, para restaurarla al volver atrás cuando el bfcache no
+   aplica. Declarada acá arriba a propósito: setActiveFace la usa y se llama en
+   la restauración, así que si estuviera más abajo entraría en zona muerta. */
+const CLAVE_CARA = 'kf:face';
 
 let activeFace = null;
 
-/** Selecciona una cara: resalta su tarjeta y revela estado + botón. */
+/* Despliega o repliega el folio (estado + botón).
+   La animación es puro CSS: acá sólo se conmuta la clase. `inert` viaja con
+   ella para que plegado no sea sólo invisible — sin tabulación ni lectura por
+   lector de pantalla. No se usa `hidden` porque display:none no se anima: el
+   folio colapsaría de golpe, que es justo lo que se quería evitar. */
+function setFolio(open) {
+  if (!elFolio) return;
+  elFolio.classList.toggle('is-open', open);
+  if (open) elFolio.removeAttribute('inert');
+  else elFolio.setAttribute('inert', '');
+}
+
+/** Selecciona una cara: resalta su tarjeta y despliega estado + botón. */
 function setActiveFace(key) {
   const face = FACES[key];
   if (!face) return;
@@ -73,24 +91,49 @@ function setActiveFace(key) {
     elStatus.dataset.state = face.state;
     elStatus.querySelector('.dot').dataset.state = face.state;
     elStatusText.textContent = face.status;
-    elStatus.hidden = false;
   }
   if (elOpen) {
     // El botón navega SIEMPRE, incluso en las caras "coming soon": su
     // subpágina existe y ahí el placeholder lo dice de frente.
     elOpen.href = '/' + key + '/';
     elOpen.textContent = 'Open ' + face.romaji + ' →';
-    elOpen.hidden = false;
   }
+  setFolio(true);
+  prefetchFace(key);
+  try { sessionStorage.setItem(CLAVE_CARA, key); } catch (e) { /* modo privado */ }
   if (cube && cube.snapTo) cube.snapTo(key);
 }
 
-/** Arrastrar revive el cubo: se deshace la selección y el botón se va. */
+/** Arrastrar revive el cubo: se deshace la selección y el folio se repliega. */
 function clearSelection() {
   activeFace = null;
   cards.forEach((c) => c.classList.remove('is-active'));
-  if (elStatus) elStatus.hidden = true;
-  if (elOpen) elOpen.hidden = true;
+  setFolio(false);
+  try { sessionStorage.removeItem(CLAVE_CARA); } catch (e) { /* modo privado */ }
+}
+
+/* ---- Precarga de la cara seleccionada ------------------------------------
+   Se precarga al SELECCIONAR, no al pulsar el botón: entre una cosa y la otra
+   hay un gesto entero, que es exactamente el tiempo que hace falta para que el
+   documento ya esté en caché cuando se decide entrar. Sin eso, la transición
+   de entrada arranca contra una petición de red y se ve el parpadeo.
+
+   rel=prefetch y no prerender a propósito: prefetch baja el documento y para;
+   prerender además ejecutaría su JS. Ninguna subpágina lo necesita, y en la
+   portada sería crear un contexto WebGL de más por cada cara que se toca. */
+const prefetched = new Set();
+function prefetchFace(key) {
+  if (prefetched.has(key)) return;
+  const con = navigator.connection;
+  // Respetar «ahorro de datos» y las conexiones muy lentas: ahí precargar algo
+  // que quizá no se visite es exactamente lo que no hay que hacer.
+  if (con && (con.saveData || /(^|-)2g$/.test(con.effectiveType || ''))) return;
+  prefetched.add(key);
+  const l = document.createElement('link');
+  l.rel = 'prefetch';
+  l.as = 'document';
+  l.href = '/' + key + '/';
+  document.head.appendChild(l);
 }
 
 cards.forEach((card) => {
@@ -149,6 +192,9 @@ async function hydrateCube() {
     }
     setView('3d');
     // No forzamos snap al cargar: se conserva la vista 3/4 inicial del cubo.
+    // La excepción es volver atrás: si hay una cara restaurada, el cubo tiene
+    // que aparecer mirándola, no en la pose de bienvenida.
+    if (activeFace && cube.snapTo) cube.snapTo(activeFace);
   } catch (err) {
     // Sin cubo: la grilla semántica queda como navegación. No es un fallo fatal.
     console.warn('[cube] no se pudo hidratar; se mantiene la grilla.', err);
@@ -180,3 +226,56 @@ function hydrateCubeWhenNear() {
   io.observe(section);
 }
 hydrateCubeWhenNear();
+
+/* ---- Volver atrás -------------------------------------------------------
+   Dos caminos, y hacen falta los dos:
+
+   1. bfcache. La página vuelve viva y entera —cubo, pose, folio desplegado—
+      sin ejecutar nada. Es el caso bueno y no hay que restaurar nada. Lo único
+      que puede haberse roto es el contexto WebGL: mientras la página está
+      congelada el navegador tiene permiso para liberar la GPU, y entonces el
+      canvas vuelve en negro. Por eso se comprueba en `pageshow`.
+
+   2. Sin bfcache (el navegador no lo tiene, o Chrome lo descartó por presión
+      de memoria). La página se reconstruye desde cero y la selección se
+      perdería. Ahí entra sessionStorage.
+
+   Sólo se restaura si la navegación fue back/forward. En una carga normal no
+   hay nada seleccionado, y eso es deliberado: llegar a la portada no debe
+   elegir una cara en tu nombre. */
+function esVueltaAtras() {
+  const e = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+  return !!e && e.type === 'back_forward';
+}
+
+function restoreSelection() {
+  if (!elFolio || !esVueltaAtras()) return;
+  let key = null;
+  try { key = sessionStorage.getItem(CLAVE_CARA); } catch (e) { /* modo privado */ }
+  if (!key || !FACES[key]) return;
+  // Sin animación: volver atrás devuelve la página como estaba. Reproducir el
+  // despliegue haría parecer que la elección la acaba de hacer el navegador.
+  elFolio.classList.add('no-anim');
+  setActiveFace(key);
+  // dos cuadros: uno para que el layout aplique el estado final, otro para
+  // devolver la transición sin que la reanimación arranque sola.
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    elFolio.classList.remove('no-anim');
+  }));
+}
+restoreSelection();
+
+window.addEventListener('pageshow', (e) => {
+  if (!e.persisted) return;               // carga normal: no vino del bfcache
+  if (!cube) return;
+  if (cube.isContextLost && cube.isContextLost()) {
+    // El canvas volvió sin GPU. Se tira y se rehidrata: es la única salida y
+    // cuesta lo mismo que la primera vez.
+    console.warn('[cube] contexto perdido al volver del bfcache; rehidratando.');
+    cube.dispose();
+    cube = null;
+    hydrateCube();
+  } else if (cube.render) {
+    cube.render();                        // un cuadro por si el buffer se vació
+  }
+});

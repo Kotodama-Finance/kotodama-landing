@@ -161,15 +161,25 @@
             </ul>
           </div>
 
-          <!-- Entrada: ayuda, estado y botón. El espacio se reserva desde el
-               inicio (min-height en CSS) para que no salte el layout cuando
-               aparecen el estado y el botón al seleccionar una cara. -->
+          <!-- Entrada: ayuda, estado y botón.
+               El estado y el botón viven en un FOLIO que arranca con altura
+               cero y se despliega al seleccionar una cara. Antes el espacio
+               estaba reservado desde el inicio; el cambio es seguro porque el
+               folio está DEBAJO del cubo y de la grilla: lo que se corre es el
+               enlace al sistema de nombres y lo que sigue, nunca la cara que
+               el usuario acaba de tocar. Ver .cube__folio en el CSS.
+               `inert` de arranque: plegado no es sólo invisible, tampoco es
+               tabulable ni lo lee un lector de pantalla. -->
           <div class="cube__enter">
             <p class="cube__hint"><span class="todo">TODO: línea de ayuda — el gesto real es arrastrar para girar, clic para seleccionar, botón para entrar</span></p>
-            <p class="status" id="cube-status" data-state="active" hidden>
-              <span class="dot" data-state="active" aria-hidden="true"></span><span id="cube-status-text"></span>
-            </p>
-            <a class="btn btn--solid btn--sm cube__open" id="cube-open" href="/hajime/" hidden></a>
+            <div class="cube__folio" id="cube-folio" inert>
+              <div class="cube__folio-in">
+                <p class="status" id="cube-status" data-state="active">
+                  <span class="dot" data-state="active" aria-hidden="true"></span><span id="cube-status-text"></span>
+                </p>
+                <a class="btn btn--solid btn--sm cube__open" id="cube-open" href="/hajime/"></a>
+              </div>
+            </div>
           </div>
 
         </div>
