@@ -102,12 +102,18 @@ const FACE_LAYOUT = {
   kanjiWidth: 0.86,      // ancho máximo
   kanjiCenterY: 0.40,
   romajiCenterY: 0.835,  // centro de la fila inferior de cubies
-  romajiWidth: 0.28,     // < 1/3: entra en el cubie central sin tocar juntas
+  romajiWidth: 0.29,     // < 1/3: entra en el cubie central sin tocar juntas
   romajiSize: 0.11,
 };
 
 const FONT_KANJI = (px) => `500 ${px}px 'Zen Kaku Gothic New', sans-serif`;
-const FONT_ROMAJI = (px) => `italic 500 ${px}px 'Cormorant Garamond', serif`;
+/* Inter y no Cormorant, aunque el romaji vaya en Cormorant en el resto del
+   sitio. Medido a tamaño real (cubo de 720px): en Cormorant itálica el romaji
+   de las caras escorzadas se deshacía. Es una serif de display, de astas finas
+   y modulación fuerte; grabada y a ~12px de altura de mayúscula, el halo del
+   relieve se come el trazo. Inter tiene asta uniforme y x-height alta, que es
+   exactamente lo que aguanta ese tamaño. */
+const FONT_ROMAJI = (px) => `500 ${px}px 'Inter', sans-serif`;
 
 /* Achica el cuerpo hasta que el texto entre en maxW. */
 function fitFont(ctx, text, font, startPx, maxW) {
