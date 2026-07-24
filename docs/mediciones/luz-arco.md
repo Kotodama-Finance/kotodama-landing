@@ -1,15 +1,29 @@
 # Medición: la luz del cubo a lo largo del arco del péndulo
 
-> **ESTADO: sin conclusión. No tocar la iluminación todavía.**
-> La métrica original quedó **descartada** (ver "Métrica descartada"). La nueva,
-> de perímetro, está bien instrumentada pero **sus números siguen contradiciendo
-> lo que muestran las capturas**, y esa contradicción no está resuelta.
-> Próximo paso: capturar la peor pose según la métrica nueva
-> (**rx=20°, ry=0°**) y mirarla. Es la misma validación que
-> desmintió a la métrica anterior.
+> **ESTADO: CERRADO por inspección visual. No reabrir el barrido.**
+> No hay problema de iluminación que arreglar. La contradicción entre la métrica
+> y las capturas está explicada abajo, y no era un bug: era una lectura
+> equivocada de un número correcto. **El tema se resuelve mirando, no midiendo.**
+> Hoja de contactos: `hoja-contactos-arco.png`.
 
-Barrido hecho el 2026-07-24 sobre `redesign-trust`. **Guardado para no tener que
-remedirlo.** Datos crudos en `luz-arco-rx.json` y `luz-arco-opciones.json`.
+## Resolución: por qué "70% del perímetro con ΔL bajo" no significa nada malo
+
+El cuerpo del cubie (`#040d18`) tiene luminancia **~11.5** y el fondo de sección
+**15.3**. **El cubo es más oscuro que su fondo.** Por lo tanto toda porción de
+perímetro que no esté iluminada da ΔL ≈ 4 y falla los tres umbrales **por
+construcción**, sin que eso indique ningún defecto.
+
+Y un objeto más oscuro que su fondo **se ve perfecto**: se lee como silueta. Lo
+que hace desaparecer un contorno es **ΔL ≈ 0**, no un ΔL chico pero consistente.
+Además la percepción cierra el contorno a partir de la arista iluminada aunque
+medio perímetro esté en sombra.
+
+O sea: la métrica **no estaba rota** — «70% del perímetro con ΔL bajo» es
+verdadero. Lo que estaba mal era interpretarlo como «el cubo se deshace».
+
+**La pregunta era perceptual y binaria, y se contesta mirando.** Se gastaron
+cuatro tandas construyendo un instrumento para eso. Si alguien siente que el
+cubo se pierde en alguna pose, la respuesta es una captura, no un barrido.
 
 ## Métrica vigente: contraste del perímetro
 
@@ -70,12 +84,11 @@ el fondo. Construcción:
 muy parecidos, así que no es un parámetro sensible y el bisel no está
 contaminando la medición.
 
-### Por qué estos números no son creíbles todavía
+### Cómo leer estos números
 
-La mediana de |ΔL| es 17–20 sobre un fondo de 15.3, o sea que el borde típico
-tiene contraste sano. Y las capturas de las peores poses muestran un cubo
-**sólido y nítido**. Que el peor caso dé 70% de perímetro fallido no encaja con
-ninguna de las dos cosas. Falta explicar la discrepancia antes de actuar.
+Ver la resolución al principio: los porcentajes altos son consecuencia de que el
+cubo es más oscuro que el fondo, no señal de un problema. **Sirven para comparar
+esquemas de luz entre sí, no como umbral de aprobado/desaprobado.**
 
 Dos bugs ya encontrados y corregidos en esta métrica, que muestran lo fácil que
 es equivocarse acá:

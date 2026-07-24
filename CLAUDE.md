@@ -161,21 +161,16 @@ antes del pase de redacción.
 
 ## Cabos abiertos (lista viva)
 
-- **Luz a lo largo del arco del péndulo.** Prioritario. Barrido completo medido
-  y guardado en **`docs/mediciones/luz-arco.md`** (+ los JSON crudos). No
-  remedir: leer eso primero. Resumen:
-  - El peor punto es **rx≈26 con 54.5%** de silueta fundida, no rx=38.
-  - **El centro del péndulo no aguanta**: 33.3% a rx=18. Sólo `rx ∈ [-4, 4]`
-    queda bajo 8%.
-  - El `ry` que peor cae **cambia con `rx`**, así que ninguna pose fija lo
-    encuentra. Medir siempre barriendo los dos ejes.
-  - **Subir el ambiente NO sirve** (medido: de hemi 3.5 a 8.0 el peor caso pasa
-    de 51.8% a 53.6%). Mover la clave quedó sin medir y es lo más prometedor.
-    Achicar la amplitud sola tampoco alcanza: obligaría a centro ≈ 0 y amplitud
-    ≈ 0, matando el péndulo y la vista 3/4.
-  - **Salvedad pendiente**: la métrica excluye el dorado y puede estar inflando
-    el número en poses donde el kanji domina el encuadre. Confirmar con una
-    captura a rx=26 / ry=0 **antes** de tocar la luz.
+- ~~Luz a lo largo del arco del péndulo~~ — **CERRADO**, no reabrir. No había
+  problema. La métrica decía «70% del perímetro con ΔL bajo» y era cierto, pero
+  no significaba lo que parecía: el cuerpo del cubie (lum ~11.5) es **más oscuro
+  que el fondo** (15.3), así que todo perímetro sin iluminar falla por
+  construcción — y un objeto más oscuro que su fondo se ve perfecto, se lee como
+  silueta. Lo que desaparece es ΔL ≈ 0, no ΔL chico y consistente. Cerrado por
+  inspección visual con una hoja de contactos de 8 poses cubriendo el arco real.
+  Todo en `docs/mediciones/luz-arco.md`. **La pregunta era perceptual y binaria:
+  si alguien sospecha que el cubo se pierde, se saca una captura, no un barrido.**
+
 - **Móvil sin medir en dispositivo real.** Incluye: degradación del cubo, y que
   con escenario más alto que ancho manda el FOV horizontal, la cámara se aleja y
   queda aire vertical desperdiciado. El shader ya va a media resolución y 25 fps.
