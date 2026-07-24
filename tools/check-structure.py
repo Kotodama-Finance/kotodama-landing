@@ -44,6 +44,25 @@ def main():
     else:
         print(f"  OK     idénticos en las {len(list(G.htmls()))} páginas")
 
+    print("\nTítulos y descriptions únicos")
+    repetidos = G.metadatos_repetidos()
+    if repetidos:
+        for x in repetidos:
+            print(f"  FALLA  {x}")
+        problemas += repetidos
+    else:
+        print(f"  OK     sin repetidos entre las {len(list(G.htmls()))} páginas")
+
+    print("\nCobertura del sitemap")
+    huecos = G.sitemap_incompleto()
+    if huecos:
+        for x in huecos:
+            print(f"  FALLA  {x}")
+        problemas += huecos
+        print("  -> regenerar: python tools/make-sitemap.py")
+    else:
+        print("  OK     todas las páginas indexables están listadas")
+
     print("\nCobertura del subset japonés")
     faltan = G.glifos_faltantes()
     if faltan is None:

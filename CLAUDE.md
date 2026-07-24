@@ -301,10 +301,10 @@ antes del pase de redacción.
   Todo en `docs/mediciones/luz-arco.md`. **La pregunta era perceptual y binaria:
   si alguien sospecha que el cubo se pierde, se saca una captura, no un barrido.**
 
-- **Móvil sin medir en dispositivo real.** Incluye: degradación del cubo, y que
-  con escenario más alto que ancho manda el FOV horizontal, la cámara se aleja y
-  queda aire vertical desperdiciado. El shader ya va a media resolución y 25 fps.
-  El maelstrom táctil (escala + fundido, sin blur) tampoco se vio en un teléfono.
+- **Móvil: POSTERGADO por decisión del autor.** No proponerlo. Sigue sin medirse
+  en un dispositivo real (degradación del cubo, el FOV horizontal que manda con
+  el escenario más alto que ancho, el maelstrom táctil), pero **no es un pendiente
+  vivo**: se retoma cuando el autor lo diga.
 - ~~`favicon.ico` 404~~ — **CERRADO**. Hay `favicon.ico` (16/32/48), `favicon.svg`
   y `apple-touch-icon.png`, generados por `tools/make-favicon.py` a partir del
   mismo subset de la marca (言, oro sobre navy). Consola limpia.
@@ -318,8 +318,11 @@ antes del pase de redacción.
   un ilustrador humano o un enfoque distinto (imagen dibujada, no generada).
   **No reintentar con los mismos medios.** La transición se queda con la versión
   actual: giro + escala + desenfoque leve, sin `feTurbulence`.
-- **Vista explotada del cubo: sin plan.** Mencionada como pendiente; no hay
-  registro de que se haya discutido ni decidido nada al respecto.
+- **Vista explotada del cubo: DESPUÉS del pase de redacción.** Se discutió fuera
+  de estas sesiones y el brief todavía no está escrito; no hay nada que decidir
+  acá hasta que llegue. No proponerla antes.
+- **hreflang / versión japonesa**: patrón documentado en el README, sin
+  implementar. Depende de que exista `/ja/`.
 - **`/naming/`**: los siete bloques están como andamiaje; falta el texto.
 
 ---
