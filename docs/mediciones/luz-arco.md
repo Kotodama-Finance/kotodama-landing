@@ -1,9 +1,112 @@
 # Medición: la luz del cubo a lo largo del arco del péndulo
 
+> **ESTADO: sin conclusión. No tocar la iluminación todavía.**
+> La métrica original quedó **descartada** (ver "Métrica descartada"). La nueva,
+> de perímetro, está bien instrumentada pero **sus números siguen contradiciendo
+> lo que muestran las capturas**, y esa contradicción no está resuelta.
+> Próximo paso: capturar la peor pose según la métrica nueva
+> (**rx=20°, ry=0°**) y mirarla. Es la misma validación que
+> desmintió a la métrica anterior.
+
 Barrido hecho el 2026-07-24 sobre `redesign-trust`. **Guardado para no tener que
 remedirlo.** Datos crudos en `luz-arco-rx.json` y `luz-arco-opciones.json`.
 
-## Qué se mide
+## Métrica vigente: contraste del perímetro
+
+Qué fracción del **perímetro** de la silueta tiene contraste insuficiente contra
+el fondo. Construcción:
+
+1. **Silueta desde el canal alfa** del canvas del cubo (`alpha = 255`), no desde
+   la luminancia: es exacta y no depende de lo que esté pintado adentro.
+2. **Perímetro 4-conexo**: píxeles del objeto con al menos un vecino fuera. El
+   interior queda excluido por construcción.
+3. **Muestreo hacia adentro** siguiendo el gradiente de la máscara, a 3px y 6px,
+   exigiendo `alpha = 255` (un píxel con alfa parcial es mezcla de cubo y fondo
+   y da contraste falsamente bajo).
+4. **Fondo local medido**, no asumido: se camina hacia afuera hasta el primer
+   píxel con `alpha = 0`. Medido así, el fondo detrás del escenario resultó
+   **plano en 15.3 en las 696 poses** — la constante habría servido, pero ahora
+   está verificado en vez de supuesto.
+5. **Sin excluir el oro.** El oro es el cubo siendo visible.
+6. Se reportan **tres umbrales** (5, 8, 12 unidades sRGB), la **mediana de |ΔL|**
+   y el **tramo fallido contiguo más largo**: un 15% en manchitas es invisible,
+   un 15% en una arista entera es un borde que desapareció.
+
+### Resultados (peor caso sobre 24 valores de ry)
+
+| rx | 3px u5 | 3px u8 | 3px u12 | 6px u8 | contig u8 | mediana \|ΔL\| |
+|---|---|---|---|---|---|---|
+| -10 | 42.8 | 45.0 | 64.7 | 38.6 | 15.1 | 17.3 |
+|  -8 | 43.8 | 44.5 | 56.4 | 37.6 | 15.7 | 19.2 |
+|  -6 | 21.4 | 44.3 | 49.1 | 37.9 | 14.6 | 19.1 |
+|  -4 | 11.5 | 44.7 | 49.6 | 36.8 | 12.8 | 18.3 |
+|  -2 | 3.7 | 25.7 | 50.2 | 22.3 | 12.9 | 19.1 |
+|   0 | 1.1 | 8.5 | 49.6 | 8.1 | 4.2 | 20.1 |
+|   2 | 4.7 | 27.1 | 50.1 | 23.6 | 12.9 | 19.2 |
+|   4 | 15.1 | 48.7 | 49.3 | 41.2 | 12.8 | 18.3 |
+|   6 | 30.5 | 48.1 | 48.5 | 43.2 | 14.6 | 18.4 |
+|   8 | 48.6 | 48.8 | 57.5 | 45.5 | 16.1 | 19.2 |
+|  10 | 46.3 | 47.9 | 56.0 | 46.7 | 15.5 | 17.3 |
+|  12 | 41.1 | 42.0 | 73.0 | 43.8 | 14.6 | 17.3 |
+|  14 | 40.7 | 43.1 | 75.1 | 45.2 | 13.9 | 17.4 |
+|  16 | 39.3 | 42.3 | 74.3 | 44.4 | 19.1 | 17.4 |
+|  18 | 40.8 | 50.9 | 72.1 | 51.1 | 13.6 | 17.5 |
+|  20 | 40.1 | 70.2 | 70.9 | 70.2 | 17.5 | 17.3 |
+|  22 | 42.7 | 68.3 | 71.9 | 68.2 | 24.7 | 17.3 |
+|  24 | 66.0 | 66.5 | 69.9 | 66.7 | 24.6 | 17.3 |
+|  26 | 63.8 | 64.8 | 71.0 | 65.1 | 24.3 | 17.3 |
+|  28 | 62.3 | 63.1 | 71.2 | 63.0 | 17.7 | 17.3 |
+|  30 | 60.8 | 61.2 | 71.0 | 61.0 | 24.1 | 17.3 |
+|  32 | 59.3 | 59.7 | 71.9 | 59.9 | 23.5 | 17.3 |
+|  34 | 56.8 | 57.8 | 71.6 | 57.7 | 23.6 | 17.3 |
+|  36 | 37.3 | 55.8 | 70.0 | 55.4 | 23.0 | 17.3 |
+|  38 | 32.0 | 40.7 | 69.2 | 41.0 | 22.9 | 17.3 |
+|  40 | 5.0 | 40.4 | 69.2 | 37.9 | 22.4 | 17.3 |
+|  42 | 5.6 | 30.7 | 68.2 | 25.4 | 10.9 | 17.3 |
+|  44 | 3.1 | 25.7 | 68.9 | 21.1 | 10.7 | 17.1 |
+|  46 | 4.0 | 22.6 | 50.6 | 21.1 | 10.3 | 17.1 |
+
+**La profundidad de muestreo no cambia la conclusión**: 3px y 6px dan valores
+muy parecidos, así que no es un parámetro sensible y el bisel no está
+contaminando la medición.
+
+### Por qué estos números no son creíbles todavía
+
+La mediana de |ΔL| es 17–20 sobre un fondo de 15.3, o sea que el borde típico
+tiene contraste sano. Y las capturas de las peores poses muestran un cubo
+**sólido y nítido**. Que el peor caso dé 70% de perímetro fallido no encaja con
+ninguna de las dos cosas. Falta explicar la discrepancia antes de actuar.
+
+Dos bugs ya encontrados y corregidos en esta métrica, que muestran lo fácil que
+es equivocarse acá:
+- Se dibujaba el canvas sobre un lienzo **vacío**, así que "afuera" era
+  transparente (luminancia 0) en vez del fondo, y el antialias dorado del borde
+  se contaba como fondo brillante (daba "fondo" entre 0 y 85 en una página plana).
+- Las muestras de afuera caían en el **antialias del borde**. Ahora se exige
+  `alpha = 0` caminando hacia afuera.
+
+## Métrica descartada: oscuridad interior
+
+**No usar.** Medía el porcentaje de píxeles del cubo a menos de 3 unidades del
+fondo, excluyendo los dorados. Dos errores de fondo:
+
+1. **Excluir el oro era el bug.** El oro es el cubo siendo visible. Una cara con
+   un kanji grande es la pose donde el cubo mejor se lee, y la métrica la
+   penalizaba justamente ahí: al descartar esos píxeles terminaba midiendo el
+   navy **entre** los trazos, que es sombra de relieve. Cuanto más legible el
+   cubo, peor puntuaba.
+2. **Medía interior y lo llamaba silueta.** Fundirse con el fondo es un fenómeno
+   de **contorno**: un píxel oscuro rodeado de oro no disuelve nada, el ojo lo
+   integra al objeto.
+
+Quedó desmentida mirando las capturas: la pose que llamó la peor (rx=26, ry=0,
+54.5%) es la que mejor se ve — 肇 enorme y nítido, contorno recortado — y la que
+llamó sana (rx=0, 3.8%) es una vista de canto menos legible. **Ordenaba las
+poses al revés.**
+
+Sus datos quedan en `luz-arco-rx.json` sólo como registro de lo descartado.
+
+## Qué se medía antes (histórico, con la métrica descartada)
 
 **Silueta fundida**: porcentaje de píxeles del cubo que quedan a menos de 3
 unidades sRGB del fondo de sección (`--c-surface-cube` = `#05111d`, luminancia
