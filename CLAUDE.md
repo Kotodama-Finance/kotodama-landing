@@ -147,22 +147,40 @@ cubo no se mueve** al abrirse (que es la propiedad que hace seguro el cambio).
 Entrar a una cara usa **`@view-transition { navigation: auto }`** —transición
 entre documentos, sin SPA ni router—, dentro de
 `@media (prefers-reduced-motion: no-preference)` para que bajo reduced-motion no
-haya nada que desactivar: la regla ni se declara. Hoy es sólo `transform` +
+haya nada que desactivar: la regla ni se declara. Es sólo `transform` +
 `filter: blur` + `opacity` sobre `::view-transition-old/new(root)`: la página
-que se va gira/escala/desenfoca, la que llega entra girada desde el otro lado y
-se acomoda, las dos en el **mismo sentido** para que se lea un solo remolino.
+que se va gira **46°** y crece a 2.1, la que llega entra desde **−38°** y 0.52 y
+se endereza, las dos en el **mismo sentido** para que se lea un solo remolino.
 
+**Calibrada dos veces, y el motivo de la segunda importa.** La primera versión
+(14°, escala 1.3, blur 16px) se leía como un fundido con desenfoque, no como un
+giro, por dos razones:
+
+1. **El desenfoque tapaba el giro.** Una rotación se percibe por el ángulo de
+   los BORDES, y 16px de blur son justo lo que los borra. Bajó a 4px.
+2. **El fundido iba atado al giro**, así que la página estaba casi transparente
+   antes de haber girado lo suficiente. Ahora giro y fundido son **dos
+   animaciones con curvas distintas** sobre la misma capa: la opacidad se
+   sostiene mientras el ángulo se acumula.
+
+Otros detalles que ya se pagaron:
+- **`::view-transition` lleva `background-color`**: al girar, el snapshot deja
+  de cubrir el viewport y asoman cuñas — y debajo está el lienzo del navegador,
+  que es **blanco**. Con 14° casi no se veía; con 46° eran destellos en cada
+  esquina. Se pinta el fondo del árbol de la transición, que vive sólo mientras
+  dura y no toca el fondo del sitio.
 - `mix-blend-mode: normal` pisa el `plus-lighter` que el navegador pone por
   defecto: como las capas además se mueven y escalan, sumarlas daba un fogonazo
   claro donde se solapan.
 - **Táctil** (`pointer: coarse`): escala + fundido, **sin blur** — el desenfoque
-  a pantalla completa es lo caro y lo que peor escala en GPU de teléfono.
+  a pantalla completa es lo caro y lo que peor escala en GPU de teléfono. **Sin
+  recalibrar**: la segunda pasada fue sobre la versión de escritorio, que es la
+  que se filmó; el móvil sigue sin medirse en un dispositivo real.
 - Precarga (`rel=prefetch`) **al seleccionar la cara, no al pulsar el botón**:
   el gesto entre una cosa y otra es el tiempo que hace falta para que el
   documento ya esté en caché. Respeta `saveData` y 2G.
-- **`feTurbulence` no se usa todavía**: es el escalón caro y la versión barata
-  alcanza. Si hiciera falta más remolino, el próximo paso es darle
-  `view-transition-name` propio a la nav para que quede quieta.
+- **`feTurbulence` no se usa, y el remolino ilustrado está descartado** — ver
+  cabos abiertos. La versión actual es la definitiva por ahora.
 
 ### Volver atrás restaura el cubo por dos caminos
 Los dos hacen falta. **bfcache**: la página vuelve viva y entera sin ejecutar
@@ -268,6 +286,15 @@ que produjeron conclusiones equivocadas:
   Verificar contra la tabla `cmap` de la fuente.
 - **Leer un canvas WebGL fuera de su frame** devuelve vacío: da falsos negativos.
   Renderizar y leer en el mismo turno, o usar la captura compositada.
+- **`Page.captureScreenshot` se cuelga durante una transición entre documentos.**
+  El pedido queda esperando y revienta por timeout: no es que salga mal la
+  captura, es que no vuelve. Para filmar una view transition hay que usar
+  **`Page.startScreencast`**, que empuja cuadros como eventos en vez de
+  responder pedidos. Y como los eventos llegan mezclados con las respuestas,
+  conviene un hilo lector que consuma todo el socket: interrumpir un `recv()`
+  por timeout para sondear deja media trama leída y cuelga lo que sigue.
+  Para ver el detalle, `Animation.setPlaybackRate` ralentiza sin tocar el CSS,
+  así que lo filmado sigue siendo la animación publicada.
 - **En headless el loop del cubo corre a ~7–15 ticks/s, no a 30.** Las pruebas
   de física tienen que esperar **por ticks, no por reloj**.
 - **Un test roto se disfraza de bug de la página.** Si el JS de una guarda lanza,

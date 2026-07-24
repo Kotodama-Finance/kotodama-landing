@@ -1052,10 +1052,10 @@ button:focus-visible {
    MAELSTROM — transición entre documentos
 
    Entrar a una cara no es cambiar de página: es atravesar el cubo. La página
-   que se deja gira, crece y se desenfoca hasta perderse; la que llega aparece
-   girada al otro lado y se acomoda. Las dos rotaciones van EN EL MISMO SENTIDO
-   (la de salida hacia +14°, la de entrada desde -12° hasta 0), así que se lee
-   como un solo remolino continuo y no como dos animaciones distintas.
+   que se deja GIRA y crece hasta pasarse de largo; la que llega aparece girada
+   al otro lado, chica, y se endereza. Las dos rotaciones van EN EL MISMO
+   SENTIDO (la de salida hacia +46°, la de entrada desde -38° hasta 0), así que
+   se lee como un solo remolino continuo y no como dos animaciones distintas.
 
    Es una transición ENTRE DOCUMENTOS: no hay SPA ni router. Todo el mecanismo
    es @view-transition; el navegador saca la foto de la página que se va, carga
@@ -1065,24 +1065,47 @@ button:focus-visible {
    reduced-motion no se atenúa la animación, no se declara la transición y la
    navegación es la de siempre. Nada que desactivar después.
 
-   Por ahora sólo transform, filter y opacity sobre el snapshot de root — que
-   es la versión barata y la que corre en el compositor. Si hace falta más
-   remolino, el siguiente escalón es darle view-transition-name propio a la nav
-   para que quede quieta mientras el resto gira; el turbulence del SVG es el
-   escalón caro y todavía no se justificó.
+   CALIBRACIÓN (2ª pasada, tras filmarla). La primera versión —14°, escala 1.3,
+   blur 16px— se leía como un fundido con desenfoque y no como un giro, por dos
+   razones que se corrigen acá:
+
+   1. El desenfoque tapaba el giro. Una rotación se percibe por el ÁNGULO DE LOS
+      BORDES, y 16px de blur son justamente lo que borra los bordes. Bajó a 4px:
+      alcanza para dar la sensación de velocidad sin comerse la evidencia.
+   2. El fundido iba atado al giro, así que la página estaba casi transparente
+      antes de haber girado lo suficiente como para notarlo. Ahora el giro y el
+      fundido son DOS animaciones con curvas distintas sobre las mismas capas:
+      la opacidad se sostiene (cae tarde) mientras el ángulo se acumula. Es el
+      motivo de que haya keyframes separados para -spin- y -fade-.
+
+   Y la rotación pasó de 14° a 46°: a 0,5 s de duración, 14° son ~28°/s, por
+   debajo de lo que se lee como rotación en una imagen sin ejes marcados.
+
+   Sigue siendo sólo transform, filter y opacity sobre el snapshot de root: la
+   versión barata, la que corre en el compositor. Sin feTurbulence.
    ------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: no-preference) {
   @view-transition { navigation: auto; }
 }
 
-@keyframes kf-maelstrom-out {
-  from { transform: rotate(0) scale(1);        filter: blur(0);    opacity: 1; }
-  to   { transform: rotate(14deg) scale(1.3);  filter: blur(16px); opacity: 0; }
+@keyframes kf-maelstrom-spin-out {
+  from { transform: rotate(0deg) scale(1);     filter: blur(0); }
+  to   { transform: rotate(46deg) scale(2.1);  filter: blur(4px); }
 }
-@keyframes kf-maelstrom-in {
-  from { transform: rotate(-12deg) scale(0.88); filter: blur(12px); opacity: 0; }
-  to   { transform: rotate(0) scale(1);         filter: blur(0);    opacity: 1; }
+@keyframes kf-maelstrom-spin-in {
+  from { transform: rotate(-38deg) scale(0.52); filter: blur(3px); }
+  to   { transform: rotate(0deg) scale(1);      filter: blur(0); }
 }
+@keyframes kf-maelstrom-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes kf-maelstrom-fade-in  { from { opacity: 0; } to { opacity: 1; } }
+
+/* FONDO DE LA TRANSICIÓN. Al girar, el snapshot deja de cubrir el viewport y
+   asoman cuñas en las esquinas; debajo está el lienzo del navegador, que es
+   BLANCO. Con 14° casi no se veía, con 46° eran destellos claros en cada
+   esquina (visto en la filmación). Se pinta el fondo del propio árbol de la
+   transición, que cubre el viewport y vive sólo mientras dura: no toca el
+   fondo del sitio, así que el degradado del mar queda intacto. */
+::view-transition { background-color: var(--c-navy); }
 
 /* mix-blend-mode: normal pisa el plus-lighter que el navegador pone por
    defecto. Ese modo existe para que un fundido cruzado sume exactamente 1 de
@@ -1094,11 +1117,17 @@ button:focus-visible {
   mix-blend-mode: normal;
   transform-origin: 50% 50%;
 }
+/* Dos animaciones por capa, con curvas distintas: el giro acelera, el fundido
+   llega tarde. Atados a la misma curva, la página se apagaba antes de girar. */
 ::view-transition-old(root) {
-  animation: kf-maelstrom-out 0.5s cubic-bezier(0.5, 0, 0.9, 0.4) both;
+  animation:
+    kf-maelstrom-spin-out 0.56s cubic-bezier(0.36, 0, 0.78, 0.46) both,
+    kf-maelstrom-fade-out 0.56s cubic-bezier(0.82, 0, 0.94, 0.55) both;
 }
 ::view-transition-new(root) {
-  animation: kf-maelstrom-in 0.62s 0.06s var(--ease-rise) both;
+  animation:
+    kf-maelstrom-spin-in 0.66s 0.05s var(--ease-rise) both,
+    kf-maelstrom-fade-in 0.42s 0.05s cubic-bezier(0.1, 0.62, 0.35, 1) both;
 }
 
 /* Táctil: el desenfoque de una capa a pantalla completa es lo caro de todo
