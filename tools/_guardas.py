@@ -180,6 +180,121 @@ def comparar_baseline(actual: dict, base: dict):
     return subieron, bajaron
 
 
+def url_propia(p: Path) -> str:
+    """La URL canónica de una página, en el esquema por directorios del sitio."""
+    rel = p.relative_to(RAIZ)
+    if p.name == "index.html":
+        carpeta = rel.parent.as_posix()
+        return SITIO + ("/" if carpeta == "." else f"/{carpeta}/")
+    return SITIO + "/" + rel.as_posix()
+
+
+def urls_no_absolutas():
+    """canonical, og:url y og:image tienen que ser ABSOLUTAS y apuntarse a sí mismas.
+
+    Es EL fallo clásico de Open Graph: quien arma la vista previa —LinkedIn,
+    Slack, X, WhatsApp— no es el navegador del lector y no tiene contra qué
+    resolver una ruta relativa, así que la tarjeta sale sin imagen. No falla de
+    forma visible en el sitio: falla afuera, donde nadie lo mira.
+
+    Un canonical que apunta a otra página es peor que no tenerlo: le está
+    diciendo al buscador que ésta no es la versión buena y que no la indexe.
+    """
+    problemas = []
+    for p in htmls():
+        h = p.read_text(encoding="utf-8")
+        indexable = p.relative_to(RAIZ).as_posix() not in NO_INDEXABLES
+        propia = url_propia(p)
+        campos = {
+            "canonical": re.search(r'<link rel="canonical" href="([^"]*)"', h),
+            "og:url": re.search(r'<meta property="og:url" content="([^"]*)"', h),
+            "og:image": re.search(r'<meta property="og:image" content="([^"]*)"', h),
+        }
+        for campo, m in campos.items():
+            if m is None:
+                if indexable:
+                    problemas.append(f"{nombre(p)}: falta {campo}")
+                continue
+            v = m.group(1)
+            if not v.startswith("https://"):
+                problemas.append(f"{nombre(p)}: {campo} NO es absoluta: «{v}»")
+            elif not v.startswith(SITIO + "/"):
+                problemas.append(f"{nombre(p)}: {campo} apunta fuera del sitio: «{v}»")
+            elif campo in ("canonical", "og:url") and v != propia:
+                problemas.append(
+                    f"{nombre(p)}: {campo} apunta a «{v}» y no a sí misma «{propia}»")
+    return problemas
+
+
+# --- og-image: detectar que quedó vieja -------------------------------------
+# La imagen se genera CAPTURANDO el cubo del sitio servido. Si cambia la luz, el
+# material, la geometría o los tokens de color, el PNG sigue mostrando la
+# versión anterior y no hay nada que avise: es un archivo, no una vista. Mismo
+# problema que el sitemap, y misma solución — sólo que acá no se puede
+# regenerar barato para comparar (hace falta un navegador), así que en vez de
+# comparar la SALIDA se comparan las ENTRADAS contra las que se generó.
+#
+# Se hashea el :root de styles.css y NO el archivo entero a propósito: el CSS
+# cambia todo el tiempo por cosas que no tocan el cubo, y una guarda que se pone
+# roja por motivos ajenos deja de mirarse.
+OG_LOCK = RAIZ / "tools" / "og-image.lock.json"
+
+
+def og_entradas() -> dict:
+    """{entrada: sha256} de todo lo que determina cómo se ve og-image.png."""
+    import hashlib
+
+    def sha(datos: bytes) -> str:
+        return hashlib.sha256(datos).hexdigest()[:16]
+
+    entradas = {}
+    cube = RAIZ / "assets" / "js" / "cube.js"
+    if cube.exists():
+        entradas["cube.js"] = sha(cube.read_bytes())
+
+    css = RAIZ / "assets" / "css" / "styles.css"
+    if css.exists():
+        m = re.search(r":root\s*\{.*?\n\}", css.read_text(encoding="utf-8"), flags=re.S)
+        entradas["styles.css :root"] = sha(m.group(0).encode("utf-8")) if m else "SIN-:root"
+
+    gen = RAIZ / "tools" / "make-og-image.py"
+    if gen.exists():
+        entradas["make-og-image.py"] = sha(gen.read_bytes())
+
+    for f in sorted((RAIZ / "assets" / "fonts").glob("*.woff2")):
+        if f.name.startswith(("zen-kaku-gothic-new-500", "inter-", "cormorant-garamond-latin.")):
+            entradas["fuente " + f.name] = sha(f.read_bytes())
+    return entradas
+
+
+def og_desactualizada():
+    """Entradas que cambiaron desde que se generó la imagen."""
+    salida = RAIZ / "og-image.png"
+    if not salida.exists():
+        return ["no existe og-image.png -> python tools/make-og-image.py"]
+    if not OG_LOCK.exists():
+        return ["no existe tools/og-image.lock.json -> python tools/make-og-image.py"]
+
+    import json
+    guardado = json.loads(OG_LOCK.read_text(encoding="utf-8")).get("entradas", {})
+    actual = og_entradas()
+    cambiadas = [k for k in sorted(set(actual) | set(guardado))
+                 if actual.get(k) != guardado.get(k)]
+    if not cambiadas:
+        return []
+    return [f"og-image.png quedó vieja: cambió {', '.join(cambiadas)}"]
+
+
+def sellar_og():
+    import json
+    OG_LOCK.write_text(json.dumps(
+        {"_comentario": "Generado por tools/make-og-image.py. Hashes de lo que "
+                        "determina cómo se ve og-image.png; check-structure "
+                        "avisa si alguno cambió. No editar a mano.",
+         "entradas": og_entradas()},
+        ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+
+
 def glifos_faltantes():
     """Glifos japoneses del sitio que NO están en el subset de Zen Kaku.
 

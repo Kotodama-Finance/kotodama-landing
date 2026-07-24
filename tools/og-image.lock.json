@@ -1,0 +1,11 @@
+{
+ "_comentario": "Generado por tools/make-og-image.py. Hashes de lo que determina cómo se ve og-image.png; check-structure avisa si alguno cambió. No editar a mano.",
+ "entradas": {
+  "cube.js": "d16161e5582e5b8e",
+  "fuente cormorant-garamond-latin.woff2": "cabcb63cdcf37a39",
+  "fuente inter-latin.woff2": "f7ce522d4eac0459",
+  "fuente zen-kaku-gothic-new-500-subset.woff2": "5209310d4211098c",
+  "make-og-image.py": "7f6e6f3ce965edfc",
+  "styles.css :root": "5248e6cd8c226ec9"
+ }
+}

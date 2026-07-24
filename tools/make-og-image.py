@@ -200,11 +200,29 @@ def componer(cubo):
 
 
 def main():
+    # El sello guarda los hashes de todo lo que determina cómo se ve la imagen
+    # (cube.js, los tokens de :root, este script, las fuentes). check-structure
+    # los compara y avisa si alguno cambió: sin eso, tocar la luz del cubo deja
+    # la tarjeta mostrando la versión anterior sin que nada lo diga.
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import _guardas as G
+
+    if "--sellar" in sys.argv:
+        # Para cuando la imagen la pone el autor a mano y no este script: se
+        # acepta la que hay y se vuelve a sellar contra las entradas actuales.
+        if not os.path.exists(SALIDA):
+            sys.exit("no hay og-image.png que sellar")
+        G.sellar_og()
+        print("  sellada la og-image.png actual sin regenerarla")
+        return 0
+
     print("capturando el cubo del sitio servido…")
     cubo = recortar_al_cubo(capturar_cubo())
     componer(cubo).save(SALIDA, optimize=True)
+    G.sellar_og()
     kb = os.path.getsize(SALIDA) / 1024
     print(f"  og-image.png  {W}x{H}  {kb:.0f} KB")
+    print("  tools/og-image.lock.json sellado")
     if kb > 300:
         print("  OJO: >300 KB. Algunas plataformas descartan imágenes pesadas.")
     return 0

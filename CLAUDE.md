@@ -213,6 +213,19 @@ cuanto cambia un parámetro de luz.
   página con `noindex` aparece listada: son dos declaraciones que se contradicen.
   Usa rutas absolutas porque GitHub Pages la sirve ante URLs de cualquier
   profundidad.
+- **`canonical`, `og:url` y `og:image` son ABSOLUTAS y autorreferentes**, con
+  guarda. Quien arma la vista previa (LinkedIn, Slack, X) no es el navegador del
+  lector y no resuelve rutas relativas: la tarjeta sale sin imagen. **El fallo no
+  se ve en el sitio, se ve afuera**, que es por qué necesita guarda y no revisión
+  visual. La 404 está exenta: no lleva ninguna de las tres, a propósito.
+- **La og-image puede quedar vieja en silencio.** Se genera capturando el cubo,
+  así que un cambio de luz o de material deja el PNG mostrando la versión
+  anterior — es un archivo, no una vista. `tools/og-image.lock.json` guarda el
+  hash de las ENTRADAS (cube.js, el `:root` de styles.css, el script, las
+  fuentes) y la guarda avisa si alguna cambió. No se compara la salida porque
+  regenerarla necesita un navegador. **Se hashea sólo el `:root`**, no el CSS
+  entero: el CSS cambia todo el tiempo por cosas ajenas al cubo, y una guarda
+  que se pone roja sin motivo deja de mirarse.
 - **hreflang: sólo el patrón anotado en el README**, sin implementar, hasta que
   exista `/ja/`.
 

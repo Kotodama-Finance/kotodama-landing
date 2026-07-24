@@ -229,7 +229,49 @@ dudas» copiando un robots.txt ajeno.
 página de error es lo contrario de lo que hace falta. Usa rutas absolutas porque
 GitHub Pages la sirve ante URLs de cualquier profundidad
 (`/tosei/algo/inexistente/`), y con rutas relativas el CSS y los enlaces
-apuntarían a la nada.
+apuntarían a la nada. Tampoco lleva `canonical` ni Open Graph: un canonical en
+una página `noindex` no dice nada, y una tarjeta linda al compartirla haría
+pasar un enlace roto por contenido.
+
+### Las URLs de metadatos son absolutas, y hay guarda
+
+`canonical`, `og:url` y `og:image` son **absolutas** en las ocho páginas
+indexables, y `canonical`/`og:url` apuntan cada una **a sí misma**.
+
+No es un detalle de estilo. Quien arma la vista previa —LinkedIn, Slack, X,
+WhatsApp— **no es el navegador del lector** y no tiene contra qué resolver una
+ruta relativa: con `og:image="/og-image.png"` la tarjeta sale sin imagen. Y el
+fallo no se ve en el sitio, que anda perfecto; se ve afuera, donde nadie mira.
+Un `canonical` que apunta a otra página es peor que no tenerlo: le dice al
+buscador que ésta no es la versión buena.
+
+`check-structure.py` lo verifica en cada commit, justamente porque es un fallo
+silencioso.
+
+### La imagen OG puede quedar vieja sin que nada avise
+
+Se genera capturando el cubo, así que si cambian la luz, los materiales, la
+geometría o los tokens de color, el PNG sigue mostrando la versión anterior.
+Es un archivo, no una vista: no se «re-renderiza» solo.
+
+Mismo problema que el sitemap, distinta solución: el sitemap se puede regenerar
+barato y comparar, pero la imagen necesita un navegador. Así que en vez de
+comparar la **salida** se comparan las **entradas**:
+`tools/og-image.lock.json` guarda un hash de `cube.js`, del bloque `:root` de
+`styles.css`, del propio script y de las fuentes de la tarjeta.
+`check-structure.py` avisa si alguno cambió.
+
+Se hashea **sólo el `:root`** y no `styles.css` entero a propósito: el CSS cambia
+todo el tiempo por cosas que no tocan el cubo, y una guarda que se pone roja por
+motivos ajenos deja de mirarse. Verificado: cambiar `--c-gold` avisa, cambiar la
+opacidad del footer no.
+
+```
+python tools/make-og-image.py            # regenera y vuelve a sellar
+python tools/make-og-image.py --sellar   # acepta la imagen actual sin regenerar
+```
+
+El `--sellar` es para cuando la imagen la pone el autor a mano en vez del script.
 
 **La imagen OG es 1200×630** (relación 1.91:1), que es la medida canónica: la
 que piden Facebook, LinkedIn, Slack, Discord y X. Debajo de 600×315 varias

@@ -6,7 +6,11 @@
 <title>Page not found — Kotodama Finance</title>
 <meta name="description" content="TODO: texto de la página 404.">
 <!-- La única página del sitio que NO se quiere indexada: es un destino de
-     error, no contenido. Por eso tampoco está en sitemap.xml. -->
+     error, no contenido. Por eso tampoco está en sitemap.xml.
+     Y por eso NO lleva canonical ni Open Graph, a diferencia de las otras ocho:
+     un canonical en una página noindex no dice nada, y una tarjeta linda al
+     compartirla haría pasar un enlace roto por contenido. La ausencia es
+     deliberada; check-structure exime a esta página de exigirlos. -->
 <meta name="robots" content="noindex, follow">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">

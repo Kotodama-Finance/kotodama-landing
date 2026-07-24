@@ -53,6 +53,26 @@ def main():
     else:
         print(f"  OK     sin repetidos entre las {len(list(G.htmls()))} páginas")
 
+    print("\nURLs absolutas y autorreferentes")
+    relativas = G.urls_no_absolutas()
+    if relativas:
+        for x in relativas:
+            print(f"  FALLA  {x}")
+        problemas += relativas
+    else:
+        print("  OK     canonical, og:url y og:image absolutas y bien apuntadas")
+
+    print("\nog-image.png al día")
+    vieja = G.og_desactualizada()
+    if vieja:
+        for x in vieja:
+            print(f"  FALLA  {x}")
+        problemas += vieja
+        print("  -> regenerar: python tools/make-og-image.py   (necesita el sitio en :8000)")
+        print("     o, si la imagen la pusiste vos a mano: --sellar")
+    else:
+        print("  OK     generada contra las entradas actuales")
+
     print("\nCobertura del sitemap")
     huecos = G.sitemap_incompleto()
     if huecos:
