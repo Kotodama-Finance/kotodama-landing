@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+"""Genera sitemap.xml a partir de los HTML publicables.
+
+    python tools/make-sitemap.py            # reescribe sitemap.xml
+    python tools/make-sitemap.py --check    # sólo informa si quedó viejo
+
+POR QUÉ UN SCRIPT Y NO A MANO. El sitemap es una lista duplicada: las mismas
+URLs que ya están en el sistema de archivos, escritas otra vez. Igual que el nav
+y el footer, la duplicación se banca sólo si está vigilada — pero acá hay algo
+mejor que vigilarla, que es no escribirla: las páginas ya existen como
+directorios con su index.html, así que la lista se deriva. Agregar una página
+nueva es correr esto; y si alguien se olvida, `check-structure.py` lo caza,
+porque verifica que toda página publicable esté en el sitemap.
+
+SIN <lastmod> A PROPÓSITO. Es opcional, y sólo sirve si es exacto: un lastmod
+que miente es peor que ninguno, porque los buscadores dejan de creerle al
+archivo entero. Para que fuera exacto habría que sacarlo de git en cada
+regeneración, y entonces el sitemap cambiaría en cada commit ensuciando el
+historial. Con ocho páginas estáticas no compensa. <changefreq> y <priority>
+directamente los ignora Google desde hace años.
+
+La 404 queda afuera: pedirle a un buscador que indexe la página de error es
+exactamente lo contrario de lo que hace falta.
+"""
+import sys
+from pathlib import Path
+
+RAIZ = Path(__file__).resolve().parent.parent
+SITIO = "https://kotodamafinance.com"
+SALIDA = RAIZ / "sitemap.xml"
+EXCLUIDOS = {"_dev", "_ref", ".git", "docs", "tools", "node_modules"}
+NO_INDEXABLES = {"404.html"}
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
+
+def urls():
+    """URLs canónicas, en el mismo esquema por directorios que usa el sitio:
+    /naming/ y no /naming/index.html."""
+    encontradas = []
+    for p in sorted(RAIZ.rglob("*.html")):
+        rel = p.relative_to(RAIZ)
+        if any(parte in EXCLUIDOS for parte in rel.parts):
+            continue
+        if rel.as_posix() in NO_INDEXABLES:
+            continue
+        if p.name == "index.html":
+            carpeta = rel.parent.as_posix()
+            encontradas.append("/" if carpeta == "." else f"/{carpeta}/")
+        else:
+            encontradas.append("/" + rel.as_posix())
+    # la portada primero, el resto alfabético
+    return sorted(set(encontradas), key=lambda u: (u != "/", u))
+
+
+def documento():
+    cuerpo = "\n".join(f"  <url><loc>{SITIO}{u}</loc></url>" for u in urls())
+    return ('<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<!-- Generado por tools/make-sitemap.py — no editar a mano.\n'
+            '     check-structure.py verifica que no le falte ninguna página. -->\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            f"{cuerpo}\n"
+            "</urlset>\n")
+
+
+def main():
+    nuevo = documento()
+    if "--check" in sys.argv:
+        viejo = SALIDA.read_text(encoding="utf-8") if SALIDA.exists() else ""
+        if viejo == nuevo:
+            print(f"  sitemap.xml al día ({len(urls())} URLs)")
+            return 0
+        print("  sitemap.xml quedó viejo -> correr: python tools/make-sitemap.py")
+        return 1
+    SALIDA.write_text(nuevo, encoding="utf-8")
+    for u in urls():
+        print(f"  {SITIO}{u}")
+    print(f"{len(urls())} URLs en sitemap.xml")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

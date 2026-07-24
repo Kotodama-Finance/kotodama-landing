@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page not found — Kotodama Finance</title>
+<meta name="description" content="TODO: texto de la página 404.">
+<!-- La única página del sitio que NO se quiere indexada: es un destino de
+     error, no contenido. Por eso tampoco está en sitemap.xml. -->
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body class="page">
+
+<!-- 404 — GitHub Pages sirve este archivo ante cualquier ruta que no exista,
+     así que las rutas absolutas del nav y el footer son obligatorias: la URL
+     fallida puede tener cualquier profundidad (/tosei/algo/inexistente/) y con
+     rutas relativas los enlaces y el CSS apuntarían a la nada.
+     Lleva el mismo chrome que el resto del sitio: quien se pierde tiene que
+     poder salir por donde saldría en cualquier otra página. -->
+<header id="nav" class="nav">
+    <a class="nav__brand" href="/">
+      <span class="nav__mark" lang="ja">言霊</span>
+      <span class="nav__word">Kotodama Finance</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="/#cube">The Cube</a>
+      <a href="/naming/"><span class="todo">Naming</span></a>
+      <a href="/#about">About</a>
+      <a href="/#method">Method</a>
+      <a href="/#footer">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <article class="face-page">
+      <header class="face-page__head">
+        <p class="eyebrow">404</p>
+        <!-- Sin kanji: elegir la palabra japonesa de esta página es una decisión
+             de contenido del autor, igual que los seis nombres de las caras, y
+             además cualquier kanji nuevo obliga a regenerar el subset de Zen
+             Kaku (ver README). Si se agrega uno, hay que hacer las dos cosas. -->
+        <h1 class="face-page__title">
+          <span class="face-page__romaji">Page not found</span>
+        </h1>
+      </header>
+
+      <div class="face-page__body">
+        <p><span class="todo">TODO: una o dos frases. La página no existe; el mapa sigue estando.</span></p>
+      </div>
+
+      <p class="face-page__back"><a href="/">&larr; <span class="todo">TODO: rótulo de vuelta a la portada</span></a></p>
+    </article>
+  </main>
+
+<footer id="footer" class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <p class="footer__mark">
+          <span lang="ja">言霊</span>
+          <span class="footer__word">Kotodama Finance</span>
+        </p>
+        <p class="footer__tag">Where Japan&rsquo;s economic currents become visible. Open access.</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <p class="footer__label">Reach us</p>
+          <a href="mailto:contact@kotodamafinance.com">contact@kotodamafinance.com</a>
+        </div>
+        <div class="footer__col">
+          <p class="footer__label">Follow</p>
+          <a href="https://x.com/KotodamaFinance" target="_blank" rel="noopener">X / @KotodamaFinance</a>
+          <a href="https://www.linkedin.com/company/kotodamafinance/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+        <div class="footer__col">
+          <p class="footer__label">Platform</p>
+          <a href="#cube">The Cube</a>
+          <a href="#method">Method</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>&copy; 2026 Kotodama Finance &middot; Open access</span>
+      <span>English &middot; <span class="footer__soon"><span lang="ja">日本語</span> &mdash; coming</span></span>
+    </div>
+  </footer>
+
+</body>
+</html>

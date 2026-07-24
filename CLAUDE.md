@@ -192,6 +192,38 @@ servidor de desarrollo manda `no-store`): la selección se restaura desde
 `sessionStorage`, y **sólo** si la navegación fue `back_forward` — llegar a la
 portada normalmente no debe elegir una cara en tu nombre.
 
+### La capa de metadatos se genera y se vigila; nada se escribe a mano dos veces
+`sitemap.xml` y `og-image.png` salen de scripts (`tools/make-sitemap.py`,
+`tools/make-og-image.py`). El sitemap es la misma lista de URLs que ya existe
+como directorios: se deriva en vez de copiarse, y `check-structure.py` verifica
+que no le falte ninguna página. La imagen OG **captura el cubo del sitio
+servido** en vez de redibujarlo, porque una copia a mano deriva del original en
+cuanto cambia un parámetro de luz.
+
+- **`robots.txt` no bloquea crawlers de IA** — GPTBot, ClaudeBot, CCBot y demás.
+  Es deliberado y está escrito en el archivo para que nadie los agregue "por las
+  dudas": la descubribilidad por máquinas es objetivo del proyecto, la misma
+  razón por la que el contenido va en el HTML.
+- **Títulos y descriptions únicos por página, verificado.** Las seis subpáginas
+  de las caras salieron del mismo molde y **compartían la description palabra
+  por palabra**; eso hace que buscadores y crawlers las traten como duplicados y
+  se queden con una. Ahora cada placeholder nombra su cara, y la guarda no deja
+  que vuelvan a coincidir.
+- **La 404 lleva `noindex` y queda fuera del sitemap**, y la guarda falla si una
+  página con `noindex` aparece listada: son dos declaraciones que se contradicen.
+  Usa rutas absolutas porque GitHub Pages la sirve ante URLs de cualquier
+  profundidad.
+- **hreflang: sólo el patrón anotado en el README**, sin implementar, hasta que
+  exista `/ja/`.
+
+### Los placeholders de metadatos también se cuentan
+Los `TODO` de `<title>` y de `content="…"` **no llevan `class="todo"`**, porque
+no son elementos. Durante un tiempo no se contaron, y el sitio podía dar «LISTO
+PARA PUBLICAR» con seis descriptions que decían *«TODO: descripción de esta
+cara.»* — exactamente el fallo que la guarda existe para evitar. `placeholders()`
+ahora cuenta las dos familias. Si aparece otra clase de placeholder que no sea
+un elemento con clase, hay que agregarla ahí.
+
 ### El shader del mar es código cerrado
 El GLSL de `assets/js/background.js` está calibrado a mano y **no se toca**. Su
 paleta (`deep`, `mid`, `crest`) vive en constantes del fragment shader, **fuera

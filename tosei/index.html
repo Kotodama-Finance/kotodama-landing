@@ -4,8 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tosei 渡世 — Kotodama Finance</title>
-<meta name="description" content="TODO: descripción de esta cara.">
+<meta name="description" content="TODO: descripción de Tosei (渡世) — Personal finance in Japan.">
 <link rel="canonical" href="https://kotodamafinance.com/tosei/">
+<!-- Open Graph: la tarjeta que se ve al compartir el enlace en un chat o una
+     red. Sin esto el enlace viaja como una línea de texto pelada.
+     og:url y og:image tienen que ser ABSOLUTAS: el que arma la vista previa no
+     es el navegador del lector y no puede resolver una ruta relativa.
+     La imagen la genera tools/make-og-image.py. -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kotodamafinance.com/tosei/">
+<meta property="og:title" content="Tosei 渡世 — Kotodama Finance">
+<meta property="og:description" content="TODO: descripción de Tosei (渡世) — Personal finance in Japan.">
+<meta property="og:image" content="https://kotodamafinance.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="El cubo de seis caras de Kotodama Finance">
+<!-- Sin esto X muestra una miniatura cuadrada en vez de la tarjeta ancha. -->
+<meta name="twitter:card" content="summary_large_image">
+<!-- Sin esto X muestra una miniatura cuadrada en vez de la tarjeta ancha. -->
 <!-- Iconos. El .ico existe porque el navegador pide /favicon.ico haya o no
      <link>: sin el archivo, cada carga deja un 404 en la consola.
      Se generan con tools/make-favicon.py, que documenta el porqué de cada formato. -->

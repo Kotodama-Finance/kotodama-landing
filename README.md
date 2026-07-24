@@ -17,9 +17,15 @@ assets/fonts/           tipografías auto-hospedadas y subseteadas
 assets/vendor/          Three.js vendoreado (sin CDN en runtime)
 favicon.ico/.svg        iconos del sitio (generados, ver más abajo)
 apple-touch-icon.png    icono para «añadir a inicio» en iOS
+sitemap.xml             generado por tools/make-sitemap.py
+robots.txt              todo abierto, incluidos los crawlers de IA
+404.html                la sirve GitHub Pages ante cualquier ruta inexistente
+og-image.png            tarjeta al compartir (generada)
 tools/check-structure.py guarda estructural: verde siempre (ver más abajo)
 tools/check-ready.py    guarda previa a publicar (roja hasta la redacción)
 tools/make-favicon.py   genera los iconos a partir del subset de la marca
+tools/make-sitemap.py   genera el sitemap a partir de los HTML publicables
+tools/make-og-image.py  genera og-image.png capturando el cubo real
 docs/v1-dark/           registro visual de versiones etiquetadas
 ```
 
@@ -190,6 +196,82 @@ del mar: si cambia la paleta, hay que volver a correr el script.
 
 El `favicon.ico` existe aunque haya `<link>`: el navegador pide `/favicon.ico`
 igual, y sin el archivo cada carga deja un 404 en la consola.
+
+## Metadatos y descubribilidad
+
+Que el sitio sea legible por máquinas es un **objetivo** del proyecto, no un
+extra: es la misma razón por la que todo el contenido va en el HTML.
+
+| Archivo | Qué hace | Se mantiene |
+|---|---|---|
+| `sitemap.xml` | lista las 8 páginas indexables | `python tools/make-sitemap.py` |
+| `robots.txt` | abre todo y apunta al sitemap | a mano (casi nunca cambia) |
+| `og-image.png` | la tarjeta al compartir un enlace | `python tools/make-og-image.py` |
+| `404.html` | GitHub Pages la sirve ante cualquier ruta inexistente | a mano |
+
+**El sitemap se genera, no se escribe.** Es una lista duplicada —las mismas URLs
+que ya están en el sistema de archivos— y la duplicación acá no hace falta ni
+vigilarla: se deriva. Al agregar una página, correr el script. Si alguien se
+olvida, `check-structure.py` lo caza, porque verifica que toda página publicable
+esté listada.
+
+No lleva `<lastmod>`: sólo sirve si es exacto, para que fuera exacto habría que
+sacarlo de git en cada regeneración, y entonces el sitemap cambiaría en cada
+commit ensuciando el historial. `<changefreq>` y `<priority>` los ignora Google
+desde hace años.
+
+**`robots.txt` no bloquea a los crawlers de IA** (GPTBot, ClaudeBot, CCBot,
+PerplexityBot, Google-Extended). No están nombrados porque `User-agent: *` ya
+los cubre; el archivo lo dice por escrito para que nadie los agregue «por las
+dudas» copiando un robots.txt ajeno.
+
+**La 404 queda fuera del sitemap** y lleva `noindex`: pedir que se indexe la
+página de error es lo contrario de lo que hace falta. Usa rutas absolutas porque
+GitHub Pages la sirve ante URLs de cualquier profundidad
+(`/tosei/algo/inexistente/`), y con rutas relativas el CSS y los enlaces
+apuntarían a la nada.
+
+**La imagen OG es 1200×630** (relación 1.91:1), que es la medida canónica: la
+que piden Facebook, LinkedIn, Slack, Discord y X. Debajo de 600×315 varias
+plataformas degradan a miniatura cuadrada. El cubo **se captura del sitio de
+verdad** —por eso el script necesita el servidor en `:8000`, a diferencia de
+`make-favicon.py`— porque redibujarlo a mano crearía una copia que deriva del
+original en cuanto cambie cualquier parámetro de luz o material.
+
+### hreflang: el patrón para cuando exista `/ja/`
+
+**Todavía no está implementado** — no hay versión japonesa. Cuando la haya, el
+patrón es éste, y tiene una regla que se incumple seguido:
+
+**Las declaraciones tienen que ser recíprocas y cada página se declara a sí
+misma.** Si `/hajime/` apunta a `/ja/hajime/` pero la japonesa no apunta de
+vuelta, Google descarta el par entero. Y si una página no se lista a sí misma,
+tampoco vale.
+
+En el `<head>` de **las dos** versiones de cada página, el mismo bloque idéntico:
+
+```html
+<link rel="alternate" hreflang="en" href="https://kotodamafinance.com/hajime/">
+<link rel="alternate" hreflang="ja" href="https://kotodamafinance.com/ja/hajime/">
+<link rel="alternate" hreflang="x-default" href="https://kotodamafinance.com/hajime/">
+```
+
+`x-default` apunta a la inglesa: es la que ve quien no coincide con ningún
+idioma declarado. Y en Open Graph, `<meta property="og:locale" content="en_US">`
+con `og:locale:alternate` = `ja_JP` (invertidos en la versión japonesa).
+
+Tres cosas más para ese día:
+
+1. **`<html lang="ja">`** en las páginas japonesas — hoy las ocho dicen `en`.
+2. **El `canonical` de cada página apunta a sí misma**, nunca de la japonesa a
+   la inglesa: son contenidos distintos, no duplicados.
+3. **El sitemap puede llevar los alternates** con `xmlns:xhtml` y un
+   `<xhtml:link>` por idioma dentro de cada `<url>`. `make-sitemap.py` habrá que
+   extenderlo; hoy emite sólo `<loc>`.
+
+Y lo de siempre: **cada texto japonés nuevo obliga a regenerar el subset**, que
+para una versión japonesa entera significa rehacerlo con el corpus completo —
+ahí ya no alcanza con listar los kanji a mano.
 
 ## Decisiones
 

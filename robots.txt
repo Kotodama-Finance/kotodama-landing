@@ -1,0 +1,18 @@
+# Kotodama Finance — https://kotodamafinance.com
+#
+# Todo abierto, a propósito. Que el sitio sea legible por máquinas es un
+# OBJETIVO del proyecto, no una concesión: es la misma razón por la que todo el
+# contenido va en el HTML y no inyectado por JS.
+#
+# Los crawlers de IA (GPTBot, ClaudeBot, CCBot, PerplexityBot, Google-Extended…)
+# NO se bloquean. No hace falta nombrarlos uno por uno para permitirlos: el
+# User-agent: * de abajo ya los cubre. Se los menciona acá para que quede por
+# escrito que la omisión es deliberada y nadie los agregue "por las dudas"
+# copiando un robots.txt ajeno.
+#
+# Acceso abierto significa acceso abierto también para quien lee a máquina.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://kotodamafinance.com/sitemap.xml
