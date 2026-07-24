@@ -32,6 +32,17 @@ fallidos ya corregidos, y las capturas intermedias.
 - Tag `v1-dark` = versión navy+oro con el cubo Three.js, con registro visual en
   `docs/v1-dark/`.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
+- Último cierre: **2026-07-24**, en `5c27675`. Árbol limpio y todo pusheado.
+
+### AL RETOMAR, EMPEZAR ACÁ
+
+**Levantar el servidor en `:8000` y correr `python tools/check-structure.py`.**
+Tiene que dar verde; si da rojo, algo cambió fuera de sesión y eso es lo primero
+a resolver, antes de tocar nada.
+
+Después, el único frente activo es **la redacción**, y se hace fuera de Code
+(ver cabos abiertos). Si el autor no trae texto, no hay tarea de implementación
+esperando: lo que queda está congelado por decisión suya o depende de `/ja/`.
 
 ---
 
@@ -311,39 +322,88 @@ antes del pase de redacción.
 
 ## Cabos abiertos (lista viva)
 
-- ~~Luz a lo largo del arco del péndulo~~ — **CERRADO**, no reabrir. No había
-  problema. La métrica decía «70% del perímetro con ΔL bajo» y era cierto, pero
-  no significaba lo que parecía: el cuerpo del cubie (lum ~11.5) es **más oscuro
-  que el fondo** (15.3), así que todo perímetro sin iluminar falla por
-  construcción — y un objeto más oscuro que su fondo se ve perfecto, se lee como
-  silueta. Lo que desaparece es ΔL ≈ 0, no ΔL chico y consistente. Cerrado por
-  inspección visual con una hoja de contactos de 8 poses cubriendo el arco real.
-  Todo en `docs/mediciones/luz-arco.md`. **La pregunta era perceptual y binaria:
-  si alguien sospecha que el cubo se pierde, se saca una captura, no un barrido.**
+**Estado al cierre de la sesión del 2026-07-24.** El andamiaje está terminado:
+las nueve páginas, el cubo, la transición, la capa de metadatos y las guardas.
 
-- **Móvil: POSTERGADO por decisión del autor.** No proponerlo. Sigue sin medirse
-  en un dispositivo real (degradación del cubo, el FOV horizontal que manda con
-  el escenario más alto que ancho, el maelstrom táctil), pero **no es un pendiente
-  vivo**: se retoma cuando el autor lo diga.
-- ~~`favicon.ico` 404~~ — **CERRADO**. Hay `favicon.ico` (16/32/48), `favicon.svg`
-  y `apple-touch-icon.png`, generados por `tools/make-favicon.py` a partir del
-  mismo subset de la marca (言, oro sobre navy). Consola limpia.
-- ~~Animación maelstrom~~ — **IMPLEMENTADA**, ver decisión cerrada arriba. Falta
-  sólo verla en un teléfono real (arriba, con lo demás de móvil).
-- **~80 placeholders `TODO`** pendientes de redacción. El piso está fijado en
-  `tools/placeholders-baseline.json`; bajarlo es progreso, subirlo es un bug.
-- **Remolino ukiyo-e para la transición: descartado por ahora.** Ocho
-  iteraciones fallidas entre Design y Claude. **El ruido procedural produce
-  textura, no dibujo**: da granulado, no la línea de una ola grabada. Requiere
-  un ilustrador humano o un enfoque distinto (imagen dibujada, no generada).
-  **No reintentar con los mismos medios.** La transición se queda con la versión
-  actual: giro + escala + desenfoque leve, sin `feTurbulence`.
-- **Vista explotada del cubo: DESPUÉS del pase de redacción.** Se discutió fuera
-  de estas sesiones y el brief todavía no está escrito; no hay nada que decidir
-  acá hasta que llegue. No proponerla antes.
-- **hreflang / versión japonesa**: patrón documentado en el README, sin
-  implementar. Depende de que exista `/ja/`.
-- **`/naming/`**: los siete bloques están como andamiaje; falta el texto.
+### El único frente activo: la redacción
+
+**102 placeholders `TODO`**, y **se escriben fuera de Code** — son decisiones de
+contenido del autor, no tareas de implementación. Nada de lo que queda en esta
+lista se destraba antes que esto.
+
+| Página | Placeholders |
+|---|---|
+| `/naming/` | 34 |
+| portada | 17 |
+| `/sugao/` | 12 |
+| `/hajime/` `/tosei/` `/kamon/` `/torii/` `/kizuna/` | 7 c/u |
+| `404.html` | 4 |
+
+El piso está fijado en `tools/placeholders-baseline.json`: **bajarlo es progreso,
+subirlo es un bug**. Al redactar, correr
+`python tools/check-structure.py --actualizar-baseline` para fijar el piso nuevo.
+Incluye los `TODO` de `<title>` y `content="…"`, que no llevan `class="todo"`.
+
+Y lo de siempre: **cada texto japonés nuevo obliga a regenerar el subset** de Zen
+Kaku, verificando contra la tabla `cmap`. Ya frenó una vez, con el 迷 de la 404.
+
+### Congelados por decisión del autor — no proponerlos
+
+- **Móvil.** Sin medir en dispositivo real (degradación del cubo, el FOV
+  horizontal que manda con el escenario más alto que ancho, el maelstrom táctil).
+  Se retoma cuando el autor lo diga.
+- **Vista explotada del cubo.** Va **después** del pase de redacción; se discutió
+  fuera de estas sesiones y el brief todavía no está escrito.
+- **Remolino ukiyo-e para la transición.** Ocho iteraciones fallidas entre Design
+  y Claude: **el ruido procedural produce textura, no dibujo** — granulado, no la
+  línea de una ola grabada. Requiere ilustrador humano o un enfoque distinto.
+  **No reintentar con los mismos medios.** La transición queda como está: giro
+  46° + escala + desenfoque leve, sin `feTurbulence`.
+
+### Ideas anotadas, sin probar
+
+- **Unabare de fondo en la og:image.** Usar un frame estático del mar,
+  oscurecido, detrás de la tipografía. La tarjeta actual es legible pero
+  **genérica**; el mar es lo que la haría reconocible como este proyecto y no
+  como cualquier sitio financiero serio.
+  *(«Unabare» es como el autor llama al shader del mar; el nombre no aparece en
+  el código, donde es `background.js` / `#sea`.)*
+
+  Lo que ya está resuelto para intentarlo: `initSea(canvas, reduce, stillTime)`
+  dibuja **un solo frame** con `preserveDrawingBuffer: true`, que es justo lo que
+  hace falta para poder leer los píxeles del canvas. `STILL_TIME = 12.0` es el
+  instante elegido, y el tercer parámetro permite probar otros.
+
+  **El costo a sopesar antes de empezar**: hoy `make-og-image.py` no necesita
+  navegador ni servidor, que fue una ventaja explícita de sacar el cubo. Meter el
+  mar la devuelve, y además reintroduce `background.js` como entrada de
+  `og-image.lock.json`. No es un impedimento, pero es un intercambio, no una
+  mejora gratis. Y el texto tiene que seguir leyéndose **a 500 px**: el mar es
+  oscuro y de bajo contraste, así que probablemente haga falta oscurecerlo más de
+  lo que parece necesario a tamaño completo.
+
+### Depende de que exista `/ja/`
+
+- **hreflang y versión japonesa**: patrón documentado en el README, sin
+  implementar. Incluye `<html lang="ja">`, canonical de cada página a sí misma, y
+  extender `make-sitemap.py` con `xhtml:link`.
+
+### Cerrados en esta sesión — no reabrir
+
+- ~~Luz a lo largo del arco del péndulo~~ — no había problema. La métrica decía
+  «70% del perímetro con ΔL bajo» y era cierto, pero no significaba lo que
+  parecía: el cuerpo del cubie (lum ~11.5) es **más oscuro que el fondo** (15.3),
+  así que todo perímetro sin iluminar falla por construcción — y un objeto más
+  oscuro que su fondo se lee como silueta. Lo que desaparece es ΔL ≈ 0, no ΔL
+  chico y consistente. Cerrado por inspección visual, todo en
+  `docs/mediciones/luz-arco.md`. **La pregunta era perceptual y binaria: si
+  alguien sospecha que el cubo se pierde, se saca una captura, no un barrido.**
+- ~~`favicon.ico` 404~~ — hay `.ico` (16/32/48), `.svg` y `apple-touch-icon`,
+  generados por `tools/make-favicon.py`. Consola limpia.
+- ~~Animación maelstrom~~ — implementada y calibrada dos veces (ver decisión
+  cerrada arriba).
+- ~~Capa de metadatos~~ — sitemap generado, robots abierto a los crawlers de IA,
+  Open Graph completo, 404, y títulos/descriptions únicos verificados por guarda.
 
 ---
 
