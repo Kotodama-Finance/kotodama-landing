@@ -15,7 +15,10 @@ assets/js/cube.js       cubo de navegación (Three.js)
 assets/js/main.js       orquestador: toggle, nav, visibilidad
 assets/fonts/           tipografías auto-hospedadas y subseteadas
 assets/vendor/          Three.js vendoreado (sin CDN en runtime)
+favicon.ico/.svg        iconos del sitio (generados, ver más abajo)
+apple-touch-icon.png    icono para «añadir a inicio» en iOS
 tools/check-ready.py    guarda previa a publicar (ver más abajo)
+tools/make-favicon.py   genera los iconos a partir del subset de la marca
 docs/v1-dark/           registro visual de versiones etiquetadas
 ```
 
@@ -144,6 +147,27 @@ python tools/check-ready.py
 **No usar `document.fonts.check()` para esto.** Informa si la fuente está
 cargada, no si contiene el glifo: devuelve `true` para caracteres que la fuente
 no puede dibujar. Ya dio un falso positivo con 免責事項.
+
+## Iconos (favicon)
+
+Los tres iconos —`favicon.ico` (16/32/48 px), `favicon.svg` y
+`apple-touch-icon.png`— **se generan**, no se editan a mano:
+
+```
+python tools/make-favicon.py            # regenera los tres
+python tools/make-favicon.py --strip    # además, la tira de comparación en _dev/
+```
+
+Salen del **mismo subset de la marca** (Zen Kaku peso 500), así que el icono es
+literalmente la misma letra 言 que el logo del nav, en oro sobre navy. El SVG
+lleva el glifo como `<path>` y no como `<text>`: un favicon no carga webfonts.
+
+Los colores (`--c-navy`, `--c-gold`) están **copiados** en el script, porque un
+icono se renderiza aislado y no ve el CSS. Es la misma excepción que el shader
+del mar: si cambia la paleta, hay que volver a correr el script.
+
+El `favicon.ico` existe aunque haya `<link>`: el navegador pide `/favicon.ico`
+igual, y sin el archivo cada carga deja un 404 en la consola.
 
 ## Decisiones
 
