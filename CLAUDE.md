@@ -228,13 +228,29 @@ Correr las guardas. **Si alguna falla, no commitear**: arreglar, o revertir al
 último commit verde y avisar qué se revirtió y por qué. El objetivo es que todo
 commit sea un punto de restauración seguro por construcción, no por suerte.
 
-| Guarda | Cuándo | Costo |
-|---|---|---|
-| `python tools/check-ready.py` | siempre | instantánea |
-| `python tools/check-modes.py` | siempre | ~40 s |
-| `python tools/check-pendulum.py` | antes de push, o al tocar la física | ~2–4 min |
+| Guarda | Cuándo | Costo | Se espera |
+|---|---|---|---|
+| `python tools/check-structure.py` | siempre | instantánea | **verde** |
+| `python tools/check-modes.py` | siempre | ~40 s | **verde** |
+| `python tools/check-pendulum.py` | antes de push, o al tocar la física | ~2–4 min | **verde** |
+| `python tools/check-ready.py` | antes de publicar a `main` | instantánea | rojo hasta la redacción |
 
 Las dos que usan navegador necesitan el sitio servido en `:8000`.
+
+**Por qué `check-ready` no va en cada commit.** Está en rojo por diseño mientras
+queden placeholders, y **una guarda siempre en rojo deja de ser señal**: uno se
+entrena a ignorarla y el día que se rompa algo de verdad no lo ve. Por eso se
+partió en dos, con códigos de salida distintos:
+
+- `check-structure.py` — nav y footer idénticos, cobertura del subset, y **sin
+  placeholders nuevos contra `tools/placeholders-baseline.json`**. Sale `0`/`1`.
+  Ésta es la que tiene que estar verde siempre, así que su rojo significa algo.
+- `check-ready.py` — ¿puede ir a `main`? Sale `0` listo, **`2` falta redacción
+  (esperado, no es regresión)**, `1` algo roto de verdad.
+
+Cuando se redacta un placeholder el conteo baja: la guarda lo informa y **no**
+falla, pero hay que fijar el piso nuevo con
+`python tools/check-structure.py --actualizar-baseline`.
 
 **Tags**: sólo en hitos. El próximo natural es cuando el andamiaje esté completo,
 antes del pase de redacción.
@@ -262,7 +278,14 @@ antes del pase de redacción.
   mismo subset de la marca (言, oro sobre navy). Consola limpia.
 - ~~Animación maelstrom~~ — **IMPLEMENTADA**, ver decisión cerrada arriba. Falta
   sólo verla en un teléfono real (arriba, con lo demás de móvil).
-- **~70 placeholders `TODO`** pendientes de redacción.
+- **~80 placeholders `TODO`** pendientes de redacción. El piso está fijado en
+  `tools/placeholders-baseline.json`; bajarlo es progreso, subirlo es un bug.
+- **Remolino ukiyo-e para la transición: descartado por ahora.** Ocho
+  iteraciones fallidas entre Design y Claude. **El ruido procedural produce
+  textura, no dibujo**: da granulado, no la línea de una ola grabada. Requiere
+  un ilustrador humano o un enfoque distinto (imagen dibujada, no generada).
+  **No reintentar con los mismos medios.** La transición se queda con la versión
+  actual: giro + escala + desenfoque leve, sin `feTurbulence`.
 - **Vista explotada del cubo: sin plan.** Mencionada como pendiente; no hay
   registro de que se haya discutido ni decidido nada al respecto.
 - **`/naming/`**: los siete bloques están como andamiaje; falta el texto.

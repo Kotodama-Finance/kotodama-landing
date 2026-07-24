@@ -17,7 +17,8 @@ assets/fonts/           tipografías auto-hospedadas y subseteadas
 assets/vendor/          Three.js vendoreado (sin CDN en runtime)
 favicon.ico/.svg        iconos del sitio (generados, ver más abajo)
 apple-touch-icon.png    icono para «añadir a inicio» en iOS
-tools/check-ready.py    guarda previa a publicar (ver más abajo)
+tools/check-structure.py guarda estructural: verde siempre (ver más abajo)
+tools/check-ready.py    guarda previa a publicar (roja hasta la redacción)
 tools/make-favicon.py   genera los iconos a partir del subset de la marca
 docs/v1-dark/           registro visual de versiones etiquetadas
 ```
@@ -50,18 +51,35 @@ simplemente no se publicaría.
 arreglá, o revertí al último commit verde. El objetivo es que todo commit del
 historial sea un punto de restauración seguro por construcción, no por suerte.
 
-| Guarda | Cuándo | Costo |
-|---|---|---|
-| `tools/check-ready.py` | siempre | instantánea, sin navegador |
-| `tools/check-modes.py` | siempre | ~40 s |
-| `tools/check-pendulum.py` | antes de push, o al tocar la física del cubo | ~2–4 min |
+| Guarda | Cuándo | Costo | Se espera |
+|---|---|---|---|
+| `tools/check-structure.py` | siempre | instantánea, sin navegador | **verde** |
+| `tools/check-modes.py` | siempre | ~40 s | **verde** |
+| `tools/check-pendulum.py` | antes de push, o al tocar la física del cubo | ~2–4 min | **verde** |
+| `tools/check-ready.py` | antes de publicar a `main` | instantánea | rojo hasta la redacción |
 
 `check-pendulum.py` es la única demasiado lenta para cada commit: mide dos
 períodos de una oscilación real en un navegador, y encima el loop corre a un
 ritmo variable en headless (~7–15 ticks/s), así que no se puede acortar sin
-perder lo que verifica. Las otras dos sí van siempre.
+perder lo que verifica.
 
 Las dos que usan navegador necesitan el sitio servido en `:8000`.
+
+**`check-ready.py` no va en cada commit**, y no es un descuido: mientras queden
+placeholders está en rojo por diseño, y una guarda que siempre está en rojo se
+deja de mirar — el día que se rompa algo de verdad, pasa inadvertido. Por eso la
+verificación estructural vive aparte, en `check-structure.py`, que **sí** tiene
+que estar en verde siempre:
+
+- **`check-structure.py`** — nav y footer idénticos en las ocho páginas,
+  cobertura del subset japonés, y **ningún placeholder nuevo** respecto de
+  `tools/placeholders-baseline.json`. Sale `0` si está bien, `1` si algo se
+  rompió.
+- **`check-ready.py`** — ¿puede publicarse? Sale `0` listo, **`2` falta
+  redacción** (esperado, no es una regresión) y `1` si hay algo roto de verdad.
+
+Al redactar un placeholder el conteo baja: eso **no** falla, pero hay que fijar
+el piso nuevo con `python tools/check-structure.py --actualizar-baseline`.
 
 **Si un cambio rompe algo y no se puede arreglar en el momento**, revertir al
 último commit verde en vez de dejar el árbol roto, y decir qué se revirtió y
@@ -85,6 +103,10 @@ Tiene que terminar con `LISTO PARA PUBLICAR` y código de salida 0. Comprueba:
    que dar **0**. Un placeholder en producción es texto en castellano dirigido
    al autor apareciendo en un sitio en inglés.
 2. **Que el subset japonés cubra todos los glifos del sitio** (ver abajo).
+3. **Que el nav y el footer no hayan derivado** entre las ocho páginas.
+
+Hoy sale **2** (faltan placeholders), que es lo esperado hasta el pase de
+redacción; **1** sería una regresión de verdad.
 
 Y con el sitio servido, la guarda de comportamiento del cubo:
 
