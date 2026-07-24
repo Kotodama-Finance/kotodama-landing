@@ -57,6 +57,28 @@ Tiene que terminar con `LISTO PARA PUBLICAR` y código de salida 0. Comprueba:
    al autor apareciendo en un sitio en inglés.
 2. **Que el subset japonés cubra todos los glifos del sitio** (ver abajo).
 
+Y con el sitio servido, la guarda de comportamiento del cubo:
+
+```
+python tools/check-modes.py
+```
+
+Verifica en un navegador real que en modo cubo la grilla esté **recortada** (no
+en flujo, pero tampoco en `display:none`: es la capa semántica), que en modo
+grilla el escenario compute `display:none`, y el ciclo de selección completo
+—carga sin nada seleccionado, clic, arrastre, otro clic—. Existe porque esas
+dos cosas se rompieron dos veces, las dos por un cambio de layout que pisó una
+regla de CSS, y las dos se detectaron mirando la página en vez de por una
+prueba. `check-ready.py` no puede cubrirlo: son estilos computados y eventos.
+
+### Una trampa de CSS que ya mordió dos veces
+
+Varias clases del sitio fijan `display` (`.btn`, `.status`, `.cube__stage`,
+`.cube__toggle`). Una clase **le gana por especificidad** a la regla `[hidden]`
+del navegador, así que un elemento marcado como oculto seguía viéndose. Hay una
+regla `[hidden] { display: none !important; }` al principio de `styles.css` que
+lo resuelve para toda la clase de bug. No borrarla.
+
 ## Tipografías: el subset es un paso obligatorio
 
 Las tipografías están auto-hospedadas y subseteadas. El subset de **Zen Kaku
