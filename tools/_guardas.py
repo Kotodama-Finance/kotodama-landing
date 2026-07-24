@@ -227,17 +227,28 @@ def urls_no_absolutas():
 
 
 # --- og-image: detectar que quedó vieja -------------------------------------
-# La imagen se genera CAPTURANDO el cubo del sitio servido. Si cambia la luz, el
-# material, la geometría o los tokens de color, el PNG sigue mostrando la
-# versión anterior y no hay nada que avise: es un archivo, no una vista. Mismo
-# problema que el sitemap, y misma solución — sólo que acá no se puede
-# regenerar barato para comparar (hace falta un navegador), así que en vez de
-# comparar la SALIDA se comparan las ENTRADAS contra las que se generó.
+# La imagen es un ARCHIVO, no una vista: no se re-renderiza sola. Si cambia algo
+# de lo que la determina, el PNG sigue mostrando la versión anterior y nada
+# avisa. Mismo problema que el sitemap; distinta solución, porque el sitemap se
+# puede regenerar barato y comparar la SALIDA, y acá se comparan las ENTRADAS.
 #
-# Se hashea el :root de styles.css y NO el archivo entero a propósito: el CSS
-# cambia todo el tiempo por cosas que no tocan el cubo, y una guarda que se pone
-# roja por motivos ajenos deja de mirarse.
+# LA LISTA TIENE QUE SER EXACTA EN LAS DOS DIRECCIONES. Una entrada de más
+# significa avisos por cambios que ya no influyen — señal falsa, que es lo que
+# hace que una guarda se deje de mirar. Una de menos significa que la imagen
+# queda vieja en silencio, que es el fallo que esto viene a tapar.
+#
+# Vigentes desde que la tarjeta es puramente tipográfica (sin captura del cubo):
+#   - el script, que define la composición entera;
+#   - el :root de styles.css, que es de donde el script LEE los colores (por eso
+#     no los copia: si los copiara, :root dejaría de ser una entrada real);
+#   - las dos fuentes que se dibujan.
+# Salieron de la lista al sacar el cubo:
+#   - cube.js, que ya no aparece en la imagen;
+#   - Cormorant, que ya no se usa (la bajada pasó a Inter por legibilidad).
+# Se hashea el :root y no styles.css entero: el CSS cambia todo el tiempo por
+# cosas que no tocan la tarjeta.
 OG_LOCK = RAIZ / "tools" / "og-image.lock.json"
+OG_FUENTES = ("zen-kaku-gothic-new-500", "inter-")
 
 
 def og_entradas() -> dict:
@@ -248,10 +259,6 @@ def og_entradas() -> dict:
         return hashlib.sha256(datos).hexdigest()[:16]
 
     entradas = {}
-    cube = RAIZ / "assets" / "js" / "cube.js"
-    if cube.exists():
-        entradas["cube.js"] = sha(cube.read_bytes())
-
     css = RAIZ / "assets" / "css" / "styles.css"
     if css.exists():
         m = re.search(r":root\s*\{.*?\n\}", css.read_text(encoding="utf-8"), flags=re.S)
@@ -262,7 +269,7 @@ def og_entradas() -> dict:
         entradas["make-og-image.py"] = sha(gen.read_bytes())
 
     for f in sorted((RAIZ / "assets" / "fonts").glob("*.woff2")):
-        if f.name.startswith(("zen-kaku-gothic-new-500", "inter-", "cormorant-garamond-latin.")):
+        if f.name.startswith(OG_FUENTES):
             entradas["fuente " + f.name] = sha(f.read_bytes())
     return entradas
 

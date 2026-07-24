@@ -196,9 +196,11 @@ portada normalmente no debe elegir una cara en tu nombre.
 `sitemap.xml` y `og-image.png` salen de scripts (`tools/make-sitemap.py`,
 `tools/make-og-image.py`). El sitemap es la misma lista de URLs que ya existe
 como directorios: se deriva en vez de copiarse, y `check-structure.py` verifica
-que no le falte ninguna página. La imagen OG **captura el cubo del sitio
-servido** en vez de redibujarlo, porque una copia a mano deriva del original en
-cuanto cambia un parámetro de luz.
+que no le falte ninguna página. La imagen OG es **sólo tipografía** —llevaba el
+cubo capturado del sitio y se sacó—, así que su script no necesita navegador, y
+**lee los colores del `:root`** en vez de copiarlos: copiarlos haría que la
+tarjeta derive de la paleta en silencio y que `:root` dejara de ser una entrada
+real de la imagen.
 
 - **`robots.txt` no bloquea crawlers de IA** — GPTBot, ClaudeBot, CCBot y demás.
   Es deliberado y está escrito en el archivo para que nadie los agregue "por las
@@ -218,14 +220,19 @@ cuanto cambia un parámetro de luz.
   lector y no resuelve rutas relativas: la tarjeta sale sin imagen. **El fallo no
   se ve en el sitio, se ve afuera**, que es por qué necesita guarda y no revisión
   visual. La 404 está exenta: no lleva ninguna de las tres, a propósito.
-- **La og-image puede quedar vieja en silencio.** Se genera capturando el cubo,
-  así que un cambio de luz o de material deja el PNG mostrando la versión
-  anterior — es un archivo, no una vista. `tools/og-image.lock.json` guarda el
-  hash de las ENTRADAS (cube.js, el `:root` de styles.css, el script, las
-  fuentes) y la guarda avisa si alguna cambió. No se compara la salida porque
-  regenerarla necesita un navegador. **Se hashea sólo el `:root`**, no el CSS
-  entero: el CSS cambia todo el tiempo por cosas ajenas al cubo, y una guarda
-  que se pone roja sin motivo deja de mirarse.
+- **La og-image puede quedar vieja en silencio**: es un archivo, no una vista.
+  `tools/og-image.lock.json` guarda el hash de sus ENTRADAS y la guarda avisa si
+  alguna cambió. **La lista tiene que ser exacta en las dos direcciones**: una
+  entrada de más avisa por cambios que no influyen —señal falsa, el mismo mal que
+  partir `check-ready` vino a curar— y una de menos deja la imagen vieja en
+  silencio. Hoy son: el script, el `:root` de styles.css, y las fuentes Inter y
+  Zen Kaku. Salieron al sacar el cubo de la tarjeta: **cube.js** y **Cormorant**.
+  Se hashea sólo el `:root` y no el CSS entero, que cambia por cosas ajenas.
+- **La tarjeta se juzga a ~500 px, no a 1200**: es el ancho al que se ve en un
+  feed. Ahí el nombre de la marca quedaba en ~10 px y era lo primero que se
+  perdía; ahora va al doble de cuerpo y en blanco. Y la bajada usa **Inter, no
+  Cormorant**, por lo mismo que el romaji del cubo: a ese tamaño las astas finas
+  de una serif de display desaparecen. `--prueba` deja la versión reducida.
 - **hreflang: sólo el patrón anotado en el README**, sin implementar, hasta que
   exista `/ja/`.
 

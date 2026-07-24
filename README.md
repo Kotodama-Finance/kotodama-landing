@@ -25,7 +25,7 @@ tools/check-structure.py guarda estructural: verde siempre (ver más abajo)
 tools/check-ready.py    guarda previa a publicar (roja hasta la redacción)
 tools/make-favicon.py   genera los iconos a partir del subset de la marca
 tools/make-sitemap.py   genera el sitemap a partir de los HTML publicables
-tools/make-og-image.py  genera og-image.png capturando el cubo real
+tools/make-og-image.py  genera og-image.png (sólo tipografía, sin navegador)
 docs/v1-dark/           registro visual de versiones etiquetadas
 ```
 
@@ -250,21 +250,33 @@ silencioso.
 
 ### La imagen OG puede quedar vieja sin que nada avise
 
-Se genera capturando el cubo, así que si cambian la luz, los materiales, la
-geometría o los tokens de color, el PNG sigue mostrando la versión anterior.
-Es un archivo, no una vista: no se «re-renderiza» solo.
+Es un archivo, no una vista: no se «re-renderiza» solo. Si cambia algo de lo que
+la determina, el PNG sigue mostrando la versión anterior.
 
-Mismo problema que el sitemap, distinta solución: el sitemap se puede regenerar
-barato y comparar, pero la imagen necesita un navegador. Así que en vez de
-comparar la **salida** se comparan las **entradas**:
-`tools/og-image.lock.json` guarda un hash de `cube.js`, del bloque `:root` de
-`styles.css`, del propio script y de las fuentes de la tarjeta.
-`check-structure.py` avisa si alguno cambió.
+Mismo problema que el sitemap, distinta solución: el sitemap se regenera barato y
+se compara la **salida**; acá se comparan las **entradas**.
+`tools/og-image.lock.json` guarda un hash de cada una y `check-structure.py`
+avisa si alguna cambió.
 
-Se hashea **sólo el `:root`** y no `styles.css` entero a propósito: el CSS cambia
-todo el tiempo por cosas que no tocan el cubo, y una guarda que se pone roja por
-motivos ajenos deja de mirarse. Verificado: cambiar `--c-gold` avisa, cambiar la
-opacidad del footer no.
+**La lista tiene que ser exacta en las dos direcciones.** Una entrada de más
+produce avisos por cambios que ya no influyen —señal falsa, que es lo que hace
+que una guarda se deje de mirar—; una de menos deja la imagen vieja en silencio,
+que es el fallo que esto viene a tapar. Vigentes:
+
+| Entrada | Por qué |
+|---|---|
+| `tools/make-og-image.py` | define la composición entera |
+| el `:root` de `styles.css` | de ahí lee los colores |
+| `inter-latin.woff2` | el nombre y la bajada |
+| `zen-kaku-…-500-subset.woff2` | el 言霊 |
+
+Salieron de la lista cuando la tarjeta dejó de llevar el cubo: **`cube.js`**, que
+ya no aparece en la imagen, y **Cormorant**, que ya no se usa.
+
+Se hashea **sólo el `:root`** y no `styles.css` entero: el CSS cambia todo el
+tiempo por cosas que no tocan la tarjeta. Verificado en las dos direcciones:
+cambiar `--c-gold` avisa **y regenerar produce un PNG distinto**; cambiar la luz
+del cubo o la opacidad del footer no avisa.
 
 ```
 python tools/make-og-image.py            # regenera y vuelve a sellar
@@ -275,10 +287,33 @@ El `--sellar` es para cuando la imagen la pone el autor a mano en vez del script
 
 **La imagen OG es 1200×630** (relación 1.91:1), que es la medida canónica: la
 que piden Facebook, LinkedIn, Slack, Discord y X. Debajo de 600×315 varias
-plataformas degradan a miniatura cuadrada. El cubo **se captura del sitio de
-verdad** —por eso el script necesita el servidor en `:8000`, a diferencia de
-`make-favicon.py`— porque redibujarlo a mano crearía una copia que deriva del
-original en cuanto cambie cualquier parámetro de luz o material.
+plataformas degradan a miniatura cuadrada.
+
+Es **sólo tipografía**: 言霊 en oro, el nombre de la marca y la bajada. No lleva
+el cubo. Por eso el script **no necesita navegador ni servidor** —sólo las
+fuentes— y la tarjeta se lee como institucional.
+
+**La medida que manda no es 1200 px sino ~500**, que es el ancho al que se ve en
+un feed de escritorio: un 42%. Lo que no se lea ahí no está sirviendo, por bien
+que se vea a tamaño completo. Para juzgarla así:
+
+```
+python tools/make-og-image.py --prueba
+```
+
+deja además `_dev/og-image-500px.png`. Dos consecuencias de haber mirado a ese
+tamaño: el nombre de la marca está al doble de cuerpo y en blanco (a 23 px en
+azul grisáceo quedaba en ~10 px de feed, y era lo primero que se perdía), y la
+bajada va en **Inter y no en Cormorant** — es una serif de display con astas
+finas, el mismo problema que obligó a pasar el romaji del cubo a Inter. Cormorant
+sigue siendo la voz de marca en el sitio, donde el texto se ve a tamaño real.
+
+**El script lee los colores del `:root` de `styles.css`**, no los copia. Es la
+diferencia con `make-favicon.py`, que sí los copia porque un icono de 16 px no
+puede depender de parsear un CSS. Copiarlos acá tendría dos costos: la tarjeta
+derivaría de la paleta sin que nadie lo note, y `:root` dejaría de ser una
+entrada real de la imagen — con lo cual la guarda de abajo avisaría por cambios
+que no la afectan, o no avisaría por los que sí.
 
 ### hreflang: el patrón para cuando exista `/ja/`
 
