@@ -406,14 +406,15 @@ button:focus-visible {
 }
 .hero__title em { font-style: italic; color: var(--c-gold); }
 .hero .rule { margin-bottom: 26px; }
+/* Último elemento del hero desde que se quitaron los botones: sin margen
+   inferior. El hero centra su contenido en vertical, así que un margen colgando
+   al final del bloque lo empuja hacia arriba la mitad de su valor. */
 .hero__lead {
   font-size: clamp(1rem, 2.1vw, 1.14rem);
   line-height: 1.7;
   color: var(--c-text-dim);
   max-width: 38rem;
-  margin-bottom: 44px;
 }
-.hero__cta { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
 .hero__scroll {
   position: absolute;
   bottom: 30px;
