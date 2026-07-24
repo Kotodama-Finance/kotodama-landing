@@ -74,8 +74,25 @@ export const MATERIAL_DEFAULTS = {
 };
 
 /* Velocidad de autorrotación (grados por tick de ~30fps) */
-const AUTO_RX = 0.09;
 const AUTO_RY = 0.28;
+
+/* rx no gira libre: oscila como un péndulo alrededor de la vista 3/4.
+   Con rx corriendo libre el cubo daba vueltas completas y el romaji aparecía
+   invertido o de costado. Un kanji dado vuelta se lee como forma; texto latino
+   dado vuelta se lee como error. Acotarlo mantiene el texto siempre cerca de la
+   vertical sin perder el movimiento en dos ejes, que es lo que da vida.
+   Consecuencia asumida: 鳥居 y 絆 (arriba y abajo) no se muestran solas en
+   reposo; se llega por arrastre o por la grilla.
+   La amplitud sale de integrar la velocidad: rx = centro + (PICO/RITMO)*sin(fase),
+   así que RITMO = PICO/AMPLITUD da justo la amplitud buscada. */
+const PEND_CENTER = 18;    // grados: la vista 3/4 inicial
+const PEND_AMP = 20;       // grados de excursión a cada lado
+const PEND_PEAK = 0.09;    // velocidad máxima, la misma que tenía la deriva libre
+const PEND_RATE = PEND_PEAK / PEND_AMP;   // radianes de fase por tick
+/* Retorno al rango desde una rotación extrema: más rápido cuanto más lejos,
+   pero igual al pico del péndulo en el borde (continuidad) y con techo. */
+const RETURN_GAIN = 0.006;   // por grado de exceso
+const RETURN_MAX = 0.6;      // grados por tick (~18°/s)
 /* Lerp de VELOCIDAD: converge en ~1s a 30fps -> sin saltos de velocidad. */
 const VEL_LERP = 0.095;
 
@@ -396,12 +413,14 @@ export function initCube(stage, opts) {
     velRx: 0, velRy: 0,
     snapping: false, dragging: false, moved: false,
     holdUntil: 0,
+    pendPhase: 0,
     // parked: al SELECCIONAR una cara el cubo se detiene y se queda quieto
     // indefinidamente. Solo un drag nuevo lo revive.
     parked: false,
-    // Dirección heredada del último drag: la autorrotación conserva su magnitud
-    // pero toma el signo con el que el usuario soltó.
-    signRx: 1, signRy: 1,
+    /* Dirección heredada del último drag. Sólo en Y: en X manda la fase del
+       péndulo, no el sentido del último tiro. Heredar un signo en rx pelearía
+       contra la oscilación en vez de sumarse a ella. */
+    signRy: 1,
   };
 
   function applyRotation() {
@@ -484,7 +503,6 @@ export function initCube(stage, opts) {
     } else {
       // Soltó arrastrando: la autorrotación hereda el sentido del tiro.
       if (Math.abs(C.velRy) > 0.01) C.signRy = Math.sign(C.velRy);
-      if (Math.abs(C.velRx) > 0.01) C.signRx = Math.sign(C.velRx);
     }
   }
   el.addEventListener('pointerdown', onDown);
@@ -551,8 +569,32 @@ export function initCube(stage, opts) {
         // parked (cara seleccionada) => objetivo 0: se detiene y espera.
         // Si no, hold => 0 y después autorrotación EN EL SENTIDO heredado.
         const idle = C.parked || now() < C.holdUntil;
-        const tRx = idle ? 0 : AUTO_RX * C.signRx;
         const tRy = idle ? 0 : AUTO_RY * C.signRy;
+
+        /* Objetivo de velocidad en X. Nunca se asigna rx a mano: sólo se mueve
+           su VELOCIDAD objetivo, y velRx la persigue con el mismo lerp que el
+           resto. Por eso no puede haber escalón, ni siquiera volviendo desde
+           una rotación extrema. */
+        let tRx = 0;
+        if (!idle) {
+          const off = C.rx - PEND_CENTER;
+          if (Math.abs(off) > PEND_AMP) {
+            /* Fuera de rango (p. ej. el usuario arrastró hasta rx=180 y soltó).
+               La velocidad de retorno crece con la distancia, pero vale
+               EXACTAMENTE el pico del péndulo justo en el borde: así el empalme
+               al reentrar es continuo por construcción, no por casualidad.
+               A la velocidad del péndulo sola, volver desde 180° tomaba ~52 s
+               y se sentía colgado. */
+            const exceso = Math.abs(off) - PEND_AMP;
+            const vel = Math.min(PEND_PEAK + exceso * RETURN_GAIN, RETURN_MAX);
+            tRx = -Math.sign(off) * vel;
+            // y se entra en la fase que corresponde a ese sentido de marcha
+            C.pendPhase = off > 0 ? Math.PI : 0;
+          } else {
+            C.pendPhase += PEND_RATE;
+            tRx = PEND_PEAK * Math.cos(C.pendPhase);
+          }
+        }
         C.velRx += (tRx - C.velRx) * VEL_LERP;
         C.velRy += (tRy - C.velRy) * VEL_LERP;
         C.rx += C.velRx;
@@ -595,6 +637,7 @@ export function initCube(stage, opts) {
         m.needsUpdate = true;
       });
     },
+    getRotation() { return { rx: C.rx, ry: C.ry, velRx: C.velRx, velRy: C.velRy }; },
     setRotation(rx, ry) { C.rx = rx; C.ry = ry; C.snapping = false; applyRotation(); },
     dispose() {
       ro.disconnect();

@@ -147,7 +147,15 @@
    clase le gana por especificidad a la regla [hidden] del navegador, así que
    el elemento seguía visible pese a estar marcado como oculto.
    Ya rompió el toggle del cubo una vez y el botón de entrada otra: se arregla
-   acá, para toda la clase de bug, y no caso por caso. */
+   acá, para toda la clase de bug, y no caso por caso.
+
+   OJO SI ALGÚN DÍA SE USA hidden="until-found": este !important lo rompe. Ese
+   valor sirve para que el navegador pueda ENCONTRAR y desplegar contenido
+   oculto (buscar en la página, navegar a un fragmento dentro de un acordeón),
+   y depende de que el elemento sea `content-visibility: hidden` y no
+   `display: none`. Si se necesita, hay que excluirlo:
+     [hidden]:not([hidden="until-found"]) { display: none !important; }
+   No se hizo ahora porque el sitio no lo usa y la forma corta se lee mejor. */
 [hidden] { display: none !important; }
 
 html { scroll-behavior: smooth; }
@@ -801,6 +809,30 @@ button:focus-visible {
 .naming .eyebrow { display: block; margin-bottom: 20px; }
 .naming .section-title { margin-bottom: 16px; }
 .naming .section-lead { margin-bottom: clamp(36px, 5vw, 56px); max-width: 46rem; }
+
+.naming__block { margin-bottom: clamp(40px, 5vw, 64px); }
+.naming__h {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  line-height: 1.2;
+  color: var(--c-text);
+  margin-bottom: 16px;
+}
+.naming__block p { font-size: 1.02rem; line-height: 1.8; color: var(--c-text-soft); margin-bottom: 16px; }
+.naming__term-block {
+  margin: 26px 0 0;
+  padding-left: clamp(16px, 2vw, 26px);
+  border-left: 1px solid var(--line-gold-faint);
+}
+.naming__h3 {
+  font-family: var(--font-ja);
+  font-weight: 500;
+  font-size: 1.5rem;
+  color: var(--c-text);
+  margin-bottom: 10px;
+}
+.naming__h3 .naming__reading { font-family: var(--font-display); font-size: 1.05rem; color: var(--c-gold); }
 
 .naming__list { display: flex; flex-direction: column; border-top: 1px solid var(--line-gold-faint); }
 .naming__row {
