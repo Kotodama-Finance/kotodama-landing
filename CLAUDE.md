@@ -32,17 +32,22 @@ fallidos ya corregidos, y las capturas intermedias.
 - Tag `v1-dark` = versión navy+oro con el cubo Three.js, con registro visual en
   `docs/v1-dark/`.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-07-24**, en `5c27675`. Árbol limpio y todo pusheado.
+- Último cierre: **2026-07-25**, en `fb097c0`. Árbol limpio y todo pusheado.
+- Empezó la redacción: el hero, `/sugao/` y el `免責事項` ya tienen texto
+  definitivo. Quedan **85 placeholders en 11 páginas**.
 
 ### AL RETOMAR, EMPEZAR ACÁ
 
-**Levantar el servidor en `:8000` y correr `python tools/check-structure.py`.**
-Tiene que dar verde; si da rojo, algo cambió fuera de sesión y eso es lo primero
-a resolver, antes de tocar nada.
+**Levantar el servidor en `:8000`, correr `python tools/check-structure.py`
+—tiene que dar verde— y después cerrar los tres pendientes técnicos**: el estado
+de Sugao a `live`, el `<title>`/`description` de la portada, y regenerar la
+og-image con la bajada nueva. Están detallados en los cabos abiertos.
 
-Después, el único frente activo es **la redacción**, y se hace fuera de Code
-(ver cabos abiertos). Si el autor no trae texto, no hay tarea de implementación
-esperando: lo que queda está congelado por decisión suya o depende de `/ja/`.
+Si `check-structure` da rojo, eso es lo primero: algo cambió fuera de sesión.
+
+Los tres pendientes son trabajo mío y son cortos. El resto —la redacción— se
+hace fuera de Code, y lo demás está congelado por decisión del autor o depende
+de `/ja/`.
 
 ---
 
@@ -102,8 +107,12 @@ vertical. Se recalcula en cada `resize`, así que es inmune a cambios de tamaño
 Es una **garantía**, no un ajuste: si la esfera entra, ninguna rotación se sale.
 
 ### `素顔 Sugao` es la persona entera, en su propia página — no una sección de la portada
-Sugao es **la persona detrás del proyecto, completa**: introducción, perfil
-profesional y perfil personal. **Se publica ya**, en `/sugao/` y sólo ahí.
+Sugao es **la persona detrás del proyecto, completa**: perfil profesional y
+perfil personal. **Se publica ya**, en `/sugao/` y sólo ahí.
+
+**Sin introducción**: la página arranca directo en el perfil profesional, que es
+lo que contesta la pregunta que trae el lector. Una apertura genérica antes de
+eso sólo demora la respuesta.
 
 **Dónde NO va.** Hubo una sección `#operator` en la **portada** con nombre, rol,
 trayectoria y `免責事項`, al modo de un `運営者情報`. Se eliminó entera y **no se
@@ -165,7 +174,7 @@ pegar la URL — ahí el placeholder desaparece, todo se pone verde y el enlace
 queda muerto. La guarda falla **exactamente** en ese momento y no antes.
 
 ### No templetizar: verificar
-El nav y el footer están **duplicados** en las diez páginas. No hay build step
+El nav y el footer están **duplicados** en todas las páginas. No hay build step
 que los comparta, y las alternativas eran peores (inyectar por JS rompe la regla
 de contenido en el HTML; Jekyll sería un build step y choca con `.nojekyll`).
 La duplicación es aceptable **si está vigilada**: `check-ready.py` verifica que
@@ -412,29 +421,71 @@ antes del pase de redacción.
 
 ## Cabos abiertos (lista viva)
 
-**Estado al cierre de la sesión del 2026-07-24.** El andamiaje está terminado:
-las diez páginas, el cubo, la transición, la capa de metadatos y las guardas.
+**Estado al cierre de la sesión del 2026-07-25.** El andamiaje está completo
+—once páginas, el cubo, la transición, la capa de metadatos y las guardas— y
+**empezó la redacción**.
+
+### Ya redactado: texto definitivo, versión de lanzamiento en inglés
+
+- **El hero de la portada.** Titular y bajada nuevos.
+- **`/sugao/` entera**: perfil profesional y personal, con LinkedIn (URL real) y
+  LibraryThing. Sin introducción, sin foto y sin slots vacíos.
+- **`/disclaimer/` completo** —ocho cláusulas— y **la línea corta del `免責事項`
+  en el footer de las once páginas**.
+
+La versión japonesa es un pase aparte y **se escribe como original, no
+traduciendo de acá**.
+
+### Andamiaje agregado en esta sesión
+
+- **`/method/`**, subpágina nueva, con placeholders. La sección `#method` de la
+  portada **queda como resumen** y la nav sigue apuntando a ese ancla; a la
+  subpágina se llega por «Read the full method →» al pie. La lista taxativa de
+  fuentes vive **dentro** de `/method/`; no hay `/sources/`.
+- **Cinco fuentes de ejemplo** en la portada: BOJ, FSA, EDINET, BIS y Damodaran
+  Online, japonesas y globales.
+- **Rótulos japoneses ornamentales retirados de la versión EN** (`立方体`,
+  `一次資料`, `追跡可能`, `公開`). **Los glifos siguen en el subset** para
+  `/ja/`, con una advertencia en el `@font-face` para que nadie los borre al
+  regenerarlo.
 
 ### El único frente activo: la redacción
 
-**91 placeholders `TODO`** en **10 páginas**, y **se escriben fuera de Code** —
-son decisiones de contenido del autor, no tareas de implementación. Nada de lo
-que queda en esta lista se destraba antes que esto.
+**85 placeholders `TODO`** en **11 páginas**, y **se escriben fuera de Code** —
+son decisiones de contenido del autor, no tareas de implementación.
 
 | Página | Placeholders |
 |---|---|
-| `/musubi/` | 32 |
-| `/sugao/` | 11 |
-| `/hajime/` `/tosei/` `/kamon/` `/torii/` `/kizuna/` | 7 c/u |
-| `/disclaimer/` | 6 |
-| `404.html` | 4 |
-| portada | 3 |
+| `/musubi/` | 31 |
+| `/method/` | 13 |
+| `/hajime/` `/tosei/` `/kamon/` `/torii/` `/kizuna/` | 6 c/u |
+| `404.html` `/disclaimer/` `/sugao/` | 3 c/u |
+| portada | 2 |
 
-Uno de cada página es **la línea del `免責事項` en el footer**: al ser el footer
-un bloque idéntico en las diez, se redacta una vez y se propaga a las diez con
-el mismo script con que se insertó. No son diez decisiones, es una.
+**Al redactar `/method/`, aplicar también las dos notas de fuentes provisorias**
+que hoy están en la portada, ya corregidas por el autor y anotadas en el
+comentario del propio HTML: BIS → «Cross-border banking exposure»; Damodaran →
+«Valuation datasets by sector and region».
 
-Y hay uno que **no es texto sino una URL**: el `href` de LinkedIn en `/sugao/`.
+### Pendientes técnicos, sin resolver
+
+No son redacción: son **inconsistencias que dejó la redacción** y hay que
+cerrarlas. Las tres se ven desde afuera.
+
+1. **El cubo anuncia un estado de Sugao que la página desmiente.**
+   `assets/js/main.js:50` sigue diciendo `status: 'Intro live · profiles
+   deferred'` y la tarjeta de la portada lleva `data-state="light"`. **Sugao ya
+   se publica entera: va a `live`.** El texto exacto del estado lo define el
+   autor; el `domain` de la tarjeta («The human behind») sale del archivo de
+   referencia y ésa es otra decisión.
+2. **El `<title>` y las `description` de la portada son del hero viejo.** Dicen
+   «Japan's financial system, made legible» y «An open, free reading of how
+   capital actually moves…», que ya no es lo que dice la página.
+3. **La og-image muestra la bajada vieja.** `LINEA` en `make-og-image.py` sigue
+   siendo «Japan's financial system, made legible — from the source.»
+   **Regenerar con el hero nuevo.** Ojo: es el fallo que no se ve en el sitio
+   sino afuera, al compartir el enlace. Después de cambiarla, la guarda del lock
+   avisa hasta que se vuelva a sellar (`python tools/make-og-image.py`).
 
 El piso está fijado en `tools/placeholders-baseline.json`: **bajarlo es progreso,
 subirlo es un bug**. Al redactar, correr
