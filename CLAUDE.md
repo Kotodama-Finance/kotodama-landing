@@ -446,5 +446,14 @@ que produjeron conclusiones equivocadas:
   así que lo filmado sigue siendo la animación publicada.
 - **En headless el loop del cubo corre a ~7–15 ticks/s, no a 30.** Las pruebas
   de física tienen que esperar **por ticks, no por reloj**.
+- **Y las transiciones CSS tampoco siguen el reloj de pared en headless.** Misma
+  trampa que la anterior, en otra forma, y muerde a cualquier medición de estado
+  animado. Midiendo el folio 1,6 s después del clic dio **5 px de 97**: seguía a
+  mitad del despliegue. Con `deviceScaleFactor=2` y dos contextos WebGL el
+  compositor se atrasa muchísimo. **Esperar a que la propiedad se estabilice**
+  —dos lecturas iguales seguidas— en vez de dormir un rato y dar por hecho que
+  terminó. Lo delató que la captura mostraba el folio abierto y la medición
+  decía que estaba cerrado: **cuando la captura y la métrica se contradicen, la
+  sospechosa es la métrica.**
 - **Un test roto se disfraza de bug de la página.** Si el JS de una guarda lanza,
   tiene que reventar el script, no devolver `undefined` en silencio.
