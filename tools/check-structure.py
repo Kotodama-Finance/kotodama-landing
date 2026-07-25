@@ -62,6 +62,16 @@ def main():
     else:
         print("  OK     canonical, og:url y og:image absolutas y bien apuntadas")
 
+    print("\nEnlaces con href pendiente")
+    muertos = G.hrefs_muertos()
+    if muertos:
+        for x in muertos:
+            print(f"  FALLA  {x}")
+        problemas += muertos
+        print("  -> pegar la URL real, o devolver el placeholder que lo anunciaba")
+    else:
+        print('  OK     ningún href="#" quedó sin su placeholder')
+
     print("\nog-image.png al día")
     vieja = G.og_desactualizada()
     if vieja:

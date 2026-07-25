@@ -349,6 +349,30 @@ def glifos_faltantes():
     return faltan
 
 
+def hrefs_muertos():
+    """Un href="#" no navega a ningún lado: es un enlace muerto.
+
+    Se ADMITE mientras el ancla lleve adentro un placeholder que lo anuncie —
+    eso es andamiaje declarado, y check-ready ya impide publicar mientras queden
+    placeholders. Lo que esta guarda ataja es el caso SILENCIOSO: que alguien
+    redacte el rótulo, borre el TODO y se olvide de pegar la URL. En ese momento
+    el placeholder desaparece, todas las guardas se ponen verdes y el enlace
+    queda muerto sin que nadie se entere.
+
+    O sea que falla exactamente cuando empieza a importar, y no antes. Existe
+    porque hoy /sugao/ tiene el href de LinkedIn pendiente de que lo complete
+    Manuel; si algún día no queda ningún href="#", esta guarda no molesta.
+    """
+    problemas = []
+    for p in htmls():
+        h = p.read_text(encoding="utf-8")
+        for m in re.finditer(r'<a\b[^>]*href="#"[^>]*>.*?</a>', h, flags=re.S):
+            if 'class="todo"' not in m.group(0):
+                problemas.append(
+                    f'{nombre(p)}: href="#" ya sin placeholder — el enlace quedó muerto')
+    return problemas
+
+
 def chrome_divergente():
     """El nav y el footer están duplicados en las ocho páginas: no hay build step
     que los comparta. La duplicación es aceptable si está vigilada, así que en

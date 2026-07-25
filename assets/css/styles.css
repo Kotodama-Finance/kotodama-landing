@@ -765,13 +765,34 @@ button:focus-visible {
 .face-page__body { display: flex; flex-direction: column; gap: 22px; font-size: 1.02rem; line-height: 1.8; color: var(--c-text-soft); }
 /* .face-page__ref se fue con el enlace de /sugao/ al registro del operador,
    que dejó de existir junto con esa sección. */
-.face-page__deferred {
+/* Antes era .face-page__deferred, para «lo que la cara promete y todavía no
+   existe». Se generalizó al partir /sugao/ en secciones (profesional, personal):
+   la regla siempre fue un separador, no algo propio de lo diferido. */
+.face-page__section {
   margin-top: clamp(44px, 6vw, 64px);
   padding-top: clamp(28px, 4vw, 40px);
   border-top: 1px solid var(--line-gold-faint);
 }
-.face-page__deferred .status { margin: 12px 0 18px; }
-.face-page__deferred p { font-size: 1.02rem; line-height: 1.8; color: var(--c-text-soft); }
+.face-page__section .status { margin: 12px 0 18px; }
+.face-page__section p { font-size: 1.02rem; line-height: 1.8; color: var(--c-text-soft); }
+
+/* Enlaces a perfiles externos. Lista y no prosa: son un registro consultable,
+   y así agregar uno (IMDb, Steam, GitHub…) no obliga a reescribir una frase. */
+.profile-links {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  margin-top: 22px;
+}
+.profile-links a {
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  color: var(--c-gold);
+  border-bottom: 1px solid var(--line-gold-soft);
+  padding-bottom: 2px;
+}
+.profile-links a:hover { border-bottom-color: var(--c-gold); }
 .face-page__subtitle {
   font-family: var(--font-display);
   font-weight: 500;
@@ -972,9 +993,24 @@ button:focus-visible {
 }
 .footer__col a { font-size: 0.92rem; color: var(--c-text-link); }
 .footer__col a:hover { color: var(--c-gold); }
+/* 免責事項 corto. Va sobre la línea de copyright y con el mismo peso visual que
+   ella: es una advertencia legal permanente, no un aviso que reclame atención.
+   Destacarlo lo convertiría en ruido en cada página; esconderlo lo haría
+   inútil. El enlace lleva al texto completo, que vive sólo en /disclaimer/. */
+.footer__disclaimer {
+  max-width: 1120px;
+  margin: 48px auto 0;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--c-text-muted-2);
+}
+.footer__disclaimer :lang(ja) { color: var(--c-text-muted-2); }
+.footer__disclaimer a { color: var(--c-text-link); }
+.footer__disclaimer a:hover { color: var(--c-gold); }
+
 .footer__bottom {
   max-width: 1120px;
-  margin: 56px auto 0;
+  margin: 24px auto 0;
   padding-top: 28px;
   border-top: 1px solid rgb(var(--rgb-gold) / 0.1);
   display: flex;

@@ -3,25 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kizuna 絆 — Kotodama Finance</title>
-<meta name="description" content="TODO: descripción de Kizuna (絆) — Act / Business.">
-<link rel="canonical" href="https://kotodamafinance.com/kizuna/">
+<title>Disclaimer 免責事項 — Kotodama Finance</title>
+<meta name="description" content="TODO: descripción de la página de descargo de responsabilidad.">
+<link rel="canonical" href="https://kotodamafinance.com/disclaimer/">
 <!-- Open Graph: la tarjeta que se ve al compartir el enlace en un chat o una
      red. Sin esto el enlace viaja como una línea de texto pelada.
      og:url y og:image tienen que ser ABSOLUTAS: el que arma la vista previa no
      es el navegador del lector y no puede resolver una ruta relativa.
      La imagen la genera tools/make-og-image.py. -->
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://kotodamafinance.com/kizuna/">
-<meta property="og:title" content="Kizuna 絆 — Kotodama Finance">
-<meta property="og:description" content="TODO: descripción de Kizuna (絆) — Act / Business.">
+<meta property="og:url" content="https://kotodamafinance.com/disclaimer/">
+<meta property="og:title" content="Disclaimer 免責事項 — Kotodama Finance">
+<meta property="og:description" content="TODO: descripción de la página de descargo de responsabilidad.">
 <meta property="og:image" content="https://kotodamafinance.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="El cubo de seis caras de Kotodama Finance">
 <!-- Sin esto X muestra una miniatura cuadrada en vez de la tarjeta ancha. -->
 <meta name="twitter:card" content="summary_large_image">
-<!-- Sin esto X muestra una miniatura cuadrada en vez de la tarjeta ancha. -->
 <!-- Iconos. El .ico existe porque el navegador pide /favicon.ico haya o no
      <link>: sin el archivo, cada carga deja un 404 en la consola.
      Se generan con tools/make-favicon.py, que documenta el porqué de cada formato. -->
@@ -32,10 +31,7 @@
 </head>
 <body class="page">
 
-<!-- Página de texto: no carga el shader del mar ni Three.js. Sólo el CSS
-     compartido y el script de la nav. -->
-  <!-- NAV — rutas absolutas para que el bloque sea idéntico en las ocho páginas.
-       tools/check-ready.py verifica que no derive. -->
+<!-- Página de texto: no carga el shader del mar ni Three.js. -->
   <header id="nav" class="nav">
     <a class="nav__brand" href="/">
       <span class="nav__mark" lang="ja">言霊</span>
@@ -51,29 +47,32 @@
   </header>
 
   <main>
+    <!-- 免責事項 COMPLETO — el ÚNICO lugar del sitio donde vive el texto largo.
+         El footer de TODAS las páginas lleva una línea corta que enlaza acá.
+         La regla, que está en CLAUDE.md: el corto se REPITE (esa repetición es
+         su función: tiene que estar donde sea que el lector esté leyendo), y el
+         completo NO se duplica NUNCA. Dos copias de un texto legal derivan, y
+         cuando derivan el sitio se contradice a sí mismo en lo único donde no
+         puede permitirse hacerlo.
+         Cuando Manuel lo redacte va a necesitar varios <p>; el placeholder es
+         uno solo a propósito, para no prefigurar la estructura de un texto
+         legal que todavía no está escrito. -->
     <article class="face-page">
       <header class="face-page__head">
-        <p class="eyebrow">Act / Business</p>
+        <p class="eyebrow"><span lang="ja">免責事項</span></p>
         <h1 class="face-page__title">
-          <span class="face-page__kanji" lang="ja">絆</span>
-          <span class="face-page__romaji">Kizuna</span>
+          <span class="face-page__romaji"><span class="todo">TODO: título en inglés</span></span>
         </h1>
-        <p class="face-page__gloss">&ldquo;the bond&rdquo;</p>
-        <p class="status" data-state="soon"><span class="dot" data-state="soon" aria-hidden="true"></span>Coming soon</p>
       </header>
 
-      <p class="face-page__lead"><span class="todo">TODO: la frase que definía esta cara en el panel del cubo, desarrollada.</span></p>
-
       <div class="face-page__body">
-        <p><span class="todo">TODO: qué hay en esta cara y para quién.</span></p>
-        <p><span class="todo">TODO: qué se publica acá y con qué criterio.</span></p>
+        <p><span class="todo">TODO: texto legal completo. No es asesoramiento de inversión ni financiero.</span></p>
       </div>
 
-      <p class="face-page__back"><a href="/#cube">&larr; <span class="todo">TODO: rótulo de vuelta al cubo</span></a></p>
+      <p class="face-page__back"><a href="/">&larr; <span class="todo">TODO: rótulo de vuelta a la portada</span></a></p>
     </article>
   </main>
 
-  <!-- FOOTER -->
   <footer id="footer" class="footer">
     <div class="footer__top">
       <div class="footer__brand">

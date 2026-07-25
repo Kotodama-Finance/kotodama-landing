@@ -38,9 +38,11 @@ Esquema por **directorios**, no archivos sueltos. Cada página es un directorio
 con su `index.html` adentro:
 
 ```
-/            index.html          home EN
-/musubi/     musubi/index.html   subpágina
-/ja/         (previsto)          subárbol paralelo en japonés
+/            index.html              home EN
+/musubi/     musubi/index.html       el núcleo del cubo
+/sugao/      sugao/index.html        la persona detrás del proyecto
+/disclaimer/ disclaimer/index.html   免責事項 completo (el único lugar)
+/ja/         (previsto)              subárbol paralelo en japonés
 ```
 
 GitHub Pages sirve `/musubi/` como `/musubi/index.html`, y redirige `/musubi`
@@ -58,6 +60,26 @@ El archivo `.nojekyll` desactiva el procesamiento con Jekyll: el sitio ya es
 estático y no lo necesita. Además evita un problema silencioso — Jekyll ignora
 todo path que empiece con `_`, así que sin ese archivo un directorio así
 simplemente no se publicaría.
+
+### El `免責事項`: dos textos, dos reglas opuestas
+
+Es la única duplicación deliberada de texto del sitio, y conviene entender por
+qué antes de "arreglarla":
+
+| | Dónde vive | Regla |
+|---|---|---|
+| **Corto** (una línea) | footer global | **se repite** en las diez páginas |
+| **Completo** | `/disclaimer/` | **una sola vez**, todo lo demás lo enlaza |
+
+Repetir el corto no es deriva: es su función. Una advertencia sólo sirve si está
+donde el lector está leyendo, no en una página a la que haya que llegar. Como
+vive en el footer, que es idéntico en las diez páginas, **se redacta una vez** y
+se propaga con el mismo script con que se insertó.
+
+El completo, en cambio, no se duplica nunca. Dos copias de un texto legal
+derivan, y un sitio que se contradice en su propio descargo pierde exactamente
+lo que el descargo da. La prueba práctica: **si son más de una línea, va en
+`/disclaimer/`** y desde donde estabas se pone un enlace.
 
 ## Flujo de trabajo (obligatorio)
 
@@ -85,10 +107,11 @@ deja de mirar — el día que se rompa algo de verdad, pasa inadvertido. Por eso
 verificación estructural vive aparte, en `check-structure.py`, que **sí** tiene
 que estar en verde siempre:
 
-- **`check-structure.py`** — nav y footer idénticos en las ocho páginas,
-  cobertura del subset japonés, y **ningún placeholder nuevo** respecto de
-  `tools/placeholders-baseline.json`. Sale `0` si está bien, `1` si algo se
-  rompió.
+- **`check-structure.py`** — nav y footer idénticos en las diez páginas,
+  metadatos únicos, URLs absolutas, cobertura del subset japonés, **ningún
+  `href="#"` que haya perdido su placeholder** y **ningún placeholder nuevo**
+  respecto de `tools/placeholders-baseline.json`. Sale `0` si está bien, `1` si
+  algo se rompió.
 - **`check-ready.py`** — ¿puede publicarse? Sale `0` listo, **`2` falta
   redacción** (esperado, no es una regresión) y `1` si hay algo roto de verdad.
 
@@ -117,7 +140,7 @@ Tiene que terminar con `LISTO PARA PUBLICAR` y código de salida 0. Comprueba:
    que dar **0**. Un placeholder en producción es texto en castellano dirigido
    al autor apareciendo en un sitio en inglés.
 2. **Que el subset japonés cubra todos los glifos del sitio** (ver abajo).
-3. **Que el nav y el footer no hayan derivado** entre las ocho páginas.
+3. **Que el nav y el footer no hayan derivado** entre las diez páginas.
 
 Hoy sale **2** (faltan placeholders), que es lo esperado hasta el pase de
 redacción; **1** sería una regresión de verdad.
@@ -212,7 +235,7 @@ extra: es la misma razón por la que todo el contenido va en el HTML.
 
 | Archivo | Qué hace | Se mantiene |
 |---|---|---|
-| `sitemap.xml` | lista las 8 páginas indexables | `python tools/make-sitemap.py` |
+| `sitemap.xml` | lista las 9 páginas indexables | `python tools/make-sitemap.py` |
 | `robots.txt` | abre todo y apunta al sitemap | a mano (casi nunca cambia) |
 | `og-image.png` | la tarjeta al compartir un enlace | `python tools/make-og-image.py` |
 | `404.html` | GitHub Pages la sirve ante cualquier ruta inexistente | a mano |
@@ -243,7 +266,7 @@ pasar un enlace roto por contenido.
 
 ### Las URLs de metadatos son absolutas, y hay guarda
 
-`canonical`, `og:url` y `og:image` son **absolutas** en las ocho páginas
+`canonical`, `og:url` y `og:image` son **absolutas** en las diez páginas
 indexables, y `canonical`/`og:url` apuntan cada una **a sí misma**.
 
 No es un detalle de estilo. Quien arma la vista previa —LinkedIn, Slack, X,

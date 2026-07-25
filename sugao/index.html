@@ -62,28 +62,46 @@
         <p class="status" data-state="light"><span class="dot" data-state="light" aria-hidden="true"></span>Intro live &middot; profiles deferred</p>
       </header>
 
-      <!-- EL LADO B PERSONAL, DE PUBLICACIÓN DIFERIDA.
-           Esta página NO es una ficha del operador. Durante un tiempo lo fue,
-           por una lectura equivocada de 素顔 como 運営者情報 (identificación del
-           responsable), que llegó a crear una sección #operator en la portada
-           con nombre, rol, trayectoria y 免責事項. Esa sección se eliminó y
-           aquella identificación no existe en el proyecto.
-           Sugao es una cara del cubo como las otras cinco, y su dominio es la
-           dimensión personal: lecturas, cine, juegos. Lo que la distingue es el
-           estado, no la naturaleza: publicación diferida.
-           El contenido lo escribe el autor: acá sólo va la estructura. -->
-      <p class="face-page__lead"><span class="todo">TODO: la apertura del Lado B — qué es esta cara y por qué está en el cubo.</span></p>
+      <!-- LA PERSONA ENTERA DETRÁS DEL PROYECTO. Se publica YA, completa:
+           introducción, perfil profesional y perfil personal.
+           SIN FOTO, y sin hueco reservado para una: la credibilidad la carga el
+           enlace a LinkedIn, que es verificable por quien lo lea. Un retrato no
+           agrega nada comprobable y compromete a mantenerlo.
+           El 免責事項 NO va acá. El corto vive en el footer de todas las páginas
+           y el completo en /disclaimer/. Meterlo también en esta página sería
+           empezar a duplicar texto legal, que es justo lo que se evita.
+           El texto lo redacta Manuel: acá sólo va la estructura. -->
+      <p class="face-page__lead"><span class="todo">TODO: 2-3 líneas de presentación. Quién es, dicho de frente.</span></p>
 
-      <div class="face-page__body">
-        <p><span class="todo">TODO: qué se va a publicar acá (lecturas, cine, juegos) y con qué frecuencia.</span></p>
-        <p><span class="todo">TODO: qué relación tiene este material con el resto del sitio, si es que tiene alguna.</span></p>
-      </div>
+      <!-- PERFIL PROFESIONAL — en PROSA, no en formato CV. Una lista de puestos
+           y fechas se lee como currículum y no responde la pregunta que trae el
+           lector, que es qué habilita a esta persona a publicar esto. -->
+      <section class="face-page__section" aria-labelledby="sugao-pro">
+        <h2 id="sugao-pro" class="face-page__subtitle"><span class="todo">TODO: título — perfil profesional</span></h2>
+        <div class="face-page__body">
+          <p><span class="todo">TODO: historia académica y laboral contada en prosa, NO como lista de puestos.</span></p>
+          <p><span class="todo">TODO: qué de esa trayectoria habilita para publicar análisis del sistema financiero japonés.</span></p>
+        </div>
+        <ul class="profile-links">
+          <!-- El href queda pendiente: la URL la pone Manuel. Mientras siga en
+               "#", el placeholder del rótulo impide que check-ready dé LISTO, y
+               check-structure falla si un href="#" sobrevive a la redacción. -->
+          <li><a href="#">LinkedIn &mdash; <span class="todo">TODO: pegar la URL en el href</span></a></li>
+        </ul>
+      </section>
 
-      <!-- PUBLICACIÓN DIFERIDA: lo que la cara promete y todavía no existe. -->
-      <section class="face-page__deferred" aria-labelledby="sugao-deferred">
-        <h2 id="sugao-deferred" class="face-page__subtitle"><span class="todo">TODO: título — lo que viene</span></h2>
-        <p class="status" data-state="soon"><span class="dot" data-state="soon" aria-hidden="true"></span>Coming soon</p>
-        <p><span class="todo">TODO: contenido personal, próximamente. Qué va a haber y por qué todavía no está.</span></p>
+      <!-- PERFIL PERSONAL — se publica ya. Los demás perfiles (IMDb,
+           MyAnimeList, Steam, GitHub) NO entran todavía y por eso no hay slots
+           vacíos esperándolos: un hueco reservado para algo que no está se lee
+           como página incompleta. Cuando existan, se agregan a esta lista. -->
+      <section class="face-page__section" aria-labelledby="sugao-personal">
+        <h2 id="sugao-personal" class="face-page__subtitle"><span class="todo">TODO: título — perfil personal</span></h2>
+        <div class="face-page__body">
+          <p><span class="todo">TODO: nota breve sobre los hobbies. Qué lee, qué mira, qué juega.</span></p>
+        </div>
+        <ul class="profile-links">
+          <li><a href="https://www.librarything.com/catalog/Manuel_Vivo" target="_blank" rel="noopener">LibraryThing</a></li>
+        </ul>
       </section>
 
       <p class="face-page__back"><a href="/#cube">&larr; <span class="todo">TODO: rótulo de vuelta al cubo</span></a></p>
@@ -117,6 +135,17 @@
         </div>
       </div>
     </div>
+    <!-- 免責事項 CORTO — se repite en TODAS las páginas a propósito, y es la
+         única duplicación deliberada de texto legal del sitio. Una advertencia
+         sólo cumple su función si está donde el lector está leyendo; por eso va
+         en el footer global y no en una página a la que haya que llegar.
+         El texto COMPLETO vive UNA sola vez, en /disclaimer/, y desde acá se
+         enlaza. Duplicar el largo lo haría derivar, y un sitio que se
+         contradice en su propio descargo pierde lo único que el descargo da. -->
+    <p class="footer__disclaimer">
+      <span lang="ja">免責事項</span> &middot;
+      <a href="/disclaimer/"><span class="todo">TODO: una línea — esto no es asesoramiento de inversión ni financiero.</span></a>
+    </p>
     <div class="footer__bottom">
       <span>&copy; 2026 Kotodama Finance &middot; Open access</span>
       <span>English &middot; <span class="footer__soon"><span lang="ja">日本語</span> &mdash; coming</span></span>

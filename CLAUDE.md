@@ -101,29 +101,60 @@ Con una distancia fija se recortaba en toda rotación con un vértice cerca de l
 vertical. Se recalcula en cada `resize`, así que es inmune a cambios de tamaño.
 Es una **garantía**, no un ajuste: si la esfera entra, ninguna rotación se sale.
 
-### `素顔 Sugao` es el Lado B personal — NO la identificación del operador
-**Esto CORRIGE una premisa equivocada que llegó a estar implementada.** Se leyó
-`素顔` («cara sin maquillaje») como *identificación del responsable*, al modo del
-`運営者情報` de un sitio japonés, y de ahí salió una sección `#operator` en la
-portada con nombre, rol, trayectoria, contacto y `免責事項`, más una `/sugao/`
-escrita como ficha profesional que la enlazaba.
+### `素顔 Sugao` es la persona entera, en su propia página — no una sección de la portada
+Sugao es **la persona detrás del proyecto, completa**: introducción, perfil
+profesional y perfil personal. **Se publica ya**, en `/sugao/` y sólo ahí.
 
-**Nada de eso existe en el proyecto.** Sugao es una cara del cubo como las otras
-cinco, y su dominio es la **dimensión personal**: lecturas, cine, juegos. Lo que
-la distingue no es su naturaleza sino su estado: **publicación diferida**. La
-sección `#operator` se eliminó entera —bloque, placeholders, `免責事項` y CSS—,
-junto con el enlace desde `/sugao/`.
+**Dónde NO va.** Hubo una sección `#operator` en la **portada** con nombre, rol,
+trayectoria y `免責事項`, al modo de un `運営者情報`. Se eliminó entera y **no se
+reintroduce**: la portada no lleva nada de esto. Quien quiera saber quién está
+detrás entra a la cara, que para eso está en el cubo.
 
-Lo que sí sale del archivo de referencia y **se copia literal**: `gloss:"the true
+Decisiones dentro de la página:
+- **Sin foto, y sin hueco reservado para una.** La credibilidad la carga el
+  enlace a **LinkedIn**, que es verificable; un retrato no aporta nada
+  comprobable y hay que mantenerlo.
+- **El perfil profesional va en PROSA, no en formato CV.** Una lista de puestos y
+  fechas se lee como currículum y no contesta la pregunta que trae el lector, que
+  es qué habilita a esta persona a publicar esto.
+- **Sin slots vacíos** para los perfiles que todavía no entran (IMDb,
+  MyAnimeList, Steam, GitHub). Un hueco reservado para algo que no está se lee
+  como página incompleta. Cuando existan, se agregan a `.profile-links`.
+- **El `免責事項` NO va en `/sugao/`.** Ver la regla de abajo.
+
+Lo que sale del archivo de referencia y **se copia literal**: `gloss:"the true
 face"`, `domain:"The human behind"`, `status:"Intro live · profiles deferred"`.
-Que el dominio diga «the human behind» **no** autoriza a construir un registro
-del operador: describe una cara personal, no una ficha de responsable legal.
 
-Cómo se detecta la confusión si vuelve: aparece un campo **nombre / rol /
-trayectoria / `免責事項`**. Ninguno de esos cuatro pertenece a este sitio hoy.
+### El `免責事項`: el corto se repite, el completo vive una sola vez
+Son **dos textos con dos reglas opuestas**, y confundirlas es lo que hay que
+evitar:
+
+- **El corto** —una línea: esto no es asesoramiento de inversión ni financiero—
+  va en el **footer global**, o sea que **se repite en todas las páginas**. Esa
+  repetición no es deriva: es su función. Una advertencia sólo sirve si está
+  donde el lector está leyendo, no en una página a la que haya que llegar.
+- **El completo** vive **UNA sola vez, en `/disclaimer/`**, y todo lo demás lo
+  **enlaza**. Nunca se duplica. Dos copias de un texto legal derivan, y cuando
+  derivan el sitio se contradice a sí mismo justo en lo único donde no puede
+  permitírselo.
+
+La prueba para saber cuál se está por escribir: si son más de una línea, va en
+`/disclaimer/` y desde donde estabas se pone un enlace.
+
+**Para la plantilla futura de notas financieras** (no existe todavía, no hay nada
+que construir hoy): cada nota tiene que llevar **el corto al pie**, igual que
+cualquier otra página. No el completo.
+
+### `href="#"` es andamiaje, y hay guarda para que no sobreviva
+El href de LinkedIn en `/sugao/` queda pendiente de que lo complete el autor.
+Mientras el ancla lleve adentro su placeholder, es andamiaje declarado y
+`check-ready` ya impide publicar. Lo que `check-structure` ataja es el caso
+**silencioso**: que alguien redacte el rótulo, borre el `TODO` y se olvide de
+pegar la URL — ahí el placeholder desaparece, todo se pone verde y el enlace
+queda muerto. La guarda falla **exactamente** en ese momento y no antes.
 
 ### No templetizar: verificar
-El nav y el footer están **duplicados** en las ocho páginas. No hay build step
+El nav y el footer están **duplicados** en las diez páginas. No hay build step
 que los comparta, y las alternativas eran peores (inyectar por JS rompe la regla
 de contenido en el HTML; Jekyll sería un build step y choca con `.nojekyll`).
 La duplicación es aceptable **si está vigilada**: `check-ready.py` verifica que
@@ -343,21 +374,28 @@ antes del pase de redacción.
 ## Cabos abiertos (lista viva)
 
 **Estado al cierre de la sesión del 2026-07-24.** El andamiaje está terminado:
-las nueve páginas, el cubo, la transición, la capa de metadatos y las guardas.
+las diez páginas, el cubo, la transición, la capa de metadatos y las guardas.
 
 ### El único frente activo: la redacción
 
-**102 placeholders `TODO`**, y **se escriben fuera de Code** — son decisiones de
-contenido del autor, no tareas de implementación. Nada de lo que queda en esta
-lista se destraba antes que esto.
+**91 placeholders `TODO`** en **10 páginas**, y **se escriben fuera de Code** —
+son decisiones de contenido del autor, no tareas de implementación. Nada de lo
+que queda en esta lista se destraba antes que esto.
 
 | Página | Placeholders |
 |---|---|
-| `/naming/` | 34 |
-| portada | 17 |
-| `/sugao/` | 12 |
+| `/musubi/` | 32 |
+| `/sugao/` | 11 |
 | `/hajime/` `/tosei/` `/kamon/` `/torii/` `/kizuna/` | 7 c/u |
+| `/disclaimer/` | 6 |
 | `404.html` | 4 |
+| portada | 3 |
+
+Uno de cada página es **la línea del `免責事項` en el footer**: al ser el footer
+un bloque idéntico en las diez, se redacta una vez y se propaga a las diez con
+el mismo script con que se insertó. No son diez decisiones, es una.
+
+Y hay uno que **no es texto sino una URL**: el `href` de LinkedIn en `/sugao/`.
 
 El piso está fijado en `tools/placeholders-baseline.json`: **bajarlo es progreso,
 subirlo es un bug**. Al redactar, correr
