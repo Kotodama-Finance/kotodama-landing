@@ -239,6 +239,17 @@ real de la imagen.
   silencio. Hoy son: el script, el `:root` de styles.css, y las fuentes Inter y
   Zen Kaku. Salieron al sacar el cubo de la tarjeta: **cube.js** y **Cormorant**.
   Se hashea sólo el `:root` y no el CSS entero, que cambia por cosas ajenas.
+- **Los archivos de texto del lock se hashean NORMALIZADOS; los binarios, por
+  bytes.** `core.autocrlf=true` es el valor por defecto en Windows: git guarda
+  LF y escribe CRLF al hacer checkout. Hasheando los bytes crudos del `.py`, la
+  guarda avisaba «la og-image quedó vieja» con sólo **cambiar de rama y volver**
+  —y también en cualquier **clon nuevo**—, sin que hubiera cambiado nada que
+  mueva un píxel del PNG. Doblemente malo: es la señal falsa que esta guarda
+  existe para no dar, y rompía justo el caso que motivó hashear contenido en vez
+  de fechas, que era sobrevivir a un clon. Las fuentes siguen por bytes a
+  propósito: son binarias, git no las convierte, y ahí el byte crudo sí es el
+  contenido. Verificado en las dos direcciones: pasar el script a CRLF y a LF no
+  avisa, y cambiar una línea de verdad sí.
 - **La tarjeta se juzga a ~500 px, no a 1200**: es el ancho al que se ve en un
   feed. Ahí el nombre de la marca quedaba en ~10 px y era lo primero que se
   perdía; ahora va al doble de cuerpo y en blanco. Y la bajada usa **Inter, no

@@ -278,6 +278,13 @@ tiempo por cosas que no tocan la tarjeta. Verificado en las dos direcciones:
 cambiar `--c-gold` avisa **y regenerar produce un PNG distinto**; cambiar la luz
 del cubo o la opacidad del footer no avisa.
 
+Y los archivos de **texto se hashean normalizando los saltos de línea**; las
+fuentes, por bytes crudos. En Windows `core.autocrlf=true` hace que git guarde LF
+y escriba CRLF al hacer checkout, así que hashear los bytes del `.py` hacía
+saltar la guarda con sólo cambiar de rama, o al **clonar el repo de nuevo** —
+justo el caso que motivó comparar contenido en vez de fechas. Las fuentes son
+binarias, git no las toca, y ahí el byte crudo sí es el contenido.
+
 ```
 python tools/make-og-image.py            # regenera y vuelve a sellar
 python tools/make-og-image.py --sellar   # acepta la imagen actual sin regenerar

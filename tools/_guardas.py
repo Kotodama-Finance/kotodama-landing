@@ -252,11 +252,30 @@ OG_FUENTES = ("zen-kaku-gothic-new-500", "inter-")
 
 
 def og_entradas() -> dict:
-    """{entrada: sha256} de todo lo que determina cómo se ve og-image.png."""
+    """{entrada: sha256} de todo lo que determina cómo se ve og-image.png.
+
+    LOS ARCHIVOS DE TEXTO SE HASHEAN NORMALIZADOS, los binarios por bytes.
+    No es un detalle: con `core.autocrlf=true` —el valor por defecto en Windows—
+    git guarda LF en el repo y escribe CRLF al checkout. Hashear los bytes
+    crudos de un .py hacía que la guarda avisara «la og-image quedó vieja» al
+    cambiar de rama o al CLONAR DE NUEVO, cuando no había cambiado nada que
+    mueva un solo píxel del PNG.
+
+    Eso es una señal falsa, que es exactamente el modo de fallo que esta guarda
+    existe para no tener; y encima rompía en el caso que motivó hashear
+    contenido en vez de fechas, que era justamente sobrevivir a un clon.
+
+    Las fuentes siguen por bytes a propósito: son binarias, git no las convierte
+    y ahí el byte crudo SÍ es el contenido.
+    """
     import hashlib
 
     def sha(datos: bytes) -> str:
         return hashlib.sha256(datos).hexdigest()[:16]
+
+    def sha_texto(ruta) -> str:
+        # read_text() aplica universal newlines: CRLF y CR entran como LF.
+        return sha(ruta.read_text(encoding="utf-8").encode("utf-8"))
 
     entradas = {}
     css = RAIZ / "assets" / "css" / "styles.css"
@@ -266,7 +285,7 @@ def og_entradas() -> dict:
 
     gen = RAIZ / "tools" / "make-og-image.py"
     if gen.exists():
-        entradas["make-og-image.py"] = sha(gen.read_bytes())
+        entradas["make-og-image.py"] = sha_texto(gen)
 
     for f in sorted((RAIZ / "assets" / "fonts").glob("*.woff2")):
         if f.name.startswith(OG_FUENTES):
