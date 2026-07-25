@@ -41,9 +41,15 @@ con su `index.html` adentro:
 /            index.html              home EN
 /musubi/     musubi/index.html       el núcleo del cubo
 /sugao/      sugao/index.html        la persona detrás del proyecto
+/method/     method/index.html       el método completo + las fuentes, una por una
 /disclaimer/ disclaimer/index.html   免責事項 completo (el único lugar)
 /ja/         (previsto)              subárbol paralelo en japonés
 ```
+
+`/method/` es el **desarrollo**; la sección `#method` de la portada queda como
+**resumen** y la nav sigue apuntando ahí. **No hay `/sources/`**: la lista
+taxativa de fuentes vive dentro de `/method/`, porque el criterio y su
+aplicación no deben poder divergir.
 
 GitHub Pages sirve `/musubi/` como `/musubi/index.html`, y redirige `/musubi`
 (sin barra final) a `/musubi/` con un 301. Las URLs no llevan extensión.

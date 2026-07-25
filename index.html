@@ -77,7 +77,9 @@
       <div class="cube__wrap">
         <div class="cube__head">
           <div>
-            <p class="eyebrow">The Cube &middot; <span lang="ja">立方体</span></p>
+            <!-- Sin «· 立方体»: era japonés ORNAMENTAL, la traducción literal de
+                 la palabra inglesa de al lado. Ver la regla en CLAUDE.md. -->
+            <p class="eyebrow">The Cube</p>
             <h2 class="section-title">Six faces, one level. The backbone of the whole platform.</h2>
             <p class="section-lead">Each face is a way into the system. None sits above another. One is live today; the rest carry an honest status &mdash; the map is real even where the ground is not yet built.</p>
           </div>
@@ -222,24 +224,24 @@
     <section id="method" class="method">
       <div class="method__wrap">
         <div class="method__head">
-          <p class="eyebrow">Method &middot; <span lang="ja">一次資料</span></p>
+          <p class="eyebrow">Method</p>
           <h2 class="section-title">Everything here traces back to the source.</h2>
           <p class="section-lead">Not summaries of summaries. We read the filings, releases and datasets themselves, cite where every figure came from, and publish the method alongside the finding. This is the moat &mdash; and the reason to trust the map.</p>
         </div>
 
+        <!-- Sin los kanji de encabezado (一次資料 / 追跡可能 / 公開): cada uno
+             traducía literalmente el título inglés que tenía debajo. Se guardan
+             para la versión japonesa, donde serán el original y no el adorno. -->
         <div class="method__cards">
           <div class="method-card">
-            <p class="method-card__kanji" lang="ja">一次資料</p>
             <h3 class="method-card__title">Primary source</h3>
             <p class="method-card__text">Every claim starts at the origin document &mdash; a BOJ release, an MOF table, a JPX disclosure &mdash; never a second-hand retelling.</p>
           </div>
           <div class="method-card">
-            <p class="method-card__kanji" lang="ja">追跡可能</p>
             <h3 class="method-card__title">Traceability</h3>
             <p class="method-card__text">Each number carries its origin, its date and its revision. Follow any figure back to the exact release it came from.</p>
           </div>
           <div class="method-card">
-            <p class="method-card__kanji" lang="ja">公開</p>
             <h3 class="method-card__title">Transparency</h3>
             <p class="method-card__text">The methodology is published, the access is free, and there are no paywalls. If it cannot be shown openly, it does not ship.</p>
           </div>
@@ -257,16 +259,32 @@
           </div>
           <div class="method__sources">
             <p class="eyebrow eyebrow--muted">Sources we read directly</p>
+            <!-- CINCO de ejemplo, no la lista entera: japonesas y globales, para
+                 que se vea que el alcance no es sólo Japón. La lista taxativa
+                 vive en /method/, a un enlace de acá.
+                 Los nombres japoneses SÍ se quedan, a diferencia de los kanji
+                 ornamentales que se sacaron arriba: son el nombre real de cada
+                 organismo, lo que uno busca para llegar a la fuente. Por eso
+                 BIS y Damodaran tienen la columna vacía — no tienen nombre
+                 japonés, y el min-width de .sources__ja mantiene la alineación. -->
             <ul class="sources">
               <li><span class="sources__ja" lang="ja">日本銀行</span><span class="sources__en"><span>Bank of Japan (BOJ)</span><span class="sources__note">Monetary policy, flow of funds</span></span></li>
-              <li><span class="sources__ja" lang="ja">財務省</span><span class="sources__en"><span>Ministry of Finance (MOF)</span><span class="sources__note">Fiscal, public debt, FX</span></span></li>
               <li><span class="sources__ja" lang="ja">金融庁</span><span class="sources__en"><span>Financial Services Agency (FSA)</span><span class="sources__note">Regulation, disclosure</span></span></li>
-              <li><span class="sources__ja" lang="ja">日本取引所</span><span class="sources__en"><span>Japan Exchange Group (JPX)</span><span class="sources__note">Markets, listings, filings</span></span></li>
-              <li><span class="sources__ja" lang="ja">内閣府</span><span class="sources__en"><span>Cabinet Office</span><span class="sources__note">National accounts, GDP</span></span></li>
-              <li><span class="sources__ja" lang="ja">e-Stat / 総務省</span><span class="sources__en"><span>Statistics Bureau (e-Stat)</span><span class="sources__note">Official statistics portal</span></span></li>
+              <!-- EDINET va con la columna japonesa vacía aunque sea japonés: en
+                   japonés también se escribe «EDINET», así que ponerlo repetía
+                   la misma palabra dos veces en la misma fila. -->
+              <li><span class="sources__ja"></span><span class="sources__en"><span>EDINET</span><span class="sources__note">Corporate filings and disclosures</span></span></li>
+              <li><span class="sources__ja"></span><span class="sources__en"><span>Bank for International Settlements (BIS)</span><span class="sources__note">Cross-border banking and settlement data</span></span></li>
+              <li><span class="sources__ja"></span><span class="sources__en"><span>Damodaran Online</span><span class="sources__note">Valuation data and cost of capital</span></span></li>
             </ul>
           </div>
         </div>
+
+        <!-- Un solo enlace al pie de la sección, no uno por columna: cae debajo
+             de las dos, y dos enlaces al mismo destino a pocas líneas se leen
+             como un error. Lleva al método completo Y a la lista taxativa de
+             fuentes, que viven los dos en /method/. -->
+        <p class="method__more"><a href="/method/">Read the full method &rarr;</a></p>
       </div>
     </section>
 

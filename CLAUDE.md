@@ -324,6 +324,34 @@ de `:root`** — es la única excepción a "ningún color literal fuera de `:roo
 Cambiar el color del mar exige editar el shader, y esos valores no se sincronizan
 solos si cambia la paleta.
 
+### En la versión inglesa no va japonés ornamental
+La prueba es simple: **si el japonés sólo traduce la palabra inglesa que tiene
+al lado, es textura y se saca.** Si es un nombre conceptual propio, se queda.
+
+- **Se sacaron**: `The Cube · 立方体`, `Method · 一次資料`, y los kanji que
+  encabezaban las tres tarjetas del método (`一次資料` / `追跡可能` / `公開`),
+  cada uno traduciendo su propio título inglés.
+- **Se quedan**: `素顔`, `免責事項`, los seis nombres de las caras, los tres
+  términos del núcleo, y **los nombres reales de los organismos** en la lista de
+  fuentes (`日本銀行` junto a Bank of Japan). Esos no decoran: son el nombre por
+  el que se llega a la fuente.
+
+**La versión japonesa se escribirá como ORIGINAL, no como traducción de ésta**:
+ahí «The Cube» será katakana, no `立方体`. Por eso lo que se sacó no se tiró —
+los glifos siguen en el subset a propósito. Ver la advertencia en el
+`@font-face` de `styles.css` antes de regenerarlo.
+
+### `/method/` es el desarrollo; la sección de la portada es el resumen
+La sección `#method` de la portada **queda** —los tres pilares y los cuatro
+pasos— y la nav «Method» **sigue apuntando ahí**, no a la subpágina. A
+`/method/` se llega por un enlace al pie de esa sección.
+
+**La lista taxativa de fuentes vive dentro de `/method/`, no en un `/sources/`
+aparte.** Separarlas obligaría a mantener sincronizados el criterio y su
+aplicación, que es exactamente lo que no debe poder divergir. La portada muestra
+**cinco de ejemplo**, japonesas y globales, para que se vea que el alcance no es
+sólo Japón.
+
 ### No redactar contenido
 Sólo **andamiaje con placeholders `TODO`**, en castellano a propósito para que no
 puedan confundirse con copy real (el sitio está en inglés). El texto final y la

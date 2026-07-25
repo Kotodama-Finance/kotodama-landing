@@ -9,8 +9,16 @@
    - Cormorant Garamond e Inter: fuentes VARIABLES (un archivo cubre todos los
      pesos), subseteadas a latín + puntuación.
    - Zen Kaku Gothic New: estática. Se usan solo los pesos 400 y 500. El subset
-     cubre EXACTAMENTE los glifos japoneses que aparecen en la página; si mañana
-     cambia un nombre de cara o cualquier texto japonés, hay que regenerarlo.
+     cubre todos los glifos japoneses que aparecen en la página; si mañana
+     cambia un nombre de cara o se agrega texto japonés, hay que regenerarlo.
+
+     OJO AL REGENERAR: la lista de abajo YA NO ES exactamente lo que hay en las
+     páginas. Al sacar el japonés ornamental de la versión inglesa (立方体,
+     一次資料, 追跡可能, 公開 y varios nombres de organismos) esos glifos
+     quedaron sin uso, y se CONSERVAN a propósito porque vuelven con /ja/.
+     Regenerar a partir del texto actual del sitio los borraría, y el día que
+     exista la versión japonesa se caerían a una fuente del sistema sin que
+     nadie lo note. Sobran ~4 KB; volver a bajarlos no vale ese riesgo.
 
    Glifos del subset japonés (50 kanji + espacio ideográfico U+3000 + latín
    básico U+0020–007F para tramos mixtos como "e-Stat / 総務省"):
@@ -692,7 +700,8 @@ button:focus-visible {
   margin-bottom: clamp(48px, 6vw, 72px);
 }
 .method-card { background: var(--c-surface-method); padding: 34px 30px; }
-.method-card__kanji { font-family: var(--font-ja); font-size: 1.2rem; color: var(--c-gold); margin-bottom: 14px; }
+/* .method-card__kanji se fue con los kanji ornamentales de las tres tarjetas
+   (一次資料 / 追跡可能 / 公開), que sólo traducían su propio título inglés. */
 .method-card__title {
   font-family: var(--font-display);
   font-weight: 600;
@@ -728,6 +737,16 @@ button:focus-visible {
 .sources__ja { font-family: var(--font-ja); font-size: 1.02rem; color: var(--c-gold); min-width: 118px; }
 .sources__en { display: flex; flex-direction: column; gap: 2px; color: var(--c-text); font-size: 0.95rem; }
 .sources__note { font-size: 0.82rem; color: var(--c-text-muted); }
+
+/* Enlace al método completo, al pie de la sección. Mismo tratamiento discreto
+   que .cube__more: es una salida, no una llamada a la acción. */
+.method__more {
+  max-width: 1120px;
+  margin: clamp(40px, 5vw, 56px) auto 0;
+  font-size: 0.95rem;
+}
+.method__more a { color: var(--c-gold); border-bottom: 1px solid var(--line-gold-soft); padding-bottom: 2px; }
+.method__more a:hover { border-bottom-color: var(--c-gold); }
 
 /* -------------------------------------------------------------------------
    PÁGINAS DE TEXTO (subpáginas)
