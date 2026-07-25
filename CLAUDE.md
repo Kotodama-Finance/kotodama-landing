@@ -141,6 +141,17 @@ evitar:
 La prueba para saber cuál se está por escribir: si son más de una línea, va en
 `/disclaimer/` y desde donde estabas se pone un enlace.
 
+**EL TEXTO DE `/disclaimer/` ES UN BORRADOR SIN REVISAR.** Está redactado y
+publicable como andamiaje, pero **no lo validó un profesional legal japonés**
+(benrishi o abogado). No tratarlo como definitivo ni citarlo como si lo fuera:
+declara ley aplicable japonesa y limitación de responsabilidad, que son
+exactamente las cláusulas donde un texto sin revisar puede no sostener lo que
+promete. **Antes de publicar a `main`, esto necesita revisión profesional.**
+
+Y una cláusula tiene fecha de vencimiento propia: **«Language»** dice hoy que
+prevalece el inglés hasta que se designe otra versión como autoritativa. Cuando
+exista `/ja/` hay que revisarla, porque la prevalencia puede invertirse.
+
 **Para la plantilla futura de notas financieras** (no existe todavía, no hay nada
 que construir hoy): cada nota tiene que llevar **el corto al pie**, igual que
 cualquier otra página. No el completo.

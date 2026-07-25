@@ -54,19 +54,37 @@
          completo NO se duplica NUNCA. Dos copias de un texto legal derivan, y
          cuando derivan el sitio se contradice a sí mismo en lo único donde no
          puede permitirse hacerlo.
-         Cuando Manuel lo redacte va a necesitar varios <p>; el placeholder es
-         uno solo a propósito, para no prefigurar la estructura de un texto
-         legal que todavía no está escrito. -->
+         TEXTO DEFINITIVO (versión de lanzamiento, en inglés), pero SIN REVISAR:
+         BORRADOR-SIN-REVISION-LEGAL
+         Esa marca de una sola palabra la busca check-ready.py y bloquea la
+         publicación mientras esté. La saca a mano quien corresponda, DESPUÉS de
+         que lo revise un profesional legal japonés (benrishi o abogado).
+         Es un token sin espacios a propósito: una marca con espacios se parte
+         en el salto de línea de un comentario y la guarda deja de encontrarla
+         —ya pasó— con lo cual daría verde sin que nadie hubiera revisado nada.
+         Los encabezados de cláusula van en <strong> dentro del propio párrafo,
+         no como <h2>: son rótulos de una sola oración dentro de un documento
+         continuo, y sacarlos a línea aparte partiría el texto legal en ocho
+         secciones que se leerían como independientes entre sí. -->
     <article class="face-page">
       <header class="face-page__head">
         <p class="eyebrow"><span lang="ja">免責事項</span></p>
         <h1 class="face-page__title">
-          <span class="face-page__romaji"><span class="todo">TODO: título en inglés</span></span>
+          <span class="face-page__romaji">Disclaimer</span>
         </h1>
       </header>
 
       <div class="face-page__body">
-        <p><span class="todo">TODO: texto legal completo. No es asesoramiento de inversión ni financiero.</span></p>
+        <p><strong>Information, not advice.</strong> Kotodama Finance publishes data, analysis and context about financial systems for general information only. Nothing on this site is investment, financial, legal or tax advice, nor a recommendation, offer or solicitation to buy, sell or hold any security or financial instrument. We explain how things work and what the figures mean; any decision you make from that understanding is your own.</p>
+        <p><strong>No professional relationship.</strong> Using this site creates no advisory, fiduciary or client relationship. Before acting on any financial matter, consult a professional qualified and licensed in your jurisdiction.</p>
+        <p><strong>Sources and accuracy.</strong> Every figure we publish is drawn from primary sources and verified against the original document. Even so, source data can contain errors, be revised, or be superseded, and we do not warrant that any figure is complete, current or free from error. We make no guarantee as to future results or outcomes of any kind.</p>
+        <p><strong>No liability.</strong> To the fullest extent permitted by law, Kotodama Finance and its operators accept no liability for any loss or damage arising from the use of, or reliance on, anything published on this site.</p>
+        <p><strong>External links.</strong> This site links to official and third-party sources. We do not control those sites and are not responsible for their content or availability.</p>
+        <p><strong>Changes.</strong> This site, its content and this disclaimer may change at any time without notice.</p>
+        <p><strong>Governing law.</strong> This disclaimer is governed by the laws of Japan.</p>
+        <!-- La cláusula de idioma se revisa cuando exista /ja/: puede invertirse
+             cuál versión prevalece. Ver CLAUDE.md. -->
+        <p><strong>Language.</strong> This disclaimer is published in English. Should a translation be provided, the English version prevails until a translated version is designated as authoritative.</p>
       </div>
 
       <p class="face-page__back"><a href="/">&larr; <span class="todo">TODO: rótulo de vuelta a la portada</span></a></p>
@@ -108,7 +126,8 @@
          contradice en su propio descargo pierde lo único que el descargo da. -->
     <p class="footer__disclaimer">
       <span lang="ja">免責事項</span> &middot;
-      <a href="/disclaimer/"><span class="todo">TODO: una línea — esto no es asesoramiento de inversión ni financiero.</span></a>
+      Kotodama Finance is published for information only and is not investment or financial advice.
+      <a href="/disclaimer/">Full disclaimer &rarr;</a>
     </p>
     <div class="footer__bottom">
       <span>&copy; 2026 Kotodama Finance &middot; Open access</span>

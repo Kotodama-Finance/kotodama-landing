@@ -112,8 +112,17 @@ que estar en verde siempre:
   `href="#"` que haya perdido su placeholder** y **ningún placeholder nuevo**
   respecto de `tools/placeholders-baseline.json`. Sale `0` si está bien, `1` si
   algo se rompió.
-- **`check-ready.py`** — ¿puede publicarse? Sale `0` listo, **`2` falta
-  redacción** (esperado, no es una regresión) y `1` si hay algo roto de verdad.
+- **`check-ready.py`** — ¿puede publicarse? Sale `0` listo, **`2` falta trabajo
+  previsto** (esperado, no es una regresión) y `1` si hay algo roto de verdad.
+
+  El `2` cubre dos cosas: los placeholders sin redactar y **la revisión legal
+  del `免責事項`**. `/disclaimer/` declara ley aplicable japonesa y limitación
+  de responsabilidad, y el texto todavía **no lo validó un profesional**. La
+  guarda lo detecta por una marca de una sola palabra dentro del propio HTML,
+  que se saca a mano después de la revisión. Es un token sin espacios a
+  propósito: una marca con espacios se parte en el salto de línea de un
+  comentario y deja de encontrarse — pasó en la primera versión, que daba
+  «revisado» con el borrador intacto.
 
 Al redactar un placeholder el conteo baja: eso **no** falla, pero hay que fijar
 el piso nuevo con `python tools/check-structure.py --actualizar-baseline`.
