@@ -52,41 +52,45 @@
 
   <main>
     <article class="face-page">
+      <!-- SIN eyebrow: decía «The human behind» y la línea de función de abajo
+           dice lo mismo mejor. Dos rótulos para una sola idea es ruido.
+           SIN línea de estado: decía «Intro live · profiles deferred» y ya no es
+           cierto — el contenido está completo. Lo único pendiente (el registro
+           de lecturas) lo dice el cierre, en prosa y en su lugar. Un estado que
+           anuncia una falta que no existe es peor que no tener estado. -->
       <header class="face-page__head">
-        <p class="eyebrow">The human behind</p>
         <h1 class="face-page__title">
           <span class="face-page__kanji" lang="ja">素顔</span>
           <span class="face-page__romaji">Sugao</span>
         </h1>
-        <p class="face-page__gloss">&ldquo;the true face&rdquo;</p>
-        <p class="status" data-state="light"><span class="dot" data-state="light" aria-hidden="true"></span>Intro live &middot; profiles deferred</p>
+        <p class="face-page__gloss">The face behind the Cube</p>
       </header>
 
-      <!-- LA PERSONA ENTERA DETRÁS DEL PROYECTO. Se publica YA, completa:
-           introducción, perfil profesional y perfil personal.
+      <!-- LA PERSONA ENTERA DETRÁS DEL PROYECTO. Se publica ya, completa.
+           SIN introducción: el contenido arranca directo en el perfil
+           profesional, que es lo que contesta la pregunta que trae el lector.
            SIN FOTO, y sin hueco reservado para una: la credibilidad la carga el
-           enlace a LinkedIn, que es verificable por quien lo lea. Un retrato no
-           agrega nada comprobable y compromete a mantenerlo.
+           enlace a LinkedIn, que es verificable por quien lo lea.
            El 免責事項 NO va acá. El corto vive en el footer de todas las páginas
-           y el completo en /disclaimer/. Meterlo también en esta página sería
-           empezar a duplicar texto legal, que es justo lo que se evita.
-           El texto lo redacta Manuel: acá sólo va la estructura. -->
-      <p class="face-page__lead"><span class="todo">TODO: 2-3 líneas de presentación. Quién es, dicho de frente.</span></p>
+           y el completo en /disclaimer/. Meterlo también acá sería empezar a
+           duplicar texto legal, que es justo lo que se evita.
+           TEXTO DEFINITIVO (versión de lanzamiento, en inglés). La versión
+           japonesa es un pase aparte: no traducir de acá. -->
 
       <!-- PERFIL PROFESIONAL — en PROSA, no en formato CV. Una lista de puestos
            y fechas se lee como currículum y no responde la pregunta que trae el
-           lector, que es qué habilita a esta persona a publicar esto. -->
+           lector, que es qué habilita a esta persona a publicar esto.
+           El encabezado es el NOMBRE, sin una línea de rol debajo: el rol lo
+           cubre el texto, y repetirlo arriba lo volvería una ficha. -->
       <section class="face-page__section" aria-labelledby="sugao-pro">
-        <h2 id="sugao-pro" class="face-page__subtitle"><span class="todo">TODO: título — perfil profesional</span></h2>
+        <h2 id="sugao-pro" class="face-page__subtitle">Manuel Vivo Casarotti</h2>
         <div class="face-page__body">
-          <p><span class="todo">TODO: historia académica y laboral contada en prosa, NO como lista de puestos.</span></p>
-          <p><span class="todo">TODO: qué de esa trayectoria habilita para publicar análisis del sistema financiero japonés.</span></p>
+          <p>Kotodama Finance began with a frustration I lived. For years I worked in risk management inside multinational insurers &mdash; a job that runs on information &mdash; and I kept hitting the same wall: what I needed existed, but it was scattered, slow to reach, and written to inform without revealing. The numbers were public and still opaque. Closing that opacity &mdash; public information that still fails to inform &mdash; is what this platform sets out to do.</p>
+          <p>The instinct to close it comes from the work. Across seventeen years in financial services I moved through the whole arc of an insurance business, from underwriting and claims to management and the Board, and built the parts that turn raw figures into decisions. That is where I learned to tell a figure that has been verified from one that has merely been repeated &mdash; the difference this platform is built on.</p>
+          <p>It is also why we begin where we do. Insurance is the sector I know from the inside; Japan is where I live, work in the language, and read these sources in their original form. The first node of a larger map, not its edge.</p>
         </div>
         <ul class="profile-links">
-          <!-- El href queda pendiente: la URL la pone Manuel. Mientras siga en
-               "#", el placeholder del rótulo impide que check-ready dé LISTO, y
-               check-structure falla si un href="#" sobrevive a la redacción. -->
-          <li><a href="#">LinkedIn &mdash; <span class="todo">TODO: pegar la URL en el href</span></a></li>
+          <li><a href="https://www.linkedin.com/in/manuel-vivo-casarotti/" target="_blank" rel="noopener">LinkedIn</a></li>
         </ul>
       </section>
 
@@ -95,9 +99,15 @@
            vacíos esperándolos: un hueco reservado para algo que no está se lee
            como página incompleta. Cuando existan, se agregan a esta lista. -->
       <section class="face-page__section" aria-labelledby="sugao-personal">
-        <h2 id="sugao-personal" class="face-page__subtitle"><span class="todo">TODO: título — perfil personal</span></h2>
+        <h2 id="sugao-personal" class="face-page__subtitle">Off the clock</h2>
         <div class="face-page__body">
-          <p><span class="todo">TODO: nota breve sobre los hobbies. Qué lee, qué mira, qué juega.</span></p>
+          <p>What ties most of this together is a taste for hard problems. I became a risk manager by vocation, not by training &mdash; I came to it because untangling something complex and making it hold still is the kind of work I enjoy. Risk is a puzzle; so is a financial system; so is a Rubik&rsquo;s cube &mdash; only the most honest-looking of the three.</p>
+          <!-- «told elsewhere» enlaza a /musubi/: el enlace va en las palabras
+               que nombran lo que hay del otro lado, no en un «ver más» pegado
+               al final. -->
+          <p>The same appetite runs through what I read. Literature mostly, but my longest obsession is mythology and religious studies &mdash; old ways of naming the world so it can be understood. That interest leaves fingerprints on this project, though where and how is a longer story <a href="/musubi/">told elsewhere</a>.</p>
+          <p>Away from the desk I climb and camp when I can. Japan has been generous here &mdash; Mount Fuji five times so far. Sailing is the one I still owe myself: I love being on the water, and haven&rsquo;t yet managed it on this side of the world.</p>
+          <p>A slower, more personal record of what I read and watch is on the way.</p>
         </div>
         <ul class="profile-links">
           <li><a href="https://www.librarything.com/catalog/Manuel_Vivo" target="_blank" rel="noopener">LibraryThing</a></li>
