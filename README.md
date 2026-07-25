@@ -39,12 +39,20 @@ con su `index.html` adentro:
 
 ```
 /            index.html          home EN
-/naming/     naming/index.html   subpágina
+/musubi/     musubi/index.html   subpágina
 /ja/         (previsto)          subárbol paralelo en japonés
 ```
 
-GitHub Pages sirve `/naming/` como `/naming/index.html`, y redirige `/naming`
-(sin barra final) a `/naming/` con un 301. Las URLs no llevan extensión.
+GitHub Pages sirve `/musubi/` como `/musubi/index.html`, y redirige `/musubi`
+(sin barra final) a `/musubi/` con un 301. Las URLs no llevan extensión.
+
+`/musubi/` se llamaba `/naming/`. **No quedó redirección**: GitHub Pages sirve
+archivos estáticos y no tiene reglas de reescritura, así que la ruta vieja
+responde con la 404 del sitio. Es aceptable porque nada de esto está publicado
+todavía; si alguna vez se renombra una ruta **ya publicada**, hay que dejar en
+su lugar un `index.html` con `<link rel="canonical">` a la nueva y un
+`<meta http-equiv="refresh">`, que es lo más parecido a un 301 que permite
+Pages.
 
 El archivo `.nojekyll` desactiva el procesamiento con Jekyll: el sitio ya es
 estático y no lo necesita. Además evita un problema silencioso — Jekyll ignora
@@ -352,6 +360,12 @@ Tres cosas más para ese día:
 3. **El sitemap puede llevar los alternates** con `xmlns:xhtml` y un
    `<xhtml:link>` por idioma dentro de cada `<url>`. `make-sitemap.py` habrá que
    extenderlo; hoy emite sólo `<loc>`.
+4. **`/musubi/` puede querer otro rótulo en japonés.** En inglés la nav dice
+   «Musubi», que es el romaji. La versión japonesa podría preferir escribirlo en
+   kanji —**産霊** o **結び**—, que no son intercambiables: 産霊 es el término del
+   núcleo que ya aparece en la página, y 結び es la palabra corriente para «nudo,
+   atadura». Es una decisión del autor, no una traducción mecánica; queda
+   anotada, sin implementar.
 
 Y lo de siempre: **cada texto japonés nuevo obliga a regenerar el subset**, que
 para una versión japonesa entera significa rehacerlo con el corpus completo —

@@ -101,17 +101,26 @@ Con una distancia fija se recortaba en toda rotación con un vértice cerca de l
 vertical. Se recalcula en cada `resize`, así que es inmune a cambios de tamaño.
 Es una **garantía**, no un ajuste: si la esfera entra, ninguna rotación se sale.
 
-### `/sugao/` y el registro del operador
-- **Portada `#operator`**: registro factual denso (nombre, rol, contacto,
-  `免責事項`). La señal de confianza tiene que estar donde nace la duda.
-- **`/sugao/`**: desarrollo de largo aliento, y después los perfiles diferidos.
-  **No repite** los datos duros: los enlaza.
-- **El `免責事項` vive en un solo lugar.** Texto legal duplicado es la peor
-  clase de deriva.
+### `素顔 Sugao` es el Lado B personal — NO la identificación del operador
+**Esto CORRIGE una premisa equivocada que llegó a estar implementada.** Se leyó
+`素顔` («cara sin maquillaje») como *identificación del responsable*, al modo del
+`運営者情報` de un sitio japonés, y de ahí salió una sección `#operator` en la
+portada con nombre, rol, trayectoria, contacto y `免責事項`, más una `/sugao/`
+escrita como ficha profesional que la enlazaba.
 
-No se duplica prosa: cambia el **registro**, no el contenido. Y el `id` de la
-portada es `operator`, no `sugao`, para que el nombre Sugao designe una sola
-cosa (la cara y su subpágina).
+**Nada de eso existe en el proyecto.** Sugao es una cara del cubo como las otras
+cinco, y su dominio es la **dimensión personal**: lecturas, cine, juegos. Lo que
+la distingue no es su naturaleza sino su estado: **publicación diferida**. La
+sección `#operator` se eliminó entera —bloque, placeholders, `免責事項` y CSS—,
+junto con el enlace desde `/sugao/`.
+
+Lo que sí sale del archivo de referencia y **se copia literal**: `gloss:"the true
+face"`, `domain:"The human behind"`, `status:"Intro live · profiles deferred"`.
+Que el dominio diga «the human behind» **no** autoriza a construir un registro
+del operador: describe una cara personal, no una ficha de responsable legal.
+
+Cómo se detecta la confusión si vuelve: aparece un campo **nombre / rol /
+trayectoria / `免責事項`**. Ninguno de esos cuatro pertenece a este sitio hoy.
 
 ### No templetizar: verificar
 El nav y el footer están **duplicados** en las ocho páginas. No hay build step
@@ -130,7 +139,7 @@ arrastrar (deseleccionar).
 
 Por qué se pudo revertir sin traer de vuelta el salto de layout: el folio está
 **debajo** del cubo y de la grilla. Lo que se desplaza al abrirlo es el enlace
-al sistema de nombres y lo que sigue —nunca el cubo ni la cara que el usuario
+a Musubi y lo que sigue —nunca el cubo ni la cara que el usuario
 acaba de tocar—, así que **nada se mueve bajo el cursor**. Reservar el espacio
 dejaba un hueco vacío permanente para algo que la mayor parte del tiempo no
 está; el folio sólo ocupa lugar cuando hay algo que mostrar.
@@ -289,7 +298,7 @@ del sistema filosófico ni las razones de los nombres.
   crawlers. En vista 3D se oculta con el patrón clip, **nunca** `display:none`.
   Al recibir foco se corre **al costado** del escenario, no encima: taparlo
   escondía justo lo que el usuario de teclado necesita ver.
-- **URLs por directorios** (`/naming/`, `/hajime/`…), sin extensión.
+- **URLs por directorios** (`/musubi/`, `/hajime/`…), sin extensión.
 - **Cada texto japonés nuevo obliga a regenerar el subset** de Zen Kaku. Ver
   README. **`document.fonts.check()` no sirve** para verificarlo: informa si la
   fuente está cargada, no si contiene el glifo.
@@ -364,7 +373,13 @@ Kaku, verificando contra la tabla `cmap`. Ya frenó una vez, con el 迷 de la 40
   horizontal que manda con el escenario más alto que ancho, el maelstrom táctil).
   Se retoma cuando el autor lo diga.
 - **Vista explotada del cubo.** Va **después** del pase de redacción; se discutió
-  fuera de estas sesiones y el brief todavía no está escrito.
+  fuera de estas sesiones y el brief todavía no está escrito. Lo que sí está
+  decidido, para que el brief lo dé por sentado: al abrirse, el **núcleo** del
+  cubo muestra los **tres conceptos** del centro conceptual del proyecto en
+  kanji —**産霊 · 河川 · 言霊** (Musubi · Kasen · Kotodama)— y al hacer clic
+  lleva a **`/musubi/`**. Los tres ya viven en el HTML de esa página, así que
+  **no hacen falta glifos nuevos** en el subset. No hay nada visual que
+  construir hoy.
 - **Remolino ukiyo-e para la transición.** Ocho iteraciones fallidas entre Design
   y Claude: **el ruido procedural produce textura, no dibujo** — granulado, no la
   línea de una ola grabada. Requiere ilustrador humano o un enfoque distinto.

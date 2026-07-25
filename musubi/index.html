@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TODO: título de la página — Kotodama Finance</title>
-<meta name="description" content="TODO: descripción del sistema de nombres.">
-<link rel="canonical" href="https://kotodamafinance.com/naming/">
+<title>Musubi — Kotodama Finance</title>
+<meta name="description" content="TODO: descripción de Musubi, el núcleo que unifica las seis caras.">
+<link rel="canonical" href="https://kotodamafinance.com/musubi/">
 <!-- Open Graph: la tarjeta que se ve al compartir el enlace en un chat o una
      red. Sin esto el enlace viaja como una línea de texto pelada.
      og:url y og:image tienen que ser ABSOLUTAS: el que arma la vista previa no
      es el navegador del lector y no puede resolver una ruta relativa.
      La imagen la genera tools/make-og-image.py. -->
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://kotodamafinance.com/naming/">
-<meta property="og:title" content="TODO: título de la página — Kotodama Finance">
-<meta property="og:description" content="TODO: descripción del sistema de nombres.">
+<meta property="og:url" content="https://kotodamafinance.com/musubi/">
+<meta property="og:title" content="Musubi — Kotodama Finance">
+<meta property="og:description" content="TODO: descripción de Musubi, el núcleo que unifica las seis caras.">
 <meta property="og:image" content="https://kotodamafinance.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -42,7 +42,7 @@
     </a>
     <nav class="nav__links" aria-label="Primary">
       <a href="/#cube">The Cube</a>
-      <a href="/naming/"><span class="todo">Naming</span></a>
+      <a href="/musubi/">Musubi</a>
       <a href="/#about">About</a>
       <a href="/#method">Method</a>
       <a href="/#footer">Contact</a>
@@ -50,14 +50,17 @@
   </header>
 
   <main>
-    <!-- SISTEMA DE NOMBRES ------------------------------------------------
-         Registro de referencia que anota las seis caras del cubo: por qué cada
-         una se llama como se llama. Va acá, pegado al cubo, porque es donde el
-         lector se hace la pregunta. Es un bloque autónomo: para moverlo, se
-         mueve entero.
-         El texto de las razones lo escribe el autor: acá sólo va la estructura.
+    <!-- MUSUBI — EL NÚCLEO DEL CUBO ------------------------------------------
+         El sistema conceptual que unifica las seis caras: los tres términos del
+         centro (産霊 · 河川 · 言霊) y, a partir de ellos, por qué cada cara se
+         llama como se llama. Antes esta página se llamaba «naming» y vivía en
+         /naming/; el nombre propio es Musubi y la ruta es /musubi/.
+         Es un bloque autónomo: para moverlo, se mueve entero.
+         El texto lo escribe el autor: acá sólo va la estructura.
          Se usa <dl> y no <table>: la relación es término -> explicación, y así
-         no hay que inventar encabezados de columna. -->
+         no hay que inventar encabezados de columna.
+         Las clases CSS siguen llamándose .naming__*: son nombres internos y
+         renombrarlas no cambiaría nada que se vea. -->
     <article class="naming" aria-labelledby="naming-title">
       <div class="naming__wrap">
         <!-- Si el eyebrow lleva japonés, hay que regenerar el subset de Zen Kaku

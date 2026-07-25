@@ -39,7 +39,7 @@ except Exception:
 
 def urls():
     """URLs canónicas, en el mismo esquema por directorios que usa el sitio:
-    /naming/ y no /naming/index.html."""
+    /musubi/ y no /musubi/index.html."""
     encontradas = []
     for p in sorted(RAIZ.rglob("*.html")):
         rel = p.relative_to(RAIZ)

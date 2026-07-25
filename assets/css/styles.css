@@ -512,8 +512,8 @@ button:focus-visible {
    Sustituye al espacio reservado con min-height. Reservarlo dejaba un hueco
    vacío permanente bajo el cubo para algo que la mayoría del tiempo no está.
    Se puede desplegar sin que moleste porque el folio está DEBAJO del cubo y de
-   la grilla: lo que se corre hacia abajo es el enlace al sistema de nombres y
-   lo que sigue. Nada se mueve bajo el cursor.
+   la grilla: lo que se corre hacia abajo es el enlace a Musubi y lo que sigue.
+   Nada se mueve bajo el cursor.
 
    TÉCNICA: se anima grid-template-rows de 0fr a 1fr, no height de 0 a auto.
    - `auto` no interpola sin interpolate-size / calc-size(), que hoy sólo están
@@ -763,14 +763,8 @@ button:focus-visible {
   text-wrap: pretty;
 }
 .face-page__body { display: flex; flex-direction: column; gap: 22px; font-size: 1.02rem; line-height: 1.8; color: var(--c-text-soft); }
-.face-page__ref {
-  margin-top: 28px;
-  padding: 16px 18px;
-  border-left: 2px solid var(--line-gold);
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: var(--c-text-dim);
-}
+/* .face-page__ref se fue con el enlace de /sugao/ al registro del operador,
+   que dejó de existir junto con esa sección. */
 .face-page__deferred {
   margin-top: clamp(44px, 6vw, 64px);
   padding-top: clamp(28px, 4vw, 40px);
@@ -787,7 +781,8 @@ button:focus-visible {
 
 .face-page__back { margin-top: clamp(48px, 6vw, 72px); font-size: 0.9rem; }
 
-/* La subpágina del sistema de nombres reusa .naming, que ya no vive en la portada */
+/* /musubi/ reusa .naming, que ya no vive en la portada. La clase conserva el
+   nombre viejo: es interna y renombrarla no cambiaría nada que se vea. */
 .page .naming { border-top: none; }
 
 /* Vista 3D: la grilla NO se saca del DOM ni va a display:none — es la capa
@@ -852,7 +847,7 @@ button:focus-visible {
   .face-grid.is-sr:focus-within .face-card__domain { display: block; }
 }
 
-/* Enlace discreto a /naming/ al pie de la sección del cubo */
+/* Enlace discreto a /musubi/ al pie de la sección del cubo */
 .cube__more {
   margin-top: clamp(32px, 4vw, 48px);
   text-align: center;
@@ -934,67 +929,12 @@ button:focus-visible {
 .naming__reading { font-family: var(--font-display); font-size: 1.1rem; color: var(--c-gold); }
 .naming__reason { font-size: 1rem; line-height: 1.7; color: var(--c-text-soft); }
 
-/* -------------------------------------------------------------------------
-   素顔 / OPERADOR
-   Señal de confianza: densa y llana. Sin ornamento.
-   ------------------------------------------------------------------------- */
-.operator {
-  position: relative;
-  z-index: 3;
-  background: var(--c-surface-method);
-  /* misma familia que method: la costura entre ambas no necesita fundido */
-  border-top: 1px solid var(--line-gold-faint);
-  padding: clamp(80px, 11vw, 140px) clamp(20px, 5vw, 64px);
-}
-.operator__wrap { max-width: 720px; margin: 0 auto; }
-.operator__head { margin-bottom: clamp(36px, 5vw, 52px); }
-.operator .eyebrow { display: block; margin-bottom: 20px; }
-.operator .section-title { margin-bottom: 16px; }
-.operator .section-lead { color: var(--c-text-soft); }
-
-/* Datos duros en pares campo-valor, como un 運営者情報 */
-.operator__facts {
-  display: flex;
-  flex-direction: column;
-  border-top: 1px solid var(--line-gold-faint);
-  margin-bottom: clamp(36px, 5vw, 52px);
-}
-.operator__fact {
-  display: grid;
-  grid-template-columns: minmax(140px, 200px) 1fr;
-  gap: clamp(14px, 3vw, 32px);
-  padding: 14px 0;
-  border-bottom: 1px solid var(--line-gold-faint);
-}
-.operator__fact dt {
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--c-text-muted);
-}
-.operator__fact dd { font-size: 1rem; line-height: 1.6; color: var(--c-text); }
-
-.operator__block { margin-bottom: clamp(28px, 4vw, 40px); }
-.operator__label {
-  font-family: var(--font-ui);
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--c-gold);
-  margin-bottom: 12px;
-}
-.operator__block p { font-size: 1.02rem; line-height: 1.8; color: var(--c-text-soft); }
-
-/* El descargo se separa del resto: es advertencia legal, no argumento */
-.operator__disclaimer {
-  margin-top: clamp(36px, 5vw, 52px);
-  padding: 24px 26px;
-  border: 1px solid var(--line-gold-soft);
-  border-radius: var(--radius);
-}
-.operator__disclaimer p { font-size: 0.94rem; line-height: 1.7; color: var(--c-text-dim); }
+/* Acá vivía el bloque .operator*: la sección «素顔 / OPERADOR» de la portada,
+   con nombre, rol, trayectoria y 免責事項 al estilo de un 運営者情報 japonés.
+   Se eliminó junto con la sección. Nacía de leer 素顔 como «identificación del
+   responsable», y esa identificación no existe en el proyecto: Sugao es una
+   cara del cubo como las otras cinco, con dominio personal y publicación
+   diferida. Ver /sugao/index.html. */
 
 /* -------------------------------------------------------------------------
    FOOTER
@@ -1164,9 +1104,8 @@ button:focus-visible {
 
 @media (max-width: 640px) {
   /* Los pares campo-valor pasan a una columna: a este ancho, dos columnas
-     dejan la etiqueta y el valor demasiado estrechos. */
-  .naming__row,
-  .operator__fact { grid-template-columns: 1fr; gap: 6px; }
+     dejan el término y su explicación demasiado estrechos. */
+  .naming__row { grid-template-columns: 1fr; gap: 6px; }
   .nav__word { display: none; }
   .nav__links { gap: 16px; }
   .face-grid { grid-template-columns: repeat(2, 1fr); }
