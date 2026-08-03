@@ -44,10 +44,20 @@ let cube = null;
 
 /* El estado de cada cara venía del panel lateral, que se quitó. No puede
    desaparecer de la vista 3D: alguien navegando en modo cubo entraría a una
-   cara sin saber que está vacía. Ahora viaja con el botón de entrada. */
+   cara sin saber que está vacía. Ahora viaja con el botón de entrada.
+
+   POR QUÉ SUGAO LLEVA EL PUNTO LLENO Y HAJIME NO. Se lee al revés de lo que
+   uno espera: Hajime es la cara del análisis, o sea el proyecto. Pero los
+   estados dicen lo que HAY, no lo que importa — Hajime no tiene todavía una
+   línea publicada y Sugao está entera. Es lo que el lead del cubo ya promete
+   («One is live today»), y con el reparto anterior la grilla lo desmentía.
+   No hay estado nuevo: los tres siguen siendo los mismos, cambia quién ocupa
+   cada uno. Si alguien lo "arregla" devolviéndole el punto lleno a Hajime,
+   vuelve a haber dos caras leyéndose como la más fuerte y ninguna de las dos
+   es la publicada. */
 const FACES = {
-  hajime: { romaji: 'Hajime', state: 'active', status: 'First analysis on the way' },
-  sugao:  { romaji: 'Sugao',  state: 'light',  status: 'Intro live · profiles deferred' },
+  hajime: { romaji: 'Hajime', state: 'light',  status: 'First analysis on the way' },
+  sugao:  { romaji: 'Sugao',  state: 'active', status: 'Live' },
   tosei:  { romaji: 'Tosei',  state: 'soon',   status: 'Coming soon' },
   kamon:  { romaji: 'Kamon',  state: 'soon',   status: 'Coming soon' },
   torii:  { romaji: 'Torii',  state: 'soon',   status: 'Coming soon' },

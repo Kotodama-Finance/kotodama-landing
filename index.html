@@ -110,10 +110,14 @@
             <!-- BASELINE: grilla de seis como lista semántica (nav real sin JS) -->
             <ul class="face-grid" aria-label="The six faces">
               <li>
-                <a class="face-card" href="/hajime/" data-face="hajime" data-state="active">
+                <!-- Hajime en `light` y Sugao en `active`: los estados dicen lo
+                     que HAY publicado, no cuál cara pesa más en el proyecto.
+                     El porqué completo, en assets/js/main.js (FACES), que es
+                     donde el JS los vuelve a aplicar al seleccionar. -->
+                <a class="face-card" href="/hajime/" data-face="hajime" data-state="light">
                   <span class="face-card__top">
                     <span class="face-card__kanji" lang="ja">肇</span>
-                    <span class="dot" data-state="active" aria-hidden="true"></span>
+                    <span class="dot" data-state="light" aria-hidden="true"></span>
                   </span>
                   <span class="face-card__meta">
                     <span class="face-card__romaji">Hajime</span>
@@ -122,10 +126,10 @@
                 </a>
               </li>
               <li>
-                <a class="face-card" href="/sugao/" data-face="sugao" data-state="light">
+                <a class="face-card" href="/sugao/" data-face="sugao" data-state="active">
                   <span class="face-card__top">
                     <span class="face-card__kanji" lang="ja">素顔</span>
-                    <span class="dot" data-state="light" aria-hidden="true"></span>
+                    <span class="dot" data-state="active" aria-hidden="true"></span>
                   </span>
                   <span class="face-card__meta">
                     <span class="face-card__romaji">Sugao</span>
