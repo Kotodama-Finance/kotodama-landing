@@ -156,7 +156,12 @@ def componer():
         a = d.textbbox((0, 0), txt, font=fnt)
         return a[3] - a[1], a[1]
 
-    LINEA = "Japan’s financial system, made legible — from the source."
+    # LINEA es el TITULAR DEL HERO, literal — no una bajada escrita aparte.
+    # Si el hero cambia, esto cambia con él y hay que regenerar: la tarjeta es
+    # un archivo, no una vista, así que se queda vieja sin que nada se rompa.
+    # Ya pasó: sobrevivió al reemplazo del hero diciendo «Japan's financial
+    # system, made legible — from the source.», que era el hero anterior.
+    LINEA = "Capital moves in currents. Most of them run unseen."
     h_ja, off_ja = alto("言霊", ja)
     h_marca, off_marca = alto("KOTODAMA FINANCE", marca)
     h_baj, off_baj = alto(LINEA, bajada)
