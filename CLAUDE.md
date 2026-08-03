@@ -32,16 +32,20 @@ fallidos ya corregidos, y las capturas intermedias.
 - Tag `v1-dark` = versión navy+oro con el cubo Three.js, con registro visual en
   `docs/v1-dark/`.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-07-25**, en `fb097c0`. Árbol limpio y todo pusheado.
+- Último cierre: **2026-08-03**, en `ed8f29e`. Árbol limpio, **dos commits sin
+  pushear** (`72b6f4b` y `ed8f29e`) y **`check-pendulum` sin correr**: esta
+  sesión no tocó la física —sólo documentación y comentarios—, pero la guarda va
+  antes del push igual.
 - Empezó la redacción: el hero, `/sugao/` y el `免責事項` ya tienen texto
   definitivo. Quedan **85 placeholders en 11 páginas**.
 
 ### AL RETOMAR, EMPEZAR ACÁ
 
 **Levantar el servidor en `:8000`, correr `python tools/check-structure.py`
-—tiene que dar verde— y después cerrar los tres pendientes técnicos**: el estado
-de Sugao a `live`, el `<title>`/`description` de la portada, y regenerar la
-og-image con la bajada nueva. Están detallados en los cabos abiertos.
+—tiene que dar verde—, correr `check-pendulum` y pushear los dos commits
+pendientes. Después, cerrar los tres pendientes técnicos**: el estado de Sugao a
+`live`, el `<title>`/`description` de la portada, y regenerar la og-image con la
+bajada nueva. Están detallados en los cabos abiertos.
 
 Si `check-structure` da rojo, eso es lo primero: algo cambió fuera de sesión.
 
@@ -486,9 +490,30 @@ antes del pase de redacción.
 
 ## Cabos abiertos (lista viva)
 
-**Estado al cierre de la sesión del 2026-07-25.** El andamiaje está completo
-—once páginas, el cubo, la transición, la capa de metadatos y las guardas— y
-**empezó la redacción**.
+**Estado al cierre de la sesión del 2026-08-03.** El andamiaje está completo
+—once páginas, el cubo, la transición, la capa de metadatos y las guardas—,
+**empezó la redacción**, y el registro técnico ya no tiene huecos.
+
+### Hecho en esta sesión (2026-08-03): documentar desde el código
+
+Sesión de documentación: **no se tocó ni una línea de comportamiento**. Se
+cerraron los huecos del registro técnico leyendo el fuente, no los papeles.
+
+- **README**: dos secciones nuevas, «El import map» y «El cubo: parámetros
+  vigentes» (geometría, constantes, encuadre, luces, colores, péndulo,
+  `snap`/`parked`, lazy-init), más el índice de `docs/mediciones/`.
+- **`docs/mediciones/rendimiento.md`**, nuevo: la única medición de rendimiento
+  que existe, de escritorio, fechada y con condiciones.
+- **Divergencias resueltas contra el código**: `docs/v1-dark/README.md` daba como
+  actuales unas luces y un fondo que son del tag, y quedó marcado como histórico
+  punto por punto; `luz-arco.md` sí coincidía y quedó confirmado.
+- **`cube.js`**: el encabezado decía «las luces van tintadas en oro» y era falso
+  **desde el primer commit** (verificado con `git log -L` y `git log -S`: `hemi`
+  y `key` nunca fueron doradas). Se sacó de ahí y el reparto real vive ahora en
+  el bloque de luces, junto al código que lo aplica.
+
+**La regla que dejó la sesión**: los números del cubo se leen del código y se
+tabulan en un solo lugar. Ver la decisión cerrada correspondiente.
 
 ### Ya redactado: texto definitivo, versión de lanzamiento en inglés
 
@@ -501,7 +526,7 @@ antes del pase de redacción.
 La versión japonesa es un pase aparte y **se escribe como original, no
 traduciendo de acá**.
 
-### Andamiaje agregado en esta sesión
+### Andamiaje agregado en la sesión del 2026-07-25
 
 - **`/method/`**, subpágina nueva, con placeholders. La sección `#method` de la
   portada **queda como resumen** y la nav sigue apuntando a ese ancla; a la
