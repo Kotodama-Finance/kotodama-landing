@@ -233,8 +233,10 @@ que construir hoy): cada nota tiene que llevar **el corto al pie**, igual que
 cualquier otra página. No el completo.
 
 ### `href="#"` es andamiaje, y hay guarda para que no sobreviva
-El href de LinkedIn en `/sugao/` queda pendiente de que lo complete el autor.
-Mientras el ancla lleve adentro su placeholder, es andamiaje declarado y
+**Hoy no queda ninguno**: el de LinkedIn en `/sugao/`, que era el único, lo
+completó el autor con la URL real. La guarda queda igual, para el próximo.
+
+Mientras un ancla lleve adentro su placeholder, es andamiaje declarado y
 `check-ready` ya impide publicar. Lo que `check-structure` ataja es el caso
 **silencioso**: que alguien redacte el rótulo, borre el `TODO` y se olvide de
 pegar la URL — ahí el placeholder desaparece, todo se pone verde y el enlace
