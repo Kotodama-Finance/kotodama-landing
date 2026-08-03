@@ -131,6 +131,14 @@ Se excluyen los píxeles dorados del kanji, para medir el cuerpo y no el trazo.
 Condiciones: escenario 720×520, luz `hemi 3.5 · key 2.9 · rim 0.65 · back 1.3`,
 material `roughness 0.72 · metalness 0.02`, cuerpo `#040d18`.
 
+> **Estas condiciones coinciden con el código vigente** (verificado contra
+> `assets/js/cube.js` y el `:root` de `styles.css`): luz, material, cuerpo y
+> fondo (`--c-surface-cube` = `#05111d`, luminancia 15.3) son los de hoy. **Ojo
+> con `docs/v1-dark/`**, que registra otro juego de luces y otro fondo: ésos son
+> del tag y ya no rigen. Los valores vigentes están tabulados en el README de la
+> raíz, sección «El cubo: parámetros vigentes». Si alguna vez la luz cambia, esta
+> medición pasa a ser histórica y hay que decirlo acá.
+
 ## Por qué un barrido y no poses sueltas
 
 Tres mediciones anteriores en poses fijas dieron conclusiones equivocadas. A

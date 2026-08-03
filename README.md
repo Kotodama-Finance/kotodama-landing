@@ -27,10 +27,50 @@ tools/make-favicon.py   genera los iconos a partir del subset de la marca
 tools/make-sitemap.py   genera el sitemap a partir de los HTML publicables
 tools/make-og-image.py  genera og-image.png (sólo tipografía, sin navegador)
 docs/v1-dark/           registro visual de versiones etiquetadas
+docs/mediciones/        mediciones con fecha y condiciones (luz, rendimiento)
 ```
 
 Para desarrollo alcanza con cualquier servidor estático desde la raíz del repo.
 Los módulos ES necesitan HTTP, no funcionan por `file://`.
+
+## El import map
+
+`cube.js` importa Three.js con el especificador desnudo `three`. Un navegador no
+sabe resolver eso solo: quien lo traduce es el **import map**, que vive en
+`index.html` justo antes del `<script type="module">` que arranca `main.js`.
+
+```html
+<script type="importmap">
+{ "imports": { "three": "./assets/vendor/three.module.js" } }
+</script>
+<script type="module" src="./assets/js/main.js"></script>
+```
+
+Es lo que hace posible tener Three.js vendoreado sin bundler: el especificador
+queda igual que si viniera de un CDN, y el mapa lo apunta al archivo local.
+
+Tres cosas que no se ven mirando el HTML:
+
+- **La ruta se resuelve contra el documento que lleva el mapa**, no contra el
+  módulo que hace el `import`. Por eso los bancos de prueba de `_dev/` llevan el
+  mismo mapa con `../assets/vendor/three.module.js`: están un nivel más abajo.
+- **El mapa tiene que ir antes del primer módulo que lo use**, y sólo puede haber
+  uno por documento. Declarado después, no se aplica: la resolución de `three`
+  falla, el `await import('./cube.js')` de `hydrateCube()` lanza, y el `catch`
+  de `main.js` deja la grilla como navegación con un `console.warn`. **El sitio
+  no se rompe, sólo se queda sin cubo** — que es el modo de fallo buscado, pero
+  también es silencioso, así que conviene mirar la consola.
+- **`RoundedBoxGeometry` no pasa por el mapa.** `cube.js` la importa por ruta
+  relativa (`../vendor/RoundedBoxGeometry.js`), así que no aparece ahí y no hay
+  que agregarla.
+
+**Al agregar una página, el mapa sólo hace falta si esa página monta el cubo.**
+Hoy vive únicamente en `index.html`, que es la única página publicable con
+JavaScript: las otras diez —las seis caras, `/musubi/`, `/method/`, `/sugao/`,
+`/disclaimer/` y la 404— no cargan ningún script. Un import map **no se hereda
+entre documentos**, así que una página nueva que quiera el cubo necesita **su
+propia copia**, con la ruta corregida a su profundidad. El caso previsto es
+`/ja/index.html`: un nivel abajo, o sea `../assets/vendor/three.module.js`.
 
 ## URLs
 
@@ -242,6 +282,186 @@ del mar: si cambia la paleta, hay que volver a correr el script.
 
 El `favicon.ico` existe aunque haya `<link>`: el navegador pide `/favicon.ico`
 igual, y sin el archivo cada carga deja un 404 en la consola.
+
+## El cubo: parámetros vigentes
+
+**Todo lo de acá está leído de `assets/js/cube.js` y del `:root` de
+`assets/css/styles.css`. Si algo no coincide, manda el código y esta tabla está
+vieja.** Las capturas de `docs/v1-dark/` y las mediciones de `docs/mediciones/`
+son registros con fecha, no la definición: valen para el momento en que se
+tomaron y varias de sus cifras ya no son las de hoy.
+
+### Geometría
+
+Son **26 cubies redondeados, todos idénticos**, que llenan el volumen **3×3×3**.
+No hay cubie central: el núcleo está vacío porque no se ve nunca, y el cubo se
+lee sólido porque los 26 son opacos y el depth buffer resuelve la oclusión —que
+es la razón de haber pasado de CSS 3D a Three.js.
+
+| Constante | Valor | Qué es |
+|---|---|---|
+| `CELL` | `1` | paso de la grilla: la unidad de todo lo demás |
+| `GAP` | `0.022` | separación entre cubies |
+| `CUBIE` | `0.978` | arista del cubie, derivada: `CELL - GAP` |
+| `RADIUS` | `0.03` | radio del bisel |
+| `PLATE` | `0.918` | zona plana de la cara, derivada: `CUBIE - 2·RADIUS` |
+
+`GAP` y `RADIUS` van los dos chicos, y por la misma razón: **se suman en el vacío
+que se abre donde concurren cuatro esquinas redondeadas.** Si crecen, ese hueco
+deja de leerse como junta y se abre en rombo. La malla es
+`RoundedBoxGeometry(CUBIE, CUBIE, CUBIE, 3, RADIUS)` — 3 segmentos de bisel.
+
+### Encuadre de cámara
+
+`PerspectiveCamera(fov 24, near 0.1, far 100)`, con la distancia **calculada en
+cada `resize()`**, nunca fija:
+
+```
+CUBE_RADIUS = √3 · (CELL + CUBIE/2) ≈ 2.579     // esfera envolvente
+FIT_MARGIN  = 1.06
+camera.z    = CUBE_RADIUS · FIT_MARGIN / sin(min(halfV, halfH))
+```
+
+Dos detalles que importan: es **seno, no tangente** (la esfera envolvente, no la
+cara), y **manda el semiángulo más chico de los dos**. En un escenario apaisado
+gana la vertical y `camera.z ≈ 13.2`; en uno más alto que ancho gana la
+horizontal y la cámara se aleja más. Ésa es la variable que queda sin medir en
+móvil, donde el escenario cambia de proporción.
+
+`setPixelRatio(min(devicePixelRatio, 2))`, y **1.5 en punteros gruesos**, donde
+además se apaga el antialias.
+
+### Luces y material — VIGENTES
+
+Las intensidades y posiciones están en `LIGHT_DEFAULTS`; los colores salen de los
+tokens, nunca literales.
+
+| Luz | Intensidad | Posición | Color |
+|---|---|---|---|
+| `hemi` | **3.5** | — | cielo `--c-cube-key-light`, suelo `--c-navy` |
+| `key` | **2.9** | `[-3, 5, 4]` | `--c-cube-key-light` |
+| `rim` | **0.65** | `[4.5, 0.5, 2.5]` | `--c-gold-soft` |
+| `back` | **1.3** | `[2.5, 1.5, -4]` | `--c-gold-soft` |
+
+Material del cubie: **`roughness 0.72`, `metalness 0.02`**. Mate a propósito:
+roughness bajo concentra el reflejo en un punto y lee metálico, y metalness sin
+environment map oscurece en vez de brillar.
+
+El ambiente domina sobre el total direccional, que es lo que da el degradé suave.
+La clave y el hemisférico son **neutros** —tintarlos de oro le come el canal azul
+al navy y lo desatura a gris—; el oro entra por `rim` y `back`, y por el trazo
+incrustado.
+
+> **El juego `hemi 2.2 · key 1.8 · rim 0.4 · back 0.8` es HISTÓRICO**: es el del
+> tag `v1-dark`, y está documentado en `docs/v1-dark/README.md`. **No es el
+> actual.** Las intensidades subieron al aclarar el fondo de sección de `#020509`
+> a `#05111d`, porque la separación del cubo contra su fondo se sostiene con
+> **luz** y no oscureciendo la página. El reparto entre las cuatro no cambió, así
+> que el carácter difuso se conserva.
+
+### Colores — VIGENTES
+
+| Token | Valor | Dónde |
+|---|---|---|
+| `--c-cube-body` | `#040d18` | cuerpo del cubie |
+| `--c-surface-cube` | `#05111d` | fondo de la sección del cubo |
+| `--c-gold` | `#c8a85a` | el trazo incrustado |
+| `--c-gold-soft` | `#e7d6a6` | `rim` y `back` |
+| `--c-cube-key-light` | `#ffffff` | `key` y el cielo del hemisférico |
+
+**`#020509` ya no es el fondo de nada.** Aparece en `docs/v1-dark/README.md` y en
+un comentario de `styles.css` como el valor anterior: era un casi negro que hacía
+leer la página como tres páginas pegadas, y se reemplazó por una rampa suave
+entre secciones. Cualquier documento que lo dé como fondo actual está desactualizado.
+
+El cuerpo del cubie es el navy de marca sin deriva, y eso está medido: dentro de
+la familia navy a esa profundidad **todas las variantes caen dentro de ~4 unidades
+sRGB**, o sea que el color base no es una palanca perceptible. Lo que separa el
+cubo del fondo es la luz. Ver `docs/mediciones/luz-arco.md`.
+
+### Física: el péndulo
+
+| Constante | Valor | Qué es |
+|---|---|---|
+| `PEND_CENTER` | `18` | grados: el centro, la vista 3/4 |
+| `PEND_AMP` | `20` | grados de excursión a cada lado |
+| `PEND_PEAK` | `0.09` | velocidad máxima, grados por tick |
+| `PEND_RATE` | `0.0045` | radianes de fase por tick, derivada: `PEND_PEAK / PEND_AMP` |
+| `TRACK_GAIN` | `0.004` | corrección hacia la posición ideal, por grado de desvío |
+| `RETURN_MAX` | `0.6` | techo de velocidad (~18°/s): vuelve desde rx=180 en ~8 s |
+| `VEL_LERP` | `0.095` | lerp de velocidad: converge en ~1 s |
+| `AUTO_RY` | `0.28` | autorrotación en Y, grados por tick |
+
+Pose inicial: **`rx 18, ry -26`**. El loop es `requestAnimationFrame` con un
+piso de **32 ms por tick** (~30 fps), que es el ritmo con el que calzan esos
+valores de damping. El porqué de cada decisión —la fase que siempre avanza, la
+herencia de dirección sólo en `ry`— está en `CLAUDE.md`.
+
+### `snap` y el estado `parked`
+
+Son dos cosas distintas y conviene no confundirlas: **el snap es el movimiento,
+`parked` es el estado en que queda.**
+
+`snapTo(key)` pone `parked = true` y lleva la rotación al objetivo de la cara con
+un lerp de **0.12** por tick, hasta que las dos componentes quedan a menos de
+**0.2°**; ahí clava los valores exactos y arranca un `hold` de **2600 ms**. El
+ángulo objetivo pasa por `nearest()`, que elige el equivalente a ±180° del actual:
+sin eso el cubo desenrollaría vueltas enteras para llegar al mismo lado. Bajo
+`prefers-reduced-motion` no hay lerp: salta al objetivo y listo.
+
+**`parked` es la razón por la que el cubo se queda quieto indefinidamente al
+seleccionar una cara**, y no vuelve a arrancar solo pasado el hold. Mientras esté
+puesto, la velocidad objetivo de los dos ejes es 0. **Sólo un drag nuevo lo
+revive**: `pointerdown` lo apaga y deshace la selección, que es la misma acción
+que repliega el folio.
+
+Un `pointerup` cuenta como click limpio si `|dx| + |dy|` nunca pasó de **3 px**
+acumulados: entonces se hace raycast contra los cubies, se selecciona la cara y
+se hace el snap. Si hubo arrastre, en cambio, la autorrotación hereda el **signo**
+del tiro (sólo en Y). El arrastre convierte a **0.45° por píxel**.
+
+**Render bajo demanda**: el loop sólo redibuja si `rx` o `ry` se movieron más de
+**0.002°**. Con el cubo `parked` eso es nunca, así que un cubo detenido no
+consume GPU. Lo mismo hace `setEnabled(false)` en modo grilla, que pausa el loop
+entero; al volver, invalida la caché y fuerza un cuadro.
+
+### Lazy-init del contexto WebGL
+
+**Hay dos `IntersectionObserver` sobre `#cube`, y hacen cosas distintas.** Se
+confunden fácil porque miran el mismo elemento.
+
+1. **`main.js` — crear el contexto.** `hydrateCubeWhenNear()` no importa
+   `cube.js` hasta que la sección toca el viewport; ahí se desconecta y no vuelve
+   a correr. Lo que se difiere **no es dibujar** —la geometría es trivial— sino
+   **crear el segundo contexto WebGL**: memoria de GPU, compilación de shaders y
+   armado del pipeline. Ese costo se paga una vez y **no lo evitan ni el render
+   bajo demanda ni la pausa por visibilidad**, porque para pausar un contexto
+   primero hay que crearlo.
+
+   Va con **`rootMargin: '0px'` a propósito**, que es lo contrario de lo
+   habitual: el hero mide `100vh`, así que la sección del cubo arranca ~20 px
+   debajo del fold y cualquier margen de anticipación la haría intersectar **ya
+   en la carga**, con lo cual no se diferiría nada. Con margen 0 el contexto se
+   crea al scrollear, fuera del pico inicial —donde ya están la compilación del
+   shader del mar y las fuentes—, y el margen de maniobra lo da el padding de la
+   sección.
+
+   Si el navegador no tiene `IntersectionObserver`, hidrata directo. Y si la
+   hidratación falla, no es fatal: queda la grilla semántica.
+
+2. **`cube.js` — pausar el loop.** El segundo observer, con `threshold 0.02`,
+   sólo mantiene la bandera `visible`. El loop no hace nada si el cubo está fuera
+   de pantalla, en modo grilla, o si la pestaña está oculta.
+
+### Mediciones
+
+Van en `docs/mediciones/`, **fechadas y con sus condiciones**, porque una
+medición sin condiciones no se puede repetir ni comparar:
+
+| Archivo | Qué mide | Estado |
+|---|---|---|
+| `luz-arco.md` | contraste del cubo contra su fondo a lo largo del arco del péndulo | cerrado: no había problema, y explica por qué la métrica engañaba |
+| `rendimiento.md` | tiempo por cuadro de la página completa (escritorio, julio 2026) | en escritorio sobra margen; **móvil sin medir en dispositivo real** |
 
 ## Metadatos y descubribilidad
 

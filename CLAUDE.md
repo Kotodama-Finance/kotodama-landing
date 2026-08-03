@@ -106,6 +106,71 @@ Con una distancia fija se recortaba en toda rotación con un vértice cerca de l
 vertical. Se recalcula en cada `resize`, así que es inmune a cambios de tamaño.
 Es una **garantía**, no un ajuste: si la esfera entra, ninguna rotación se sale.
 
+**Manda el semiángulo más chico**, `min(halfV, halfH)`, no la vertical siempre:
+en un escenario apaisado gana la vertical, pero en uno más alto que ancho gana la
+horizontal y la cámara tiene que alejarse más. Es la misma variable que queda sin
+medir en móvil, donde el escenario cambia de proporción.
+
+### Los números del cubo se leen del código, y se tabulan en UN solo lugar
+
+Constantes de geometría, luces, material, colores y física **viven en
+`assets/js/cube.js` y en el `:root` de `styles.css`**. Ésa es la única fuente de
+verdad. El README los tabula en «El cubo: parámetros vigentes» para poder
+consultarlos sin leer el fuente; **ningún otro documento los repite**, por la
+misma razón por la que el `免責事項` completo vive en un solo lugar: dos copias de
+un número derivan, y la copia vieja se lee como si fuera la actual.
+
+Ya pasó. **`docs/v1-dark/README.md` daba `hemi 2.2 · key 1.8 · rim 0.4 · back
+0.8` y fondo de sección `#020509`**, que son los valores del tag y no los de hoy
+(`hemi 3.5 · key 2.9 · rim 0.65 · back 1.3` sobre `--c-surface-cube` = `#05111d`;
+las intensidades subieron justamente al aclarar ese fondo). Ahora ese archivo
+dice en su encabezado que es histórico. **Al leer un `.md` con números del cubo,
+la pregunta es siempre de cuándo son.**
+
+### El import map vive en `index.html` y no se hereda
+
+`cube.js` importa `three` como especificador desnudo; quien lo resuelve es el
+import map de `index.html`. **No se comparte entre documentos**: una página nueva
+que monte el cubo necesita su propia copia, con la ruta relativa corregida a su
+profundidad (`/ja/index.html` necesitaría `../assets/vendor/three.module.js`).
+Hoy es la única página publicable con JavaScript — las otras diez no cargan
+ningún script—, así que agregar una página **no** obliga a tocarlo salvo que esa
+página quiera el cubo. Detalle completo en el README, sección «El import map».
+
+### `snap` es el movimiento; `parked` es el estado en que queda
+
+Seleccionar una cara **detiene el cubo indefinidamente**, y eso es deliberado:
+`snapTo()` pone `parked = true`, y mientras esté puesto la velocidad objetivo de
+los dos ejes es 0. **No vuelve a arrancar solo** cuando termina el `hold`. El
+único que lo revive es un arrastre nuevo, que es la misma acción que deshace la
+selección y repliega el folio — o sea que el cubo se mueve exactamente cuando no
+hay una cara elegida, y se queda quieto cuando sí.
+
+Consecuencias que ya se aprovechan: con el cubo `parked` el render bajo demanda
+no redibuja **ningún** cuadro, así que un cubo detenido no consume GPU; y el
+ángulo objetivo pasa por `nearest()`, que elige el equivalente a ±180° del actual
+para que no desenrolle vueltas enteras yendo al mismo lado.
+
+### El lazy-init difiere CREAR el contexto, no dibujarlo
+
+Hay **dos `IntersectionObserver` sobre `#cube`** y se confunden fácil, porque
+miran el mismo elemento y hacen cosas distintas: el de `main.js` decide **cuándo
+existe** el contexto WebGL, el de `cube.js` sólo pausa el loop cuando la sección
+sale de pantalla.
+
+Lo que se difiere no es el costo de dibujar —la geometría es trivial— sino el de
+**crear el segundo contexto**: memoria de GPU, compilación de shaders y armado
+del pipeline. Ese costo se paga una sola vez y **no lo evitan ni el render bajo
+demanda ni la pausa por visibilidad**, porque para pausar un contexto primero hay
+que crearlo.
+
+Va con **`rootMargin: '0px'` a propósito**, que es lo contrario de lo habitual:
+el hero mide `100vh`, así que la sección del cubo arranca ~20px debajo del fold y
+cualquier margen de anticipación la haría intersectar ya en la carga — no se
+diferiría nada. Con margen 0 el contexto se crea al scrollear, fuera del pico de
+carga inicial. **Si alguien "mejora" esto agregando un `rootMargin` generoso,
+desactiva la optimización entera sin que se note.**
+
 ### `素顔 Sugao` es la persona entera, en su propia página — no una sección de la portada
 Sugao es **la persona detrás del proyecto, completa**: perfil profesional y
 perfil personal. **Se publica ya**, en `/sugao/` y sólo ahí.
@@ -500,6 +565,14 @@ Kaku, verificando contra la tabla `cmap`. Ya frenó una vez, con el 迷 de la 40
 - **Móvil.** Sin medir en dispositivo real (degradación del cubo, el FOV
   horizontal que manda con el escenario más alto que ancho, el maelstrom táctil).
   Se retoma cuando el autor lo diga.
+
+  **Hay una sola medición de rendimiento y es de escritorio**:
+  `docs/mediciones/rendimiento.md` (julio de 2026, RTX 4060 Laptop a 165 Hz).
+  Ahí sobra margen — la página completa mide lo mismo que no dibujar nada— y el
+  único término que aparece es el shader del mar, que evalúa ruido por píxel a
+  pantalla completa. **Ese resultado no dice nada de móvil**: el costo escala con
+  los píxeles y una GPU de teléfono no tiene ese margen. La media resolución, el
+  cap de 25 fps y el maelstrom táctil sin blur son **precaución, no medición**.
 - **Vista explotada del cubo.** Va **después** del pase de redacción; se discutió
   fuera de estas sesiones y el brief todavía no está escrito. Lo que sí está
   decidido, para que el brief lo dé por sentado: al abrirse, el **núcleo** del
