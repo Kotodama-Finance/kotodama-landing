@@ -35,8 +35,10 @@ fallidos ya corregidos, y las capturas intermedias.
 - Último cierre: **2026-08-03**, en `fd7ee89`. **Árbol limpio y todo pusheado**,
   con `check-structure`, `check-modes` y `check-pendulum` en verde.
   `check-ready` sigue en `2` por la redacción, que es lo esperado.
-- Empezó la redacción: el hero, `/sugao/` y el `免責事項` ya tienen texto
-  definitivo. Quedan **85 placeholders en 11 páginas**.
+- Empezó la redacción: el hero, `/sugao/`, `/disclaimer/` y el `免責事項` ya
+  tienen texto definitivo. Quedan **72 placeholders en 9 páginas**.
+- **No queda ningún pendiente técnico.** Los tres que había se cerraron el
+  2026-08-04.
 
 ### AL RETOMAR, EMPEZAR ACÁ
 
@@ -44,12 +46,13 @@ fallidos ya corregidos, y las capturas intermedias.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**Queda un solo pendiente técnico y está esperando una decisión del autor**: el
-estado `live` de Sugao, que necesita tratamiento visual y texto. Está detallado
-en los cabos abiertos, con la pregunta ya planteada y las opciones medidas.
+**Después no hay tarea mía esperando.** Lo único que queda es la redacción, que
+se hace fuera de Code, y la revisión legal del `免責事項`, que es externa. El
+resto está congelado por decisión del autor o depende de `/ja/`.
 
-El resto —la redacción— se hace fuera de Code, y lo demás está congelado por
-decisión del autor o depende de `/ja/`.
+Si aparece trabajo, el candidato natural es **`/musubi/`**: concentra 31 de los
+72 placeholders, o sea casi la mitad, y es la única página que sigue siendo
+andamiaje puro.
 
 ---
 
@@ -198,8 +201,19 @@ Decisiones dentro de la página:
   como página incompleta. Cuando existan, se agregan a `.profile-links`.
 - **El `免責事項` NO va en `/sugao/`.** Ver la regla de abajo.
 
-Lo que sale del archivo de referencia y **se copia literal**: `gloss:"the true
-face"`, `domain:"The human behind"`, `status:"Intro live · profiles deferred"`.
+**Del archivo de referencia ya sólo queda en pie el `domain`**, «The human
+behind», que es lo que muestra la tarjeta de la portada. Los otros dos los pisó
+la redacción del autor y **el archivo de referencia quedó atrás**:
+
+| Campo | Referencia | Vigente |
+|---|---|---|
+| `gloss` | «the true face» | **«The face behind the Cube»** |
+| `status` | «Intro live · profiles deferred» | **«Live»** (`active`) |
+| `domain` | «The human behind» | sin cambios |
+
+O sea que para esta cara **la regla de copiar literal del archivo de referencia
+ya no aplica**: manda lo redactado. Vale la pena tenerlo presente antes de
+"restaurar" un campo desde la referencia creyendo que se corrige una deriva.
 
 ### El `免責事項`: el corto se repite, el completo vive una sola vez
 Son **dos textos con dos reglas opuestas**, y confundirlas es lo que hay que
@@ -541,60 +555,53 @@ traduciendo de acá**.
 
 ### El único frente activo: la redacción
 
-**85 placeholders `TODO`** en **11 páginas**, y **se escriben fuera de Code** —
+**72 placeholders `TODO`** en **9 páginas**, y **se escriben fuera de Code** —
 son decisiones de contenido del autor, no tareas de implementación.
 
 | Página | Placeholders |
 |---|---|
 | `/musubi/` | 31 |
-| `/method/` | 13 |
-| `/hajime/` `/tosei/` `/kamon/` `/torii/` `/kizuna/` | 6 c/u |
-| `404.html` `/disclaimer/` `/sugao/` | 3 c/u |
-| portada | 2 |
+| `/method/` | 12 |
+| `/hajime/` `/tosei/` `/kamon/` `/torii/` `/kizuna/` | 5 c/u |
+| `404.html` · portada | 2 c/u |
+| `/sugao/` · `/disclaimer/` | **0 — no les falta nada** |
+
+**Casi la mitad es `/musubi/`.** Es la única página que sigue siendo andamiaje
+puro; el resto ya tiene su cabecera, su enlace de vuelta y sus metadatos.
 
 **Al redactar `/method/`, aplicar también las dos notas de fuentes provisorias**
 que hoy están en la portada, ya corregidas por el autor y anotadas en el
 comentario del propio HTML: BIS → «Cross-border banking exposure»; Damodaran →
 «Valuation datasets by sector and region».
 
-### Pendientes técnicos: queda uno, y espera decisión del autor
+### Los tres estados dicen QUÉ HAY, no qué importa — decisión cerrada
 
-Los dos de metadatos se cerraron en `bf70085`. El del estado de Sugao sigue
-abierto porque tiene adentro dos decisiones visuales que no son mías.
+`5de4566`. **Sugao lleva `active` con el estado «Live»; Hajime bajó a `light` y
+conserva «First analysis on the way».** Las otras cuatro no se tocaron.
 
-**El cubo anuncia un estado de Sugao que la página desmiente.**
-`assets/js/main.js:50` sigue diciendo `status: 'Intro live · profiles deferred'`
-y la tarjeta de la portada lleva `data-state="light"`. **Sugao ya se publica
-entera: va a `live`.**
+Se lee al revés de lo que uno espera, y por eso conviene el motivo escrito:
+Hajime es la cara del análisis, o sea el proyecto, así que el instinto es
+dejarle el marcador más fuerte. Pero **Hajime no tiene todavía una línea
+publicada y Sugao está entera.** El lead del cubo ya promete «One is live
+today», y con el reparto anterior la grilla lo desmentía: el punto lleno estaba
+en la cara vacía. Si alguien lo "arregla" devolviéndoselo a Hajime, vuelve a
+haber dos caras leyéndose como la más fuerte y ninguna es la publicada.
 
-Lo que ya está establecido y no hace falta rediscutir:
+**No se agregó un cuarto estado, y el porqué importa más que el resultado.** Se
+evaluó un `live` propio y no había con qué distinguirlo:
 
-- **`live` es un estado nuevo, no un alias de `active`.** El lead del cubo, que
-  es texto del autor, dice **«One is live today; the rest carry an honest
-  status»** — o sea que la grilla tiene que distinguir *publicada* de *en
-  camino*, y hoy no lo hace: la única cara con texto definitivo es Sugao, pero
-  la que lleva el punto más fuerte es Hajime, cuyo estado dice «First analysis
-  on the way».
-- **La distinción NO puede vivir en la animación.** `prefers-reduced-motion:
-  reduce` apaga todo con `animation: none !important`, así que dos puntos que
-  sólo se diferencien por el pulso quedan idénticos justo para quien más
-  necesita la señal. Tiene que ser una propiedad estática.
-- **Tampoco entra un color nuevo**: la paleta es navy + oro. El vocabulario
-  disponible es lleno / hueco / con aro, en oro o en gris.
+- **La animación no sirve.** `prefers-reduced-motion: reduce` apaga todo con
+  `animation: none !important`, así que dos puntos que sólo difieran por el
+  pulso quedan idénticos justo para quien más necesita la señal.
+- **Un color nuevo tampoco**: la paleta es navy + oro, y el vocabulario ya está
+  agotado — lleno en oro, hueco en oro, hueco en gris.
 
-Lo que falta decidir, y es del autor porque cambia cómo se ve la portada:
+Con tres estados y tres grados de «cuánto hay», alcanzaba con **cambiar quién
+ocupa cada uno**. El sistema queda intacto.
 
-1. **El tratamiento del punto.** Las dos opciones en pie: que `live` se lleve el
-   punto lleno en oro y **Hajime baje al aro hueco** que deja Sugao —queda un
-   solo punto lleno y es la única cara publicada, que es literalmente lo que
-   dice el lead, pero cambia la tarjeta de Hajime—; o que `live` sea lleno **con
-   aro exterior** y Hajime quede intacto, al costo de que dos caras se lean como
-   «la más fuerte» y de resolver un halo a 9 px.
-2. **El texto del estado**, que reemplaza a «Intro live · profiles deferred».
-
-Y una tercera que ya estaba anotada y sigue abierta: el `domain` de la tarjeta
-(«The human behind») sale del archivo de referencia, así que cambiarlo es otra
-decisión.
+Sigue abierta una decisión adyacente que ya estaba anotada: el `domain` de la
+tarjeta («The human behind») sale del archivo de referencia, así que cambiarlo
+es otra cosa.
 
 ### Cerrado en la sesión del 2026-08-04: los metadatos alcanzaron al hero
 
