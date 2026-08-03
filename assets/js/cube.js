@@ -6,8 +6,9 @@
    CSS 3D no tiene z-buffer. Acá la oclusión la resuelve el depth buffer del GPU
    sobre geometría real: 26 cubies sólidos y opacos que llenan el volumen 3x3x3.
 
-   Paleta: navy + oro, nada más. Las luces van tintadas en oro para que el navy
-   se despegue del fondo sin introducir un tercer color.
+   Paleta: navy + oro, nada más; no entra un tercer color por ninguna vía.
+   Cómo se reparte ese oro entre las luces se decide —y se explica— en el bloque
+   de luces, que es donde vive el código que lo aplica.
 
    Kanji: NO va en el cubie central. Se extiende sobre los 9 cubies de la cara
    (una textura por cara; cada quad mapea su sub-rect por UV, recortado por la
@@ -319,10 +320,23 @@ export function initCube(stage, opts) {
   stage.insertBefore(renderer.domElement, stage.firstChild);
 
   /* ---- Luces ----
-     Neutras a propósito: tintarlas de oro le come el canal azul al navy y lo
-     desatura a gris. La luz blanca sube el brillo conservando el hue navy; el
-     oro entra solo por el material del trazo incrustado. Un rim dorado tenue
-     aporta calidez en los biseles sin lavar el cuerpo. */
+     REPARTO DE COLOR, que es lo único que hay que recordar de acá:
+       hemi y key -> NEUTRAS  (--c-cube-key-light)
+       rim y back -> ORO      (--c-gold-soft)
+     Las intensidades y posiciones están en LIGHT_DEFAULTS, arriba.
+
+     Las dos principales van neutras a propósito: tintarlas de oro le come el
+     canal azul al navy y lo desatura a gris. La luz blanca sube el brillo
+     conservando el hue navy, que es lo que se quiere del cuerpo.
+
+     El oro entra por dos vías, y la principal NO es una luz: es el material del
+     trazo incrustado. Las dos secundarias son estos rellenos tintados, que
+     aportan calidez sin lavar el cuerpo — y ojo con el nombre, ninguno de los
+     dos dibuja un contorno; ver sus comentarios más abajo.
+
+     No volver a describir esto en el encabezado del archivo. Hubo ahí una
+     versión que decía «las luces van tintadas en oro», y era falsa desde el
+     primer commit: hemi y key nunca fueron doradas. */
   const LI = Object.assign({}, LIGHT_DEFAULTS, opts && opts.lighting);
 
   const hemi = new THREE.HemisphereLight(
