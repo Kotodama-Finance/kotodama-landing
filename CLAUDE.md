@@ -40,16 +40,16 @@ fallidos ya corregidos, y las capturas intermedias.
 
 ### AL RETOMAR, EMPEZAR ACÁ
 
-**Levantar el servidor en `:8000`, correr `python tools/check-structure.py`
-—tiene que dar verde— y después cerrar los tres pendientes técnicos**: el estado
-de Sugao a `live`, el `<title>`/`description` de la portada, y regenerar la
-og-image con la bajada nueva. Están detallados en los cabos abiertos.
+**Levantar el servidor en `:8000` y correr `python tools/check-structure.py`
+—tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
+sesión.
 
-Si `check-structure` da rojo, eso es lo primero: algo cambió fuera de sesión.
+**Queda un solo pendiente técnico y está esperando una decisión del autor**: el
+estado `live` de Sugao, que necesita tratamiento visual y texto. Está detallado
+en los cabos abiertos, con la pregunta ya planteada y las opciones medidas.
 
-Los tres pendientes son trabajo mío y son cortos. El resto —la redacción— se
-hace fuera de Code, y lo demás está congelado por decisión del autor o depende
-de `/ja/`.
+El resto —la redacción— se hace fuera de Code, y lo demás está congelado por
+decisión del autor o depende de `/ja/`.
 
 ---
 
@@ -555,25 +555,65 @@ que hoy están en la portada, ya corregidas por el autor y anotadas en el
 comentario del propio HTML: BIS → «Cross-border banking exposure»; Damodaran →
 «Valuation datasets by sector and region».
 
-### Pendientes técnicos, sin resolver
+### Pendientes técnicos: queda uno, y espera decisión del autor
 
-No son redacción: son **inconsistencias que dejó la redacción** y hay que
-cerrarlas. Las tres se ven desde afuera.
+Los dos de metadatos se cerraron en `bf70085`. El del estado de Sugao sigue
+abierto porque tiene adentro dos decisiones visuales que no son mías.
 
-1. **El cubo anuncia un estado de Sugao que la página desmiente.**
-   `assets/js/main.js:50` sigue diciendo `status: 'Intro live · profiles
-   deferred'` y la tarjeta de la portada lleva `data-state="light"`. **Sugao ya
-   se publica entera: va a `live`.** El texto exacto del estado lo define el
-   autor; el `domain` de la tarjeta («The human behind») sale del archivo de
-   referencia y ésa es otra decisión.
-2. **El `<title>` y las `description` de la portada son del hero viejo.** Dicen
-   «Japan's financial system, made legible» y «An open, free reading of how
-   capital actually moves…», que ya no es lo que dice la página.
-3. **La og-image muestra la bajada vieja.** `LINEA` en `make-og-image.py` sigue
-   siendo «Japan's financial system, made legible — from the source.»
-   **Regenerar con el hero nuevo.** Ojo: es el fallo que no se ve en el sitio
-   sino afuera, al compartir el enlace. Después de cambiarla, la guarda del lock
-   avisa hasta que se vuelva a sellar (`python tools/make-og-image.py`).
+**El cubo anuncia un estado de Sugao que la página desmiente.**
+`assets/js/main.js:50` sigue diciendo `status: 'Intro live · profiles deferred'`
+y la tarjeta de la portada lleva `data-state="light"`. **Sugao ya se publica
+entera: va a `live`.**
+
+Lo que ya está establecido y no hace falta rediscutir:
+
+- **`live` es un estado nuevo, no un alias de `active`.** El lead del cubo, que
+  es texto del autor, dice **«One is live today; the rest carry an honest
+  status»** — o sea que la grilla tiene que distinguir *publicada* de *en
+  camino*, y hoy no lo hace: la única cara con texto definitivo es Sugao, pero
+  la que lleva el punto más fuerte es Hajime, cuyo estado dice «First analysis
+  on the way».
+- **La distinción NO puede vivir en la animación.** `prefers-reduced-motion:
+  reduce` apaga todo con `animation: none !important`, así que dos puntos que
+  sólo se diferencien por el pulso quedan idénticos justo para quien más
+  necesita la señal. Tiene que ser una propiedad estática.
+- **Tampoco entra un color nuevo**: la paleta es navy + oro. El vocabulario
+  disponible es lleno / hueco / con aro, en oro o en gris.
+
+Lo que falta decidir, y es del autor porque cambia cómo se ve la portada:
+
+1. **El tratamiento del punto.** Las dos opciones en pie: que `live` se lleve el
+   punto lleno en oro y **Hajime baje al aro hueco** que deja Sugao —queda un
+   solo punto lleno y es la única cara publicada, que es literalmente lo que
+   dice el lead, pero cambia la tarjeta de Hajime—; o que `live` sea lleno **con
+   aro exterior** y Hajime quede intacto, al costo de que dos caras se lean como
+   «la más fuerte» y de resolver un halo a 9 px.
+2. **El texto del estado**, que reemplaza a «Intro live · profiles deferred».
+
+Y una tercera que ya estaba anotada y sigue abierta: el `domain` de la tarjeta
+(«The human behind») sale del archivo de referencia, así que cambiarlo es otra
+decisión.
+
+### Cerrado en la sesión del 2026-08-04: los metadatos alcanzaron al hero
+
+`bf70085`. El `<head>` de la portada y la tarjeta social seguían describiendo el
+hero anterior. **Es el modo de fallo de fábrica de estas dos cosas**: no se ven
+al mirar la página, así que sobreviven al reemplazo del texto que describen.
+
+- `<title>` y `description`/`og:description` **derivados del hero**, con la
+  dependencia anotada en el propio `<head>`.
+- `LINEA` de `make-og-image.py` es ahora **el titular del hero, literal**;
+  imagen regenerada y lock resellado. Verificada a 500 px.
+- **`og:image:alt` describía «El cubo de seis caras», y la tarjeta no lleva el
+  cubo desde que pasó a ser sólo tipografía.** Además estaba **en castellano**,
+  la única cadena así fuera de los `TODO`, y viaja en cada enlace compartido.
+
+Ese último deja un hueco que conviene tener presente: **`og-image.lock.json`
+vigila las ENTRADAS de la imagen, no el TEXTO que la describe.** El alt puede
+quedar mintiendo sin que ninguna guarda se entere, porque no es una entrada de
+la composición. Hoy no hay guarda para eso y no está claro que valga una: la
+única regla comprobable sería prohibir la cadena vieja, que caza este caso y
+ningún otro.
 
 El piso está fijado en `tools/placeholders-baseline.json`: **bajarlo es progreso,
 subirlo es un bug**. Al redactar, correr

@@ -551,6 +551,18 @@ saltar la guarda con sólo cambiar de rama, o al **clonar el repo de nuevo** —
 justo el caso que motivó comparar contenido en vez de fechas. Las fuentes son
 binarias, git no las toca, y ahí el byte crudo sí es el contenido.
 
+**El lock vigila las entradas de la imagen, no el texto que la describe.** Son
+dos cosas distintas y el hueco ya mordió: `og:image:alt` siguió diciendo «El
+cubo de seis caras» mucho después de que la tarjeta dejara de llevar el cubo —y
+encima en castellano, en un sitio en inglés—, porque un alt no es una entrada de
+la composición y ninguna guarda lo mira. Al cambiar **qué muestra** la tarjeta,
+el alt de las diez páginas se cambia a mano.
+
+Y la bajada, `LINEA`, es **el titular del hero literal**, no un texto aparte: si
+se redacta el hero, hay que regenerar. La primera versión de este README no lo
+decía y la tarjeta sobrevivió un reemplazo de hero entero anunciando la frase
+vieja.
+
 ```
 python tools/make-og-image.py            # regenera y vuelve a sellar
 python tools/make-og-image.py --sellar   # acepta la imagen actual sin regenerar
