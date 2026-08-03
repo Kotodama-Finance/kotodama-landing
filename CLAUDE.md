@@ -32,20 +32,18 @@ fallidos ya corregidos, y las capturas intermedias.
 - Tag `v1-dark` = versión navy+oro con el cubo Three.js, con registro visual en
   `docs/v1-dark/`.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-03**, en `ed8f29e`. Árbol limpio, **dos commits sin
-  pushear** (`72b6f4b` y `ed8f29e`) y **`check-pendulum` sin correr**: esta
-  sesión no tocó la física —sólo documentación y comentarios—, pero la guarda va
-  antes del push igual.
+- Último cierre: **2026-08-03**, en `fd7ee89`. **Árbol limpio y todo pusheado**,
+  con `check-structure`, `check-modes` y `check-pendulum` en verde.
+  `check-ready` sigue en `2` por la redacción, que es lo esperado.
 - Empezó la redacción: el hero, `/sugao/` y el `免責事項` ya tienen texto
   definitivo. Quedan **85 placeholders en 11 páginas**.
 
 ### AL RETOMAR, EMPEZAR ACÁ
 
 **Levantar el servidor en `:8000`, correr `python tools/check-structure.py`
-—tiene que dar verde—, correr `check-pendulum` y pushear los dos commits
-pendientes. Después, cerrar los tres pendientes técnicos**: el estado de Sugao a
-`live`, el `<title>`/`description` de la portada, y regenerar la og-image con la
-bajada nueva. Están detallados en los cabos abiertos.
+—tiene que dar verde— y después cerrar los tres pendientes técnicos**: el estado
+de Sugao a `live`, el `<title>`/`description` de la portada, y regenerar la
+og-image con la bajada nueva. Están detallados en los cabos abiertos.
 
 Si `check-structure` da rojo, eso es lo primero: algo cambió fuera de sesión.
 
