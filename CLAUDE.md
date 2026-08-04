@@ -85,24 +85,34 @@ los seis registros del `.com` documentados (cuatro `A` de GitHub Pages, el
 `CNAME` de `www`, y el `TXT`/SPF del forwarding). **DNSSEC ya se desactivó**,
 antes de transferir. El detalle vive fuera del repo.
 
+**PASO 1 — HECHO (2026-08-04). iCloud+ ya corre en el DNS de Namecheap,
+verificado por el autor: recibe y responde.** Con esto el correo dejó de
+depender del forwarding de Namecheap, que era lo que moría al salir del
+registrador — `contact@kotodamafinance.com` ya sobrevive a la transferencia, y
+con él la única vía de contacto de la página de mantenimiento. El detalle de la
+configuración vive fuera del repo, en el `.md` de infraestructura del autor.
+
 **ORDEN VIGENTE — Y OJO, CAMBIÓ. Éste reemplaza al anterior**, que decía
 transferir → correo → merge:
 
-1. **Configurar iCloud+ en el DNS de Namecheap**, y verificar que **recibe y
-   responde**.
+1. ~~Configurar iCloud+ en el DNS de Namecheap, y verificar que recibe y
+   responde.~~ **HECHO.**
 2. **Transferir el registro a Xserver.** Los nameservers **no** cambian con la
-   transferencia.
+   transferencia. ← **EL FRENTE ACTIVO**
 3. **Cargar la zona completa en Xserver y verificarla** consultando sus NS
-   **directamente**, sin tocar todavía la delegación.
+   **directamente**, sin tocar todavía la delegación. Ojo: la zona a cargar
+   ahora incluye los registros de iCloud+ (MX/SPF/DKIM), no los seis del
+   inventario del paso 0 — el inventario vigente es el de después del paso 1.
 4. **Recién ahí, cambiar los nameservers.**
 5. **Merge a `main`** + tag de publicación.
 
-**Por qué el correo va PRIMERO, que es el cambio de fondo.** El forwarding de
+**Por qué el correo fue PRIMERO, que era el cambio de fondo.** El forwarding de
 Namecheap **muere al salir del registrador**, y `contact@kotodamafinance.com`
 está publicado en el sitio, en LinkedIn, en X y **en la propia página de
 mantenimiento** — donde además es el **único** enlace que tiene. O sea que si el
-correo se cae durante la obra, se cae junto con la única vía de contacto que
-queda cuando el sitio está abajo. Por eso se resuelve antes de mover nada.
+correo se caía durante la obra, se caía junto con la única vía de contacto que
+queda cuando el sitio está abajo. Por eso se resolvió antes de mover nada — y
+quedó resuelto.
 
 **Por qué 2, 3 y 4 están separados.** Que los nameservers no cambien con la
 transferencia es lo que permite partirlo: se puede **cargar la zona en Xserver y
@@ -128,7 +138,8 @@ comportamiento del cubo ni la física.
 **Y durante toda la obra, la rama `maintenance` es la red.** Es lo que se
 publica si hay que dejar el sitio abajo mientras se mueve el DNS; está lista y
 se activa cambiando la rama de Pages. Su única vía de contacto es ese mismo
-correo, que es la otra razón por la que el paso 1 va primero.
+correo — la otra razón por la que el paso 1 fue primero, y con él hecho, la red
+ya tiene el contacto asegurado.
 
 ### Cabos abiertos vigentes — el resumen corto
 
