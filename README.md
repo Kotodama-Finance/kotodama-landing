@@ -256,6 +256,70 @@ pyftsubset ZenKakuGothicNew-Medium.ttf \
 
 El latín básico va incluido para tramos mixtos como «e-Stat / 総務省».
 
+### Los dos comandos no son iguales, y no hay que unificarlos
+
+El japonés de arriba va **sin** `--layout-features`; el latino de abajo va
+**con** `--layout-features='*'`. Parece una inconsistencia y no lo es: está
+medido en las dos direcciones, y **cada uno reproduce su archivo commiteado sólo
+con su propia forma**.
+
+| | sin el flag | con el flag |
+|---|---|---|
+| **Zen Kaku** | 163 glifos · 13,2 KB — **reproduce** | 258 glifos · 16,0 KB · suma `aalt fwid ordn sups` |
+| **Inter / Cormorant** | −35 %, se pierden 374 y 503 glifos | **reproduce** |
+
+Ponerle el flag al japonés o quitárselo al latino produce, en cada caso, un
+archivo distinto del que se sirve. La regla no es «usar el flag»: es **que el
+comando escrito reproduzca el archivo commiteado**, y eso se comprueba
+regenerando y comparando glifos y features, no de memoria.
+
+```
+pyftsubset Inter[opsz,wght].ttf \
+  --output-file=assets/fonts/inter-latin.woff2 --flavor=woff2 \
+  --layout-features='*' \
+  --unicodes=U+0020-007F,U+00A0-00FF,U+016B,U+2010-2027,U+2030-2044,U+2190-2193,U+2212
+
+pyftsubset CormorantGaramond[wght].ttf \
+  --output-file=assets/fonts/cormorant-garamond-latin.woff2 --flavor=woff2 \
+  --layout-features='*' \
+  --unicodes=U+0020-007F,U+00A0-00FF,U+016B,U+2010-2027,U+2030-2044,U+2190-2193,U+2212
+
+pyftsubset CormorantGaramond-Italic[wght].ttf \
+  --output-file=assets/fonts/cormorant-garamond-latin-italic.woff2 --flavor=woff2 \
+  --layout-features='*' \
+  --unicodes=U+0020-007F,U+00A0-00FF,U+016B,U+2010-2027,U+2030-2044,U+2190-2193,U+2212
+```
+
+**Inter y Cormorant son variables y hay que conservar los ejes**: Inter lleva
+`[opsz, wght]` y `make-og-image.py` fija el peso por eje, así que perderlos
+cambiaría la tarjeta sin que nada avise. `pyftsubset` los conserva; verificarlo
+igual después de regenerar.
+
+### Optimización disponible, sin hacer: ~79 KB en las fuentes latinas
+
+Los subsets latinos llevan features de OpenType que **el sitio no usa**: `smcp`,
+`onum`, `dlig`, `ss01`…, y con ellas 374 glifos de Inter y 503 de Cormorant.
+Verificado: **cero** `font-feature-settings`, **cero** `font-variant`, **cero**
+`small-caps` en todo el CSS y el HTML.
+
+Quitarlas —regenerando **sin** `--layout-features='*'`— baja las tres fuentes de
+**198 KB a 119 KB**, o sea **~79 KB por carga**:
+
+| | hoy | sin features |
+|---|---|---|
+| `inter-latin.woff2` | 93,0 KB | 60,5 KB |
+| `cormorant-garamond-latin.woff2` | 60,5 KB | 28,7 KB |
+| `cormorant-garamond-latin-italic.woff2` | 45,1 KB | 30,0 KB |
+
+**No se hizo, y la razón importa más que el número**: el sitio no está publicado
+y esas features son exactamente lo que alguien usa después sin acordarse de que
+se sacaron. `liga`, `kern` y `calt` no están en juego — sobreviven al subset por
+defecto y son las que el navegador aplica solo.
+
+**La condición para revisarlo**: si algún día el CSS usa `font-feature-settings`,
+`font-variant` o `small-caps`, esta optimización deja de estar disponible **y**
+hay que regenerar comprobando que la feature concreta sobreviva.
+
 **Los paréntesis de ancho completo son la trampa de esta lista.** `U+FF08` y
 `U+FF09` son japoneses y **no** entran por `U+0020-007F`: ese rango trae `(` y
 `)` de ASCII, que son otros caracteres y se ven mal junto a un kanji. Al pasar
@@ -294,13 +358,10 @@ fuente latina se da por sentado, y ahí está la trampa. **Al escribir romaji co
 macrón —ō, ū— verificar contra la `cmap` antes de publicar**, igual que con el
 japonés.
 
-Y una divergencia encontrada al regenerarlos: **el comando documentado no
-reproducía los archivos commiteados**. Le faltaba `--layout-features='*'`, y sin
-eso los subsets salen un 35% más chicos porque se pierden 374 glifos de Inter y
-503 de Cormorant (`smcp`, `onum`, `dlig`, `ss01`…). Ya está corregido en
-`styles.css`. Hoy el sitio **no pide ninguna** de esas features, así que se
-conservan por prudencia; quitarlas ahorraría ~79 KB por carga y es una decisión
-aparte, no un efecto secundario de agregar un glifo.
+Y ahí salió la divergencia que corrige la sección «Los dos comandos no son
+iguales»: **el comando latino que estaba escrito no reproducía los archivos
+commiteados**, porque le faltaba `--layout-features='*'`. El japonés sí
+reproducía el suyo — y le habría roto el flag. Por eso son distintos.
 
 ## Iconos (favicon)
 

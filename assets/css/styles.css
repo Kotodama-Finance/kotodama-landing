@@ -40,33 +40,38 @@
        c=set().union(*[set(t.cmap) for t in f['cmap'].tables]); \
        print([g for g in 'TEXTO_A_VERIFICAR' if ord(g) not in c])"
 
-   Regeneración (requiere: pip install fonttools brotli). Fuentes fuente en el
-   repo google/fonts (ofl/…). JA = la cadena de kanji de arriba + "　":
+   Regeneración (requiere: pip install fonttools brotli). Fuentes de origen en
+   el repo google/fonts (ofl/…); NO están en este repo.
+
+   ⚠ LOS DOS COMANDOS NO SON IGUALES, Y NO HAY QUE UNIFICARLOS. El japonés va
+   SIN --layout-features y el latino CON. Está medido en las dos direcciones:
+   cada uno reproduce su archivo commiteado sólo con su propia forma, y cambiarle
+   el flag a cualquiera de los dos produce un archivo distinto del que se sirve.
+
+   JAPONÉS — SIN --layout-features. JA = la cadena de kanji de arriba + "　".
+   Con el flag daría 258 glifos y 16,0 KB en vez de 163 y 13,2, agregando aalt,
+   fwid, ordn y sups, que no se usan.
      pyftsubset ZenKakuGothicNew-Regular.ttf \
        --output-file=assets/fonts/zen-kaku-gothic-new-400-subset.woff2 \
        --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000,U+FF08,U+FF09
      pyftsubset ZenKakuGothicNew-Medium.ttf  \
        --output-file=assets/fonts/zen-kaku-gothic-new-500-subset.woff2 \
        --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000,U+FF08,U+FF09
-   Latín (Cormorant/Inter). DOS COSAS QUE NO SE VEN EN LOS RANGOS:
 
-   1. Va **--layout-features='*'**. No estaba escrito y hace falta: sin él, los
-      subsets salen un 35% MÁS CHICOS porque se pierden 374 glifos de Inter y
-      503 de Cormorant (smcp, onum, dlig, ss01…). O sea que los archivos
-      commiteados NO los produjo el comando que estaba documentado acá. Hoy el
-      sitio no pide ninguna de esas features —cero font-feature-settings, cero
-      font-variant— así que se conservan por prudencia, no por uso. Sacarlas
-      ahorraría ~79 KB y es una decisión aparte, no un efecto secundario.
-   2. **U+016B (ū)** entra suelto, fuera de todo rango. Es de «Yūgen», en
-      /hajime/. No estaba, y NINGUNA GUARDA LO HABRÍA VISTO: la de cobertura
-      mira el subset japonés. Es la misma trampa que los paréntesis de ancho
-      completo, en el otro alfabeto — y peor, porque una letra latina en una
-      fuente latina se da por sentada. Al escribir romaji con macrón (ō, ū),
-      verificar contra la cmap ANTES de publicar.
-
+   LATÍN (Cormorant/Inter) — CON --layout-features='*'. Sin él los subsets salen
+   un 35% MÁS CHICOS: se pierden 374 glifos de Inter y 503 de Cormorant (smcp,
+   onum, dlig, ss01…). El comando que estaba escrito acá no llevaba el flag, o
+   sea que NO reproducía los archivos commiteados.
      --unicodes=U+0020-007F,U+00A0-00FF,U+016B,U+2010-2027,U+2030-2044,\
                 U+2190-2193,U+2212
-     --layout-features=*
+     --layout-features='*'
+
+   U+016B (ū) va suelto, fuera de todo rango: es de «Yūgen», en /hajime/, y no
+   estaba. NINGUNA GUARDA LO HABRÍA VISTO — la de cobertura mira el subset
+   japonés. Misma trampa que los paréntesis de ancho completo, en el otro
+   alfabeto y peor, porque una letra latina en una fuente latina se da por
+   sentada. Al escribir romaji con macrón (ō, ū), verificar contra la cmap
+   ANTES de publicar.
    ------------------------------------------------------------------------- */
 @font-face {
   font-family: 'Cormorant Garamond';

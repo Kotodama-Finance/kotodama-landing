@@ -510,6 +510,13 @@ del sistema filosófico ni las razones de los nombres.
 - **Cada texto japonés nuevo obliga a regenerar el subset** de Zen Kaku. Ver
   README. **`document.fonts.check()` no sirve** para verificarlo: informa si la
   fuente está cargada, no si contiene el glifo.
+- **Los dos comandos de subset NO son iguales, y unificarlos rompe uno.** El
+  japonés va **sin** `--layout-features`; el latino, **con** `'*'`. Medido en
+  las dos direcciones: con el flag, Zen Kaku pasa de 163 glifos a 258 y suma
+  `aalt fwid ordn sups`; sin él, las latinas pierden 374 y 503 glifos. **Cada
+  uno reproduce su archivo commiteado sólo con su propia forma.** La regla real
+  no es «usar el flag» sino **que el comando escrito reproduzca el archivo que
+  se sirve**, y eso se comprueba regenerando y comparando glifos y features.
 - **Y el subset LATINO tiene el mismo problema, sin guarda que lo mire.** La
   verificación automática cubre sólo el japonés. Ya mordió dos veces con
   caracteres que uno da por sentados: los **paréntesis de ancho completo**
@@ -746,6 +753,26 @@ Kaku, verificando contra la tabla `cmap`. Ya frenó una vez, con el 迷 de la 40
   **No reintentar con los mismos medios.** Y hoy la pregunta ni se plantea: la
   transición entera está **reservada y fuera del lanzamiento**, así que no hay
   nada que ilustrar hasta que se decida retomarla.
+
+### Optimización disponible, decidida como NO — ~79 KB en las fuentes latinas
+
+Los subsets latinos llevan features de OpenType que **el sitio no usa** —`smcp`,
+`onum`, `dlig`, `ss01`…—, y con ellas 374 glifos de Inter y 503 de Cormorant.
+Verificado: cero `font-feature-settings`, cero `font-variant`, cero `small-caps`
+en todo el CSS y el HTML. Quitarlas baja las tres fuentes de **198 KB a 119 KB**.
+
+**Decidido por el autor: no se hace ahora, y el motivo pesa más que el número.**
+El sitio no está publicado, y esas features son exactamente el tipo de cosa que
+alguien usa después sin acordarse de que se sacaron. Un ahorro que se paga con
+un fallo silencioso más adelante no es un ahorro.
+
+**La condición para revisarlo**: si algún día el CSS usa `font-feature-settings`,
+`font-variant` o `small-caps`, la optimización deja de estar disponible **y** hay
+que regenerar comprobando que la feature concreta sobreviva. El detalle y la
+tabla por archivo, en el README.
+
+`liga`, `kern` y `calt` nunca estuvieron en juego: sobreviven al subset por
+defecto y son las que el navegador aplica solo.
 
 ### Ideas anotadas, sin probar
 
