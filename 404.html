@@ -4,7 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Page not found — Kotodama Finance</title>
-<meta name="description" content="TODO: texto de la página 404.">
+<!-- La description queda aunque la página sea noindex: no la va a usar un
+     buscador, pero sí la muestran algunos clientes al previsualizar un enlace,
+     y un placeholder en castellano ahí sería lo mismo que en cualquier otra
+     página. Open Graph sigue sin ir, por lo de abajo. -->
+<meta name="description" content="This address does not lead anywhere on this site. It may have been mistyped, or it may point to something that has not been built yet.">
 <!-- La única página del sitio que NO se quiere indexada: es un destino de
      error, no contenido. Por eso tampoco está en sitemap.xml.
      Y por eso NO lleva canonical ni Open Graph, a diferencia de las otras ocho:
@@ -43,17 +47,28 @@
     <article class="face-page">
       <header class="face-page__head">
         <p class="eyebrow">404</p>
-        <!-- Sin kanji: elegir la palabra japonesa de esta página es una decisión
-             de contenido del autor, igual que los seis nombres de las caras, y
-             además cualquier kanji nuevo obliga a regenerar el subset de Zen
-             Kaku (ver README). Si se agrega uno, hay que hacer las dos cosas. -->
+        <!-- ACÁ VA UNA FRASE, NO UN KANJI, Y ES A PROPÓSITO. Las seis caras
+             llevan un nombre en kanji porque nombran algo que existe. Esta
+             página no es una cara del cubo y no tiene contenido que nombrar:
+             tiene una AUSENCIA, y un sustantivo suelto no puede decir «esto no
+             existe». Por eso rompe el patrón.
+             Si alguien la «corrige» a un kanji suelto por coherencia con las
+             otras páginas, está eligiendo la simetría por encima del sentido.
+             Usa .face-page__phrase y no .face-page__kanji: ese otro tamaño está
+             hecho para uno o dos glifos y diez no entran en el ancho. -->
         <h1 class="face-page__title">
-          <span class="face-page__romaji">Page not found</span>
+          <span class="face-page__phrase" lang="ja">この航路はありません</span>
+          <span class="face-page__romaji">This page does not exist.</span>
         </h1>
       </header>
 
       <div class="face-page__body">
-        <p><span class="todo">TODO: una o dos frases. La página no existe; el mapa sigue estando.</span></p>
+        <p>Sorry &mdash; the address you followed does not lead anywhere on this site. It may have been mistyped, or it may have pointed to something that has not been built yet.</p>
+        <!-- La invitación a escribir va CONDICIONADA a propósito: si alguien
+             tecleó mal la URL no hay nada que arreglar, y pedirle que reporte
+             su propio error de tipeo hace perder el tiempo a los dos. El mail
+             es el mismo del footer, enlazado igual. -->
+        <p>If you got here from a link on this site, something is broken and we would like to know. Write to <a href="mailto:contact@kotodamafinance.com">contact@kotodamafinance.com</a> and we will fix it.</p>
       </div>
 
       <p class="face-page__back"><a href="/#cube">&larr; Back to the Cube</a></p>

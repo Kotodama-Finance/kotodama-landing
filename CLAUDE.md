@@ -35,10 +35,9 @@ fallidos ya corregidos, y las capturas intermedias.
 - Último cierre: **2026-08-03**, en `fd7ee89`. **Árbol limpio y todo pusheado**,
   con `check-structure`, `check-modes` y `check-pendulum` en verde.
   `check-ready` sigue en `2` por la redacción, que es lo esperado.
-- **La redacción está terminada salvo la 404.** El hero, las seis caras,
-  `/musubi/`, `/method/`, `/disclaimer/` y el `免責事項` tienen texto
-  definitivo. Quedan **2 placeholders, los dos en `404.html`**: su
-  `description` y una o dos frases de cuerpo. Con eso `check-ready` sale `0`.
+- **LA REDACCIÓN ESTÁ TERMINADA. Cero placeholders en las once páginas**, y
+  **`check-ready` sale `0` — «LISTO PARA PUBLICAR»**. Es la primera vez.
+  El sitio puede ir a `main` cuando el autor lo decida.
 - **No queda ningún pendiente técnico.** Los tres que había se cerraron el
   2026-08-04.
 
@@ -48,9 +47,9 @@ fallidos ya corregidos, y las capturas intermedias.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**Después no hay tarea mía esperando.** Lo único que falta para publicar son
-**los 2 placeholders de `404.html`** —su `description` y una o dos frases de
-cuerpo—, y se escriben fuera de Code. Con eso `check-ready` sale `0`.
+**No queda nada bloqueando la publicación.** `check-ready` sale `0`: cero
+placeholders, nav y footer idénticos, subset cubierto. La decisión de publicar
+a `main` es del autor, no una tarea pendiente.
 
 El resto está congelado por decisión del autor o depende de `/ja/`. La revisión
 legal del `免責事項` **ya no es un pendiente**: se decidió publicar sin ella.
@@ -58,6 +57,10 @@ legal del `免責事項` **ya no es un pendiente**: se decidió publicar sin ell
 **Lo único sin decidir** es el `domain` de tres tarjetas de la portada, que no
 coincide con la línea de función de su página — la tabla con las tres parejas
 está en la sección de las seis caras.
+
+**Al publicar a `main`, releer primero** la sección «Antes de publicar» del
+README: son cuatro guardas, no una, y `check-ready` no mira el comportamiento
+del cubo ni la física.
 
 ---
 
@@ -637,8 +640,24 @@ traduciendo de acá**.
 
 ### El único frente activo: la redacción
 
-**Quedan 2 placeholders `TODO`, los dos en `404.html`** — su `description` y una
-o dos frases de cuerpo. Las otras diez páginas están en cero.
+**Cero placeholders. La redacción terminó**, y con ella el único frente que
+bloqueaba publicar. El baseline quedó en `0` — de ahora en más, cualquier
+número distinto de cero que informe `check-structure` es una regresión, no
+trabajo pendiente. Es un cambio de significado de esa guarda: hasta acá bajar
+era progreso; ahora subir es un bug y no hay «bajar».
+
+### La 404 rompe el patrón del kanji a propósito
+
+Lleva **una frase** —`この航路はありません`— donde las seis caras llevan un
+nombre en kanji. **No es una inconsistencia que haya que corregir.** Las caras
+nombran algo que existe; esta página no es una cara del cubo y no tiene
+contenido que nombrar: tiene una **ausencia**, y un sustantivo suelto no puede
+decir «esto no existe». Quien la unifique a un kanji suelto por coherencia está
+eligiendo la simetría por encima del sentido.
+
+Por eso usa `.face-page__phrase` y no `.face-page__kanji`: ese otro tamaño llega
+a 4rem porque está dimensionado para uno o dos glifos, y diez a ese cuerpo miden
+más que el ancho de la página.
 
 ### `/method/`: la lista de fuentes se DERIVA del `context.md`
 
