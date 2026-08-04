@@ -931,66 +931,15 @@ button:focus-visible {
   border-bottom: 1px dashed var(--line-gold);
 }
 
-/* -------------------------------------------------------------------------
-   SISTEMA DE NOMBRES
-   Registro de referencia. Sin efectos ni animación: es para leer, no para
-   impresionar.
-   ------------------------------------------------------------------------- */
-.naming {
-  position: relative;
-  z-index: 3;
-  background: var(--c-surface-cube);
-  border-top: 1px solid var(--line-gold-faint);
-  padding: clamp(70px, 9vw, 120px) clamp(20px, 5vw, 64px);
-}
-.naming__wrap { max-width: 820px; margin: 0 auto; }
-.naming .eyebrow { display: block; margin-bottom: 20px; }
-.naming .section-title { margin-bottom: 16px; }
-.naming .section-lead { margin-bottom: clamp(36px, 5vw, 56px); max-width: 46rem; }
-
-.naming__block { margin-bottom: clamp(40px, 5vw, 64px); }
-.naming__h {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-  line-height: 1.2;
-  color: var(--c-text);
-  margin-bottom: 16px;
-}
-.naming__block p { font-size: 1.02rem; line-height: 1.8; color: var(--c-text-soft); margin-bottom: 16px; }
-.naming__term-block {
-  margin: 26px 0 0;
-  padding-left: clamp(16px, 2vw, 26px);
-  border-left: 1px solid var(--line-gold-faint);
-}
-.naming__h3 {
-  font-family: var(--font-ja);
-  font-weight: 500;
-  font-size: 1.5rem;
-  color: var(--c-text);
-  margin-bottom: 10px;
-}
-.naming__h3 .naming__reading { font-family: var(--font-display); font-size: 1.05rem; color: var(--c-gold); }
-
-.naming__list { display: flex; flex-direction: column; border-top: 1px solid var(--line-gold-faint); }
-.naming__row {
-  display: grid;
-  grid-template-columns: minmax(150px, 200px) 1fr;
-  gap: clamp(16px, 3vw, 40px);
-  align-items: baseline;
-  padding: 20px 0;
-  border-bottom: 1px solid var(--line-gold-faint);
-}
-.naming__term { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.naming__kanji {
-  font-family: var(--font-ja);
-  font-weight: 500;
-  font-size: 1.7rem;
-  line-height: 1.1;
-  color: var(--c-text);
-}
-.naming__reading { font-family: var(--font-display); font-size: 1.1rem; color: var(--c-gold); }
-.naming__reason { font-size: 1rem; line-height: 1.7; color: var(--c-text-soft); }
+/* Acá vivía el bloque .naming*: 55 líneas para la página del sistema de
+   nombres, cuando /musubi/ era un registro de referencia con siete bloques y
+   una tabla de término -> explicación (.naming__list, __row, __term, __reason,
+   __kanji, __reading, __term-block, __h3).
+   Se fue con la tabla. /musubi/ ahora usa .face-page, igual que las otras nueve
+   subpáginas, y ninguna clase .naming* quedó referenciada en el HTML.
+   Si alguna vez vuelve una tabla de término -> explicación, conviene mirar
+   primero si .face-page__section alcanza: la razón por la que esto existía
+   aparte era una estructura que ya no está. */
 
 /* Acá vivía el bloque .operator*: la sección «素顔 / OPERADOR» de la portada,
    con nombre, rol, trayectoria y 免責事項 al estilo de un 運営者情報 japonés.
@@ -1181,9 +1130,10 @@ button:focus-visible {
 }
 
 @media (max-width: 640px) {
-  /* Los pares campo-valor pasan a una columna: a este ancho, dos columnas
-     dejan el término y su explicación demasiado estrechos. */
-  .naming__row { grid-template-columns: 1fr; gap: 6px; }
+  /* Acá estaba la regla de .naming__row, que a este ancho pasaba los pares
+     campo-valor a una columna. Se fue con la tabla de /musubi/: era el último
+     resto de .naming* y estaba lejos del bloque principal, que es por lo que
+     casi sobrevive a la limpieza. */
   .nav__word { display: none; }
   .nav__links { gap: 16px; }
   .face-grid { grid-template-columns: repeat(2, 1fr); }
