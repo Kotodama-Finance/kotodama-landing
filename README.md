@@ -994,10 +994,17 @@ ahí ya no alcanza con listar los kanji a mano.
 
   **Que siga apartada lo vigila `check-modes`**, en la portada y en una
   subpágina. No lee el archivo: le pregunta al navegador qué reglas están en
-  efecto, así que ve por igual un `<link>` a `maelstrom.css`, las reglas pegadas
-  de vuelta en `styles.css` y un `<style>` inline. **Al reactivarla hay que
-  sacar esa comprobación**, que va a dar rojo — y eso es lo que se busca: que
-  volver no pueda pasar en silencio.
+  efecto, así que ve por igual un `<link>` a `maelstrom.css`, un `@import`, las
+  reglas pegadas de vuelta en `styles.css`, un `<style>` inline y una hoja
+  adoptada por JS. **Al reactivarla hay que sacar esa comprobación**, que va a
+  dar rojo — y eso es lo que se busca: que volver no pueda pasar en silencio.
+
+  **Si aparece corriendo, sospechar primero de una copia vieja de `styles.css`
+  en el navegador.** El maelstrom vivía dentro de `styles.css` hasta `af7c726`,
+  así que cualquier copia anterior trae las seis reglas. El tamaño las
+  distingue sin interpretar nada: el viejo pesa **44054 bytes** y el vigente
+  **47738**. Un `Ctrl+Shift+R` no lo descarta —no toca los *Local Overrides* de
+  DevTools—; el detalle y la comprobación de consola, en `CLAUDE.md`.
 
 - **El bloque de estado + botón bajo el cubo es un folio que se despliega.**
   Arranca con altura cero y se abre animado al seleccionar una cara; se cierra al

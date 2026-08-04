@@ -61,11 +61,22 @@ def revisar(cond, descripcion, detalle=""):
 # Recorre cssRules recursivamente: una regla dentro de @media, @supports o
 # @layer está igual de viva y no aparece en el nivel de arriba.
 #
-# Verificado en las dos direcciones antes de confiar en su verde: da rojo con
-# @view-transition inline, con ::view-transition-old(root) inline, con un
-# <link> al maelstrom.css real, y con la regla anidada dentro de un @media.
+# HAY QUE SEGUIR `r.styleSheet`, NO SÓLO `r.cssRules`, y ésta es la parte que
+# la primera versión de esta guarda tenía mal. Una CSSImportRule NO expone
+# cssRules —expone styleSheet—, así que recorrer sólo cssRules deja pasar
+# `@import url("maelstrom.css")`... que es exactamente la vía de reactivación
+# escrita en el encabezado de maelstrom.css, o sea la MÁS probable de las tres.
+# La guarda estaba ciega justo en la puerta principal. Medido: con el @import
+# puesto daba 0 hallazgos, y con un <link> equivalente daba 7.
+# Por lo mismo va `document.adoptedStyleSheets`: una hoja construida por JS no
+# aparece en document.styleSheets y también estaba fuera del alcance.
+#
+# Verificado en rojo antes de confiar en su verde, contra seis casos rotos:
+# @view-transition inline, ::view-transition-old(root) inline, un <link> al
+# maelstrom.css real, la regla anidada en un @media, un @import, y una hoja
+# adoptada.
 DETECTOR_VT = r"""(() => {
-  const hallazgos = [], ilegibles = [];
+  const hallazgos = [], ilegibles = [], vistas = new Set();
   const mirar = (reglas, origen) => {
     for (const r of reglas) {
       const txt = (r.cssText || '').replace(/\s+/g, ' ').slice(0, 110);
@@ -74,18 +85,23 @@ DETECTOR_VT = r"""(() => {
           /view-transition/i.test(r.selectorText || '')) {
         hallazgos.push(origen + ' :: ' + txt);
       }
-      if (r.cssRules) mirar(r.cssRules, origen);
+      if (r.cssRules) mirar(r.cssRules, origen);       // @media, @supports, @layer
+      if (r.styleSheet) hoja(r.styleSheet, origen + ' -> @import');
     }
   };
-  for (const s of document.styleSheets) {
-    const origen = s.href ? s.href.replace(/^https?:\/\/[^/]+/, '') : '<style> inline';
+  const hoja = (s, origen) => {
+    if (!s || vistas.has(s)) return;                   // un @import circular colgaría
+    vistas.add(s);
+    const n = s.href ? s.href.replace(/^https?:\/\/[^/]+/, '') : origen;
     // Una hoja que no se puede leer es una hoja que no se puede descartar: va
     // como fallo con su nombre, no como omisión silenciosa. Un verde por no
     // haber podido mirar es el peor de los verdes.
-    try { mirar(s.cssRules, origen); }
-    catch (e) { ilegibles.push(origen + ' (' + e.name + ')'); }
-  }
-  return { hallazgos, ilegibles,
+    try { mirar(s.cssRules, n); }
+    catch (e) { ilegibles.push(n + ' (' + e.name + ')'); }
+  };
+  for (const s of document.styleSheets) hoja(s, '<style> inline');
+  for (const s of (document.adoptedStyleSheets || [])) hoja(s, 'adoptedStyleSheets');
+  return { hallazgos, ilegibles, hojas: vistas.size,
            pedidos: performance.getEntriesByType('resource')
                       .map(e => e.name).filter(n => /maelstrom/i.test(n)) };
 })()"""
@@ -93,6 +109,11 @@ DETECTOR_VT = r"""(() => {
 
 def sin_view_transitions(js, etiqueta):
     r = js(DETECTOR_VT)
+    # Que haya mirado ALGO. Si la página no cargara ninguna hoja, todo lo de
+    # abajo daría verde por no tener nada que revisar — el verde vacío que ya
+    # dio una vez `máx |vel| dentro 0.0000`.
+    revisar(r["hojas"] >= 1, f"{etiqueta}: hay hojas de estilo que mirar",
+            f"{r['hojas']} hojas")
     revisar(not r["hallazgos"], f"{etiqueta}: ninguna regla de view-transition viva",
             "; ".join(r["hallazgos"])[:220])
     revisar(not r["pedidos"], f"{etiqueta}: nadie pide maelstrom.css",

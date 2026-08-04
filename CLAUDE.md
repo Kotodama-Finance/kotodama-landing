@@ -528,15 +528,48 @@ lugar de donde salió.
 **Que siga apartada ahora TIENE GUARDA**, dentro de `check-modes`: ninguna regla
 de view-transition viva en la portada ni en una subpágina, nadie pide
 `maelstrom.css`, y `/hajime/` entra seca. **No lee archivos, le pregunta al
-navegador qué reglas están en efecto** — por eso ve las tres formas de reponerla
-(un `<link>`, las reglas pegadas de vuelta en `styles.css`, un `<style>` inline)
-con una sola comprobación, en vez de una por vía. Se verificó en rojo contra las
-cuatro, incluida la regla anidada en un `@media`.
+navegador qué reglas están en efecto** — por eso ve con una sola comprobación
+las formas de reponerla, en vez de una regla por vía. Verificada en rojo contra
+**seis**: `@view-transition` inline, `::view-transition-old(root)` inline, un
+`<link>` al `maelstrom.css` real, la regla anidada en un `@media`, un `@import`,
+y una hoja adoptada por JS.
+
+**Y HAY QUE SEGUIR `r.styleSheet`, NO SÓLO `r.cssRules`** — la primera versión de
+esta guarda tenía justamente eso mal y vivió una hora. Una `CSSImportRule` no
+expone `cssRules` sino `styleSheet`, así que recorrer sólo `cssRules` deja pasar
+`@import url("maelstrom.css")`, **que es la vía de reactivación escrita en el
+encabezado del propio `maelstrom.css`**: la guarda estaba ciega exactamente en
+la puerta principal. Medido: con el `@import` puesto daba 0 hallazgos y con un
+`<link>` equivalente daba 7. Lo mismo valía para `document.adoptedStyleSheets`,
+que no aparece en `document.styleSheets`.
 
 **Al reactivar la transición, esa comprobación hay que sacarla**: va a dar rojo,
 y eso es lo que se busca. Una guarda que sólo se vio en verde no está verificada
 —la misma trampa que dejó viva la variante táctil—, y ésta se probó rota antes
 de confiar en ella.
+
+**SI ALGUIEN VE EL MAELSTROM CORRIENDO, LA PRIMERA SOSPECHA ES UNA COPIA VIEJA
+DE `styles.css` EN SU NAVEGADOR, NO UNA REGRESIÓN.** Ya pasó, el 2026-08-04: la
+consola devolvía **seis** reglas de view-transition mientras el servidor
+entregaba un `styles.css` sin ninguna. Las dos cosas eran ciertas sobre archivos
+distintos — **el maelstrom vivía DENTRO de `styles.css` hasta `af7c726`**, así
+que cualquier copia anterior a ese commit las trae, y son exactamente esas seis.
+
+**El fingerprint es el tamaño**, que no exige interpretar nada: el `styles.css`
+viejo pesa **44054 bytes** y el vigente **47738**. La comprobación que decide,
+desde la consola de la página donde se ve el problema:
+
+```js
+[...document.styleSheets].filter(s => { try { return [...s.cssRules].some(r => /view-transition/i.test(r.cssText)) } catch { return false } })
+  .forEach(async s => console.log(s.href, (await (await fetch(s.href, {cache:'reload'})).text()).length))
+```
+
+Si la hoja tiene las reglas pero la copia fresca del servidor mide 47738, el
+archivo está bien y lo viejo está del lado del navegador. **Un `Ctrl+Shift+R` no
+alcanza para descartarlo**: no toca los *Local Overrides* de DevTools, que
+persisten una copia del archivo en el perfil y se sirven por encima de la red.
+Descartar el service worker —`navigator.serviceWorker.getRegistrations()`— es
+necesario y no es suficiente.
 
 **Por qué en un archivo y no detrás de un flag.** Es una transición **entre
 documentos**: `@view-transition` tiene que estar en la página que se va **y** en
@@ -1311,3 +1344,15 @@ que produjeron conclusiones equivocadas:
   arregla muestreando desde `t=0` —0/80/250/600/1200 ms—, y ahí sí aparece lo
   que corre. **La pregunta útil no es «¿lo medí?» sino «¿mi medición podía haber
   dado otro resultado?»**
+- **CUANDO DOS MEDICIONES SE CONTRADICEN Y LAS DOS ESTÁN BIEN HECHAS, NO ESTÁN
+  MIRANDO EL MISMO ARCHIVO.** Yo medía cero reglas de view-transition por seis
+  caminos y el autor veía seis en su consola, sobre la misma URL. El reflejo es
+  desconfiar de una de las dos; lo que servía era preguntar **qué archivo mira
+  cada una**. Servidor y árbol coincidían byte por byte —mismo `sha256`, cero
+  ocurrencias— y el navegador tenía una copia anterior a `af7c726`, el commit
+  que sacó el maelstrom de `styles.css`. La pregunta productiva no era «¿quién
+  se equivoca?» sino «¿qué tendría que ser cierto para que las dos lo sean?».
+  Y el corolario práctico: **para diagnosticarlo hace falta el `href` de la
+  hoja, no la lista de reglas.** El primer comando que mandé devolvía
+  `r.cssText` y por eso no distinguía nada — con las reglas solas, un archivo
+  viejo y una regresión se ven idénticos.
