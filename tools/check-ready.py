@@ -3,22 +3,25 @@
 
     python tools/check-ready.py
 
-HOY SALE 2, Y ES LO ESPERADO — el significado del código 2 ya cambió DOS veces,
-así que la historia completa antes de interpretar una corrida:
+HOY SALE 0, Y ES LO ESPERADO — el significado del código 2 ya cambió TRES
+veces, así que la historia completa antes de interpretar una corrida:
 
 1. Nació esperada en rojo: ~70 placeholders de andamiaje. `2` era lo normal.
 2. La redacción terminó (2026-08-04, `v1-content-complete`): baseline en cero,
    y `2` pasó a significar regresión.
 3. La revisión del mismo día agregó A PROPÓSITO tres subpáginas nuevas
    (/hajime/taichi|yorozu|yugen/) y la línea de la tarjeta de LibraryThing,
-   todas con placeholders que redacta Manuel. `2` vuelve a ser lo esperado
-   hasta ese pase; el baseline fija el techo y `check-structure` sigue
-   atajando cualquier placeholder NUEVO por encima de él.
-   (La línea de LibraryThing se redactó el 2026-08-05 — «My Library at
-   Home», del autor — y el baseline bajó a 15: quedan las tres subpáginas.)
+   todas con placeholders del autor pendientes. `2` volvió a ser lo esperado.
+4. La redacción terminó POR SEGUNDA VEZ (2026-08-05): la línea de
+   LibraryThing y las tres subpáginas, todo texto del autor. Baseline en
+   cero de nuevo, y `2` vuelve a ser regresión.
 
-O sea: hoy `0` significa que la redacción de las subpáginas terminó, `2` es el
-estado normal, y `1` sigue siendo estructura rota — eso sí es regresión.
+O sea: hoy `0` es el estado normal, `2` significa que apareció un placeholder
+donde no debe haber ninguno, y `1` sigue siendo estructura rota. La lección de
+las eras 2→3 queda escrita: un `2` puede volver a ser legítimo si el autor
+reintroduce andamiaje a propósito — antes de tratarlo como regresión,
+preguntarse si hubo una decisión así, y el baseline de check-structure dice
+cuál era el techo acordado.
 
 Sigue SIN entrar en el flujo de cada commit, y el motivo no caducó con el rojo:
 esta guarda contesta «¿puede ir a `main`?», que es una pregunta que sólo se hace
@@ -28,8 +31,7 @@ dos guardas y no una, y por eso el reparto se queda como está.
 
 Salida, con códigos distintos a propósito para poder distinguirlas:
     0  listo para publicar  — lo esperado hoy
-    2  hay placeholders sin redactar
-       — antes era lo previsto; desde el baseline en cero, es una regresión
+    2  hay placeholders sin redactar — con baseline en cero, regresión
     1  hay algo estructural roto — regresión
 
 El 2 cubre UNA sola cosa: los placeholders. Hubo una segunda —la revisión legal

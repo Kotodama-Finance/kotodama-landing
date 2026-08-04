@@ -30,25 +30,25 @@ fallidos ya corregidos, y las capturas intermedias.
 - **`main` no se toca**: publica kotodamafinance.com y todavía sirve la landing
   vieja. Nada de esto está publicado.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-05, segunda tanda del día: la tarjeta de
-  LibraryThing completa** (logo oficial sin alterar + «My Library at Home»),
-  que cerró los DOS últimos pendientes del autor; la primera tanda fueron
-  los kanji de las subcaras (太一 · 万 · 幽玄) con subset regenerado. **Árbol
-  limpio y todo pusheado** en `redesign-trust`, con las guardas corridas
-  (structure y modes en verde, pendulum en verde, ready en `2` — ver el punto
-  siguiente).
+- Último cierre: **2026-08-05, tercera tanda del día: la redacción de las
+  tres subpáginas de Hajime, con texto del autor — LA REDACCIÓN DEL SITIO
+  TERMINÓ POR SEGUNDA VEZ.** Las dos tandas anteriores del día: los kanji de
+  las subcaras (太一 · 万 · 幽玄, con subset regenerado) y la tarjeta de
+  LibraryThing completa (logo oficial sin alterar + «My Library at Home»).
+  **Árbol limpio y todo pusheado** en `redesign-trust`, con las guardas
+  corridas (structure y modes en verde, pendulum en verde, **ready en `0`:
+  LISTO PARA PUBLICAR** — ver el punto siguiente).
   *(Este bloque no puede nombrar su propio commit, así que siempre queda uno
   atrás: `git log -1 redesign-trust` es la respuesta exacta. El ancla fija que no
   deriva es el tag.)*
-- **EL CONTENIDO REDACTADO SIGUE ENTERO, PERO EL SITIO YA NO ESTÁ EN CERO
-  PLACEHOLDERS — Y ES DELIBERADO.** La revisión de quince puntos agregó a
-  pedido del autor tres subpáginas de andamiaje (`/hajime/taichi|yorozu|yugen/`):
-  **15 placeholders en 3 páginas, que redacta Manuel** (5+5+5; el de la
-  tarjeta de LibraryThing en /sugao/ ya se redactó — «My Library at Home»).
-  Con eso **`check-ready` sale `2`, y es LO ESPERADO** — el significado del
-  código 2 ya cambió dos veces; la historia está en el docstring de
-  `check-ready.py`. El baseline fija el techo en 15 y `check-structure` sigue
-  teniendo que estar SIEMPRE verde.
+- **EL SITIO VOLVIÓ A CERO PLACEHOLDERS (2026-08-05) — la redacción terminó
+  por segunda vez.** Los 16 que la revisión de quince puntos reintrodujo a
+  propósito se redactaron todos con texto del autor: la línea de LibraryThing
+  y las tres subpáginas de Hajime (5+5+5). **`check-ready` sale `0` — LISTO
+  PARA PUBLICAR — y `2` vuelve a ser regresión**; el significado del código 2
+  ya cambió TRES veces y la historia completa está en el docstring de
+  `check-ready.py`. El baseline está en cero: cualquier placeholder que
+  informe `check-structure` es un bug, no trabajo pendiente.
 - **Ahora son CATORCE páginas**, no once: se sumaron las tres subpáginas de
   Hajime. El sitemap tiene 13 URLs (todas menos la 404).
 - **NO queda ninguna decisión del autor pendiente.** Las dos últimas se
@@ -100,12 +100,11 @@ ninguna de las cuatro guardas la mira; su decisión cerrada está más abajo.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**LO QUE FALTA ES INFRAESTRUCTURA — Y, DESDE LA REVISIÓN DE QUINCE PUNTOS, UN
-PASE DE REDACCIÓN CHICO Y DELIBERADO.** El merge a `main` espera dos cosas: la
-infraestructura de dominio (trabajo fuera de este repo) y los **15 placeholders
-que quedan de la revisión** (las tres subpáginas de Hajime, 5+5+5 — los
-escribe Manuel; `check-ready` los bloquea solo. El de LibraryThing ya se
-redactó el 2026-08-05, junto con el logo).
+**LO QUE FALTA ES SOLO INFRAESTRUCTURA.** El pase de redacción que la revisión
+de quince puntos había reintroducido **terminó el 2026-08-05** (los 16, todos
+con texto del autor), y `check-ready` sale `0`. El merge a `main` espera una
+sola cosa: la migración de DNS (trabajo fuera de este repo, pasos 2–4 de
+abajo).
 
 **PASO 0 — HECHO. Ya se sabe dónde está el DNS**: **Namecheap BasicDNS**, con
 los seis registros del `.com` documentados (cuatro `A` de GitHub Pages, el
@@ -131,10 +130,10 @@ transferir → correo → merge:
    ahora incluye los registros de iCloud+ (MX/SPF/DKIM), no los seis del
    inventario del paso 0 — el inventario vigente es el de después del paso 1.
 4. **Recién ahí, cambiar los nameservers.**
-5. **Merge a `main`** + tag de publicación. **Ojo: desde la revisión de quince
-   puntos este paso tiene un prerrequisito nuevo** — redactar los 15
-   placeholders de las subpáginas de Hajime (`check-ready` tiene que volver
-   a `0`).
+5. **Merge a `main`** + tag de publicación. ~~El prerrequisito de redacción
+   que dejó la revisión de quince puntos~~ **se cumplió el 2026-08-05**:
+   `check-ready` ya sale `0`. Antes de mergear, releer «Antes de publicar»
+   del README — son cuatro guardas, no una.
 
 **Por qué el correo fue PRIMERO, que era el cambio de fondo.** El forwarding de
 Namecheap **muere al salir del registrador**, y `contact@kotodamafinance.com`
@@ -177,7 +176,7 @@ Ninguno bloquea publicar. Cada uno tiene su sección con el detalle.
 
 | Cabo | Estado |
 |---|---|
-| **Redacción de Hajime** | **15 placeholders deliberados** (taichi/yorozu/yugen ×5). Los escribe Manuel. `check-ready` sale `2` hasta entonces — esperado. |
+| ~~Redacción de Hajime~~ | **CERRADA 2026-08-05**: los 15, con texto del autor. Baseline en cero, `check-ready` en `0`. Cualquier placeholder nuevo es regresión. |
 | ~~Logo de LibraryThing~~ | **CERRADO 2026-08-05**: va el archivo oficial en su paleta original, sin alterar — criterio nuevo que disuelve el pendiente de permiso (ver la decisión de tarjetas y `assets/img/README.md`). |
 | ~~Kanji de Taichi/Yorozu/Yūgen~~ | **CERRADO 2026-08-05**: 太一 · 万 · 幽玄, del `context.md` del autor. Aplicados en h1 y `<title>` con el patrón de las caras; subset regenerado (太/幽/玄 eran nuevos). |
 | **Móvil** | **nunca medido en dispositivo real.** Congelado por decisión del autor. La única medición de rendimiento es de escritorio. |
@@ -473,10 +472,23 @@ About, /sugao/ p3 y /kizuna/ p2).
 
 `/hajime/taichi/` (macro), `/hajime/yorozu/` (sectorial), `/hajime/yugen/`
 (transparencia). Estructura de cara —línea de función + lead + un párrafo—,
-**todo en placeholders TODO que redacta Manuel**. Los tres nombres de
-`/hajime/` pasaron de `<i class="name">` a **enlaces** (`a.name`, oro y
-subrayado suave): eran lo único del sitio que se destacaba sin llevar a
-ninguna parte.
+**ya redactadas (2026-08-05) con texto del autor, tal cual lo dictó**: «The
+macro picture» / «Sector by sector» / «Public money», descriptions derivadas
+del texto. Los tres nombres de `/hajime/` pasaron de `<i class="name">` a
+**enlaces** (`a.name`, oro y subrayado suave): eran lo único del sitio que se
+destacaba sin llevar a ninguna parte.
+
+Dos compromisos del texto que NO son redacción libre, anotados en los HTML:
+
+- **«This is not a watchdog» (Yūgen) es un COMPROMISO del autor**, no una
+  negación de relleno: su `context.md` define esa cara como contemplativa,
+  no watchdog. No se saca por parecer innecesario — fija el límite de lo que
+  esa línea de trabajo hace.
+- **El cierre de Taichi («the parts only mean something against the whole»)
+  rima A PROPÓSITO con el subtítulo de /musubi/ («Nothing means anything
+  alone»)**: el mismo principio bajando a una cara. Dos copias deliberadas
+  sin guarda que las compare — si se redacta una, mirar la otra. Anotado en
+  los dos lados, igual que las frases del cubo.
 
 - **Los kanji se cerraron el 2026-08-05** — esto reemplaza el «sin kanji a
   propósito» que decía acá: **太一 Taichi · 万 Yorozu · 幽玄 Yūgen**, dictados
@@ -1133,7 +1145,7 @@ commit sea un punto de restauración seguro por construcción, no por suerte.
 | `python tools/check-structure.py` | siempre | instantánea | **verde** |
 | `python tools/check-modes.py` | siempre | ~40 s | **verde** |
 | `python tools/check-pendulum.py` | antes de push, o al tocar la física | ~2–4 min | **verde** |
-| `python tools/check-ready.py` | antes de publicar a `main` | instantánea | rojo hasta la redacción |
+| `python tools/check-ready.py` | antes de publicar a `main` | instantánea | **verde** (`0`) desde el 2026-08-05 |
 
 Las dos que usan navegador necesitan el sitio servido en `:8000`.
 
