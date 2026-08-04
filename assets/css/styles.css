@@ -20,12 +20,26 @@
      exista la versión japonesa se caerían a una fuente del sistema sin que
      nadie lo note. Sobran ~4 KB; volver a bajarlos no vale ese riesgo.
 
-   Glifos del subset japonés (51 kanji + espacio ideográfico U+3000 + los dos
-   PARÉNTESIS DE ANCHO COMPLETO + latín básico U+0020–007F para tramos mixtos
-   como "e-Stat / 総務省"). Son 149 códigos en la cmap:
-     肇 素 顔 渡 世 家 紋 鳥 居 絆 言 霊 産 河 川 立 方 体 一 次 資 料 追 跡
-     可 能 公 開 日 本 銀 行 財 務 省 金 融 庁 取 引 所 内 閣 府 総 語
-     免 責 事 項 近
+   YA NO SE LISTAN LOS GLIFOS ACÁ, Y ES UN CAMBIO DELIBERADO. Eran 51 kanji y
+   se podían leer de un vistazo; con la lista de fuentes de /method/ pasaron a
+   **190**, con hiragana y katakana por primera vez, y una lista de ese largo
+   mantenida a mano no es una fuente de verdad: es una copia que se desactualiza
+   en silencio. Hoy son **288 códigos** en la cmap (190 japoneses + U+3000 + los
+   dos paréntesis de ancho completo + latín básico U+0020–007F para tramos
+   mixtos como "e-Stat / 総務省").
+
+   EL CONJUNTO SE DERIVA, no se transcribe:
+
+       nuevo = códigos del subset ACTUAL  ∪  japonés que usa el HTML hoy
+
+   Las dos mitades hacen falta. La unión con el actual **preserva los glifos que
+   se conservan a propósito** aunque ya no aparezcan en ninguna página (立方体,
+   一次資料, 追跡可能, 公開 y varios nombres de organismos, sacados de la versión
+   EN y reservados para /ja/): regenerar sólo desde el texto actual los borraría,
+   y el día que exista la versión japonesa se caerían a una fuente del sistema
+   sin que nadie lo note. Y la extracción del HTML **usa la misma función que la
+   guarda** (`texto_visible` + `JAPONES` en tools/_guardas.py), así que no hay
+   dos criterios distintos de qué cuenta como japonés del sitio.
 
    LOS PARÉNTESIS SON LA TRAMPA. （U+FF08）y （U+FF09）son japoneses y NO
    entran por el rango latino: ahí están «(» y «)» de ASCII, que son otros
@@ -48,9 +62,9 @@
    cada uno reproduce su archivo commiteado sólo con su propia forma, y cambiarle
    el flag a cualquiera de los dos produce un archivo distinto del que se sirve.
 
-   JAPONÉS — SIN --layout-features. JA = la cadena de kanji de arriba + "　".
-   Con el flag daría 258 glifos y 16,0 KB en vez de 163 y 13,2, agregando aalt,
-   fwid, ordn y sups, que no se usan.
+   JAPONÉS — SIN --layout-features. Se pasa el conjunto DERIVADO (ver arriba)
+   como --unicodes, no una cadena de texto a mano. Con el flag el subset suma
+   aalt, fwid, ordn y sups, que no se usan, y deja de reproducir el commiteado.
      pyftsubset ZenKakuGothicNew-Regular.ttf \
        --output-file=assets/fonts/zen-kaku-gothic-new-400-subset.woff2 \
        --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000,U+FF08,U+FF09
@@ -773,6 +787,48 @@ button:focus-visible {
 .sources__ja { font-family: var(--font-ja); font-size: 1.02rem; color: var(--c-gold); min-width: 118px; }
 .sources__en { display: flex; flex-direction: column; gap: 2px; color: var(--c-text); font-size: 0.95rem; }
 .sources__note { font-size: 0.82rem; color: var(--c-text-muted); }
+
+/* --- La lista completa de /method/ ------------------------------------------
+   Extiende .sources, no la duplica: la portada muestra cinco de ejemplo y
+   /method/ las cincuenta, con la misma fila.
+   La MARCA DE TIER usa el mismo vocabulario que los puntos de estado de las
+   caras —lleno contra hueco, en oro— porque ya está establecido en el sitio y
+   no hace falta enseñar uno nuevo. Cuadrado y no círculo para que no se
+   confunda con el estado de una cara, que es otra cosa. */
+.sources__group {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--c-gold);
+  margin: clamp(30px, 4vw, 44px) 0 10px;
+}
+.sources__group:first-of-type { margin-top: clamp(20px, 3vw, 28px); }
+.sources__mark {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  align-self: center;
+  border: 1px solid var(--c-gold);
+}
+.sources__mark[data-tier="1"] { background: var(--c-gold); }
+.sources__mark[data-tier="2"] { background: transparent; }
+/* Sin leyenda, un marcador es decoración: no se puede deducir qué significa
+   lleno contra hueco mirando la lista. */
+.sources__legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: clamp(24px, 3vw, 32px);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--c-text-muted);
+}
+.sources__legend .sources__mark:not(:first-child) { margin-left: 16px; }
+.sources__en a {
+  color: var(--c-text);
+  border-bottom: 1px solid var(--line-gold-faint);
+}
+.sources__en a:hover { color: var(--c-gold); border-bottom-color: var(--c-gold); }
 
 /* Enlace al método completo, al pie de la sección. Mismo tratamiento discreto
    que .cube__more: es una salida, no una llamada a la acción. */

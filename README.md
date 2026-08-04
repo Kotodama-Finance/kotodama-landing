@@ -245,17 +245,39 @@ falta el día que se regenera. Hay que bajarlas en ese momento — y de un subse
 `$JA` es la cadena completa de glifos japoneses del sitio, que está listada en
 el comentario de `@font-face` en `assets/css/styles.css`:
 
-```
-JA="肇素顔渡世家紋鳥居絆言霊産河川立方体一次資料追跡可能公開日本銀行財務省金融庁取引所内閣府総語免責事項近　"
+**El conjunto ya no se escribe a mano.** Eran 51 kanji y se leían de un vistazo;
+con la lista de fuentes de `/method/` pasaron a **190**, con hiragana y katakana.
+Una lista así mantenida a mano deja de ser fuente de verdad y pasa a ser una
+copia que se desactualiza en silencio. Se **deriva**:
 
+```
+nuevo = códigos del subset ACTUAL  ∪  japonés que usa el HTML hoy
+```
+
+Las dos mitades hacen falta. La unión con el actual **preserva los glifos que se
+conservan a propósito** aunque ya no estén en ninguna página (`立方体`,
+`一次資料`, `追跡可能`, `公開` y varios nombres de organismos, reservados para
+`/ja/`); regenerar sólo desde el texto de hoy los borraría. Y la extracción del
+HTML usa **la misma función que la guarda** (`texto_visible` + `JAPONES` en
+`tools/_guardas.py`), para que no haya dos criterios de qué es «japonés del
+sitio».
+
+Ese conjunto se pasa como `--unicodes`, sin `--text` y **sin
+`--layout-features`**:
+
+```
 pyftsubset ZenKakuGothicNew-Regular.ttf \
   --output-file=assets/fonts/zen-kaku-gothic-new-400-subset.woff2 \
-  --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000,U+FF08,U+FF09
+  --flavor=woff2 --unicodes=<el conjunto derivado>
 
 pyftsubset ZenKakuGothicNew-Medium.ttf \
   --output-file=assets/fonts/zen-kaku-gothic-new-500-subset.woff2 \
-  --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000,U+FF08,U+FF09
+  --flavor=woff2 --unicodes=<el conjunto derivado>
 ```
+
+**Verificar en las dos direcciones después de regenerar**: que todo el japonés
+del HTML quede cubierto, y que **no se haya caído ningún código del subset
+anterior**. Lo segundo es lo que atrapa el borrado silencioso de los reservados.
 
 El latín básico va incluido para tramos mixtos como «e-Stat / 総務省».
 

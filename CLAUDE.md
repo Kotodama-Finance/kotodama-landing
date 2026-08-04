@@ -35,9 +35,10 @@ fallidos ya corregidos, y las capturas intermedias.
 - Último cierre: **2026-08-03**, en `fd7ee89`. **Árbol limpio y todo pusheado**,
   con `check-structure`, `check-modes` y `check-pendulum` en verde.
   `check-ready` sigue en `2` por la redacción, que es lo esperado.
-- La redacción está casi terminada: el hero, las **seis caras**, `/musubi/`,
-  `/disclaimer/` y el `免責事項` tienen texto definitivo. Quedan **14
-  placeholders en 2 páginas**: `/method/` (12) y la 404 (2).
+- **La redacción está terminada salvo la 404.** El hero, las seis caras,
+  `/musubi/`, `/method/`, `/disclaimer/` y el `免責事項` tienen texto
+  definitivo. Quedan **2 placeholders, los dos en `404.html`**: su
+  `description` y una o dos frases de cuerpo. Con eso `check-ready` sale `0`.
 - **No queda ningún pendiente técnico.** Los tres que había se cerraron el
   2026-08-04.
 
@@ -47,17 +48,16 @@ fallidos ya corregidos, y las capturas intermedias.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**Después no hay tarea mía esperando.** Lo único que queda es **la redacción**,
-que se hace fuera de Code; el resto está congelado por decisión del autor o
-depende de `/ja/`. La revisión legal del `免責事項` **ya no es un pendiente**: se
-decidió publicar sin ella (ver la decisión cerrada correspondiente).
+**Después no hay tarea mía esperando.** Lo único que falta para publicar son
+**los 2 placeholders de `404.html`** —su `description` y una o dos frases de
+cuerpo—, y se escriben fuera de Code. Con eso `check-ready` sale `0`.
 
-**`check-ready` sale `2` por una sola razón: los 14 placeholders.** Cuando se
-redacten, sale `0` y el sitio puede ir a `main`.
+El resto está congelado por decisión del autor o depende de `/ja/`. La revisión
+legal del `免責事項` **ya no es un pendiente**: se decidió publicar sin ella.
 
-El candidato natural es **`/method/`**: concentra 12 de los 14 y es la última
-página que sigue siendo andamiaje puro. Al redactarla hay que aplicar además las
-dos notas de fuentes provisorias. Los otros 2 son de la 404.
+**Lo único sin decidir** es el `domain` de tres tarjetas de la portada, que no
+coincide con la línea de función de su página — la tabla con las tres parejas
+está en la sección de las seis caras.
 
 ---
 
@@ -637,17 +637,32 @@ traduciendo de acá**.
 
 ### El único frente activo: la redacción
 
-**14 placeholders `TODO`** en **2 páginas**, y **se escriben fuera de Code** —
-son decisiones de contenido del autor, no tareas de implementación.
+**Quedan 2 placeholders `TODO`, los dos en `404.html`** — su `description` y una
+o dos frases de cuerpo. Las otras diez páginas están en cero.
 
-| Página | Placeholders |
-|---|---|
-| `/method/` | 12 |
-| `404.html` | 2 |
-| las otras nueve | **0 — no les falta nada** |
+### `/method/`: la lista de fuentes se DERIVA del `context.md`
 
-**`/method/` es lo único que queda**, y con eso se cierra la redacción. Los 2 de
-la 404 son su `description` y una o dos frases de cuerpo.
+**No se mantiene una copia paralela.** La lista de 50 fuentes sale de
+`§Fuentes de Datos Mapeadas` de `kotodama_finance_context.md`, que es la fuente
+de verdad. Al actualizarla se parte de ese archivo, no de la página.
+
+- **34 Tier 1** (primaria oficial) + **16 Tier 2** (primaria no-oficial
+  atribuida), en 12 grupos por dominio, Tier 1 primero dentro de cada uno.
+- **La marca de tier es un cuadrado lleno contra hueco, en oro**, con leyenda.
+  Reusa el vocabulario de los puntos de estado de las caras porque ya está
+  establecido; cuadrado y no círculo para que no se confunda con ellos.
+- **Tres cosas quedan fuera, cada una por su motivo**: el Tier 3, que lo cubre
+  un párrafo del texto; **EDINET DB y Yahoo Finance Japan**, que parsean y
+  redistribuyen dato ajeno y por lo tanto son **secundarias** —publicarlas
+  contradiría, en la misma pantalla, el principio que la página declara—; y
+  `japan_insurance_v2.xlsx`, que es un archivo interno del proyecto.
+- **Ninguna URL se completó de memoria.** Las 17 que el `context.md` no traía se
+  buscaron, se verificaron y las aprobó el autor una por una. En una página cuyo
+  argumento es que toda cifra es trazable, un enlace inventado sería el peor
+  error posible.
+- **El subset japonés casi se duplicó**: 149 → 288 códigos, 13,2 → 29,8 KB por
+  peso. Es el costo de nombrar 50 entidades en japonés, y entró hiragana y
+  katakana por primera vez.
 
 ### Las seis caras quedaron con un molde común — y el eyebrow se fue
 
