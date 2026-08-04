@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Musubi — Kotodama Finance</title>
-<meta name="description" content="TODO: descripción de Musubi, el núcleo que unifica las seis caras.">
+<title>Musubi 産霊 — Kotodama Finance</title>
+<meta name="description" content="The idea underneath Kotodama Finance: capital moves in traceable courses, naming a flow makes it visible, and the judgment stays with the reader.">
 <link rel="canonical" href="https://kotodamafinance.com/musubi/">
 <!-- Open Graph: la tarjeta que se ve al compartir el enlace en un chat o una
      red. Sin esto el enlace viaja como una línea de texto pelada.
@@ -13,8 +13,8 @@
      La imagen la genera tools/make-og-image.py. -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kotodamafinance.com/musubi/">
-<meta property="og:title" content="Musubi — Kotodama Finance">
-<meta property="og:description" content="TODO: descripción de Musubi, el núcleo que unifica las seis caras.">
+<meta property="og:title" content="Musubi 産霊 — Kotodama Finance">
+<meta property="og:description" content="The idea underneath Kotodama Finance: capital moves in traceable courses, naming a flow makes it visible, and the judgment stays with the reader.">
 <meta property="og:image" content="https://kotodamafinance.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -49,133 +49,79 @@
   </header>
 
   <main>
-    <!-- MUSUBI — EL NÚCLEO DEL CUBO ------------------------------------------
-         El sistema conceptual que unifica las seis caras: los tres términos del
-         centro (産霊 · 河川 · 言霊) y, a partir de ellos, por qué cada cara se
-         llama como se llama. Antes esta página se llamaba «naming» y vivía en
-         /naming/; el nombre propio es Musubi y la ruta es /musubi/.
-         Es un bloque autónomo: para moverlo, se mueve entero.
-         El texto lo escribe el autor: acá sólo va la estructura.
-         Se usa <dl> y no <table>: la relación es término -> explicación, y así
-         no hay que inventar encabezados de columna.
-         Las clases CSS siguen llamándose .naming__*: son nombres internos y
-         renombrarlas no cambiaría nada que se vea. -->
-    <article class="naming" aria-labelledby="naming-title">
-      <div class="naming__wrap">
-        <!-- Si el eyebrow lleva japonés, hay que regenerar el subset de Zen Kaku
-             (ver el comentario de @font-face en styles.css). -->
-        <p class="eyebrow"><span class="todo">TODO: eyebrow</span></p>
-        <h2 id="naming-title" class="section-title">
-          <span class="todo">TODO: título del bloque</span>
-        </h2>
-        <p class="section-lead">
-          <span class="todo">TODO: una o dos frases que enmarquen el criterio general de los nombres.</span>
-        </p>
+    <!-- MUSUBI — LA IDEA QUE SOSTIENE LA PLATAFORMA ---------------------------
+         ESTA PÁGINA YA NO EXPLICA LOS NOMBRES. Tenía siete bloques —por qué hay
+         un sistema de nombres, por qué en japonés, cómo se deriva cada uno— y
+         una tabla con las seis caras. Se reemplazó entero por CUATRO bloques
+         que explican la idea de la que sale todo lo demás.
 
+         La tabla de las seis caras NO se perdió: se sacó a propósito. Cada cara
+         dice lo suyo en su propia página, y la tabla obligaba a mantener
+         sincronizadas dos listas de la misma cosa.
 
-        <!-- 1 -->
-        <section class="naming__block" aria-labelledby="nm-1">
-          <h2 id="nm-1" class="naming__h"><span class="todo">TODO: título — por qué hay un sistema de nombres</span></h2>
-          <p><span class="todo">TODO: el problema que resuelve. Por qué las seis caras no se llaman «Data», «About», «Learn».</span></p>
-        </section>
+         Pasó de <article class="naming"> a <article class="face-page">, que es
+         lo que usan todas las demás subpáginas. Dos motivos: la estructura es
+         ahora la misma —cabecera, secciones con subtítulo, enlace de vuelta— y
+         la versión anterior NO TENÍA <h1>, sólo un <h2> al que apuntaba el
+         aria-labelledby.
 
-        <!-- 2 -->
-        <section class="naming__block" aria-labelledby="nm-2">
-          <h2 id="nm-2" class="naming__h"><span class="todo">TODO: título — por qué en japonés</span></h2>
-          <p><span class="todo">TODO: por qué palabras japonesas si la promesa es leerse en lenguaje llano. Es la versión larga de lo que About dice en una línea.</span></p>
-        </section>
+         Los nombres del marco (Kasen, Okeanos, Kotodama, Musubi, Odysseus,
+         Aeolus) van en <i class="name">, no en <em>: <i> es el elemento para un
+         término en otra voz, y <em> significa énfasis — un lector de pantalla
+         lo entonaría en cada aparición, que no es lo que se pide. Cada uno
+         aparece una sola vez, donde se lo presenta.
 
-        <!-- 3 — el núcleo. Un subapartado por término. -->
-        <section class="naming__block" aria-labelledby="nm-3">
-          <h2 id="nm-3" class="naming__h"><span class="todo">TODO: título — el núcleo</span></h2>
-          <p><span class="todo">TODO: cómo se relacionan los tres términos entre sí.</span></p>
+         TEXTO DEFINITIVO (versión de lanzamiento, en inglés). La versión
+         japonesa es un pase aparte: no traducir de acá. -->
+    <article class="face-page">
+      <header class="face-page__head">
+        <h1 class="face-page__title">
+          <span class="face-page__kanji" lang="ja">産霊</span>
+          <span class="face-page__romaji">Musubi</span>
+        </h1>
+        <p class="face-page__gloss">The idea underneath</p>
+      </header>
 
-          <section class="naming__term-block" aria-labelledby="nm-3a">
-            <h3 id="nm-3a" class="naming__h3"><span lang="ja">産霊</span> <span class="naming__reading todo">TODO: lectura</span></h3>
-            <p><span class="todo">TODO: qué significa y qué aporta al marco.</span></p>
-          </section>
-          <section class="naming__term-block" aria-labelledby="nm-3b">
-            <h3 id="nm-3b" class="naming__h3"><span lang="ja">河川</span> <span class="naming__reading todo">TODO: lectura</span></h3>
-            <p><span class="todo">TODO: qué significa y qué aporta al marco.</span></p>
-          </section>
-          <section class="naming__term-block" aria-labelledby="nm-3c">
-            <h3 id="nm-3c" class="naming__h3"><span lang="ja">言霊</span> <span class="naming__reading todo">TODO: lectura</span></h3>
-            <p><span class="todo">TODO: qué significa y qué aporta al marco.</span></p>
-          </section>
-        </section>
+      <section class="face-page__section" aria-labelledby="musubi-water">
+        <h2 id="musubi-water" class="face-page__subtitle">Capital moves like water</h2>
+        <div class="face-page__body">
+          <p>An economy is not a ledger. It is a landscape with water moving through it &mdash; along channels, at different volumes, pooling in some places and draining others. Money behaves that way: it follows paths, and those paths are shaped by rules, incentives and history.</p>
+          <p>This is what we call <i class="name">Kasen</i> &mdash; watercourses. It is the object of everything on this platform. When we say &ldquo;flows&rdquo;, we are not reaching for a metaphor; we mean that capital has a course, and that a course can be traced.</p>
+          <p>The wider water is <i class="name">Okeanos</i>, the ocean the ancients believed encircled the world and fed every river. Japan is a coast on that ocean, not the whole of it. We start here because it is where we live, and because a system you live inside is the one you have reason to understand first. The water does not stop at the shoreline, and neither does the question.</p>
+        </div>
+      </section>
 
-        <!-- 4 -->
-        <section class="naming__block" aria-labelledby="nm-4">
-          <h2 id="nm-4" class="naming__h"><span class="todo">TODO: título — por qué un cubo</span></h2>
-          <p><span class="todo">TODO: la forma como argumento. Seis caras, un solo nivel, ninguna por encima de otra: por qué esa geometría y no una lista ni un árbol.</span></p>
-        </section>
+      <section class="face-page__section" aria-labelledby="musubi-named">
+        <h2 id="musubi-named" class="face-page__subtitle">What is named becomes visible</h2>
+        <div class="face-page__body">
+          <p>Most financial opacity is not secrecy. The numbers are usually published &mdash; in tables, in filings, in annual reports that anyone can download. What is often missing is the step after: putting a figure next to the one that enlightens it, keeping the series long enough for a shape to appear, and saying plainly what it means. A number can be public and still unreadable to anyone who does not already know what to look for.</p>
+          <p><i class="name">Kotodama</i> is the old idea that a word carries force: that naming something gives it presence in the world. We take it literally and without mysticism. To name a flow &mdash; to define it, measure it, publish it with its source &mdash; is to make it exist for anyone who wants to look. That is the whole method, and it is why the platform carries this word as its name.</p>
+          <p>It also sets a limit. A name that is wrong, or a figure that cannot be traced back to the document it came from, does the opposite: it makes something invisible while appearing to reveal it. Rigour is not a virtue we add on top. It is the condition for the method to work at all.</p>
+        </div>
+      </section>
 
-        <!-- 5 -->
-        <section class="naming__block" aria-labelledby="nm-5">
-          <h2 id="nm-5" class="naming__h"><span class="todo">TODO: título — cómo se deriva cada nombre</span></h2>
-          <p><span class="todo">TODO: la regla que va del marco a las seis palabras. Es el puente hacia la tabla del final.</span></p>
-        </section>
+      <section class="face-page__section" aria-labelledby="musubi-bound">
+        <h2 id="musubi-bound" class="face-page__subtitle">Nothing means anything alone</h2>
+        <div class="face-page__body">
+          <p><i class="name">Musubi</i> is the force that binds, and in binding, creates. It is where this platform gets its shape.</p>
+          <p>A financial system is not understood from data alone. A figure means something only against the rules that produced it, the people who act on it, and what someone can actually do with it. Separate those and you have four accurate answers to four questions nobody asked.</p>
+          <!-- Las dos últimas frases son las MISMAS que cierran el lead de la
+               sección del cubo en la portada, a propósito. Si allá se redacta
+               de nuevo, acá queda viejo: son dos copias del mismo texto y no
+               hay guarda que las compare. -->
+          <p>That is why the map is a cube. Six faces, no front, none above the others: data, the person behind it, daily life, community, learning, action. Turn it and any face can be the one you are looking at. One is live today; the rest carry an honest status. The map is real even where the ground is not yet built.</p>
+        </div>
+      </section>
 
-        <!-- 6 — EN POSITIVO. Este bloque describe el criterio y la función de
-             cada nombre. NO es una desmentida: negar una sospecha se la instala
-             al lector que no la tenía. -->
-        <section class="naming__block" aria-labelledby="nm-6">
-          <h2 id="nm-6" class="naming__h"><span class="todo">TODO: título — el criterio (en positivo, no una desmentida)</span></h2>
-          <p><span class="todo">TODO: qué exigencias tiene que cumplir un nombre para entrar. Qué función cumple: qué hace un nombre acá que una etiqueta descriptiva no haría.</span></p>
-          <p><span class="todo">TODO: cómo se elige entre dos candidatos, y qué se descartó por no cumplir el criterio.</span></p>
-        </section>
-
-        <!-- 7 — cierre consultable -->
-        <section class="naming__block" aria-labelledby="nm-7">
-          <h2 id="nm-7" class="naming__h"><span class="todo">TODO: título — las seis caras</span></h2>
-
-        <dl class="naming__list">
-          <div class="naming__row">
-            <dt class="naming__term">
-              <span class="naming__kanji" lang="ja">肇</span>
-              <span class="naming__reading">Hajime</span>
-            </dt>
-            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 肇.</span></dd>
-          </div>
-          <div class="naming__row">
-            <dt class="naming__term">
-              <span class="naming__kanji" lang="ja">素顔</span>
-              <span class="naming__reading">Sugao</span>
-            </dt>
-            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 素顔.</span></dd>
-          </div>
-          <div class="naming__row">
-            <dt class="naming__term">
-              <span class="naming__kanji" lang="ja">渡世</span>
-              <span class="naming__reading">Tosei</span>
-            </dt>
-            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 渡世.</span></dd>
-          </div>
-          <div class="naming__row">
-            <dt class="naming__term">
-              <span class="naming__kanji" lang="ja">家紋</span>
-              <span class="naming__reading">Kamon</span>
-            </dt>
-            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 家紋.</span></dd>
-          </div>
-          <div class="naming__row">
-            <dt class="naming__term">
-              <span class="naming__kanji" lang="ja">鳥居</span>
-              <span class="naming__reading">Torii</span>
-            </dt>
-            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 鳥居.</span></dd>
-          </div>
-          <div class="naming__row">
-            <dt class="naming__term">
-              <span class="naming__kanji" lang="ja">絆</span>
-              <span class="naming__reading">Kizuna</span>
-            </dt>
-            <dd class="naming__reason"><span class="todo">TODO: por qué esta cara se llama 絆.</span></dd>
-          </div>
-        </dl>
-        </section>
-
-      </div>
+      <section class="face-page__section" aria-labelledby="musubi-reader">
+        <h2 id="musubi-reader" class="face-page__subtitle">Whose journey this is</h2>
+        <div class="face-page__body">
+          <p>There is a reader in all of this, and it is not us.</p>
+          <p><i class="name">Odysseus</i> is the one who sails &mdash; the reader who leaves the known harbour with a question and wants to see further than the map allows. Everything here is built for that person: not for someone who wants to be told the answer, but for someone who wants to see the water clearly enough to choose a course.</p>
+          <p>Our role is <i class="name">Aeolus</i>, who gave the sailors the wind and kept the storm in the bag. He did not steer. That is a genuine constraint on what this platform will do: we will try to explain how something works, what it means, and who it touches. What we will not do is tell you what to do about it. The judgment is yours, and it should be &mdash; you are the one sailing.</p>
+          <p>In the myth, the crew opens the bag out of greed and loses everything. The gift was right; the handling was not. We can only be responsible for the first part.</p>
+        </div>
+      </section>
 
       <p class="face-page__back"><a href="/#cube">&larr; Back to the Cube</a></p>
     </article>

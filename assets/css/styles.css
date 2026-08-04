@@ -797,6 +797,14 @@ button:focus-visible {
    peso. Si algún día hiciera falta 600, hay que ampliar el rango del
    @font-face; el archivo variable ya trae el eje wght de 100 a 900. */
 .face-page__body strong { font-weight: 500; color: var(--c-text); }
+/* Los nombres del marco conceptual dentro del texto de /musubi/: Kasen,
+   Okeanos, Kotodama, Musubi, Odysseus, Aeolus. Cada uno aparece UNA vez, donde
+   se lo presenta.
+   Cursiva y color de texto pleno, no oro: el oro es de los subtítulos y los
+   enlaces, y seis palabras doradas en el cuerpo competirían con ambos.
+   Va sobre <i> y no <em> a propósito — <em> es énfasis y un lector de pantalla
+   lo entonaría; <i> es «término en otra voz», que es exactamente esto. */
+.face-page__body .name { font-style: italic; color: var(--c-text); }
 /* .face-page__ref se fue con el enlace de /sugao/ al registro del operador,
    que dejó de existir junto con esa sección. */
 /* Antes era .face-page__deferred, para «lo que la cara promete y todavía no
