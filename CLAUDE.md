@@ -30,19 +30,30 @@ fallidos ya corregidos, y las capturas intermedias.
 - **`main` no se toca**: publica kotodamafinance.com y todavía sirve la landing
   vieja. Nada de esto está publicado.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-04**, en `fb38ffb`. **Árbol limpio y todo pusheado**,
-  con las cuatro guardas en verde más `check-maintenance`.
+- Último cierre: **2026-08-04**, con el trabajo hasta `d353fab`. **Árbol limpio
+  y todo pusheado** en `redesign-trust`, con las cuatro guardas en verde más
+  `check-maintenance`.
+  *(Este bloque no puede nombrar su propio commit, así que siempre queda uno
+  atrás: `git log -1 redesign-trust` es la respuesta exacta. El ancla fija que no
+  deriva es el tag.)*
 - **EL SITIO ESTÁ TERMINADO DE CONTENIDO. Cero placeholders en las once
   páginas**, y **`check-ready` sale `0` — «LISTO PARA PUBLICAR»**.
-- **No queda ningún pendiente técnico ni de redacción.**
+- **No queda ningún pendiente técnico ni de redacción.** Lo que falta es
+  infraestructura de dominio, y no se hace en este repo.
+
+**Lo que dejó la última tanda**, todo ya integrado en las decisiones de abajo:
+la rama `maintenance` con su generador y su guarda; la regla de credenciales,
+escrita antes de que exista la primera; Zen Kaku embebido en el cartel; y las
+dos declaraciones de procedencia de `/method/` reducidas a una línea.
 
 **Dos tags, y el segundo es el que importa ahora:**
 
 - `v1-dark` — la versión navy+oro con el cubo Three.js, con registro visual en
   `docs/v1-dark/`.
 - **`v1-content-complete`** — el sitio terminado de contenido, y **el punto de
-  restauración de la migración de DNS**. Apunta a `fb38ffb`, el último estado
-  verificado en verde. Falta el tercero: la publicación, al mergear a `main`.
+  restauración de la migración de DNS**. Apunta a `fb38ffb`, que era el último
+  estado verificado en verde al crearlo. **No se mueve** aunque el trabajo siga:
+  ver la regla más abajo. Falta el tercero: la publicación, al mergear a `main`.
 
 **Existe una rama `maintenance`, lista y NO activa.** No se ve desde acá y
 ninguna de las cuatro guardas la mira; su decisión cerrada está más abajo.
