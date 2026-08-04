@@ -35,8 +35,9 @@ fallidos ya corregidos, y las capturas intermedias.
 - Último cierre: **2026-08-03**, en `fd7ee89`. **Árbol limpio y todo pusheado**,
   con `check-structure`, `check-modes` y `check-pendulum` en verde.
   `check-ready` sigue en `2` por la redacción, que es lo esperado.
-- Empezó la redacción: el hero, `/sugao/`, `/disclaimer/` y el `免責事項` ya
-  tienen texto definitivo. Quedan **72 placeholders en 9 páginas**.
+- La redacción va por la mitad: el hero, `/sugao/`, `/disclaimer/`, `/musubi/`
+  y el `免責事項` ya tienen texto definitivo. Quedan **41 placeholders en 8
+  páginas**, y **12 de ellos son `/method/`**.
 - **No queda ningún pendiente técnico.** Los tres que había se cerraron el
   2026-08-04.
 
@@ -50,9 +51,9 @@ sesión.
 se hace fuera de Code, y la revisión legal del `免責事項`, que es externa. El
 resto está congelado por decisión del autor o depende de `/ja/`.
 
-Si aparece trabajo, el candidato natural es **`/musubi/`**: concentra 31 de los
-72 placeholders, o sea casi la mitad, y es la única página que sigue siendo
-andamiaje puro.
+Si aparece trabajo, el candidato natural es **`/method/`**: concentra 12 de los
+41 placeholders y es la última página que sigue siendo andamiaje puro. Al
+redactarla hay que aplicar además las dos notas de fuentes provisorias.
 
 ---
 
@@ -433,6 +434,32 @@ ahí «The Cube» será katakana, no `立方体`. Por eso lo que se sacó no se 
 los glifos siguen en el subset a propósito. Ver la advertencia en el
 `@font-face` de `styles.css` antes de regenerarlo.
 
+### `/musubi/` explica la IDEA, no los nombres
+
+**Esto reemplaza una premisa anterior.** La página nació como «el sistema de
+nombres»: siete bloques sobre por qué hay nombres japoneses, cómo se deriva cada
+uno, y una tabla con las seis caras y su razón. Se redactó entero de nuevo, en
+**cuatro bloques** que explican la idea de la que sale la plataforma — el agua
+(`Kasen`, `Okeanos`), el nombrar (`Kotodama`), el vínculo (`Musubi`) y quién es
+el lector (`Odysseus`, `Aeolus`).
+
+- **La tabla de las seis caras salió a propósito, no se perdió.** Cada cara dice
+  lo suyo en su propia página; la tabla obligaba a mantener sincronizadas dos
+  listas de la misma cosa.
+- **La página no explica los nombres de las caras, y no hay que reponer eso.**
+  Es la consecuencia buscada del punto anterior.
+- **Los seis nombres del marco van en `<i class="name">`**, cursiva y a color
+  de texto pleno. `<i>` y no `<em>` porque `<em>` es énfasis y un lector de
+  pantalla lo entonaría; cada nombre se marca **una sola vez**, donde se lo
+  presenta. Y no van en oro: el oro es de los subtítulos y los enlaces.
+- **Usa `.face-page`, como las otras nueve subpáginas.** Antes usaba `.naming*`,
+  que ya no existe: se borró con la tabla. De paso ganó el `<h1>` que le
+  faltaba — era la única subpágina que no tenía, sólo un `<h2>`.
+- **Dos frases del bloque 3 son las mismas que cierran el lead del cubo en la
+  portada**, a propósito del autor. Son dos copias del mismo texto y **no hay
+  guarda que las compare**: si se redacta una, hay que mirar la otra. Está
+  anotado en el HTML de los dos lados.
+
 ### `/method/` es el desarrollo; la sección de la portada es el resumen
 La sección `#method` de la portada **queda** —los tres pilares y los cuatro
 pasos— y la nav «Method» **sigue apuntando ahí**, no a la subpágina. A
@@ -555,19 +582,19 @@ traduciendo de acá**.
 
 ### El único frente activo: la redacción
 
-**72 placeholders `TODO`** en **9 páginas**, y **se escriben fuera de Code** —
+**41 placeholders `TODO`** en **8 páginas**, y **se escriben fuera de Code** —
 son decisiones de contenido del autor, no tareas de implementación.
 
 | Página | Placeholders |
 |---|---|
-| `/musubi/` | 31 |
 | `/method/` | 12 |
 | `/hajime/` `/tosei/` `/kamon/` `/torii/` `/kizuna/` | 5 c/u |
 | `404.html` · portada | 2 c/u |
-| `/sugao/` · `/disclaimer/` | **0 — no les falta nada** |
+| `/musubi/` · `/sugao/` · `/disclaimer/` | **0 — no les falta nada** |
 
-**Casi la mitad es `/musubi/`.** Es la única página que sigue siendo andamiaje
-puro; el resto ya tiene su cabecera, su enlace de vuelta y sus metadatos.
+**`/method/` es la última página que sigue siendo andamiaje puro.** Las cinco
+caras tienen 5 cada una y son todas del mismo molde: las dos `description`, el
+lead y dos párrafos de cuerpo.
 
 **Al redactar `/method/`, aplicar también las dos notas de fuentes provisorias**
 que hoy están en la portada, ya corregidas por el autor y anotadas en el
@@ -650,9 +677,13 @@ Kaku, verificando contra la tabla `cmap`. Ya frenó una vez, con el 迷 de la 40
   decidido, para que el brief lo dé por sentado: al abrirse, el **núcleo** del
   cubo muestra los **tres conceptos** del centro conceptual del proyecto en
   kanji —**産霊 · 河川 · 言霊** (Musubi · Kasen · Kotodama)— y al hacer clic
-  lleva a **`/musubi/`**. Los tres ya viven en el HTML de esa página, así que
-  **no hacen falta glifos nuevos** en el subset. No hay nada visual que
-  construir hoy.
+  lleva a **`/musubi/`**. **No hacen falta glifos nuevos** en el subset, pero
+  ojo con el motivo, porque el que estaba escrito acá dejó de ser cierto: los
+  tres ya NO viven en el HTML de `/musubi/` —esa página se redactó y ahora
+  nombra a Kasen y Kotodama en romaji, no en kanji—. Siguen cubiertos porque
+  están en la **marca de agua de la portada** (`.about__watermark`) y porque
+  `言` y `霊` son además el logo del nav. Si algún día se toca esa marca de
+  agua, esta suposición se cae. No hay nada visual que construir hoy.
 - **Remolino ukiyo-e para la transición.** Ocho iteraciones fallidas entre Design
   y Claude: **el ruido procedural produce textura, no dibujo** — granulado, no la
   línea de una ola grabada. Requiere ilustrador humano o un enfoque distinto.

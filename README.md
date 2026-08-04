@@ -79,7 +79,7 @@ con su `index.html` adentro:
 
 ```
 /            index.html              home EN
-/musubi/     musubi/index.html       el núcleo del cubo
+/musubi/     musubi/index.html       la idea que sostiene la plataforma
 /sugao/      sugao/index.html        la persona detrás del proyecto
 /method/     method/index.html       el método completo + las fuentes, una por una
 /disclaimer/ disclaimer/index.html   免責事項 completo (el único lugar)
