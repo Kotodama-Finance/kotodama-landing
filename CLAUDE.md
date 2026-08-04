@@ -30,10 +30,11 @@ fallidos ya corregidos, y las capturas intermedias.
 - **`main` no se toca**: publica kotodamafinance.com y todavía sirve la landing
   vieja. Nada de esto está publicado.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-04, tercera tanda del día: la revisión manual de
-  quince puntos del autor**. **Árbol limpio y todo pusheado** en
-  `redesign-trust`, con las cuatro guardas corridas (structure y modes en
-  verde, pendulum en verde, ready en `2` — ver el punto siguiente).
+- Último cierre: **2026-08-05, los kanji de las tres subcaras de Hajime**
+  (太一 · 万 · 幽玄, cerrados por el autor), con subset regenerado y og-image
+  resellada. **Árbol limpio y todo pusheado** en `redesign-trust`, con las
+  guardas corridas (structure y modes en verde, pendulum en verde, ready en
+  `2` — ver el punto siguiente).
   *(Este bloque no puede nombrar su propio commit, así que siempre queda uno
   atrás: `git log -1 redesign-trust` es la respuesta exacta. El ancla fija que no
   deriva es el tag.)*
@@ -48,10 +49,14 @@ fallidos ya corregidos, y las capturas intermedias.
   teniendo que estar SIEMPRE verde.
 - **Ahora son CATORCE páginas**, no once: se sumaron las tres subpáginas de
   Hajime. El sitemap tiene 13 URLs (todas menos la 404).
-- **Dos decisiones del autor quedaron pendientes** al cierre de la tanda: el
-  permiso de marca para recolorear el logo de LibraryThing (ver la decisión de
-  tarjetas de perfil) y si Taichi/Yorozu/Yūgen llevarán kanji (hoy van en
-  romaji solo — no se inventan).
+- **Queda UNA decisión del autor pendiente**: el permiso de marca para
+  recolorear el logo de LibraryThing (ver la decisión de tarjetas de perfil).
+  La otra —los kanji de Taichi/Yorozu/Yūgen— **se cerró el 2026-08-05**:
+  **太一 Taichi · 万 Yorozu · 幽玄 Yūgen**, dictados por el autor desde la
+  tabla del cubo de su `context.md` (no localizable desde este repo: los
+  valores se copiaron literales de su mensaje, que es la misma regla de no
+  inventar). Aplicados con el patrón de las seis caras y con su regeneración
+  de subset — ver la decisión de las subpáginas.
 
 **Lo que dejó la última tanda (la revisión de quince puntos)**, todo integrado
 en las decisiones de abajo: las anclas de la nav aterrizando con el layout ya
@@ -170,7 +175,7 @@ Ninguno bloquea publicar. Cada uno tiene su sección con el detalle.
 |---|---|
 | **Redacción de Hajime** | **16 placeholders deliberados** (taichi/yorozu/yugen ×5, LibraryThing ×1). Los escribe Manuel. `check-ready` sale `2` hasta entonces — esperado. |
 | **Logo de LibraryThing** | **pendiente del permiso de marca.** librarything.com devuelve 403 al acceso automatizado (/press y /topic/45089); el autor tiene que verificar desde su navegador si se puede recolorear a oro. La tarjeta ya tiene el hueco (`.profile-card__logo`). |
-| **Kanji de Taichi/Yorozu/Yūgen** | sin decidir. Hoy los h1 van en romaji solo; si el autor cierra kanji, entran con regeneración de subset. |
+| ~~Kanji de Taichi/Yorozu/Yūgen~~ | **CERRADO 2026-08-05**: 太一 · 万 · 幽玄, del `context.md` del autor. Aplicados en h1 y `<title>` con el patrón de las caras; subset regenerado (太/幽/玄 eran nuevos). |
 | **Móvil** | **nunca medido en dispositivo real.** Congelado por decisión del autor. La única medición de rendimiento es de escritorio. |
 | **Maelstrom** | apartado en `assets/css/maelstrom.css`, **no lo carga nadie** —ahora con guarda en `check-modes`—, reactivable. Al retomarlo, empezar por el **bug de la variante táctil** —definía keyframes sin blur y nunca los asignaba—, no por recalibrar. |
 | **Vista explotada del cubo** | después de publicar. El núcleo mostrará 産霊 · 河川 · 言霊 y llevará a `/musubi/`. Sin glifos nuevos. |
@@ -469,9 +474,21 @@ About, /sugao/ p3 y /kizuna/ p2).
 subrayado suave): eran lo único del sitio que se destacaba sin llevar a
 ninguna parte.
 
-- **Sin kanji en los h1, a propósito**: no hay kanji cerrado por el autor para
-  Taichi/Yorozu/Yūgen y **no se inventan**. Romaji solo; si algún día hay
-  kanji, entra con su regeneración de subset.
+- **Los kanji se cerraron el 2026-08-05** — esto reemplaza el «sin kanji a
+  propósito» que decía acá: **太一 Taichi · 万 Yorozu · 幽玄 Yūgen**, dictados
+  por el autor desde la tabla del cubo de su `context.md` (el archivo no está
+  en esta máquina; se copiaron literales de su mensaje — la misma regla de no
+  inventar, con otra fuente). En h1 y `<title>`/`og:title` con el patrón de
+  las seis caras: kanji grande + romaji al lado, la línea de función debajo,
+  sin gloss traducido. Entraron con regeneración de subset: **太/幽/玄 eran
+  nuevos; 一 y 万 ya estaban** (一次資料, 百万円). Verificado contra cmap con
+  猫 de control de ausencia; features y conservados intactos.
+- **Los enlaces de /hajime/ quedaron en ROMAJI SOLO, y es decisión, no
+  falta**: dentro de la oración inglesa, el kanji junto al romaji sólo
+  duplicaría el nombre de al lado — la prueba exacta del japonés ornamental.
+  El kanji vive donde el nombre se presenta como título (h1 y `<title>` de la
+  subpágina), igual que las seis caras: ninguna mención en prosa del sitio
+  lleva kanji. Anotado junto a los enlaces en /hajime/.
 - **La guarda de castellano exime el texto que EMPIEZA con «TODO»** — se agregó
   en esta tanda, porque los placeholders son castellano deliberado (regla de
   este archivo) y la guarda los habría marcado: era una regla del proyecto

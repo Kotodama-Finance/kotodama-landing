@@ -418,8 +418,11 @@ un 503, y GitHub Pages no puede servirlo.
 ## Tipografías: el subset es un paso obligatorio
 
 Las tipografías están auto-hospedadas y subseteadas. El subset de **Zen Kaku
-Gothic New** contiene exactamente los glifos japoneses que aparecen en el sitio,
-y nada más — por eso pesa ~13 KB en vez de 2,3 MB.
+Gothic New** contiene exactamente los glifos japoneses que aparecen en el sitio
+(más los reservados para `/ja/`), y nada más — decenas de KB en vez de los
+2,3 MB de la TTF completa. El número exacto se lee del archivo, no de acá:
+un tamaño escrito en un `.md` caduca con la próxima regeneración, y éste ya
+caducó una vez (decía «~13 KB» cuando el subset llevaba meses en ~30).
 
 **Cada vez que se agrega texto japonés nuevo hay que regenerar el subset.** Si
 no, ese carácter se renderiza con una fuente del sistema: no desaparece, sólo
@@ -431,38 +434,22 @@ ni tienen por qué estar**: pesan ~2,2 MB cada una, no se sirven, y sólo hacen
 falta el día que se regenera. Hay que bajarlas en ese momento — y de un subset
 **no** se pueden sacar glifos que no tiene, así que no hay atajo.
 
-`$JA` es la cadena completa de glifos japoneses del sitio, que está listada en
-el comentario de `@font-face` en `assets/css/styles.css`:
+**La fórmula de derivación y los comandos exactos viven en UN solo lugar: el
+comentario de `@font-face` en `assets/css/styles.css`**, junto al código que
+sirve los archivos. Este README no los repite, y es una corrección: acá había
+una segunda copia y derivó en tres puntos a la vez — decía que la cadena `$JA`
+«está listada» en ese comentario (dejó de listarse, deliberadamente), daba la
+fórmula sin el tercer término (el japonés del cartel de mantenimiento, que la
+versión vigente sí incluye) y daba otro comando (`--unicodes=<conjunto>` a
+secas, cuando el que reproduce el archivo servido va con `--text` más los
+rangos fijos). Dos copias de un método derivan igual que dos copias de un
+número, y la copia vieja se lee como si fuera la vigente.
 
-**El conjunto ya no se escribe a mano.** Eran 51 kanji y se leían de un vistazo;
-con la lista de fuentes de `/method/` pasaron a **190**, con hiragana y katakana.
-Una lista así mantenida a mano deja de ser fuente de verdad y pasa a ser una
-copia que se desactualiza en silencio. Se **deriva**:
-
-```
-nuevo = códigos del subset ACTUAL  ∪  japonés que usa el HTML hoy
-```
-
-Las dos mitades hacen falta. La unión con el actual **preserva los glifos que se
-conservan a propósito** aunque ya no estén en ninguna página (`立方体`,
-`一次資料`, `追跡可能`, `公開` y varios nombres de organismos, reservados para
-`/ja/`); regenerar sólo desde el texto de hoy los borraría. Y la extracción del
-HTML usa **la misma función que la guarda** (`texto_visible` + `JAPONES` en
-`tools/_guardas.py`), para que no haya dos criterios de qué es «japonés del
-sitio».
-
-Ese conjunto se pasa como `--unicodes`, sin `--text` y **sin
-`--layout-features`**:
-
-```
-pyftsubset ZenKakuGothicNew-Regular.ttf \
-  --output-file=assets/fonts/zen-kaku-gothic-new-400-subset.woff2 \
-  --flavor=woff2 --unicodes=<el conjunto derivado>
-
-pyftsubset ZenKakuGothicNew-Medium.ttf \
-  --output-file=assets/fonts/zen-kaku-gothic-new-500-subset.woff2 \
-  --flavor=woff2 --unicodes=<el conjunto derivado>
-```
+Lo que sí es de acá: el conjunto **se deriva, no se transcribe** (la unión con
+el subset actual preserva los glifos reservados para `/ja/`, que regenerar
+desde el texto de hoy borraría), y la extracción del HTML usa **la misma
+función que la guarda** (`texto_visible` + `JAPONES` en `tools/_guardas.py`),
+para que no haya dos criterios de qué es «japonés del sitio».
 
 **Verificar en las dos direcciones después de regenerar**: que todo el japonés
 del HTML quede cubierto, y que **no se haya caído ningún código del subset
@@ -476,6 +463,10 @@ El japonés de arriba va **sin** `--layout-features`; el latino de abajo va
 **con** `--layout-features='*'`. Parece una inconsistencia y no lo es: está
 medido en las dos direcciones, y **cada uno reproduce su archivo commiteado sólo
 con su propia forma**.
+
+La medición que fijó la regla (fechada por sus propios números: el subset
+japonés tenía entonces 163 glifos; hoy es más grande y la regla se re-verifica
+en cada regeneración comparando features contra el archivo anterior):
 
 | | sin el flag | con el flag |
 |---|---|---|
