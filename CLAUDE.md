@@ -54,9 +54,9 @@ a `main` es del autor, no una tarea pendiente.
 El resto está congelado por decisión del autor o depende de `/ja/`. La revisión
 legal del `免責事項` **ya no es un pendiente**: se decidió publicar sin ella.
 
-**Lo único sin decidir** es el `domain` de tres tarjetas de la portada, que no
-coincide con la línea de función de su página — la tabla con las tres parejas
-está en la sección de las seis caras.
+**No queda nada sin decidir.** El `domain` de las tarjetas, que era lo último,
+se cerró: son la versión comprimida de la línea de función de cada página, no
+una etiqueta distinta.
 
 **Al publicar a `main`, releer primero** la sección «Antes de publicar» del
 README: son cuatro guardas, no una, y `check-ready` no mira el comportamiento
@@ -209,19 +209,19 @@ Decisiones dentro de la página:
   como página incompleta. Cuando existan, se agregan a `.profile-links`.
 - **El `免責事項` NO va en `/sugao/`.** Ver la regla de abajo.
 
-**Del archivo de referencia ya sólo queda en pie el `domain`**, «The human
-behind», que es lo que muestra la tarjeta de la portada. Los otros dos los pisó
-la redacción del autor y **el archivo de referencia quedó atrás**:
+**EL ARCHIVO DE REFERENCIA QUEDÓ ATRÁS EN LOS TRES CAMPOS.** Ya no queda nada de
+Sugao que se copie literal de ahí:
 
 | Campo | Referencia | Vigente |
 |---|---|---|
-| `gloss` | «the true face» | **«The face behind the Cube»** |
+| `gloss` | «the true face» | **«The person behind the platform»** |
 | `status` | «Intro live · profiles deferred» | **«Live»** (`active`) |
-| `domain` | «The human behind» | sin cambios |
+| `domain` | «The human behind» | **«The person behind»** |
 
 O sea que para esta cara **la regla de copiar literal del archivo de referencia
 ya no aplica**: manda lo redactado. Vale la pena tenerlo presente antes de
-"restaurar" un campo desde la referencia creyendo que se corrige una deriva.
+"restaurar" un campo desde la referencia creyendo que se corrige una deriva —
+y lo mismo vale para las otras cinco, ver la tabla de `domain` más abajo.
 
 ### El `免責事項`: el corto se repite, el completo vive una sola vez
 Son **dos textos con dos reglas opuestas**, y confundirlas es lo que hay que
@@ -721,19 +721,41 @@ sobraban: el eyebrow de `/tosei/` ya decía literal la línea de función que se
 iba a poner, y el significado del kanji que llevaba el gloss lo dice ahora el
 lead en prosa, en las cinco.
 
-**Queda una divergencia abierta, y es del autor.** El `domain` de las tarjetas
-de la portada sale del archivo de referencia y ya no coincide con las líneas de
-función:
+### El `domain` de las tarjetas: comprimido, no idéntico — decisión cerrada
 
-| Tarjeta (portada) | Línea de función (página) |
-|---|---|
-| Connect | Community and network |
-| Learn / Resources | Learning and resources |
-| Act / Business | Understanding to action |
+**Las seis tarjetas se reescribieron.** No para igualarlas a la línea de función
+de su página, sino para que **cada una sea la versión COMPRIMIDA de la suya**:
 
-Las otras tres sí coinciden. Alinearlas implica apartarse del archivo de
-referencia en tres campos; dejarlas implica que la tarjeta rotula y la página
-describe, con palabras distintas. **Sin decidir.**
+| Cara | Tarjeta (portada) | Línea de función (página) |
+|---|---|---|
+| `肇 Hajime` | Data and analysis | Data and analysis |
+| `素顔 Sugao` | The person behind | The person behind the platform |
+| `渡世 Tosei` | Personal finance | Personal finance in Japan |
+| `家紋 Kamon` | Community | Community and network |
+| `鳥居 Torii` | Learning | Learning and resources |
+| `絆 Kizuna` | Acting on it | Understanding to action |
+
+**Que no sean idénticas es deliberado**, y es la parte que se pierde si alguien
+las "unifica": **la tarjeta se lee de un vistazo entre seis, la línea de función
+se lee sola y con calma.** Son dos trabajos distintos. Lo que sí tienen que
+compartir es la raíz — quien va de la tarjeta a la página encuentra continuidad,
+no dos nombres para lo mismo.
+
+**Todas sin barra**, mismo registro corto. El patrón anterior estaba a medias:
+tres con barra (`Data / Analysis`, `Learn / Resources`, `Act / Business`) y tres
+sin ella.
+
+**Estos valores YA NO salen del archivo de referencia**, que sigue diciendo
+`Data / Analysis`, `The human behind`, `Connect`, `Learn / Resources` y
+`Act / Business`. Ese archivo **no se editó a propósito**: es la instantánea del
+landing original, y cambiarle un campo lo convertiría en un híbrido que no es ni
+el original ni el estado actual — además de estar en `.gitignore`, o sea que la
+edición ni siquiera quedaría versionada. **La defensa contra la deriva es esta
+tabla**, que sí está versionada y sí se lee al empezar.
+
+**El folio del cubo no muestra el `domain`.** `FACES` en `assets/js/main.js`
+tiene `romaji`, `state` y `status`, nada más; el folio muestra el estado y el
+botón. El `domain` vive únicamente en las seis tarjetas de la grilla.
 
 **Al redactar `/method/`, aplicar también las dos notas de fuentes provisorias**
 que hoy están en la portada, ya corregidas por el autor y anotadas en el
