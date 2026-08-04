@@ -234,9 +234,13 @@ no, ese carácter se renderiza con una fuente del sistema: no desaparece, sólo
 desentona, y es fácil que pase inadvertido.
 
 Regenerar (requiere `pip install fonttools brotli`) con las TTF de origen del
-repo `google/fonts` (`ofl/zenkakugothicnew`). `$JA` es la cadena completa de
-glifos japoneses del sitio, que está listada en el comentario de `@font-face`
-en `assets/css/styles.css`:
+repo `google/fonts` (`ofl/zenkakugothicnew`). **Esas TTF no están en este repo
+ni tienen por qué estar**: pesan ~2,2 MB cada una, no se sirven, y sólo hacen
+falta el día que se regenera. Hay que bajarlas en ese momento — y de un subset
+**no** se pueden sacar glifos que no tiene, así que no hay atajo.
+
+`$JA` es la cadena completa de glifos japoneses del sitio, que está listada en
+el comentario de `@font-face` en `assets/css/styles.css`:
 
 ```
 JA="肇素顔渡世家紋鳥居絆言霊産河川立方体一次資料追跡可能公開日本銀行財務省金融庁取引所内閣府総語免責事項近　"
