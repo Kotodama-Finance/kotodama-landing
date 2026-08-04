@@ -959,30 +959,16 @@ button:focus-visible {
   color: var(--c-text);
 }
 
-/* Título de bloque DENTRO de una sección, un escalón por debajo de
-   .face-page__subtitle. Hoy lo usa «How this is written» en /method/: es parte
-   de qué cuenta como fuente, no un tema aparte, y el h3 lo dice. */
-.face-page__minor {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(1.2rem, 2.2vw, 1.5rem);
-  color: var(--c-text);
-  margin: clamp(30px, 4vw, 40px) 0 12px;
-}
-/* Colofón: registro de pie de página, SÓLO en /method/. Declara, no proclama —
-   por eso va al cuerpo más chico de la página y en el gris más apagado, con un
-   filete que lo separa del contenido sin encuadrarlo como un aviso. */
-.colophon {
-  margin-top: clamp(48px, 6vw, 72px);
-  padding-top: 18px;
-  border-top: 1px solid var(--line-gold-faint);
-  font-size: 0.82rem;
-  line-height: 1.7;
-  color: var(--c-text-muted);
-}
-/* Cuando el colofón está presente ya separó del contenido: el enlace de vuelta
-   no necesita repetir todo el aire de arriba. */
-.colophon + .face-page__back { margin-top: clamp(24px, 3vw, 32px); }
+/* Acá vivían .face-page__minor —el h3 de «How this is written»— y .colophon,
+   con su regla de hermano adyacente sobre .face-page__back. Las dos
+   declaraciones de procedencia de /method/ se reemplazaron por una sola línea
+   dentro del cuerpo de la sección, así que ninguna de las tres tenía ya un
+   elemento que las usara.
+   Se borran y no se dejan «por si vuelven»: una regla CSS sin usar es legal y
+   SILENCIOSA —el navegador no protesta—, y este proyecto ya se comió ese costo
+   dos veces, con kf-fade y con la variante táctil del maelstrom, que se podía
+   leer y citar sin que corriera nunca. Si la línea vuelve a necesitar estilo
+   propio, se escribe entonces. */
 .face-page__back { margin-top: clamp(48px, 6vw, 72px); font-size: 0.9rem; }
 
 /* /musubi/ reusa .naming, que ya no vive en la portada. La clase conserva el

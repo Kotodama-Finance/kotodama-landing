@@ -853,31 +853,34 @@ número distinto de cero que informe `check-structure` es una regresión, no
 trabajo pendiente. Es un cambio de significado de esa guarda: hasta acá bajar
 era progreso; ahora subir es un bug y no hay «bajar».
 
-### La procedencia del texto se declara, y sólo en `/method/`
+### La procedencia del texto se declara: UNA línea, y sólo en `/method/`
 
-Dos bloques, y van juntos: **«How this is written»** al final de la sección
-«What counts as a source», y un **colofón** al pie de la página.
+**Esto reemplaza una versión anterior de DOS bloques** —«How this is written» al
+final de «What counts as a source», y un colofón al pie— que se retiraron por
+decisión del autor. Hoy es **una sola línea**, en el lugar del primero:
 
-**Por qué ahí y en ninguna otra parte.** `/method/` es donde se declara cómo se
+> Credit where credit's due: This project would not have been possible without
+> my AI assistant.
+
+**«Credit where credit's due» va con WHERE.** La versión con «were» es un error
+de tipeo y se lee como tal. Está anotado también en el HTML.
+
+**Por qué en `/method/` y en ninguna otra parte.** Es donde se declara cómo se
 produce lo que se publica, así que es donde corresponde decir cómo se produjo el
 texto mismo. Un sitio que le exige trazabilidad al dato y no declara la de su
 propia prosa tiene un punto ciego; y si alguien lo descubre después sin que esté
 dicho, el daño al rigor es mayor que el costo de decirlo.
 
-**El colofón NO va al footer global**, aunque sea la clase de línea que suele ir
-ahí. El footer se repite en las once páginas y esto pertenece a la que habla del
-método. Es la regla opuesta a la del `免責事項` corto, y por el mismo criterio:
-una advertencia legal sirve donde el lector esté leyendo; una declaración de
+**No va al footer global**, aunque sea la clase de línea que suele ir ahí. El
+footer se repite en las once páginas y esto pertenece a la que habla del método.
+Es la regla opuesta a la del `免責事項` corto, y por el mismo criterio: una
+advertencia legal sirve donde el lector esté leyendo; una declaración de
 procedencia sirve donde se explica el procedimiento.
 
-**LA REDACCIÓN DEL COLOFÓN NO SE TOCA, y el motivo es del tipo que este proyecto
-persigue.** Dice *«the code is checked by automated guards»*, **no «reviewed by
-its author»**. El código no se revisa a mano: lo verifican las cuatro guardas
-que corren antes de cada commit. Escribir «revisado por el autor» sería una
-afirmación no verificada **justo en la línea que declara honestidad** — el error
-exacto que el resto del sitio se prohíbe. Los tiempos verbales también son parte
-de la afirmación: **presente** para las guardas, que siguen corriendo; **pasado**
-para el texto, que ya se revisó.
+**Va sin título propio, dentro del cuerpo de la sección.** Es una línea; un `h3`
+encima la anunciaría como tema aparte cuando es el cierre de qué cuenta como
+fuente. Con el colofón se fueron también `.face-page__minor` y `.colophon` del
+CSS, que quedaron sin ningún elemento que las usara.
 
 ### La 404 rompe el patrón del kanji a propósito
 
@@ -1229,6 +1232,18 @@ que produjeron conclusiones equivocadas:
   el único que sabe, porque la pregunta es sobre el fallback y no sobre el
   archivo. Y de paso: **`lang="ja"` decide si el genérico cae en una fuente
   japonesa o en una china** (Noto Sans JP con él, Microsoft YaHei sin él).
+- **UNA LÍNEA QUE DECLARA HONESTIDAD ES EL PEOR LUGAR PARA UNA AFIRMACIÓN NO
+  VERIFICADA.** El colofón de `/method/` ya no existe —se reemplazó por una
+  línea de agradecimiento—, pero el criterio que lo redactó vale para lo que
+  venga y por eso se guarda acá en vez de perderse con él. Decía *«the code is
+  checked by automated guards»* y **no «reviewed by its author»**, porque el
+  código no se revisa a mano: lo verifican las guardas que corren antes de cada
+  commit. Poner «revisado por el autor» habría sido presumir un proceso que no
+  ocurre, **justo en la frase que le pide al lector que confíe** — el error que
+  el resto del sitio se prohíbe. Y los tiempos verbales eran parte de la
+  afirmación: presente para las guardas, que siguen corriendo; pasado para el
+  texto, que ya se revisó. La prueba antes de publicar una línea así es simple:
+  **¿qué comprobación respalda cada verbo?** Si alguno no tiene ninguna, sobra.
 - **«Regenerar y comparar bytes» parece la guarda perfecta para un artefacto
   generado, y acá no funciona.** El codificador woff2 **no es determinista**:
   tres corridas del mismo comando dan tres `sha1` distintos, y siguen dándolos
