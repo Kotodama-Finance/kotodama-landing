@@ -65,26 +65,15 @@ def main():
     else:
         print("  OK     sin placeholders")
 
-    print("\nRevisión legal del 免責事項")
-    sin_revisar = G.disclaimer_sin_revisar()
-    if sin_revisar:
-        for x in sin_revisar:
-            print(f"  FALTA  {x}")
-        print("  -> lo revisa un profesional legal japonés (benrishi o abogado);")
-        print("     después se saca la marca de borrador del comentario en el HTML")
-    else:
-        print("  OK     revisado (ya no lleva la marca de borrador)")
-
+    # Acá se comprobaba que el 免責事項 hubiera pasado por revisión legal externa.
+    # Se sacó junto con la guarda: el autor decidió publicarlo sin esa revisión,
+    # así que no queda nada que esperar. El motivo, y el marco legal en el que se
+    # apoya, están en CLAUDE.md.
     if roto:
         print("\nNO PUBLICAR: hay algo roto (no es la redacción)")
         return ROTO
-    if total or sin_revisar:
-        pendientes = []
-        if total:
-            pendientes.append(f"{total} placeholders por redactar")
-        if sin_revisar:
-            pendientes.append("la revisión legal del 免責事項")
-        print(f"\nNO PUBLICAR TODAVÍA: falta {' y '.join(pendientes)}.")
+    if total:
+        print(f"\nNO PUBLICAR TODAVÍA: faltan {total} placeholders por redactar.")
         print("Es lo esperado en esta etapa. La estructura está sana:")
         print("  python tools/check-structure.py")
         return FALTA_REDACCION

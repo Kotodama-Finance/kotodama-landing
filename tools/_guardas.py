@@ -349,34 +349,20 @@ def glifos_faltantes():
     return faltan
 
 
-# Un TOKEN sin espacios, no una frase. Una marca con espacios se parte en el
-# salto de línea de un comentario HTML y deja de encontrarse: la primera versión
-# de esta guarda decía «revisado» con el borrador intacto, que es exactamente el
-# falso verde que vino a impedir.
-MARCA_BORRADOR = "BORRADOR-SIN-REVISION-LEGAL"
-
-
-def disclaimer_sin_revisar():
-    """/disclaimer/ declara ley aplicable japonesa y limitación de responsabilidad.
-
-    Mientras el texto lleve la marca de borrador NO puede publicarse. Un descargo
-    sin revisar es la peor clase de falso verde que puede dar este repo: todo lo
-    demás en verde y la guarda diciendo «LISTO PARA PUBLICAR» justamente sobre
-    las cláusulas donde equivocarse sale más caro.
-
-    La marca vive DENTRO del archivo que califica, no en un registro aparte, para
-    que quien edite el texto la tenga delante. Se saca a mano cuando lo haya
-    revisado un profesional legal japonés (benrishi o abogado).
-
-    No la mira check-structure: no es una regresión, es trabajo previsto. La mira
-    check-ready, que es la que contesta si esto puede ir a main.
-    """
-    p = RAIZ / "disclaimer" / "index.html"
-    if not p.exists():
-        return ["no existe /disclaimer/, que es donde vive el 免責事項 completo"]
-    if MARCA_BORRADOR in p.read_text(encoding="utf-8"):
-        return ["/disclaimer/ sigue marcado como borrador: falta revisión legal profesional"]
-    return []
+# Acá vivían MARCA_BORRADOR y disclaimer_sin_revisar(), que bloqueaban la
+# publicación mientras /disclaimer/ llevara una marca de borrador en su HTML.
+#
+# SE ELIMINARON PORQUE LA CONDICIÓN QUE VIGILABAN YA NO EXISTE: el autor decidió
+# publicar el 免責事項 sin revisión de un profesional legal japonés. No es que la
+# guarda estorbara — es que ya no queda nada que esperar, y una guarda que vigila
+# una espera que terminó sólo enseña a ignorar su salida.
+#
+# El motivo de la decisión, con el marco legal que la sostiene, está en CLAUDE.md.
+# Si algún día se decide sí mandarlo a revisar, esto se reconstruye en veinte
+# líneas; lo que no hay que reconstruir es la lección que dejó, que sigue escrita
+# en el README: la marca tiene que ser un TOKEN SIN ESPACIOS, porque una frase se
+# parte en el salto de línea de un comentario HTML y deja de encontrarse. La
+# primera versión decía «revisado» con el borrador intacto.
 
 
 def hrefs_muertos():

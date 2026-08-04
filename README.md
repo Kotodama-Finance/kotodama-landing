@@ -162,14 +162,17 @@ que estar en verde siempre:
 - **`check-ready.py`** — ¿puede publicarse? Sale `0` listo, **`2` falta trabajo
   previsto** (esperado, no es una regresión) y `1` si hay algo roto de verdad.
 
-  El `2` cubre dos cosas: los placeholders sin redactar y **la revisión legal
-  del `免責事項`**. `/disclaimer/` declara ley aplicable japonesa y limitación
-  de responsabilidad, y el texto todavía **no lo validó un profesional**. La
-  guarda lo detecta por una marca de una sola palabra dentro del propio HTML,
-  que se saca a mano después de la revisión. Es un token sin espacios a
-  propósito: una marca con espacios se parte en el salto de línea de un
-  comentario y deja de encontrarse — pasó en la primera versión, que daba
-  «revisado» con el borrador intacto.
+  El `2` cubre **una sola cosa: los placeholders sin redactar**. Hubo una
+  segunda —la revisión legal del `免責事項`, detectada por una marca de borrador
+  en el HTML— y **se retiró** cuando el autor decidió publicar el descargo sin
+  revisión de un profesional legal japonés. El motivo y el marco legal que lo
+  sostiene están en `CLAUDE.md`.
+
+  De esa guarda conviene conservar la lección aunque la guarda ya no exista:
+  **una marca así tiene que ser un token SIN ESPACIOS**. La primera versión usaba
+  una frase, y una frase se parte en el salto de línea de un comentario HTML y
+  deja de encontrarse — daba «revisado» con el borrador intacto, que es el falso
+  verde exacto que la guarda venía a impedir.
 
 Al redactar un placeholder el conteo baja: eso **no** falla, pero hay que fijar
 el piso nuevo con `python tools/check-structure.py --actualizar-baseline`.

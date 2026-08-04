@@ -47,13 +47,17 @@ fallidos ya corregidos, y las capturas intermedias.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**Después no hay tarea mía esperando.** Lo único que queda es la redacción, que
-se hace fuera de Code, y la revisión legal del `免責事項`, que es externa. El
-resto está congelado por decisión del autor o depende de `/ja/`.
+**Después no hay tarea mía esperando.** Lo único que queda es **la redacción**,
+que se hace fuera de Code; el resto está congelado por decisión del autor o
+depende de `/ja/`. La revisión legal del `免責事項` **ya no es un pendiente**: se
+decidió publicar sin ella (ver la decisión cerrada correspondiente).
 
-Si aparece trabajo, el candidato natural es **`/method/`**: concentra 12 de los
-41 placeholders y es la última página que sigue siendo andamiaje puro. Al
-redactarla hay que aplicar además las dos notas de fuentes provisorias.
+**`check-ready` sale `2` por una sola razón: los 14 placeholders.** Cuando se
+redacten, sale `0` y el sitio puede ir a `main`.
+
+El candidato natural es **`/method/`**: concentra 12 de los 14 y es la última
+página que sigue siendo andamiaje puro. Al redactarla hay que aplicar además las
+dos notas de fuentes provisorias. Los otros 2 son de la 404.
 
 ---
 
@@ -232,12 +236,31 @@ evitar:
 La prueba para saber cuál se está por escribir: si son más de una línea, va en
 `/disclaimer/` y desde donde estabas se pone un enlace.
 
-**EL TEXTO DE `/disclaimer/` ES UN BORRADOR SIN REVISAR.** Está redactado y
-publicable como andamiaje, pero **no lo validó un profesional legal japonés**
-(benrishi o abogado). No tratarlo como definitivo ni citarlo como si lo fuera:
-declara ley aplicable japonesa y limitación de responsabilidad, que son
-exactamente las cláusulas donde un texto sin revisar puede no sostener lo que
-promete. **Antes de publicar a `main`, esto necesita revisión profesional.**
+**`/disclaimer/` SE PUBLICA SIN REVISIÓN DE UN PROFESIONAL LEGAL JAPONÉS, POR
+DECISIÓN DE MANUEL.** Esto **revierte** lo que decía este archivo antes, que
+pedía revisión de un benrishi o abogado antes de publicar a `main`.
+
+**Fue decisión, no olvido**, y conviene que quede así de explícito porque el
+rastro invita a pensar lo contrario: hubo una marca `BORRADOR-SIN-REVISION-LEGAL`
+en el HTML y una comprobación en `check-ready.py` que bloqueaban la publicación,
+y **las dos se retiraron a propósito**. Quien las encuentre en el historial y
+crea que se perdieron algo, no: se sacaron cuando la espera terminó.
+
+**Lo que sostiene la decisión es el marco legal que verificó Manuel** —no una
+evaluación mía, que no estoy en posición de hacer—:
+
+- **La FIEA no aplica**: el sitio no da asesoría de inversión bajo contrato ni
+  emite recomendaciones. Es la línea que separa publicar análisis de operar como
+  asesor registrado, y el proyecto se mantiene del lado de publicar.
+- **El 景表法** (representaciones engañosas) **queda cubierto por el principio de
+  rigor de fuentes**: toda cifra sale de fuente primaria y es trazable al
+  documento. Ahí el rigor no es sólo método editorial, también es la defensa.
+
+Las dos cláusulas donde un texto sin revisar puede no sostener lo que promete
+—ley aplicable y limitación de responsabilidad— siguen declaradas y siguen sin
+validar por un tercero. **Eso se asumió con la decisión.** Si alguna vez cambia
+el alcance del sitio —asesoría, recomendaciones, cualquier cosa bajo contrato—
+esta decisión hay que reabrirla, porque el marco que la sostiene deja de aplicar.
 
 Y una cláusula tiene fecha de vencimiento propia: **«Language»** dice hoy que
 prevalece el inglés hasta que se designe otra versión como autoritativa. Cuando
