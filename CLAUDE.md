@@ -30,28 +30,44 @@ fallidos ya corregidos, y las capturas intermedias.
 - **`main` no se toca**: publica kotodamafinance.com y todavía sirve la landing
   vieja. Nada de esto está publicado.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-04, segunda tanda del día**. **Árbol limpio y todo
-  pusheado** en `redesign-trust`, con las cuatro guardas en verde más
-  `check-maintenance`.
+- Último cierre: **2026-08-04, tercera tanda del día: la revisión manual de
+  quince puntos del autor**. **Árbol limpio y todo pusheado** en
+  `redesign-trust`, con las cuatro guardas corridas (structure y modes en
+  verde, pendulum en verde, ready en `2` — ver el punto siguiente).
   *(Este bloque no puede nombrar su propio commit, así que siempre queda uno
   atrás: `git log -1 redesign-trust` es la respuesta exacta. El ancla fija que no
   deriva es el tag.)*
-- **EL SITIO ESTÁ TERMINADO DE CONTENIDO. Cero placeholders en las once
-  páginas**, y **`check-ready` sale `0` — «LISTO PARA PUBLICAR»**.
-- **No queda ningún pendiente técnico ni de redacción.** Lo que falta es
-  infraestructura de dominio, y no se hace en este repo.
+- **EL CONTENIDO REDACTADO SIGUE ENTERO, PERO EL SITIO YA NO ESTÁ EN CERO
+  PLACEHOLDERS — Y ES DELIBERADO.** La revisión de quince puntos agregó a
+  pedido del autor tres subpáginas de andamiaje (`/hajime/taichi|yorozu|yugen/`)
+  y la tarjeta de LibraryThing en `/sugao/`: **16 placeholders en 4 páginas,
+  que redacta Manuel** (5+5+5 en las subpáginas, 1 en /sugao/). Con eso
+  **`check-ready` volvió a salir `2`, y es LO ESPERADO** — el significado del
+  código 2 ya cambió dos veces; la historia está en el docstring de
+  `check-ready.py`. El baseline fija el techo en 16 y `check-structure` sigue
+  teniendo que estar SIEMPRE verde.
+- **Ahora son CATORCE páginas**, no once: se sumaron las tres subpáginas de
+  Hajime. El sitemap tiene 13 URLs (todas menos la 404).
+- **Dos decisiones del autor quedaron pendientes** al cierre de la tanda: el
+  permiso de marca para recolorear el logo de LibraryThing (ver la decisión de
+  tarjetas de perfil) y si Taichi/Yorozu/Yūgen llevarán kanji (hoy van en
+  romaji solo — no se inventan).
 
-**Lo que dejó la última tanda**, todo ya integrado en las decisiones de abajo:
-un reporte de «el maelstrom sigue corriendo» que resultó ser una copia vieja de
-`styles.css` en el navegador del autor —y que dejó tres cosas de valor: la
-guarda de view-transitions en `check-modes` (con el agujero de `@import`
-encontrado y tapado), el diagnóstico DOM-contra-red, y dos hallazgos de método
-sobre fingerprints—; el hero y el About sin la afirmación comparativa
-(«sharpest/deepest»), alineados con la razón de `/musubi/`; dos costuras de
-padding cerradas; los aros de estado sincronizados y el reparto verificado bajo
-reduced-motion; la ayuda del cubo por modo; y el **encuadre anisotrópico** de la
-cámara (el cubo pasó de 71 % a 78 % del canvas, con barrido de 360 poses y su
-medición en `docs/mediciones/encuadre.md`).
+**Lo que dejó la última tanda (la revisión de quince puntos)**, todo integrado
+en las decisiones de abajo: las anclas de la nav aterrizando con el layout ya
+estable (la hidratación del cubo insertaba ~406px DESPUÉS del aterrizaje — se
+arregló con la reserva del layout 3D en la carga, más `scroll-margin` para el
+footer y el ancla `#cube-view` para «Back to the Cube»); el lazy-init que en
+realidad no difería nada (el hero mide exactamente 100vh y tocar el fold cuenta
+como intersecar — `rootMargin` pasó a `-1px` abajo); la costura cubo→About en
+140px y el margen del hint en 12; la lista de fuentes de la portada sin japonés
+y con el enlace centrado; la lista de /method/ con el japonés como línea
+secundaria bajo el inglés; el footer a dos columnas sin «Platform», con la
+bajada sin «Japan's» y sin el rótulo 免責事項; seis correcciones de texto que
+des-anclan el proyecto de Japón como tema; los rótulos de vuelta por origen;
+`user-select: none` en la grilla clip; y dos reportes que NO reproducían contra
+el servidor (ayuda 3D con texto de grilla, subpáginas «descentradas») — otra
+vez el patrón de la copia vieja en el navegador del autor.
 
 **La tanda anterior** (mismo día): la rama `maintenance` con su generador y su
 guarda; la regla de credenciales, escrita antes de que exista la primera; Zen
@@ -76,9 +92,11 @@ ninguna de las cuatro guardas la mira; su decisión cerrada está más abajo.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**LO QUE FALTA NO ES CONTENIDO, ES INFRAESTRUCTURA.** El sitio está listo; el
-merge a `main` espera a que se resuelva la infraestructura de dominio, y ése es
-trabajo que no se hace en este repo.
+**LO QUE FALTA ES INFRAESTRUCTURA — Y, DESDE LA REVISIÓN DE QUINCE PUNTOS, UN
+PASE DE REDACCIÓN CHICO Y DELIBERADO.** El merge a `main` espera dos cosas: la
+infraestructura de dominio (trabajo fuera de este repo) y los **16 placeholders
+que la revisión reintrodujo a propósito** (las tres subpáginas de Hajime y la
+línea de LibraryThing — los escribe Manuel; `check-ready` los bloquea solo).
 
 **PASO 0 — HECHO. Ya se sabe dónde está el DNS**: **Namecheap BasicDNS**, con
 los seis registros del `.com` documentados (cuatro `A` de GitHub Pages, el
@@ -104,7 +122,10 @@ transferir → correo → merge:
    ahora incluye los registros de iCloud+ (MX/SPF/DKIM), no los seis del
    inventario del paso 0 — el inventario vigente es el de después del paso 1.
 4. **Recién ahí, cambiar los nameservers.**
-5. **Merge a `main`** + tag de publicación.
+5. **Merge a `main`** + tag de publicación. **Ojo: desde la revisión de quince
+   puntos este paso tiene un prerrequisito nuevo** — redactar los 16
+   placeholders de las subpáginas de Hajime y de la tarjeta de LibraryThing
+   (`check-ready` tiene que volver a `0`).
 
 **Por qué el correo fue PRIMERO, que era el cambio de fondo.** El forwarding de
 Namecheap **muere al salir del registrador**, y `contact@kotodamafinance.com`
@@ -147,6 +168,9 @@ Ninguno bloquea publicar. Cada uno tiene su sección con el detalle.
 
 | Cabo | Estado |
 |---|---|
+| **Redacción de Hajime** | **16 placeholders deliberados** (taichi/yorozu/yugen ×5, LibraryThing ×1). Los escribe Manuel. `check-ready` sale `2` hasta entonces — esperado. |
+| **Logo de LibraryThing** | **pendiente del permiso de marca.** librarything.com devuelve 403 al acceso automatizado (/press y /topic/45089); el autor tiene que verificar desde su navegador si se puede recolorear a oro. La tarjeta ya tiene el hueco (`.profile-card__logo`). |
+| **Kanji de Taichi/Yorozu/Yūgen** | sin decidir. Hoy los h1 van en romaji solo; si el autor cierra kanji, entran con regeneración de subset. |
 | **Móvil** | **nunca medido en dispositivo real.** Congelado por decisión del autor. La única medición de rendimiento es de escritorio. |
 | **Maelstrom** | apartado en `assets/css/maelstrom.css`, **no lo carga nadie** —ahora con guarda en `check-modes`—, reactivable. Al retomarlo, empezar por el **bug de la variante táctil** —definía keyframes sin blur y nunca los asignaba—, no por recalibrar. |
 | **Vista explotada del cubo** | después de publicar. El núcleo mostrará 産霊 · 河川 · 言霊 y llevará a `/musubi/`. Sin glifos nuevos. |
@@ -335,12 +359,111 @@ del pipeline. Ese costo se paga una sola vez y **no lo evitan ni el render bajo
 demanda ni la pausa por visibilidad**, porque para pausar un contexto primero hay
 que crearlo.
 
-Va con **`rootMargin: '0px'` a propósito**, que es lo contrario de lo habitual:
-el hero mide `100vh`, así que la sección del cubo arranca ~20px debajo del fold y
-cualquier margen de anticipación la haría intersectar ya en la carga — no se
-diferiría nada. Con margen 0 el contexto se crea al scrollear, fuera del pico de
-carga inicial. **Si alguien "mejora" esto agregando un `rootMargin` generoso,
-desactiva la optimización entera sin que se note.**
+Va con **`rootMargin: '0px 0px -1px 0px'` — margen NEGATIVO abajo — y el signo
+es la corrección de una premisa que resultó falsa.** Este archivo decía «la
+sección arranca ~20px debajo del fold, con margen 0 no interseca en la carga» —
+y ya no era cierto: el hero mide **exactamente** `100vh`, la sección del cubo
+**toca el fold en la carga**, y para el observer dos rects que comparten el
+borde **intersecan**. Medido en la tercera tanda del 2026-08-04: con margen
+`0px` el canvas existía antes de scrollear — el lazy-init no difería nada y
+nadie lo había notado, porque ninguna guarda miraba el estado pre-hidratación.
+El `-1px` encoge el viewport observado lo justo para que tocar el borde no
+cuente. **Si alguien "mejora" esto agregando un `rootMargin` positivo generoso,
+desactiva la optimización entera sin que se note** — y ahora `check-modes` sí
+lo nota, porque mide que el canvas NO exista antes del scroll.
+
+**Y EL LAYOUT DEL MODO 3D NO ESPERA A LA HIDRATACIÓN — es otra decisión, y
+protege las anclas.** `main.js` reserva en la carga el layout 3D completo
+(`setView('3d')`: escenario vacío con su alto de CSS, toggle visible y cableado,
+grilla recortada, ayuda de 3D). Sin la reserva, el escenario y el toggle
+aparecían recién al resolver el import de Three.js e insertaban **~406px + 59px
+de alto ARRIBA de `#about`/`#method`/`#footer` DESPUÉS de que el ancla
+aterrizara** — los destinos de la nav quedaban corridos exactamente eso, y
+`scroll-margin-top` no puede arreglar un destino que se mueve después del
+aterrizaje. Lo diferido sigue siendo lo caro (crear el contexto WebGL); lo que
+se adelanta es sólo la geometría de la página. Si la hidratación falla, el
+`catch` revierte a la grilla y esconde el toggle. `check-modes` verifica que la
+altura del documento sea estable al hidratar, midiendo ANTES y DESPUÉS — con
+detección de verde vacío si la medición pre-hidratación llega tarde.
+
+### Las anclas aterrizan con el layout ya estable — y cada destino tiene el suyo
+
+Cerrado en la revisión de quince puntos (2026-08-04):
+
+- **`scroll-margin-top: calc(var(--nav-h) + 12px)`** (= 96px) sobre `section`,
+  **`footer`** y `.cube__layout`. El footer va listado aparte porque no es
+  `<section>` y era el único destino de la nav sin margen — Contact aterrizaba
+  con la marca tapada por la nav fija. La nav real mide 63px (medida, no
+  asumida); el resto es respiro.
+- **«Back to the Cube» apunta a `/#cube-view`** (el ancla de `.cube__layout`),
+  no a `/#cube`: quien vuelve ya leyó la introducción, y aterrizar en el título
+  dejaba el cubo 57% visible. La nav sigue apuntando a `/#cube` — quien llega
+  por primera vez necesita el contexto. Verificado: cubo 100% visible a
+  1440×900; a 1280×720 se recorta un 4% del canvas que cae en el aire del
+  encuadre, el cubo dibujado entra entero.
+- La condición que hace que todo esto funcione es la **reserva del layout 3D**
+  (ver la decisión del lazy-init): sin altura estable, el destino se corre
+  después del aterrizaje y ningún scroll-margin lo salva.
+
+### Rótulos de vuelta según el ORIGEN — criterio cerrado
+
+Las páginas que se abren **desde el cubo** vuelven al cubo; las que se abren
+desde otro lado vuelven a donde se llega. Concretamente: las seis caras →
+«Back to the Cube» (`/#cube-view`); las tres subpáginas de Hajime → «Back to
+Hajime» (`/hajime/`); `/musubi/`, `/method/`, `/disclaimer/` y la 404 →
+«Back to the start» (`/`). Antes había cuatro rótulos distintos apuntando a
+cuatro lugares sin criterio común («Back to the method summary», «Back to
+Kotodama Finance»…).
+
+### El footer quedó en dos columnas — la «Platform» se fue
+
+Enlazaba a The Cube y Method: dos de cinco secciones, las dos ya presentes en
+la nav. Una selección arbitraria que duplica navegación no orienta. El footer
+es marca + bajada, «Reach us» y «Follow» — y la bajada dice «Where economic
+currents become visible», sin «Japan's»: el motor es global y Japón es el
+primer nodo, no el tema (la misma corrección de la revisión que pasó por el
+About, /sugao/ p3 y /kizuna/ p2).
+
+### Las tres subpáginas de Hajime son ANDAMIAJE deliberado
+
+`/hajime/taichi/` (macro), `/hajime/yorozu/` (sectorial), `/hajime/yugen/`
+(transparencia). Estructura de cara —línea de función + lead + un párrafo—,
+**todo en placeholders TODO que redacta Manuel**. Los tres nombres de
+`/hajime/` pasaron de `<i class="name">` a **enlaces** (`a.name`, oro y
+subrayado suave): eran lo único del sitio que se destacaba sin llevar a
+ninguna parte.
+
+- **Sin kanji en los h1, a propósito**: no hay kanji cerrado por el autor para
+  Taichi/Yorozu/Yūgen y **no se inventan**. Romaji solo; si algún día hay
+  kanji, entra con su regeneración de subset.
+- **La guarda de castellano exime el texto que EMPIEZA con «TODO»** — se agregó
+  en esta tanda, porque los placeholders son castellano deliberado (regla de
+  este archivo) y la guarda los habría marcado: era una regla del proyecto
+  peleando contra otra. La exención es angosta: castellano sin esa marca sigue
+  siendo hallazgo.
+- **En /musubi/ los seis nombres `.name` NO enlazan, y no hay que
+  "emparejarlos"**: son conceptos explicados en esa misma página, no destinos.
+  Está anotado en el HTML de /musubi/, en el de /hajime/ y en el CSS de
+  `a.name`.
+
+### Tarjetas de perfil en /sugao/ — estructura lista, logo pendiente de marca
+
+El registro de perfiles personales va en **tarjetas** desde ya, aunque haya una
+sola (LibraryThing): un enlace suelto sirve para uno, no para los cinco que
+vienen (IMDb, MyAnimeList, Steam, GitHub). **Fila que envuelve con ancho fijo
+(232px), no grilla auto-fill**: la grilla estiraría la tarjeta única al ancho
+completo como un banner. **Sin slots vacíos ni «próximamente»**. La tarjeta
+entera es el enlace. El LinkedIn del perfil profesional NO se convierte en
+tarjeta: es credencial de esa sección, no parte del registro.
+
+**El logo va monocromo en ORO, silueta SVG con `fill=currentColor`** — cinco
+marcas con cinco colores romperían la paleta; se distinguen por forma. **Y
+TODAVÍA NO ESTÁ, por una razón que no es olvido**: librarything.com devuelve
+403 al acceso automatizado en su página de prensa y en el FAQ «Use of
+LibraryThing Logo» (`/topic/45089`), así que **el permiso de RECOLOREAR quedó
+sin verificar y no se recolorea sin eso** — la condición la puso el autor.
+Cuando lo verifique desde su navegador, el hueco (`.profile-card__logo`) ya
+está.
 
 ### `素顔 Sugao` es la persona entera, en su propia página — no una sección de la portada
 Sugao es **la persona detrás del proyecto, completa**: perfil profesional y
@@ -597,7 +720,14 @@ y eso es lo que se busca. Una guarda que sólo se vio en verde no está verifica
 de confiar en ella.
 
 **SI ALGUIEN VE EL MAELSTROM CORRIENDO, LA PRIMERA SOSPECHA ES UNA COPIA VIEJA
-DE `styles.css` EN SU NAVEGADOR, NO UNA REGRESIÓN.** Ya pasó, el 2026-08-04: la
+DE `styles.css` EN SU NAVEGADOR, NO UNA REGRESIÓN.** Y la regla ya no es sólo
+del maelstrom: **el mismo día pasó DOS veces más, con otros dos síntomas** — la
+ayuda del cubo mostrando el texto de grilla en modo 3D (un `main.js` viejo: el
+servido contiene «Drag to turn…» y la guarda lo mide en verde) y las subpáginas
+«descentradas» a 1920/2560 (medidas contra `:8000`: left = right exactos, 600 y
+920px). Cuando un reporte visual no reproduce contra el servidor con perfil
+limpio, el diagnóstico es DOM-contra-red, no una búsqueda de regresión.
+Ya pasó, el 2026-08-04: la
 consola devolvía **seis** reglas de view-transition mientras el servidor
 entregaba un `styles.css` sin ninguna. Las dos cosas eran ciertas sobre archivos
 distintos — **el maelstrom vivía DENTRO de `styles.css` hasta `af7c726`**, así
@@ -770,13 +900,22 @@ solos si cambia la paleta.
 La prueba es simple: **si el japonés sólo traduce la palabra inglesa que tiene
 al lado, es textura y se saca.** Si es un nombre conceptual propio, se queda.
 
-- **Se sacaron**: `The Cube · 立方体`, `Method · 一次資料`, y los kanji que
+- **Se sacaron**: `The Cube · 立方体`, `Method · 一次資料`, los kanji que
   encabezaban las tres tarjetas del método (`一次資料` / `追跡可能` / `公開`),
-  cada uno traduciendo su propio título inglés.
-- **Se quedan**: `素顔`, `免責事項`, los seis nombres de las caras, los tres
-  términos del núcleo, y **los nombres reales de los organismos** en la lista de
-  fuentes (`日本銀行` junto a Bank of Japan). Esos no decoran: son el nombre por
-  el que se llega a la fuente.
+  y —en la revisión de quince puntos— **el rótulo `免責事項`** (del footer de
+  todas las páginas y del `<title>`/eyebrow de `/disclaimer/`: es la traducción
+  de «disclaimer») y **los nombres japoneses de la lista de fuentes DE LA
+  PORTADA** (sólo BOJ y FSA los tenían y la columna quedaba dispareja).
+- **Se quedan**: `素顔`, los seis nombres de las caras, los tres términos del
+  núcleo, y **los nombres reales de los organismos en `/method/`** (`日本銀行`
+  junto a Bank of Japan) — ahí no decoran: son el nombre por el que se llega a
+  la fuente, y desde la revisión van como **línea secundaria bajo el nombre
+  inglés**, no en columna propia. También quedan, con función y no como adorno:
+  la marca de agua del About (`産霊　河川　言霊` — sostiene además el supuesto
+  de glifos de la vista explotada), el selector `日本語（近日公開）` del footer
+  (le habla al lector japonés), y las unidades `百万円/十億円/兆円` en la prosa
+  de /method/ (son el contenido). **Todos los glifos retirados siguen en el
+  subset para /ja/** — ver el @font-face.
 
 **La versión japonesa se escribirá como ORIGINAL, no como traducción de ésta**:
 ahí «The Cube» será katakana, no `立方体`. Por eso lo que se sacó no se tiró —
@@ -874,7 +1013,11 @@ del sistema filosófico ni las razones de los nombres.
 - **La grilla de seis es la capa semántica**: nav de teclado y lo que leen los
   crawlers. En vista 3D se oculta con el patrón clip, **nunca** `display:none`.
   Al recibir foco se corre **al costado** del escenario, no encima: taparlo
-  escondía justo lo que el usuario de teclado necesita ver.
+  escondía justo lo que el usuario de teclado necesita ver. Y lleva
+  **`user-select: none` mientras está recortada** (repuesto en `:focus-within`):
+  sin eso, copiar la sección del cubo en 3D arrastraba las seis tarjetas
+  invisibles al portapapeles. No toca accesibilidad — AT y foco no pasan por la
+  selección — ni a los crawlers, que leen el DOM.
 - **URLs por directorios** (`/musubi/`, `/hajime/`…), sin extensión.
 - **Cada texto japonés nuevo obliga a regenerar el subset** de Zen Kaku. Ver
   README. **`document.fonts.check()` no sirve** para verificarlo: informa si la

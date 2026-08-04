@@ -23,7 +23,7 @@ robots.txt              todo abierto, incluidos los crawlers de IA
 404.html                la sirve GitHub Pages ante cualquier ruta inexistente
 og-image.png            tarjeta al compartir (generada)
 tools/check-structure.py guarda estructural: verde siempre (ver más abajo)
-tools/check-ready.py    guarda previa a publicar (roja hasta la redacción)
+tools/check-ready.py    guarda previa a publicar (2 esperado: quedan placeholders)
 tools/make-favicon.py   genera los iconos a partir del subset de la marca
 tools/make-sitemap.py   genera el sitemap a partir de los HTML publicables
 tools/make-og-image.py  genera og-image.png (sólo tipografía, sin navegador)
@@ -67,8 +67,8 @@ Tres cosas que no se ven mirando el HTML:
 
 **Al agregar una página, el mapa sólo hace falta si esa página monta el cubo.**
 Hoy vive únicamente en `index.html`, que es la única página publicable con
-JavaScript: las otras diez —las seis caras, `/musubi/`, `/method/`, `/sugao/`,
-`/disclaimer/` y la 404— no cargan ningún script. Un import map **no se hereda
+JavaScript: las otras trece —las seis caras, las tres subpáginas de Hajime,
+`/musubi/`, `/method/`, `/disclaimer/` y la 404— no cargan ningún script. Un import map **no se hereda
 entre documentos**, así que una página nueva que quiera el cubo necesita **su
 propia copia**, con la ruta corregida a su profundidad. El caso previsto es
 `/ja/index.html`: un nivel abajo, o sea `../assets/vendor/three.module.js`.
@@ -79,13 +79,23 @@ Esquema por **directorios**, no archivos sueltos. Cada página es un directorio
 con su `index.html` adentro:
 
 ```
-/            index.html              home EN
-/musubi/     musubi/index.html       la idea que sostiene la plataforma
-/sugao/      sugao/index.html        la persona detrás del proyecto
-/method/     method/index.html       el método completo + las fuentes, una por una
-/disclaimer/ disclaimer/index.html   免責事項 completo (el único lugar)
-/ja/         (previsto)              subárbol paralelo en japonés
+/                 index.html                 home EN
+/musubi/          musubi/index.html          la idea que sostiene la plataforma
+/sugao/           sugao/index.html           la persona detrás del proyecto
+/method/          method/index.html          el método completo + las fuentes, una por una
+/disclaimer/      disclaimer/index.html      el disclaimer completo (el único lugar)
+/hajime/taichi/   hajime/taichi/index.html   línea macro de Hajime (andamiaje)
+/hajime/yorozu/   hajime/yorozu/index.html   línea sectorial de Hajime (andamiaje)
+/hajime/yugen/    hajime/yugen/index.html    línea de transparencia de Hajime (andamiaje)
+/ja/              (previsto)                 subárbol paralelo en japonés
 ```
+
+**Los rótulos de vuelta siguen el ORIGEN, no un destino único**: las páginas que
+se abren desde el cubo (las seis caras) vuelven al cubo — «Back to the Cube»,
+con destino `/#cube-view`, el ancla del cubo mismo y no del título de la
+sección—; las tres subpáginas de Hajime vuelven a `/hajime/` («Back to
+Hajime»); y las demás (`/musubi/`, `/method/`, `/disclaimer/`, la 404) vuelven
+al inicio — «Back to the start», destino `/`.
 
 `/method/` es el **desarrollo**; la sección `#method` de la portada queda como
 **resumen** y la nav sigue apuntando ahí. **No hay `/sources/`**: la lista
@@ -108,10 +118,13 @@ estático y no lo necesita. Además evita un problema silencioso — Jekyll igno
 todo path que empiece con `_`, así que sin ese archivo un directorio así
 simplemente no se publicaría.
 
-### El `免責事項`: dos textos, dos reglas opuestas
+### El disclaimer: dos textos, dos reglas opuestas
 
 Es la única duplicación deliberada de texto del sitio, y conviene entender por
-qué antes de "arreglarla":
+qué antes de "arreglarla". (El rótulo japonés `免責事項` que encabezaba el corto
+y el `<title>`/eyebrow de `/disclaimer/` **se retiró de la versión inglesa**:
+era la traducción de «disclaimer», o sea japonés ornamental. Los glifos siguen
+en el subset porque será el título real de la página legal de `/ja/`.)
 
 | | Dónde vive | Regla |
 |---|---|---|
@@ -139,7 +152,7 @@ historial sea un punto de restauración seguro por construcción, no por suerte.
 | `tools/check-structure.py` | siempre | instantánea, sin navegador | **verde** |
 | `tools/check-modes.py` | siempre | ~40 s | **verde** |
 | `tools/check-pendulum.py` | antes de push, o al tocar la física del cubo | ~2–4 min | **verde** |
-| `tools/check-ready.py` | antes de publicar a `main` | instantánea | rojo hasta la redacción |
+| `tools/check-ready.py` | antes de publicar a `main` | instantánea | `2` hasta redactar las subpáginas de Hajime y la línea de LibraryThing |
 
 `check-pendulum.py` es la única demasiado lenta para cada commit: mide dos
 períodos de una oscilación real en un navegador, y encima el loop corre a un
@@ -276,7 +289,7 @@ publica GitHub Pages, así que ni el sitio ni `main` se tocan en ningún momento
 **Cubre el sitio entero con dos archivos.** `index.html` responde la raíz;
 cualquier otra ruta —`/sugao/`, `/method/`, un enlace viejo— no existe en esa
 rama, así que Pages sirve `404.html`, que es **el mismo archivo**. No hace falta
-replicar las once carpetas. La guarda comprueba que los dos sean el mismo blob:
+replicar las carpetas del sitio. La guarda comprueba que los dos sean el mismo blob:
 si se separan, la portada diría una cosa y el resto otra.
 
 ### Activar
@@ -766,13 +779,26 @@ confunden fácil porque miran el mismo elemento.
    bajo demanda ni la pausa por visibilidad**, porque para pausar un contexto
    primero hay que crearlo.
 
-   Va con **`rootMargin: '0px'` a propósito**, que es lo contrario de lo
-   habitual: el hero mide `100vh`, así que la sección del cubo arranca ~20 px
-   debajo del fold y cualquier margen de anticipación la haría intersectar **ya
-   en la carga**, con lo cual no se diferiría nada. Con margen 0 el contexto se
-   crea al scrollear, fuera del pico inicial —donde ya están la compilación del
-   shader del mar y las fuentes—, y el margen de maniobra lo da el padding de la
-   sección.
+   Va con **`rootMargin: '0px 0px -1px 0px'`** — margen NEGATIVO abajo, y el
+   signo es la parte que importa. El hero mide **exactamente** `100vh`, así que
+   la sección del cubo **toca el fold ya en la carga**, y para el observer dos
+   rects que comparten el borde **intersecan**: con margen `0px` el contexto se
+   creaba en la carga y el diferimiento no difería nada (medido: el canvas
+   existía antes de scrollear; la versión anterior de este párrafo decía «~20 px
+   debajo del fold» y ya no era cierto). El `-1px` encoge el viewport observado
+   lo justo para que tocar el borde no cuente, y el contexto se crea recién al
+   scrollear, fuera del pico inicial —donde ya están la compilación del shader
+   del mar y las fuentes—. Un `rootMargin` positivo «generoso» desactiva la
+   optimización entera.
+
+   **El LAYOUT del modo 3D no espera a la hidratación**: `main.js` lo reserva en
+   la carga (`setView('3d')` — escenario vacío con su alto de CSS, toggle
+   visible, grilla recortada, ayuda de 3D) para que la altura de la página sea
+   estable desde el primer layout. Sin la reserva, el escenario aparecía recién
+   al resolver el import y metía ~406 px de alto arriba de `#about`, `#method` y
+   `#footer` **después** de que el ancla aterrizara: los destinos de la nav
+   quedaban corridos exactamente eso. `check-modes` verifica la estabilidad.
+   Si la hidratación falla, el `catch` revierte a la grilla y esconde el toggle.
 
    Si el navegador no tiene `IntersectionObserver`, hidrata directo. Y si la
    hidratación falla, no es fatal: queda la grilla semántica.
@@ -1014,8 +1040,8 @@ ahí ya no alcanza con listar los kanji a mano.
   apartó antes del lanzamiento por decisión del autor.
 
   No puede ir detrás de un flag: es una transición **entre documentos**, así que
-  la regla tiene que estar en las dos páginas, y **diez de las once no cargan
-  ningún JavaScript**. Por eso se apartó en un archivo. El encabezado de ese
+  la regla tiene que estar en las dos páginas, y **trece de las catorce no
+  cargan ningún JavaScript**. Por eso se apartó en un archivo. El encabezado de ese
   archivo explica cómo reactivarla, qué valores ya están calibrados y un bug
   conocido de la variante táctil.
 

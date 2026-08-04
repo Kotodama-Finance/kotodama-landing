@@ -3,14 +3,20 @@
 
     python tools/check-ready.py
 
-HOY SALE 0. Nació esperada en rojo —quedaban ~70 placeholders `class="todo"`,
-que en producción serían texto en castellano dirigido al autor en un sitio en
-inglés—, pero la redacción terminó y el baseline quedó en cero.
+HOY SALE 2, Y ES LO ESPERADO — el significado del código 2 ya cambió DOS veces,
+así que la historia completa antes de interpretar una corrida:
 
-ESO LE CAMBIÓ EL SIGNIFICADO AL CÓDIGO 2, y conviene leerlo antes de interpretar
-una corrida. Mientras faltaba redactar, `2` era el estado normal. Ahora `2`
-quiere decir que aparecieron placeholders NUEVOS: un bug, no trabajo pendiente.
-O sea que hoy **cualquier salida distinta de 0 es una regresión**.
+1. Nació esperada en rojo: ~70 placeholders de andamiaje. `2` era lo normal.
+2. La redacción terminó (2026-08-04, `v1-content-complete`): baseline en cero,
+   y `2` pasó a significar regresión.
+3. La revisión del mismo día agregó A PROPÓSITO tres subpáginas nuevas
+   (/hajime/taichi|yorozu|yugen/) y la línea de la tarjeta de LibraryThing,
+   todas con placeholders que redacta Manuel. `2` vuelve a ser lo esperado
+   hasta ese pase; el baseline fija el techo y `check-structure` sigue
+   atajando cualquier placeholder NUEVO por encima de él.
+
+O sea: hoy `0` significa que la redacción de las subpáginas terminó, `2` es el
+estado normal, y `1` sigue siendo estructura rota — eso sí es regresión.
 
 Sigue SIN entrar en el flujo de cada commit, y el motivo no caducó con el rojo:
 esta guarda contesta «¿puede ir a `main`?», que es una pregunta que sólo se hace
