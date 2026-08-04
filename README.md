@@ -193,8 +193,21 @@ el piso nuevo con `python tools/check-structure.py --actualizar-baseline`.
 último commit verde en vez de dejar el árbol roto, y decir qué se revirtió y
 por qué.
 
-**Tags**: sólo en hitos, no cada tanto. El próximo natural es cuando el
-andamiaje esté completo, antes del pase de redacción.
+**Tags**: sólo en hitos, no cada tanto. Anotados, no ligeros — un hito lleva
+fecha, autor y mensaje.
+
+| Tag | Qué marca |
+|---|---|
+| `v1-dark` | la versión navy + oro con el cubo en Three.js |
+| `v1-content-complete` | **el sitio terminado de contenido**: cero placeholders, `check-ready` en 0 |
+| *(pendiente)* | **la publicación**, al hacer el merge a `main` |
+
+`v1-content-complete` **es el punto al que hay que volver si algo se rompe en la
+migración de DNS**, que es lo próximo que pasa. Por eso apunta al último estado
+verificado en verde y no al commit donde se redactó el último placeholder
+(`2115a4e`): ahí el contenido ya estaba completo, pero `check-structure` estaba
+en rojo — la guarda del baseline se rompía justo al llegar a cero, y se arregló
+en el commit siguiente. Un punto de restauración tiene que estar verde.
 
 ## Antes de publicar
 
@@ -329,11 +342,27 @@ distintos, también con `PYTHONHASHSEED=0`—, así que esa guarda habría estad
 rojo desde el primer día. Compara el HTML con los base64 elididos, que sí es
 estable, y las fuentes por su `cmap`.
 
-### El japonés: por qué no lleva Zen Kaku embebido
+### El japonés: Zen Kaku va embebido, y el camino hasta ahí importa
 
-**Al subset del sitio le faltan tres de los cinco glifos del titular**: 守
-(U+5B88), 作 (U+4F5C) y 中 (U+4E2D). Copiar el `woff2` commiteado a la rama era
-la opción obvia y es la peor, porque **no falla como uno espera**. Medido con
+**Hoy el cartel lleva Zen Kaku embebido**: los siete glifos —保守作業中 y 言霊—
+salen de un micro-subset de 1,46 KB (1,94 KB en base64) incrustado en el HTML.
+Verificado con `CSS.getPlatformFontsForNode`: los cinco del titular y los dos
+del logo se dibujan con **Zen Kaku Gothic New Medium**, una sola cara.
+
+Se embebe porque **ésta es la página que se muestra cuando algo salió mal**, y
+ahí que se vea distinta en cada máquina es lo peor que puede pasar. La pila del
+sistema funcionaba —medido: los cinco glifos en Yu Gothic Medium—, pero costaba
+consistencia y dejaba afuera Linux pelado sin fuentes CJK, donde el titular era
+tofu.
+
+Los tres glifos que faltaban —守 (U+5B88), 作 (U+4F5C), 中 (U+4E2D)— se
+agregaron al subset **del sitio**, aunque ninguna página los use, porque este
+generador sólo puede leer archivos del repo: si leyera la TTF de origen, que a
+propósito no está versionada, la rama dejaría de poder regenerarse en otra
+máquina. Cuestan 0,3 KB y la fórmula de derivación los preserva sola.
+
+**Lo que conviene no perder es por qué NO se copió el `woff2` y ya.** Era la
+opción obvia y es la peor, porque **no falla como uno espera**. Medido con
 `CSS.getPlatformFontsForNode`:
 
 | Pila declarada | Qué dibuja de verdad |
@@ -344,24 +373,22 @@ la opción obvia y es la peor, porque **no falla como uno espera**. Medido con
 | `sans-serif` **sin** `lang` | 5 glifos Microsoft YaHei |
 
 El fallback de fuentes es **por glifo**, así que el titular se dibuja entero y
-parece correcto: no hay tofu que delate nada. Lo que sale es un titular en dos
-tipografías, **una de ellas china**, en la rama que ninguna guarda del sitio
-mira. Por eso hoy el japonés va por la pila del sistema declarada —una sola cara
-japonesa, consistente— y no por un subset a medias.
+parece correcto: no hay tofu que delate nada. Lo que habría salido es un titular
+en dos tipografías, **una de ellas china**, en la rama que ninguna guarda del
+sitio mira.
 
-La última fila es la que conviene no olvidar: **`lang="ja"` decide si el
-navegador cae en una fuente japonesa o en una china.** Va en los dos `<span>`
-japoneses de la página, y no es decoración semántica.
-
-**Lo que haría falta para embeberlo** es bajar `ZenKakuGothicNew-Medium.ttf` de
-`google/fonts` y regenerar el subset del sitio con el conjunto derivado; después,
-`JA_EMBEBIDO = True` en el generador. Puesto en `True` el script **no adivina**:
-si falta un glifo aborta nombrándolo, justamente porque la versión rota se ve
-bien.
+Dos cosas quedan de ahí aunque el problema ya esté resuelto. La primera:
+**`lang="ja"` decide si el navegador cae en una fuente japonesa o en una china**
+(última fila de la tabla), así que sigue puesto en los dos `<span>` japoneses y
+no es decoración semántica — es la red por si el `@font-face` no cargara. La
+segunda: `JA_EMBEBIDO` en el generador **no adivina**. Si falta un glifo aborta
+nombrándolo, justamente porque la versión rota se ve bien.
 
 Y el subset de esta rama **no tiene el problema de desactualizarse** que sí tiene
 el del sitio: su texto es fijo y no va a crecer. El del sitio se agranda cada vez
-que se escribe una página; un conjunto de entrada cerrado no deriva.
+que se escribe una página; un conjunto de entrada cerrado no deriva. Ésa fue la
+razón para no dejarlo en la pila del sistema: el argumento de «un subset propio
+genera deuda» no aplicaba.
 
 ### El costo asumido del `noindex`
 

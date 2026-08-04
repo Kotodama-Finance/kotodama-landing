@@ -321,20 +321,31 @@ se reescribe desde cero el día que hace falta, que es el peor día para hacerlo
   viejo / mantener uno propio duplica el trabajo»: **un artefacto derivado no se
   mantiene, se regenera**, igual que el sitemap, la og-image y los favicons.
 
-**EL HALLAZGO DE LA SESIÓN, y vale más que la página: copiar el subset del sitio
-a la rama NO habría dado tofu.** Al subset le faltan tres de los cinco glifos del
-titular (守, 作, 中), pero el fallback de fuentes es **por glifo**, así que el
-titular se dibuja entero y se ve bien. Medido con `CSS.getPlatformFontsForNode`:
-`'Zen Kaku', sans-serif` da **2 glifos Zen Kaku + 3 Microsoft YaHei** — un
-titular en dos tipografías, una de ellas **china**, que pasa cualquier
-inspección visual. Por eso hoy el japonés va por la pila del sistema declarada
-(5 glifos en Yu Gothic Medium, una sola cara). Y `lang="ja"` **no es decoración
-semántica**: con él el genérico cae en Noto Sans JP, sin él en Microsoft YaHei.
+**ZEN KAKU VA EMBEBIDO** — micro-subset de 1,46 KB con los siete glifos, dentro
+del HTML. Verificado: los cinco del titular y los dos del logo se dibujan con
+Zen Kaku Gothic New Medium, una sola cara. Se embebe porque **ésta es la página
+que se muestra cuando algo salió mal**, y ahí que se vea distinta en cada máquina
+es lo peor que puede pasar.
 
-Para embeberlo hay que bajar `ZenKakuGothicNew-Medium.ttf` de `google/fonts`,
-regenerar el subset del sitio y poner `JA_EMBEBIDO = True`. En `True` el script
-**aborta nombrando el glifo que falta**, precisamente porque la versión rota se
-ve bien.
+**守, 作 y 中 viven en el subset del SITIO aunque ninguna página los use**, y eso
+no se poda: el generador de la rama sólo puede leer archivos del repo, así que si
+leyera la TTF de origen —no versionada, a propósito— la rama dejaría de poder
+regenerarse en otra máquina. Cuestan 0,3 KB. Es el mismo trato que 立方体 y
+一次資料, reservados para /ja/, y la fórmula de derivación los preserva sola.
+Está anotado en el `@font-face` de `styles.css`.
+
+**EL HALLAZGO SIGUE VALIENDO AUNQUE EL PROBLEMA ESTÉ RESUELTO, y es lo que hay
+que recordar: copiar el subset del sitio a la rama NO habría dado tofu.** Al
+subset le faltaban tres de los cinco glifos del titular, pero el fallback de
+fuentes es **por glifo**, así que el titular se dibuja entero y se ve bien.
+Medido con `CSS.getPlatformFontsForNode`: `'Zen Kaku', sans-serif` daba
+**2 glifos Zen Kaku + 3 Microsoft YaHei** — un titular en dos tipografías, una de
+ellas **china**, que pasa cualquier inspección visual. Y `lang="ja"` **no es
+decoración semántica**: con él el genérico cae en Noto Sans JP, sin él en
+Microsoft YaHei; sigue puesto como red por si el `@font-face` no cargara.
+
+`JA_EMBEBIDO` en el generador **no adivina**: si falta un glifo aborta
+nombrándolo, precisamente porque la versión rota se ve bien.
 
 **La guarda propia es `tools/check-maintenance.py`, y corre A DEMANDA** — al
 tocar la rama y **antes de activarla**, no en cada commit. Las cuatro guardas
@@ -740,8 +751,16 @@ Cuando se redacta un placeholder el conteo baja: la guarda lo informa y **no**
 falla, pero hay que fijar el piso nuevo con
 `python tools/check-structure.py --actualizar-baseline`.
 
-**Tags**: sólo en hitos. El próximo natural es cuando el andamiaje esté completo,
-antes del pase de redacción.
+**Tags**: sólo en hitos, anotados. `v1-dark` (navy + oro con el cubo) y
+**`v1-content-complete`** (sitio terminado de contenido: cero placeholders,
+`check-ready` en 0). Queda uno pendiente: **la publicación**, al mergear a `main`.
+
+`v1-content-complete` **es el punto al que volver si algo se rompe en la
+migración de DNS.** Apunta al último estado verificado en verde y no al commit
+donde se redactó el último placeholder (`2115a4e`): ahí el contenido ya estaba
+completo pero `check-structure` estaba en rojo —la guarda del baseline se rompía
+justo al llegar a cero— y se arregló recién en el commit siguiente. **Un punto
+de restauración tiene que estar verde**, si no es una trampa.
 
 ---
 

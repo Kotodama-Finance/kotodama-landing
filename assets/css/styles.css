@@ -22,17 +22,22 @@
 
    YA NO SE LISTAN LOS GLIFOS ACÁ, Y ES UN CAMBIO DELIBERADO. Eran 51 kanji y
    se podían leer de un vistazo; con la lista de fuentes de /method/ pasaron a
-   **190**, con hiragana y katakana por primera vez, y una lista de ese largo
+   ~190, con hiragana y katakana por primera vez, y una lista de ese largo
    mantenida a mano no es una fuente de verdad: es una copia que se desactualiza
-   en silencio. Hoy son **288 códigos** en la cmap (190 japoneses + U+3000 + los
-   dos paréntesis de ancho completo + latín básico U+0020–007F para tramos
-   mixtos como "e-Stat / 総務省").
+   en silencio.
+
+   TAMPOCO SE FÍA DEL TOTAL ESCRITO ACÁ: decía «288 códigos» y ya iban 298 —el
+   rótulo 日本語（近日公開） del footer había sumado y nadie tocó el comentario—.
+   Un total a mano es la misma copia que se evita arriba, sólo que más corta.
+   El número se lee de la fuente, con el comando de más abajo.
 
    EL CONJUNTO SE DERIVA, no se transcribe:
 
-       nuevo = códigos del subset ACTUAL  ∪  japonés que usa el HTML hoy
+       nuevo = códigos del subset ACTUAL
+             ∪ japonés que usa el HTML hoy
+             ∪ japonés del cartel de mantenimiento
 
-   Las dos mitades hacen falta. La unión con el actual **preserva los glifos que
+   Las tres partes hacen falta. La unión con el actual **preserva los glifos que
    se conservan a propósito** aunque ya no aparezcan en ninguna página (立方体,
    一次資料, 追跡可能, 公開 y varios nombres de organismos, sacados de la versión
    EN y reservados para /ja/): regenerar sólo desde el texto actual los borraría,
@@ -40,6 +45,15 @@
    sin que nadie lo note. Y la extracción del HTML **usa la misma función que la
    guarda** (`texto_visible` + `JAPONES` en tools/_guardas.py), así que no hay
    dos criterios distintos de qué cuenta como japonés del sitio.
+
+   LA TERCERA PARTE SORPRENDE, Y NO HAY QUE PODARLA. 守 (U+5B88), 作 (U+4F5C) y
+   中 (U+4E2D) están acá para 保守作業中, el titular de la rama `maintenance`, y
+   **ninguna página del sitio los usa**. Están en el subset del SITIO porque el
+   generador de esa rama sólo puede leer archivos del repo: si leyera la TTF de
+   origen —que a propósito no está versionada— la rama dejaría de poder
+   regenerarse en otra máquina. Cuestan 0,3 KB. La guarda de cobertura no los
+   mira, porque mira el HTML del sitio; quien los vigila es
+   `tools/check-maintenance.py`.
 
    LOS PARÉNTESIS SON LA TRAMPA. （U+FF08）y （U+FF09）son japoneses y NO
    entran por el rango latino: ahí están «(» y «)» de ASCII, que son otros

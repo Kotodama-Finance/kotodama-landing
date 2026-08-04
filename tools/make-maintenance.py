@@ -83,25 +83,28 @@ TITULO_HTML = "Under maintenance — Kotodama Finance"
 DESCRIPCION = "Kotodama Finance is offline while the site is rebuilt."
 
 # --------------------------------------------------------------------------
-# ¿VA ZEN KAKU EMBEBIDO O LA PILA DEL SISTEMA?
+# ZEN KAKU VA EMBEBIDO. Estuvo en False mientras al subset del repo le faltaban
+# 守 (U+5B88), 作 (U+4F5C) y 中 (U+4E2D); se regeneró con el conjunto derivado y
+# ahora los tiene, así que el cartel no depende de las fuentes del visitante.
 #
-# Hoy NO se puede embeber, y no es una preferencia: al subset de Zen Kaku del
-# repo le faltan 守 (U+5B88), 作 (U+4F5C) y 中 (U+4E2D), y las fuentes de
-# origen no están en este repo a propósito (ver el @font-face de styles.css).
-# Para poner esto en True hay que bajar ZenKakuGothicNew-Medium.ttf de
-# google/fonts y regenerar el subset del sitio con el conjunto derivado.
+# POR QUÉ SE EMBEBE Y NO SE DEJA LA PILA DEL SISTEMA. La pila declarada funciona
+# —medido: los cinco glifos en Yu Gothic Medium, una sola cara japonesa— pero
+# hace que la página se vea distinta en cada máquina, y ésta es justo la que se
+# muestra cuando algo salió mal. Ahí la consistencia vale más que los 2 KB. El
+# hueco que cierra es Linux pelado sin fuentes CJK, donde el titular era tofu.
 #
-# Con False, el japonés cae en 'Hiragino Kaku Gothic ProN' / 'Yu Gothic' /
-# sans-serif — la MISMA cadena que declara --font-ja en el sitio, así que no es
-# un apaño de esta página. Medido: da los cinco glifos en Yu Gothic Medium, una
-# sola tipografía japonesa. Windows, macOS, iOS y Android traen una de ésas; el
-# hueco real es Linux pelado sin fuentes CJK, donde el titular saldría en tofu.
+# LOS TRES GLIFOS VIVEN EN EL SUBSET DEL SITIO AUNQUE NINGUNA PÁGINA LOS USE, y
+# es a propósito: este script sólo puede leer archivos del repo. Si leyera la
+# TTF de origen —que no está versionada, a propósito— la rama dejaría de poder
+# regenerarse en otra máquina. Mismo trato que 立方体 y 一次資料, que están
+# reservados para /ja/; la fórmula de derivación los preserva sola porque la
+# primera mitad es la unión con el subset ACTUAL.
 #
 # Puesto en True, el script NO adivina: si falta un glifo aborta nombrándolo.
 # Es la diferencia que importa, porque el fallback por glifo hace que la versión
 # rota se vea bien (ver el encabezado): acá el fallo tiene que ser ruidoso.
 # --------------------------------------------------------------------------
-JA_EMBEBIDO = False
+JA_EMBEBIDO = True
 
 # Los tokens que usa la página. Se LEEN del :root de styles.css, no se copian:
 # la paleta tiene que seguir siendo una entrada real de este archivo. Igual que
@@ -159,6 +162,13 @@ def recortar(archivo, texto, ejes=None, exigir=True):
 
     Se conservan los name IDs completos porque ahí viven el copyright y la
     licencia OFL, y esto es redistribución de la fuente aunque vaya embebida.
+
+    EFECTO SECUNDARIO DE ESO, que confunde una medición: la tabla `name` viene
+    de la fuente de origen y NO la actualiza el instanciado, así que
+    `CSS.getPlatformFontsForNode` informa «Cormorant Garamond Light» para una
+    cara fijada en 500. Es sólo la etiqueta. Verificado en los contornos:
+    `usWeightClass` da 500 y la bbox de la «T» coincide con la instancia 500 y
+    no con la 300. El CSS empareja por el nombre del @font-face, no por éste.
 
     SE PRESERVA head.modified DE LA FUENTE DE ORIGEN. Al guardar, fontTools
     escribe ahí la hora actual, o sea el reloj de pared como entrada del
