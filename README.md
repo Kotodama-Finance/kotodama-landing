@@ -194,7 +194,10 @@ el piso nuevo con `python tools/check-structure.py --actualizar-baseline`.
 por qué.
 
 **Tags**: sólo en hitos, no cada tanto. Anotados, no ligeros — un hito lleva
-fecha, autor y mensaje.
+fecha, autor y mensaje. **Y una vez empujado, un tag no se mueve**: es un
+registro fechado del estado en ese commit, así que un mensaje que quedó viejo es
+historia y no deriva. Reescribirlo lo convertiría en una copia peor de los
+documentos vivos, y `--force` sobre un tag ya publicado rompe los clones ajenos.
 
 | Tag | Qué marca |
 |---|---|

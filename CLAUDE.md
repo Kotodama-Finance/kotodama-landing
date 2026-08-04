@@ -785,6 +785,15 @@ falla, pero hay que fijar el piso nuevo con
 **`v1-content-complete`** (sitio terminado de contenido: cero placeholders,
 `check-ready` en 0). Queda uno pendiente: **la publicación**, al mergear a `main`.
 
+**UN TAG NO SE MUEVE.** Ya pasó la tentación y la respuesta quedó cerrada: el
+mensaje de `v1-content-complete` describe el plan de DNS **anterior** al vigente,
+y aun así **no se re-taguea**. Un tag anotado es un **registro fechado del estado
+en ese commit**; si se reescribe cada vez que cambia el plan deja de ser un punto
+de restauración y pasa a ser una copia peor de este archivo — que sí es el
+documento vivo. Y `--force` sobre un tag ya empujado **rompe los clones ajenos**,
+que siguen con el objeto viejo. Un mensaje de tag desactualizado no es deriva:
+es historia, igual que `docs/v1-dark/README.md`.
+
 `v1-content-complete` **es el punto al que volver si algo se rompe en la
 migración de DNS.** Apunta al último estado verificado en verde y no al commit
 donde se redactó el último placeholder (`2115a4e`): ahí el contenido ya estaba
