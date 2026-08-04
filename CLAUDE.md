@@ -30,8 +30,8 @@ fallidos ya corregidos, y las capturas intermedias.
 - **`main` no se toca**: publica kotodamafinance.com y todavía sirve la landing
   vieja. Nada de esto está publicado.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-04**, con el trabajo hasta `d353fab`. **Árbol limpio
-  y todo pusheado** en `redesign-trust`, con las cuatro guardas en verde más
+- Último cierre: **2026-08-04, segunda tanda del día**. **Árbol limpio y todo
+  pusheado** en `redesign-trust`, con las cuatro guardas en verde más
   `check-maintenance`.
   *(Este bloque no puede nombrar su propio commit, así que siempre queda uno
   atrás: `git log -1 redesign-trust` es la respuesta exacta. El ancla fija que no
@@ -42,9 +42,21 @@ fallidos ya corregidos, y las capturas intermedias.
   infraestructura de dominio, y no se hace en este repo.
 
 **Lo que dejó la última tanda**, todo ya integrado en las decisiones de abajo:
-la rama `maintenance` con su generador y su guarda; la regla de credenciales,
-escrita antes de que exista la primera; Zen Kaku embebido en el cartel; y las
-dos declaraciones de procedencia de `/method/` reducidas a una línea.
+un reporte de «el maelstrom sigue corriendo» que resultó ser una copia vieja de
+`styles.css` en el navegador del autor —y que dejó tres cosas de valor: la
+guarda de view-transitions en `check-modes` (con el agujero de `@import`
+encontrado y tapado), el diagnóstico DOM-contra-red, y dos hallazgos de método
+sobre fingerprints—; el hero y el About sin la afirmación comparativa
+(«sharpest/deepest»), alineados con la razón de `/musubi/`; dos costuras de
+padding cerradas; los aros de estado sincronizados y el reparto verificado bajo
+reduced-motion; la ayuda del cubo por modo; y el **encuadre anisotrópico** de la
+cámara (el cubo pasó de 71 % a 78 % del canvas, con barrido de 360 poses y su
+medición en `docs/mediciones/encuadre.md`).
+
+**La tanda anterior** (mismo día): la rama `maintenance` con su generador y su
+guarda; la regla de credenciales, escrita antes de que exista la primera; Zen
+Kaku embebido en el cartel; y las dos declaraciones de procedencia de `/method/`
+reducidas a una línea.
 
 **Dos tags, y el segundo es el que importa ahora:**
 
@@ -580,23 +592,28 @@ entregaba un `styles.css` sin ninguna. Las dos cosas eran ciertas sobre archivos
 distintos — **el maelstrom vivía DENTRO de `styles.css` hasta `af7c726`**, así
 que cualquier copia anterior a ese commit las trae, y son exactamente esas seis.
 
-**EL TAMAÑO SIRVE DE FINGERPRINT, PERO HAY QUE DECIR LA UNIDAD, Y ÉSTE ES EL
-LUGAR DONDE YA SE FALLÓ.** `wc -c` cuenta **bytes**; `(await res.text()).length`
-en la consola cuenta **caracteres UTF-16**. `styles.css` tiene 428 caracteres
-no-ASCII —los comentarios están en castellano—, así que los dos números difieren
-en 551 y no son comparables:
+**EL FINGERPRINT ES EL CONTEO DE `view-transition`, NO EL TAMAÑO**: el viejo
+trae **9** ocurrencias en el texto; el vigente, **0**. Ese número sobrevive a
+todo lo que rompe a los demás.
 
-| | bytes | caracteres | `view-transition` |
-|---|---|---|---|
-| **vigente** (sin maelstrom) | 47738 | **47187** | 0 |
-| **viejo** (pre-`af7c726`) | 44054 | **43583** | 9 |
+El tamaño ya falló acá DOS veces, de dos maneras distintas, y por eso no es la
+referencia:
 
-Comparar el `47187` de la consola contra el `47738` de `wc -c` hace aparecer un
-tercer archivo que no existe. **Desde la consola, la referencia es 47187.**
+1. **Sin unidad no compara nada.** `wc -c` cuenta bytes; `(await
+   res.text()).length` en la consola cuenta caracteres UTF-16, y los
+   comentarios en castellano (~430 caracteres no-ASCII) hacen que difieran en
+   cientos. Comparar el número de la consola contra el de `wc -c` hizo
+   aparecer un tercer archivo que no existía.
+2. **El número del VIGENTE deriva.** Se tabuló «47738 bytes = 47187
+   caracteres» y a las pocas horas ya era falso: el commit siguiente agregó
+   comentarios al CSS. Y deriva dos veces: con cada edición, y con el final de
+   línea — el checkout de Windows sirve CRLF por `:8000` y el blob de git es
+   LF, así que ni siquiera «el vigente de hoy» es un solo número. **Un
+   fingerprint del archivo vigente caduca con el próximo commit; referencia
+   fija sólo la da lo que no cambia**: el blob viejo (pre-`af7c726`, LF: 44054
+   bytes = 43583 caracteres) y el conteo de arriba.
 
-Y el tamaño solo no alcanza: hay que mirar **el contenido de lo que baja**, no
-su longitud. La comprobación que separa el DOM de la red, que es la pregunta
-real:
+La comprobación que separa el DOM de la red, que es la pregunta real:
 
 ```js
 (async () => { for (const s of document.styleSheets) {
@@ -1422,3 +1439,10 @@ que produjeron conclusiones equivocadas:
   quería saber era si el archivo trae las reglas, y eso se contesta contando
   `view-transition` en el texto que baja. Un proxy bien elegido igual contesta
   otra cosa.
+  La segunda mordida llegó el mismo día, y es la otra mitad de la regla: **un
+  fingerprint del archivo VIGENTE caduca con el próximo commit.** El «47187
+  caracteres» corregido quedó tabulado como referencia y a las pocas horas ya
+  era falso — el commit siguiente agregó comentarios al mismo CSS. La auditoría
+  lo cazó antes que un lector. Referencia fija sólo la da lo que no cambia (un
+  blob histórico, un conteo estructural); si el número describe el presente,
+  hay que escribirle al lado cómo regenerarlo, no su valor.

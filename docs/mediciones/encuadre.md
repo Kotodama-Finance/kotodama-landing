@@ -53,9 +53,15 @@ dibujado a cada borde.
 | 180 | 73 px |
 
 **Cero recortes en 360 poses.** El mínimo cae exactamente donde la teoría lo
-pone (arista arriba) y vale ~6 % del semieje, que es el `FIT_MARGIN = 1.06`
-devuelto en píxeles: la fórmula está al hueso, el margen que queda es el
-declarado.
+pone (arista arriba), y su valor cierra contra el margen declarado:
+`M = 1.06` promete `1 − 1/1.06 ≈ 5,7 %` del semieje vertical (244 px → ~14 px),
+y los 17 px medidos quedan apenas por encima — el exceso es discretización de
+poses y el bisel de los cubies. La fórmula está al hueso: el margen que queda
+es el declarado, no holgura escondida.
+
+El guión del barrido está al lado, en `barrido-encuadre.py` — mismo trato que
+`metrica-perimetro.js` en la medición de luz: el documento especifica, el
+guión evita volver a pagar los dos errores de abajo.
 
 ## Efecto en la portada (720×620, 1440×900)
 

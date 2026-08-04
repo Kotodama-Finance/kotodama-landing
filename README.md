@@ -651,9 +651,10 @@ Tres detalles que importan:
   un escenario más alto que ancho, la horizontal — que sigue siendo la variable
   sin medir en móvil.
 
-Verificado con barrido de 360 poses (`rx` −8…180 × `ry` cada 15°): ninguna
-recorta, margen mínimo **17 px** exactamente en el peor caso teórico (`rx`
-44–45°). Detalle en `docs/mediciones/encuadre.md`.
+Verificado con barrido de 360 poses (`rx` −8…180 más −90, el snap de Kizuna,
+× `ry` cada 15°): ninguna recorta, margen mínimo **17 px** exactamente en el
+peor caso teórico (`rx` 44–45°). Detalle en `docs/mediciones/encuadre.md`;
+el guión, en `docs/mediciones/barrido-encuadre.py`.
 
 `setPixelRatio(min(devicePixelRatio, 2))`, y **1.5 en punteros gruesos**, donde
 además se apaga el antialias.
@@ -1027,12 +1028,12 @@ ahí ya no alcanza con listar los kanji a mano.
 
   **Si aparece corriendo, sospechar primero de una copia vieja de `styles.css`
   en el navegador.** El maelstrom vivía dentro de `styles.css` hasta `af7c726`,
-  así que cualquier copia anterior trae las seis reglas. El tamaño las
-  distingue, **pero hay que decir la unidad**: el vigente mide 47738 bytes =
-  **47187 caracteres**, y el viejo 44054 = **43583**. Desde la consola de
-  DevTools el número que se ve es el de caracteres, y compararlo contra los
-  bytes hace aparecer un tercer archivo que no existe. Un `Ctrl+Shift+R` no lo
-  descarta —no toca los *Local Overrides* de DevTools—; el detalle y la
+  así que cualquier copia anterior trae las seis reglas. **El fingerprint es el
+  conteo de `view-transition` en el texto que baja: 9 el viejo, 0 el vigente.**
+  No usar el tamaño como referencia: el del vigente cambia con cada edición del
+  CSS y con el final de línea (CRLF del checkout contra LF del blob), y ya
+  caducó una vez a las horas de tabulado. Un `Ctrl+Shift+R` no descarta la
+  copia vieja —no toca los *Local Overrides* de DevTools—; el detalle y la
   comprobación que separa el DOM de la red, en `CLAUDE.md`.
 
 - **El bloque de estado + botón bajo el cubo es un folio que se despliega.**
