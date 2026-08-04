@@ -32,14 +32,12 @@ fallidos ya corregidos, y las capturas intermedias.
 - Tag `v1-dark` = versión navy+oro con el cubo Three.js, con registro visual en
   `docs/v1-dark/`.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-03**, en `fd7ee89`. **Árbol limpio y todo pusheado**,
-  con `check-structure`, `check-modes` y `check-pendulum` en verde.
-  `check-ready` sigue en `2` por la redacción, que es lo esperado.
-- **LA REDACCIÓN ESTÁ TERMINADA. Cero placeholders en las once páginas**, y
-  **`check-ready` sale `0` — «LISTO PARA PUBLICAR»**. Es la primera vez.
-  El sitio puede ir a `main` cuando el autor lo decida.
-- **No queda ningún pendiente técnico.** Los tres que había se cerraron el
-  2026-08-04.
+- Último cierre: **2026-08-04**, en `3145554`. **Árbol limpio y todo pusheado**,
+  con las **cuatro** guardas en verde.
+- **EL SITIO ESTÁ TERMINADO DE CONTENIDO. Cero placeholders en las once
+  páginas**, y **`check-ready` sale `0` — «LISTO PARA PUBLICAR»**. Es la primera
+  vez que esa guarda da cero.
+- **No queda ningún pendiente técnico ni de redacción.**
 
 ### AL RETOMAR, EMPEZAR ACÁ
 
@@ -47,20 +45,49 @@ fallidos ya corregidos, y las capturas intermedias.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**No queda nada bloqueando la publicación.** `check-ready` sale `0`: cero
-placeholders, nav y footer idénticos, subset cubierto. La decisión de publicar
-a `main` es del autor, no una tarea pendiente.
+**LO QUE FALTA NO ES CONTENIDO, ES INFRAESTRUCTURA.** El sitio está listo; el
+merge a `main` espera a que se resuelva la infraestructura de dominio, y ése es
+trabajo que no se hace en este repo.
 
-El resto está congelado por decisión del autor o depende de `/ja/`. La revisión
-legal del `免責事項` **ya no es un pendiente**: se decidió publicar sin ella.
+**Orden decidido, y el orden es la decisión:**
 
-**No queda nada sin decidir.** El `domain` de las tarjetas, que era lo último,
-se cerró: son la versión comprimida de la línea de función de cada página, no
-una etiqueta distinta.
+1. **Averiguar dónde está el DNS hoy** y documentar los registros actuales.
+2. **Transferir los dominios a Xserver.**
+3. **Migrar el correo a iCloud+.**
+4. **Recién ahí, el merge a `main`.**
 
-**Al publicar a `main`, releer primero** la sección «Antes de publicar» del
+**Por qué el merge va último.** Los tres primeros pasos convergen sobre el mismo
+DNS, y publicar sobre una configuración recién movida es el peor momento posible:
+si algo falla —el sitio no resuelve, el correo se cae, un registro quedó mal
+copiado— **no se sabe cuál de los tres lo rompió**. Separarlos en el tiempo es lo
+que hace que el fallo sea diagnosticable. El paso 1 va primero por lo mismo: sin
+el registro de cómo está hoy, una transferencia no tiene a qué volver.
+
+**No es que el sitio no esté listo.** Está listo, y esa distinción importa: si
+alguien retoma y ve el merge pendiente, la pregunta no es «¿qué falta escribir?»
+sino «¿en qué paso del DNS estamos?».
+
+La revisión legal del `免責事項` **no es un pendiente**: se decidió publicar sin
+ella.
+
+**No queda nada sin decidir** dentro del sitio. El `domain` de las tarjetas, que
+era lo último, se cerró.
+
+**Al llegar al paso 4, releer primero** la sección «Antes de publicar» del
 README: son cuatro guardas, no una, y `check-ready` no mira el comportamiento
 del cubo ni la física.
+
+### Cabos abiertos vigentes — el resumen corto
+
+Ninguno bloquea publicar. Cada uno tiene su sección con el detalle.
+
+| Cabo | Estado |
+|---|---|
+| **Móvil** | **nunca medido en dispositivo real.** Congelado por decisión del autor. La única medición de rendimiento es de escritorio. |
+| **Maelstrom** | apartado en `assets/css/maelstrom.css`, **no lo carga nadie**, reactivable. Al retomarlo, empezar por el **bug de la variante táctil** —definía keyframes sin blur y nunca los asignaba—, no por recalibrar. |
+| **Vista explotada del cubo** | después de publicar. El núcleo mostrará 産霊 · 河川 · 言霊 y llevará a `/musubi/`. Sin glifos nuevos. |
+| **Dieta de fuentes** | **~79 KB disponibles** quitando features que el sitio no usa. **Decidido: no se hace ahora.** Se revisa si el CSS llega a usar `font-feature-settings`, `font-variant` o `small-caps`. |
+| **Guarda de castellano** | **incompleta a propósito, y lo dice en su salida.** Cubre diacríticos y una lista de palabras; se le escapa castellano sin ninguna de las dos. Al agregar una página, leer su superficie además de correrla. |
 
 ---
 
