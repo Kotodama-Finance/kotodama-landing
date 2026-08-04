@@ -304,6 +304,15 @@ cubo no se mueve** al abrirse (que es la propiedad que hace seguro el cambio).
 del navegador: **corte seco, sin fundido de ningún tipo.** Se apartó por
 decisión del autor —no terminaba de funcionar— y **no se borró**.
 
+Medido, no deducido: en una subpágina, `.face-page`, `main`, `body` y `html`
+computan `animation: none` y `opacity: 1`. **La única excepción es el hero de la
+portada**, que sube y aparece con `kf-rise` durante 1.3 s — y **eso no es un
+resto de la transición**: corre en cualquier carga de la portada, incluida la
+primera, y existía antes. Se queda a propósito: la portada es la que recibe, y
+que tenga vida al cargar mientras las subpáginas entran secas es la asimetría
+buscada. Está anotado junto a la regla, porque ahora que no hay transición es lo
+único que se mueve al llegar y se lee fácil como un olvido.
+
 **Dónde está**: `assets/css/maelstrom.css`, entero y calibrado, **no enlazado
 desde ninguna página**. Ese archivo lleva en su encabezado cómo reactivarla, los
 valores medidos y el bug conocido. En `styles.css` quedó un comentario en el
@@ -797,3 +806,15 @@ que produjeron conclusiones equivocadas:
   sospechosa es la métrica.**
 - **Un test roto se disfraza de bug de la página.** Si el JS de una guarda lanza,
   tiene que reventar el script, no devolver `undefined` en silencio.
+- **Una variante que sólo se LEE no está verificada.** No es una métrica mal
+  elegida: es la ausencia de métrica, disfrazada de código presente. La variante
+  táctil del maelstrom definía sus keyframes sin blur y **nunca los asignaba**
+  —sólo cambiaba `animation-duration`—, así que en teléfono corría la versión
+  cara. **El CSS no protesta**: un `@keyframes` que nadie usa es legal y
+  silencioso. Por eso la variante «existía» —se la podía leer, citar y
+  documentar— y sobrevivió a dos calibraciones y a tres documentos que la daban
+  por hecha. El mismo silencio dejó a `kf-fade` definido y sin usar.
+  La prueba no es releer el bloque: es medir la propiedad efectiva en el modo
+  que se quiere probar. Y el corolario incómodo: **una precaución documentada y
+  nunca verificada es indistinguible de una que no existe** — la lista de
+  precauciones de móvil tenía tres ítems y uno era falso.

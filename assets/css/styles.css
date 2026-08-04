@@ -406,6 +406,12 @@ button:focus-visible {
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* ESTA ANIMACIÓN NO ES UN RESTO DEL MAELSTROM, y conviene decirlo acá porque
+     desde que la transición se apartó es lo único que se mueve al llegar a una
+     página. Es la entrada del hero y corre en CUALQUIER carga de la portada,
+     incluida la primera; existía antes de la transición y se queda.
+     Que la portada tenga vida al cargar y las subpáginas entren secas es
+     deliberado: la portada es la que recibe. */
   animation: kf-rise 1.3s var(--ease-rise) both;
 }
 .hero .badge { margin-bottom: 34px; }
@@ -1028,7 +1034,10 @@ button:focus-visible {
    ------------------------------------------------------------------------- */
 @keyframes kf-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.65); } }
 @keyframes kf-rise  { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes kf-fade  { from { opacity: 0; } to { opacity: 1; } }
+/* Acá estaba kf-fade (opacity 0 -> 1). Definido y usado CERO veces: un
+   @keyframes sin usar es legal y silencioso, así que no molestaba a nadie.
+   Es el mismo modo de fallo que dejó pasar el bug de la variante táctil del
+   maelstrom — declarar una animación no es usarla. */
 @keyframes kf-bob   { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(7px); } }
 
 /* -------------------------------------------------------------------------

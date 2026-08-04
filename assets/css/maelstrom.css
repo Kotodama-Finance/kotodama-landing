@@ -44,6 +44,23 @@
    Nunca se midió en un dispositivo real, así que no se sabe cuánto de «no
    terminaba de funcionar» venía de acá.
 
+   CÓMO ENTRÓ, que es lo que evita que vuelva a entrar. El pedido original fue
+   «versión liviana en pointer: coarse», se escribió, y NADIE VERIFICÓ QUE SE
+   APLICARA. El CSS no protesta: definir un @keyframes que nadie usa es legal y
+   silencioso, y la variante «existía» en el archivo —se la podía leer, citar y
+   documentar— sin haber corrido nunca. Sobrevivió así a dos calibraciones y a
+   tres documentos que la daban por hecha.
+
+   La lección es más ancha que este bug: UNA VARIANTE QUE SÓLO SE LEE NO ESTÁ
+   VERIFICADA. Si se vuelve a hacer una versión aparte para táctil, la prueba
+   no es releer el bloque sino medir animationName en un emulador de puntero
+   grueso — que es una línea:
+
+       getComputedStyle(document.documentElement).animationName  // en la capa
+
+   Al retomarla, empezar por acá y no por recalibrar: recalibrar sobre una
+   variante que no corre es afinar un instrumento que está desenchufado.
+
    ─── LO QUE YA ESTÁ CALIBRADO (no rehacerlo a ojo) ───────────────────────
 
    Dos pasadas, la segunda después de filmarla. Valores vigentes:
