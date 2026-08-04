@@ -238,6 +238,127 @@ del navegador, así que un elemento marcado como oculto seguía viéndose. Hay u
 regla `[hidden] { display: none !important; }` al principio de `styles.css` que
 lo resuelve para toda la clase de bug. No borrarla.
 
+## La rama `maintenance`: bajar el sitio para una obra grande
+
+Un cartel para cuando haya que dejar el sitio fuera de línea a propósito. **No
+reemplaza nada**: vive en una rama aparte y se activa cambiando de qué rama
+publica GitHub Pages, así que ni el sitio ni `main` se tocan en ningún momento.
+
+**Cubre el sitio entero con dos archivos.** `index.html` responde la raíz;
+cualquier otra ruta —`/sugao/`, `/method/`, un enlace viejo— no existe en esa
+rama, así que Pages sirve `404.html`, que es **el mismo archivo**. No hace falta
+replicar las once carpetas. La guarda comprueba que los dos sean el mismo blob:
+si se separan, la portada diría una cosa y el resto otra.
+
+### Activar
+
+En GitHub: **Settings → Pages → Build and deployment → Branch**, elegir
+`maintenance` / `(root)` y guardar. Tarda un par de minutos en reconstruir. Eso
+es todo: la rama ya está en `origin`.
+
+Si se regeneró desde la última vez, empujarla antes —`make-maintenance.py` sólo
+escribe la rama local—:
+
+```bash
+git push origin maintenance
+```
+
+### Volver
+
+Misma pantalla, elegir de nuevo la rama que publicaba —hoy **`main`**— y
+guardar. No hay nada que revertir en el repo: la rama de mantenimiento queda
+donde estaba, lista para la próxima.
+
+> **El CNAME es lo único que puede romper el dominio.** La rama lo lleva,
+> copiado del sitio, y **tiene que seguir llevándolo**: cuando Pages publica una
+> rama sin `CNAME`, da de baja el dominio propio de la configuración. Volver a
+> ponerlo obliga a reaprovisionar el certificado HTTPS, que puede tardar horas —
+> justo cuando el sitio ya está caído. Por eso la rama tiene cuatro archivos y
+> no dos, y por eso la guarda compara el CNAME contra el del sitio en vez de
+> darlo por sentado. El cuarto es `.nojekyll`, para que Pages suba los archivos
+> en vez de correr un build de Jekyll que no hace falta y puede fallar.
+
+### La rama se GENERA, no se edita
+
+```bash
+python tools/make-maintenance.py              # construye en _dev/maintenance/
+python tools/make-maintenance.py --publicar    # además, actualiza la rama
+```
+
+El script escribe la rama con plumbing: **no hace checkout ni mueve `HEAD`**, así
+que se puede correr con el árbol de trabajo en cualquier estado. Editar los
+archivos de la rama a mano no sirve — la próxima corrida los pisa. El texto, el
+diseño y la paleta viven en el script; la paleta la **lee del `:root`** de
+`styles.css`, como `make-og-image.py`.
+
+Es un cartel, no una página: **una sola petición HTTP**. El CSS, el favicon y
+las fuentes van embebidos, no hay JavaScript y no hay WebGL. Con archivos
+aparte el titular aparecería primero en una fuente del sistema y saltaría al
+llegar la buena, que en una página de cinco líneas es lo único que se ve.
+
+### Verificarla antes de activarla
+
+```bash
+python tools/check-maintenance.py
+```
+
+**No entra en el flujo de cuatro guardas de cada commit**, a propósito: mira una
+rama que no cambia entre commits, así que ahí sólo sería ruido. Se corre al
+tocar la rama y **antes de activarla**, que es cuando importa. Comprueba los dos
+archivos idénticos, el CNAME, que no haya ninguna referencia externa —en esa
+rama cualquier `<link>` o `<script>` es un 404 seguro—, el `noindex`, que el
+mailto sea el mismo del sitio, y la cobertura de las fuentes embebidas contra su
+`cmap`.
+
+No compara bytes contra el generador y no es por comodidad: **el codificador
+woff2 no es determinista** —tres corridas del mismo comando, tres `sha1`
+distintos, también con `PYTHONHASHSEED=0`—, así que esa guarda habría estado en
+rojo desde el primer día. Compara el HTML con los base64 elididos, que sí es
+estable, y las fuentes por su `cmap`.
+
+### El japonés: por qué no lleva Zen Kaku embebido
+
+**Al subset del sitio le faltan tres de los cinco glifos del titular**: 守
+(U+5B88), 作 (U+4F5C) y 中 (U+4E2D). Copiar el `woff2` commiteado a la rama era
+la opción obvia y es la peor, porque **no falla como uno espera**. Medido con
+`CSS.getPlatformFontsForNode`:
+
+| Pila declarada | Qué dibuja de verdad |
+|---|---|
+| `'Zen Kaku', sans-serif` | 2 glifos Zen Kaku + **3 Microsoft YaHei** |
+| `'Hiragino', 'Yu Gothic', sans-serif` | 5 glifos Yu Gothic Medium |
+| `sans-serif` **con** `lang="ja"` | 5 glifos Noto Sans JP |
+| `sans-serif` **sin** `lang` | 5 glifos Microsoft YaHei |
+
+El fallback de fuentes es **por glifo**, así que el titular se dibuja entero y
+parece correcto: no hay tofu que delate nada. Lo que sale es un titular en dos
+tipografías, **una de ellas china**, en la rama que ninguna guarda del sitio
+mira. Por eso hoy el japonés va por la pila del sistema declarada —una sola cara
+japonesa, consistente— y no por un subset a medias.
+
+La última fila es la que conviene no olvidar: **`lang="ja"` decide si el
+navegador cae en una fuente japonesa o en una china.** Va en los dos `<span>`
+japoneses de la página, y no es decoración semántica.
+
+**Lo que haría falta para embeberlo** es bajar `ZenKakuGothicNew-Medium.ttf` de
+`google/fonts` y regenerar el subset del sitio con el conjunto derivado; después,
+`JA_EMBEBIDO = True` en el generador. Puesto en `True` el script **no adivina**:
+si falta un glifo aborta nombrándolo, justamente porque la versión rota se ve
+bien.
+
+Y el subset de esta rama **no tiene el problema de desactualizarse** que sí tiene
+el del sitio: su texto es fijo y no va a crecer. El del sitio se agranda cada vez
+que se escribe una página; un conjunto de entrada cerrado no deriva.
+
+### El costo asumido del `noindex`
+
+La página lleva `noindex` porque no se quiere el estado de mantenimiento en el
+índice de nadie. El costo: un `noindex` sostenido hace que un buscador deje caer
+las URLs, y volver a indexarlas lleva tiempo. Se acepta porque el sitio nuevo
+todavía no se publicó y no hay ranking que perder. **Si esta rama llegara a estar
+meses arriba sobre un sitio ya indexado, hay que reabrirlo** — lo canónico ahí es
+un 503, y GitHub Pages no puede servirlo.
+
 ## Tipografías: el subset es un paso obligatorio
 
 Las tipografías están auto-hospedadas y subseteadas. El subset de **Zen Kaku

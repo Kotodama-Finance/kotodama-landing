@@ -88,6 +88,7 @@ Ninguno bloquea publicar. Cada uno tiene su sección con el detalle.
 | **Vista explotada del cubo** | después de publicar. El núcleo mostrará 産霊 · 河川 · 言霊 y llevará a `/musubi/`. Sin glifos nuevos. |
 | **Dieta de fuentes** | **~79 KB disponibles** quitando features que el sitio no usa. **Decidido: no se hace ahora.** Se revisa si el CSS llega a usar `font-feature-settings`, `font-variant` o `small-caps`. |
 | **Guarda de castellano** | **incompleta a propósito, y lo dice en su salida.** Cubre diacríticos y una lista de palabras; se le escapa castellano sin ninguna de las dos. Al agregar una página, leer su superficie además de correrla. |
+| **Rama `maintenance`** | **existe, está lista y NO está activa.** Se activa cambiando la rama que publica Pages. Ver la decisión cerrada más abajo. |
 
 ---
 
@@ -249,6 +250,56 @@ O sea que para esta cara **la regla de copiar literal del archivo de referencia
 ya no aplica**: manda lo redactado. Vale la pena tenerlo presente antes de
 "restaurar" un campo desde la referencia creyendo que se corrige una deriva —
 y lo mismo vale para las otras cinco, ver la tabla de `domain` más abajo.
+
+### La rama `maintenance` existe, está lista y NO está activa
+
+Un cartel para bajar el sitio a propósito durante una obra grande. **Rama
+aparte**, huérfana, con cuatro archivos: `index.html`, `404.html` idéntico,
+`CNAME` y `.nojekyll`. Se activa **cambiando la rama que publica GitHub Pages**
+y se revierte igual — el sitio y `main` no se tocan en ningún momento. El
+procedimiento completo está en el README.
+
+**Que exista es justamente lo que hay que recordar**: no se ve desde `main` ni
+desde `redesign-trust`, no aparece en el árbol de trabajo, y ninguna de las
+cuatro guardas la mira. Un cartel de mantenimiento que nadie recuerda que existe
+se reescribe desde cero el día que hace falta, que es el peor día para hacerlo.
+
+**Tres cosas que parecen detalles y no lo son:**
+
+- **La rama lleva `CNAME`, y por eso son cuatro archivos y no dos.** Cuando
+  Pages publica una rama sin `CNAME`, **da de baja el dominio propio**, y
+  reponerlo obliga a reaprovisionar el certificado HTTPS. Eso pasaría con el
+  sitio ya caído. El `.nojekyll` es por lo mismo: que Pages suba archivos en vez
+  de correr un build que no hace falta y puede fallar.
+- **Los dos HTML son el MISMO blob.** La raíz sirve el cartel y cualquier otra
+  ruta cae en el 404, que dice lo mismo; no hay que replicar las once carpetas.
+  Si se separan, la portada dice una cosa y el resto otra.
+- **La rama se GENERA con `tools/make-maintenance.py`, no se edita.** El script
+  escribe la rama con plumbing —sin checkout, sin mover `HEAD`—, así que corre
+  con el árbol en cualquier estado. Ésa es la respuesta a «copiar el woff2 queda
+  viejo / mantener uno propio duplica el trabajo»: **un artefacto derivado no se
+  mantiene, se regenera**, igual que el sitemap, la og-image y los favicons.
+
+**EL HALLAZGO DE LA SESIÓN, y vale más que la página: copiar el subset del sitio
+a la rama NO habría dado tofu.** Al subset le faltan tres de los cinco glifos del
+titular (守, 作, 中), pero el fallback de fuentes es **por glifo**, así que el
+titular se dibuja entero y se ve bien. Medido con `CSS.getPlatformFontsForNode`:
+`'Zen Kaku', sans-serif` da **2 glifos Zen Kaku + 3 Microsoft YaHei** — un
+titular en dos tipografías, una de ellas **china**, que pasa cualquier
+inspección visual. Por eso hoy el japonés va por la pila del sistema declarada
+(5 glifos en Yu Gothic Medium, una sola cara). Y `lang="ja"` **no es decoración
+semántica**: con él el genérico cae en Noto Sans JP, sin él en Microsoft YaHei.
+
+Para embeberlo hay que bajar `ZenKakuGothicNew-Medium.ttf` de `google/fonts`,
+regenerar el subset del sitio y poner `JA_EMBEBIDO = True`. En `True` el script
+**aborta nombrando el glifo que falta**, precisamente porque la versión rota se
+ve bien.
+
+**La guarda propia es `tools/check-maintenance.py`, y corre A DEMANDA** — al
+tocar la rama y **antes de activarla**, no en cada commit. Las cuatro guardas
+siguen siendo cuatro: ésta mira una rama que no cambia entre commits, así que
+en el flujo de siempre sería ruido. Probada en las dos direcciones, con cuatro
+ramas rotas armadas al lado.
 
 ### El `免責事項`: el corto se repite, el completo vive una sola vez
 Son **dos textos con dos reglas opuestas**, y confundirlas es lo que hay que
@@ -1075,3 +1126,26 @@ que produjeron conclusiones equivocadas:
   que se quiere probar. Y el corolario incómodo: **una precaución documentada y
   nunca verificada es indistinguible de una que no existe** — la lista de
   precauciones de móvil tenía tres ítems y uno era falso.
+- **«¿Se ve bien?» no mide la cobertura de glifos, porque el fallback de fuentes
+  es POR GLIFO.** Un texto al que le faltan glifos en la fuente declarada **se
+  dibuja entero igual**: el navegador va a buscar cada glifo ausente a otra
+  familia, sin avisar y sin dejar hueco. Medido en la página de mantenimiento:
+  `'Zen Kaku', sans-serif` sobre 保守作業中 dio **2 glifos Zen Kaku + 3 Microsoft
+  YaHei** — dos tipografías en una palabra, una de ellas china, y a simple vista
+  correcto. La métrica que sirve es **`CSS.getPlatformFontsForNode`**, que dice
+  qué fuente REAL dibujó cada glifo; la cmap dice qué debería haber pasado, ésta
+  dice qué pasó. Es la contracara del hallazgo de arriba: ahí el subset japonés
+  se verificaba contra la cmap porque el navegador no sabía; acá el navegador es
+  el único que sabe, porque la pregunta es sobre el fallback y no sobre el
+  archivo. Y de paso: **`lang="ja"` decide si el genérico cae en una fuente
+  japonesa o en una china** (Noto Sans JP con él, Microsoft YaHei sin él).
+- **«Regenerar y comparar bytes» parece la guarda perfecta para un artefacto
+  generado, y acá no funciona.** El codificador woff2 **no es determinista**:
+  tres corridas del mismo comando dan tres `sha1` distintos, y siguen dándolos
+  fijando `head.modified` y con `PYTHONHASHSEED=0` — la diferencia arranca en el
+  tamaño comprimido, o sea en Brotli. Una guarda así habría estado en rojo desde
+  el primer día, que es la señal que uno aprende a ignorar. Lo que sí funciona
+  es partir el artefacto: comparar la parte estable (el HTML con los base64
+  elididos, verificado estable en tres corridas) y verificar la parte inestable
+  por una propiedad y no por sus bytes (la `cmap` de la fuente). **Antes de
+  escribir una guarda que compare salidas, correr el generador dos veces.**
