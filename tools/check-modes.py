@@ -15,6 +15,10 @@ Y verifica el ciclo de selección completo, que asume que "ninguna cara activa"
 es un estado válido:
    carga (nada) -> clic (estado + botón) -> arrastre (nada) -> otro clic
 
+3. Que NO haya ninguna regla de view-transition viva. El maelstrom está
+   reservado en assets/css/maelstrom.css y no lo carga nadie; se repone sin
+   querer con un solo `<link>`. Ver `sin_view_transitions()`.
+
 check-ready.py no puede hacer esto: son estilos computados y eventos, no texto
 en un archivo. Hace falta un navegador de verdad.
 """
@@ -42,6 +46,59 @@ def revisar(cond, descripcion, detalle=""):
     print(("  OK   " if cond else "  FALLA") + "  " + descripcion + (f"  [{detalle}]" if detalle and not cond else ""))
     if not cond:
         fallos.append(descripcion)
+
+
+# --- El maelstrom no vuelve solo, pero se repone con un solo <link> ----------
+# Le pregunta al NAVEGADOR qué reglas están en efecto, no al texto de un
+# archivo. Ésa es la diferencia que importa: hay tres formas de reponer la
+# transición —un <link> a maelstrom.css, las reglas pegadas de vuelta en
+# styles.css, o un <style> inline— y un grep sobre un archivo sólo ataja la
+# que se le ocurrió a quien escribió el grep. document.styleSheets las ve a
+# las tres a la vez porque ve el resultado, no la causa. Es la lección que
+# dejó el bug de la variante táctil del propio maelstrom: una regla que sólo
+# se LEE no está verificada; hay que medir la propiedad efectiva.
+#
+# Recorre cssRules recursivamente: una regla dentro de @media, @supports o
+# @layer está igual de viva y no aparece en el nivel de arriba.
+#
+# Verificado en las dos direcciones antes de confiar en su verde: da rojo con
+# @view-transition inline, con ::view-transition-old(root) inline, con un
+# <link> al maelstrom.css real, y con la regla anidada dentro de un @media.
+DETECTOR_VT = r"""(() => {
+  const hallazgos = [], ilegibles = [];
+  const mirar = (reglas, origen) => {
+    for (const r of reglas) {
+      const txt = (r.cssText || '').replace(/\s+/g, ' ').slice(0, 110);
+      if (r.constructor.name === 'CSSViewTransitionRule' ||
+          /^@view-transition/i.test(txt) ||
+          /view-transition/i.test(r.selectorText || '')) {
+        hallazgos.push(origen + ' :: ' + txt);
+      }
+      if (r.cssRules) mirar(r.cssRules, origen);
+    }
+  };
+  for (const s of document.styleSheets) {
+    const origen = s.href ? s.href.replace(/^https?:\/\/[^/]+/, '') : '<style> inline';
+    // Una hoja que no se puede leer es una hoja que no se puede descartar: va
+    // como fallo con su nombre, no como omisión silenciosa. Un verde por no
+    // haber podido mirar es el peor de los verdes.
+    try { mirar(s.cssRules, origen); }
+    catch (e) { ilegibles.push(origen + ' (' + e.name + ')'); }
+  }
+  return { hallazgos, ilegibles,
+           pedidos: performance.getEntriesByType('resource')
+                      .map(e => e.name).filter(n => /maelstrom/i.test(n)) };
+})()"""
+
+
+def sin_view_transitions(js, etiqueta):
+    r = js(DETECTOR_VT)
+    revisar(not r["hallazgos"], f"{etiqueta}: ninguna regla de view-transition viva",
+            "; ".join(r["hallazgos"])[:220])
+    revisar(not r["pedidos"], f"{etiqueta}: nadie pide maelstrom.css",
+            "; ".join(r["pedidos"])[:220])
+    revisar(not r["ilegibles"], f"{etiqueta}: todas las hojas se pudieron leer",
+            "; ".join(r["ilegibles"])[:220])
 
 
 def main():
@@ -94,6 +151,9 @@ def main():
         # el cubo se hidrata al acercarse su sección
         js("document.getElementById('cube').scrollIntoView({behavior:'auto'}); true")
         time.sleep(3)
+
+        print("Transición entre páginas: reservada, no activa")
+        sin_view_transitions(js, "portada")
 
         # El estado y el botón viven en un FOLIO que se despliega al seleccionar
         # (grid-template-rows 0fr->1fr) y se repliega al arrastrar. Antes se
@@ -243,6 +303,24 @@ def main():
         revisar(e["stageDisplay"] != "none", "el escenario vuelve")
         time.sleep(0.8)
         cubo_visible("y se repinta al volver de modo grilla")
+
+        # La subpágina se mira aparte y no por prolijidad: @view-transition es
+        # una transición ENTRE DOCUMENTOS y tiene que estar declarada en los
+        # dos lados, así que mirar sólo la portada dejaría medio caso sin ver.
+        # Y es el lado ciego: las diez subpáginas no cargan ningún JavaScript,
+        # o sea que ninguna otra comprobación de runtime las toca nunca.
+        print("\nSubpágina de una cara")
+        cmd("Page.navigate", url=BASE + "/hajime/")
+        time.sleep(2.5)
+        sin_view_transitions(js, "/hajime/")
+        # Y que entre seca: si algo la anima al llegar, la transición volvió por
+        # otra puerta —una animación sobre .face-page en vez de sobre el pseudo.
+        e = js("""(() => {const p = document.querySelector('.face-page');
+                   const cs = getComputedStyle(p);
+                   return {anim: cs.animationName, op: cs.opacity};})()""")
+        revisar(e["anim"] == "none" and e["op"] == "1",
+                "/hajime/ entra seca (sin animación de llegada)",
+                f"{e['anim']} / opacity {e['op']}")
 
         ws.close()
     finally:

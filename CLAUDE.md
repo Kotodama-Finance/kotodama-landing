@@ -125,7 +125,7 @@ Ninguno bloquea publicar. Cada uno tiene su sección con el detalle.
 | Cabo | Estado |
 |---|---|
 | **Móvil** | **nunca medido en dispositivo real.** Congelado por decisión del autor. La única medición de rendimiento es de escritorio. |
-| **Maelstrom** | apartado en `assets/css/maelstrom.css`, **no lo carga nadie**, reactivable. Al retomarlo, empezar por el **bug de la variante táctil** —definía keyframes sin blur y nunca los asignaba—, no por recalibrar. |
+| **Maelstrom** | apartado en `assets/css/maelstrom.css`, **no lo carga nadie** —ahora con guarda en `check-modes`—, reactivable. Al retomarlo, empezar por el **bug de la variante táctil** —definía keyframes sin blur y nunca los asignaba—, no por recalibrar. |
 | **Vista explotada del cubo** | después de publicar. El núcleo mostrará 産霊 · 河川 · 言霊 y llevará a `/musubi/`. Sin glifos nuevos. |
 | **Dieta de fuentes** | **~79 KB disponibles** quitando features que el sitio no usa. **Decidido: no se hace ahora.** Se revisa si el CSS llega a usar `font-feature-settings`, `font-variant` o `small-caps`. |
 | **Guarda de castellano** | **incompleta a propósito, y lo dice en su salida.** Cubre diacríticos y una lista de palabras; se le escapa castellano sin ninguna de las dos. Al agregar una página, leer su superficie además de correrla. |
@@ -510,10 +510,33 @@ que tenga vida al cargar mientras las subpáginas entran secas es la asimetría
 buscada. Está anotado junto a la regla, porque ahora que no hay transición es lo
 único que se mueve al llegar y se lee fácil como un olvido.
 
+**Y `kf-rise` TAMBIÉN CORRE AL VOLVER CON EL BOTÓN ATRÁS**, que es el dato que
+faltaba y el que explica por qué se confunde. Medido: entrar a una cara no anima
+nada —en `/hajime/` sólo late `kf-pulse` en un punto de estado—, pero al volver
+a la portada el hero sube y aparece durante 1,3 s. O sea que **lo único que se
+parece a una transición de página aparece justo después de una navegación**, que
+es exactamente cuando uno la atribuye a la transición. Si alguien reporta que
+«el maelstrom sigue corriendo», éste es el primer candidato y se distingue en un
+segundo: el maelstrom giraba y desenfocaba la **página entera**; `kf-rise` sólo
+sube el hero, y sólo en la portada.
+
 **Dónde está**: `assets/css/maelstrom.css`, entero y calibrado, **no enlazado
 desde ninguna página**. Ese archivo lleva en su encabezado cómo reactivarla, los
 valores medidos y el bug conocido. En `styles.css` quedó un comentario en el
 lugar de donde salió.
+
+**Que siga apartada ahora TIENE GUARDA**, dentro de `check-modes`: ninguna regla
+de view-transition viva en la portada ni en una subpágina, nadie pide
+`maelstrom.css`, y `/hajime/` entra seca. **No lee archivos, le pregunta al
+navegador qué reglas están en efecto** — por eso ve las tres formas de reponerla
+(un `<link>`, las reglas pegadas de vuelta en `styles.css`, un `<style>` inline)
+con una sola comprobación, en vez de una por vía. Se verificó en rojo contra las
+cuatro, incluida la regla anidada en un `@media`.
+
+**Al reactivar la transición, esa comprobación hay que sacarla**: va a dar rojo,
+y eso es lo que se busca. Una guarda que sólo se vio en verde no está verificada
+—la misma trampa que dejó viva la variante táctil—, y ésta se probó rota antes
+de confiar en ella.
 
 **Por qué en un archivo y no detrás de un flag.** Es una transición **entre
 documentos**: `@view-transition` tiene que estar en la página que se va **y** en
@@ -1274,3 +1297,17 @@ que produjeron conclusiones equivocadas:
   elididos, verificado estable en tres corridas) y verificar la parte inestable
   por una propiedad y no por sus bytes (la `cmap` de la fuente). **Antes de
   escribir una guarda que compare salidas, correr el generador dos veces.**
+- **PARA MEDIR QUE ALGO NO PASA, PRIMERO HAY QUE PROVOCAR EL MOMENTO EN QUE
+  PASARÍA.** Buscando si la transición seguía viva, el primer intento clickeó la
+  **tarjeta** de una cara y midió «no hubo transición». Era cierto y no
+  significaba nada: la tarjeta hace `preventDefault()` —seleccionar y navegar son
+  dos actos, navega el botón del folio—, así que **no hubo navegación**, y una
+  transición entre documentos no puede ocurrir sin una. Es el mismo verde vacío
+  que `máx |vel| dentro 0.0000`: la comprobación pasa por no tener nada que
+  comprobar. Lo delató el propio script, que informaba `aterrizó en: /`.
+  El segundo intento trajo la trampa opuesta: midiendo `getAnimations()` a 1,2 s
+  del aterrizaje daba «nada corriendo», porque **una animación terminada
+  desaparece de la lista**. Llegar tarde y no haber nada se ven idénticos. Se
+  arregla muestreando desde `t=0` —0/80/250/600/1200 ms—, y ahí sí aparece lo
+  que corre. **La pregunta útil no es «¿lo medí?» sino «¿mi medición podía haber
+  dado otro resultado?»**

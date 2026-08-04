@@ -992,6 +992,13 @@ ahí ya no alcanza con listar los kanji a mano.
   archivo explica cómo reactivarla, qué valores ya están calibrados y un bug
   conocido de la variante táctil.
 
+  **Que siga apartada lo vigila `check-modes`**, en la portada y en una
+  subpágina. No lee el archivo: le pregunta al navegador qué reglas están en
+  efecto, así que ve por igual un `<link>` a `maelstrom.css`, las reglas pegadas
+  de vuelta en `styles.css` y un `<style>` inline. **Al reactivarla hay que
+  sacar esa comprobación**, que va a dar rojo — y eso es lo que se busca: que
+  volver no pueda pasar en silencio.
+
 - **El bloque de estado + botón bajo el cubo es un folio que se despliega.**
   Arranca con altura cero y se abre animado al seleccionar una cara; se cierra al
   arrastrar. No empuja nada visible porque está debajo del cubo. Verlo en detalle
