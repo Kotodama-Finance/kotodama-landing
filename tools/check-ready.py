@@ -3,21 +3,31 @@
 
     python tools/check-ready.py
 
-Se espera en ROJO hasta que termine el pase de redacción: hoy quedan ~70
-placeholders `class="todo"`, que en producción serían texto en castellano
-dirigido al autor apareciendo en un sitio en inglés.
+HOY SALE 0. Nació esperada en rojo —quedaban ~70 placeholders `class="todo"`,
+que en producción serían texto en castellano dirigido al autor en un sitio en
+inglés—, pero la redacción terminó y el baseline quedó en cero.
 
-Eso NO la vuelve inútil, pero sí la vuelve inservible como guarda de commit: una
-señal que siempre está en rojo se deja de mirar, y el día que se rompa algo de
-verdad pasa inadvertido. Por eso lo que hay que correr en cada commit es
-`check-structure.py`, que sí tiene que estar en verde siempre; ésta se corre
-antes de publicar.
+ESO LE CAMBIÓ EL SIGNIFICADO AL CÓDIGO 2, y conviene leerlo antes de interpretar
+una corrida. Mientras faltaba redactar, `2` era el estado normal. Ahora `2`
+quiere decir que aparecieron placeholders NUEVOS: un bug, no trabajo pendiente.
+O sea que hoy **cualquier salida distinta de 0 es una regresión**.
+
+Sigue SIN entrar en el flujo de cada commit, y el motivo no caducó con el rojo:
+esta guarda contesta «¿puede ir a `main`?», que es una pregunta que sólo se hace
+al publicar. La de cada commit es `check-structure.py`. El razonamiento original
+—una señal que siempre está en rojo se deja de mirar— es lo que hizo que fueran
+dos guardas y no una, y por eso el reparto se queda como está.
 
 Salida, con códigos distintos a propósito para poder distinguirlas:
-    0  listo para publicar
-    2  falta trabajo previsto (redacción y/o la revisión legal del 免責事項)
-       — ESPERADO en esta etapa, no es una regresión
-    1  hay algo estructural roto — esto sí es una regresión
+    0  listo para publicar  — lo esperado hoy
+    2  hay placeholders sin redactar
+       — antes era lo previsto; desde el baseline en cero, es una regresión
+    1  hay algo estructural roto — regresión
+
+El 2 cubre UNA sola cosa: los placeholders. Hubo una segunda —la revisión legal
+del 免責事項, detectada por una marca de borrador en el HTML— y se retiró cuando
+el autor decidió publicar el descargo sin revisión de un profesional legal
+japonés. El motivo y el marco legal que lo sostiene están en CLAUDE.md.
 """
 import sys
 

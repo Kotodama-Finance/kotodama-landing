@@ -206,15 +206,28 @@ python tools/check-ready.py
 
 Tiene que terminar con `LISTO PARA PUBLICAR` y código de salida 0. Comprueba:
 
-1. **Que no queden placeholders de redacción.** Equivale a
-   `grep -c 'class="todo"' index.html` sobre todos los HTML publicables, y tiene
-   que dar **0**. Un placeholder en producción es texto en castellano dirigido
-   al autor apareciendo en un sitio en inglés.
+1. **Que no queden placeholders de redacción**, en **dos** familias. La obvia
+   son los elementos con `class="todo"`. La otra son los `TODO` de `<title>` y
+   de cualquier `content="…"`, que **no llevan clase porque no son elementos**.
+   Un placeholder en producción es texto en castellano dirigido al autor
+   apareciendo en un sitio en inglés.
+
+   **Acá había un `grep -c 'class="todo"'` como equivalencia, y era falso**: se
+   come la segunda familia entera. Durante un tiempo la guarda tampoco la
+   contaba, y el sitio podía dar «LISTO PARA PUBLICAR» con seis descriptions que
+   decían *«TODO: descripción de esta cara.»*. Si aparece otra clase de
+   placeholder que no sea un elemento con clase, va agregada en
+   `placeholders()`, no en un `grep` de este README.
 2. **Que el subset japonés cubra todos los glifos del sitio** (ver abajo).
 3. **Que el nav y el footer no hayan derivado** entre todas las páginas.
 
-Hoy sale **2** (faltan placeholders), que es lo esperado hasta el pase de
-redacción; **1** sería una regresión de verdad.
+Hoy sale **0** —«LISTO PARA PUBLICAR»—, y eso **le cambió el significado a los
+otros dos códigos**. Mientras quedaban placeholders, `2` era el estado normal y
+esperado. Desde que la redacción terminó y el baseline quedó en cero, **`2`
+quiere decir que aparecieron placeholders NUEVOS**: un bug, no trabajo
+pendiente. O sea que hoy **cualquier salida distinta de `0` es una regresión** —
+`1` algo estructural roto, `2` castellano dirigido al autor que se coló en una
+página.
 
 Y con el sitio servido, la guarda de comportamiento del cubo:
 
