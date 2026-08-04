@@ -115,7 +115,9 @@ def main():
         print(f"  baseline actualizado: {total} placeholders en {len(actual)} páginas")
         return 0 if not problemas else 1
 
-    if not base:
+    # `base is None` y no `not base`: el baseline vacío es LEGÍTIMO desde que la
+    # redacción terminó, y con `not base` se confundía con el archivo ausente.
+    if base is None:
         print("  FALLA  no hay baseline; crearlo con --actualizar-baseline")
         problemas.append("sin baseline")
     else:

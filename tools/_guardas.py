@@ -151,9 +151,21 @@ def sitemap_incompleto():
     return problemas
 
 
-def leer_baseline() -> dict:
+def leer_baseline():
+    """None = NO HAY archivo. {} = hay archivo y dice CERO placeholders.
+
+    La distinción no es cosmética y costó un rojo. Antes esto devolvía {} en los
+    dos casos y quien llamaba hacía `if not base`, así que un baseline vacío se
+    leía como baseline ausente. Mientras quedaban placeholders eso no se notaba
+    nunca; el día que la redacción terminó, el baseline legítimo pasó a ser {} y
+    la guarda empezó a fallar sin que nada estuviera roto.
+
+    Es un caso borde que sólo puede ocurrir UNA vez —al terminar— y por eso
+    sobrevivió a todas las corridas anteriores: la guarda funcionaba en todos
+    los estados menos en el estado final.
+    """
     if not BASELINE.exists():
-        return {}
+        return None
     return json.loads(BASELINE.read_text(encoding="utf-8"))
 
 

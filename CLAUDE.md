@@ -931,6 +931,14 @@ que produjeron conclusiones equivocadas:
   sospechosa es la métrica.**
 - **Un test roto se disfraza de bug de la página.** Si el JS de una guarda lanza,
   tiene que reventar el script, no devolver `undefined` en silencio.
+- **El estado FINAL es un caso borde, y es el único que nunca se prueba.** El
+  baseline de placeholders se leía con `if not base`, que confunde «archivo
+  ausente» con «archivo que dice cero». Mientras quedaba un solo placeholder eso
+  no se notaba; **al terminar la redacción el baseline legítimo pasó a ser `{}`
+  y la guarda se rompió sin que nada estuviera mal**. Sobrevivió a decenas de
+  corridas porque funcionaba en todos los estados menos en el último — y a ese
+  se llega una sola vez. Cuando un contador puede llegar a cero, **cero tiene
+  que ser distinguible de vacío**.
 - **DOS GUARDAS DE NAVEGADOR A LA VEZ SE ARRUINAN, y una de las dos puede dar
   VERDE EN FALSO.** Lanzando `check-pendulum` en segundo plano y otra encima, la
   segunda murió con `ConnectionResetError` —se pelean el mismo Chrome— y la
