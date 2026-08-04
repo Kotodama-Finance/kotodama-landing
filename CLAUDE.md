@@ -646,6 +646,32 @@ número distinto de cero que informe `check-structure` es una regresión, no
 trabajo pendiente. Es un cambio de significado de esa guarda: hasta acá bajar
 era progreso; ahora subir es un bug y no hay «bajar».
 
+### La procedencia del texto se declara, y sólo en `/method/`
+
+Dos bloques, y van juntos: **«How this is written»** al final de la sección
+«What counts as a source», y un **colofón** al pie de la página.
+
+**Por qué ahí y en ninguna otra parte.** `/method/` es donde se declara cómo se
+produce lo que se publica, así que es donde corresponde decir cómo se produjo el
+texto mismo. Un sitio que le exige trazabilidad al dato y no declara la de su
+propia prosa tiene un punto ciego; y si alguien lo descubre después sin que esté
+dicho, el daño al rigor es mayor que el costo de decirlo.
+
+**El colofón NO va al footer global**, aunque sea la clase de línea que suele ir
+ahí. El footer se repite en las once páginas y esto pertenece a la que habla del
+método. Es la regla opuesta a la del `免責事項` corto, y por el mismo criterio:
+una advertencia legal sirve donde el lector esté leyendo; una declaración de
+procedencia sirve donde se explica el procedimiento.
+
+**LA REDACCIÓN DEL COLOFÓN NO SE TOCA, y el motivo es del tipo que este proyecto
+persigue.** Dice *«the code is checked by automated guards»*, **no «reviewed by
+its author»**. El código no se revisa a mano: lo verifican las cuatro guardas
+que corren antes de cada commit. Escribir «revisado por el autor» sería una
+afirmación no verificada **justo en la línea que declara honestidad** — el error
+exacto que el resto del sitio se prohíbe. Los tiempos verbales también son parte
+de la afirmación: **presente** para las guardas, que siguen corriendo; **pasado**
+para el texto, que ya se revisó.
+
 ### La 404 rompe el patrón del kanji a propósito
 
 Lleva **una frase** —`この航路はありません`— donde las seis caras llevan un

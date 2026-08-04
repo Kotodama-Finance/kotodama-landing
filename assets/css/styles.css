@@ -945,6 +945,30 @@ button:focus-visible {
   color: var(--c-text);
 }
 
+/* Título de bloque DENTRO de una sección, un escalón por debajo de
+   .face-page__subtitle. Hoy lo usa «How this is written» en /method/: es parte
+   de qué cuenta como fuente, no un tema aparte, y el h3 lo dice. */
+.face-page__minor {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.2rem, 2.2vw, 1.5rem);
+  color: var(--c-text);
+  margin: clamp(30px, 4vw, 40px) 0 12px;
+}
+/* Colofón: registro de pie de página, SÓLO en /method/. Declara, no proclama —
+   por eso va al cuerpo más chico de la página y en el gris más apagado, con un
+   filete que lo separa del contenido sin encuadrarlo como un aviso. */
+.colophon {
+  margin-top: clamp(48px, 6vw, 72px);
+  padding-top: 18px;
+  border-top: 1px solid var(--line-gold-faint);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--c-text-muted);
+}
+/* Cuando el colofón está presente ya separó del contenido: el enlace de vuelta
+   no necesita repetir todo el aire de arriba. */
+.colophon + .face-page__back { margin-top: clamp(24px, 3vw, 32px); }
 .face-page__back { margin-top: clamp(48px, 6vw, 72px); font-size: 0.9rem; }
 
 /* /musubi/ reusa .naming, que ya no vive en la portada. La clase conserva el

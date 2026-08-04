@@ -90,6 +90,21 @@
           <p>When sources disagree or revise, we say so. Official figures get revised; two bodies measuring similar things with different methods produce different numbers, and neither is wrong. Where that happens we publish the discrepancy rather than picking a winner quietly, and we name the methodology that separates them. A revision is dated, not overwritten.</p>
           <p>What travels with every figure: its origin, its date, and its revision state. Enough to take any number here, go to the body that issued it, and find the same number. That is the standard. Where a figure cannot meet it, it does not appear &mdash; and where a whole measure cannot be built from primary sources, we say that too, instead of estimating our way around the gap.</p>
         </div>
+
+        <!-- DECLARACIÓN DE PROCEDENCIA DEL TEXTO. Va acá y en ninguna otra
+             página: /method/ es donde se declara cómo se produce lo que se
+             publica, así que es donde corresponde decir cómo se produjo el
+             texto mismo. Un sitio que le exige trazabilidad al dato y no
+             declara la de su propia prosa tiene un punto ciego — y si alguien
+             lo descubre después sin que esté dicho, el daño al rigor es mayor
+             que el costo de decirlo.
+             Es un BLOQUE DENTRO de esta sección, no una sección aparte: la
+             procedencia del texto es parte de qué cuenta como fuente, no un
+             tema nuevo. Por eso h3 y no h2. -->
+        <h3 class="face-page__minor">How this is written</h3>
+        <div class="face-page__body">
+          <p>The text on this site is written with the help of an AI assistant, used the way one would use a demanding editor: to draft, to argue against, and to be argued with. Every claim was checked against its source, and every decision about what to say and what to leave out is ours. Where the two disagreed, the source won.</p>
+        </div>
       </section>
 
       <section class="face-page__section" aria-labelledby="method-fuentes">
@@ -199,6 +214,19 @@
           <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__ja" lang="ja">三菱総合研究所</span><span class="sources__en"><a href="https://www.mri.co.jp/knowledge/insight/" target="_blank" rel="noopener">Mitsubishi Research Institute</a><span class="sources__note">Economic outlooks, energy and public policy.</span></span></li>
         </ul>
       </section>
+
+      <!-- COLOFÓN. Registro de pie de página: chico y discreto, no un bloque
+           destacado — declara, no proclama. Va SÓLO acá, no en el footer
+           global: el footer se repite en las once páginas y esto pertenece a
+           la página que habla del método.
+           OJO CON LA REDACCIÓN, no «reviewed by its author». El código NO se
+           revisa a mano: lo verifican las cuatro guardas que corren antes de
+           cada commit. Decir «revisado por el autor» sería una afirmación no
+           verificada justo en la línea que declara honestidad — el error que
+           el resto del sitio se prohíbe.
+           Presente para las guardas (siguen corriendo), pasado para el texto
+           (ya ocurrió). Los tiempos verbales son parte de la afirmación. -->
+      <p class="colophon">Built and written with AI assistance. The text was checked against its sources; the code is checked by automated guards on every change.</p>
 
       <p class="face-page__back"><a href="/#method">&larr; Back to the method summary</a></p>
     </article>
