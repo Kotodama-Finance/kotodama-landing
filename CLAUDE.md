@@ -780,8 +780,19 @@ que produjeron conclusiones equivocadas:
 - **Calibrar en una sola pose**: un esquema ganó por maximizar el rango en una
   pose fija, que es justo lo que produce luz inestable al girar. Medir en **2–3
   poses rotadas** y reportar la variación.
-- **`document.fonts.check()`** da falsos positivos de cobertura de glifos.
-  Verificar contra la tabla `cmap` de la fuente.
+- **La cobertura de glifos NO se verifica en el navegador. Ninguna forma
+  funciona, y ya se probaron tres.** `document.fonts.check()` da falsos
+  positivos: informa si la fuente está cargada, no si contiene el glifo. Medir
+  el **ancho** tampoco: los CJK son todos de 1em, así que un glifo presente y
+  uno ausente miden exactamente lo mismo. Y comparar los **píxeles** contra un
+  fallback tampoco: la cadena de respaldo de `"Zen Kaku", serif` resuelve a una
+  fuente distinta de `serif` a secas, así que todo «difiere» y no distingue
+  nada. **Verificar contra la tabla `cmap`**, que es la única fuente de verdad.
+
+  Lo que salvó las dos últimas fue **incluir un glifo de control** que se sabe
+  ausente (`猫`). Las dos métricas lo dieron como presente, y ahí se ve que
+  fallan. **Sin control, las dos habrían pasado por confirmación.** Cuando el
+  control se comporta mal, lo que está mal es la métrica, no el sujeto.
 - **Leer un canvas WebGL fuera de su frame** devuelve vacío: da falsos negativos.
   Renderizar y leer en el mismo turno, o usar la captura compositada.
 - **`Page.captureScreenshot` se cuelga durante una transición entre documentos.**

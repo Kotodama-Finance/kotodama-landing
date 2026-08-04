@@ -20,11 +20,19 @@
      exista la versión japonesa se caerían a una fuente del sistema sin que
      nadie lo note. Sobran ~4 KB; volver a bajarlos no vale ese riesgo.
 
-   Glifos del subset japonés (50 kanji + espacio ideográfico U+3000 + latín
-   básico U+0020–007F para tramos mixtos como "e-Stat / 総務省"):
+   Glifos del subset japonés (51 kanji + espacio ideográfico U+3000 + los dos
+   PARÉNTESIS DE ANCHO COMPLETO + latín básico U+0020–007F para tramos mixtos
+   como "e-Stat / 総務省"). Son 149 códigos en la cmap:
      肇 素 顔 渡 世 家 紋 鳥 居 絆 言 霊 産 河 川 立 方 体 一 次 資 料 追 跡
      可 能 公 開 日 本 銀 行 財 務 省 金 融 庁 取 引 所 内 閣 府 総 語
-     免 責 事 項
+     免 責 事 項 近
+
+   LOS PARÉNTESIS SON LA TRAMPA. （U+FF08）y （U+FF09）son japoneses y NO
+   entran por el rango latino: ahí están «(» y «)» de ASCII, que son otros
+   caracteres. Al agregar 日本語（近日公開） al footer faltaban TRES glifos, no
+   uno — 近 y los dos paréntesis—, y los paréntesis son los que no se ven
+   venir, porque uno da por hecho que un paréntesis es un paréntesis. Van por
+   --unicodes y no en la cadena de texto, para que se lean como lo que son.
 
    COMPROBAR LA COBERTURA (no confiar en document.fonts.check: informa si la
    fuente está cargada, no si contiene el glifo). Contra la tabla cmap real:
@@ -36,10 +44,10 @@
    repo google/fonts (ofl/…). JA = la cadena de kanji de arriba + "　":
      pyftsubset ZenKakuGothicNew-Regular.ttf \
        --output-file=assets/fonts/zen-kaku-gothic-new-400-subset.woff2 \
-       --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000
+       --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000,U+FF08,U+FF09
      pyftsubset ZenKakuGothicNew-Medium.ttf  \
        --output-file=assets/fonts/zen-kaku-gothic-new-500-subset.woff2 \
-       --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000
+       --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000,U+FF08,U+FF09
    Latín (Cormorant/Inter), --unicodes:
      U+0020-007F,U+00A0-00FF,U+2010-2027,U+2030-2044,U+2190-2193,U+2212
    ------------------------------------------------------------------------- */

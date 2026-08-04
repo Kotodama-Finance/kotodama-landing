@@ -239,18 +239,36 @@ glifos japoneses del sitio, que está listada en el comentario de `@font-face`
 en `assets/css/styles.css`:
 
 ```
-JA="肇素顔渡世家紋鳥居絆言霊産河川立方体一次資料追跡可能公開日本銀行財務省金融庁取引所内閣府総語免責事項　"
+JA="肇素顔渡世家紋鳥居絆言霊産河川立方体一次資料追跡可能公開日本銀行財務省金融庁取引所内閣府総語免責事項近　"
 
 pyftsubset ZenKakuGothicNew-Regular.ttf \
   --output-file=assets/fonts/zen-kaku-gothic-new-400-subset.woff2 \
-  --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000
+  --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000,U+FF08,U+FF09
 
 pyftsubset ZenKakuGothicNew-Medium.ttf \
   --output-file=assets/fonts/zen-kaku-gothic-new-500-subset.woff2 \
-  --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000
+  --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000,U+FF08,U+FF09
 ```
 
 El latín básico va incluido para tramos mixtos como «e-Stat / 総務省».
+
+**Los paréntesis de ancho completo son la trampa de esta lista.** `U+FF08` y
+`U+FF09` son japoneses y **no** entran por `U+0020-007F`: ese rango trae `(` y
+`)` de ASCII, que son otros caracteres y se ven mal junto a un kanji. Al pasar
+el footer a `日本語（近日公開）` faltaban **tres** glifos, no uno — `近` y los
+dos paréntesis—, y son los paréntesis los que no se ven venir.
+
+**Más seguro que reescribir `$JA` a mano**: derivar el conjunto nuevo del viejo.
+Se lee la `cmap` del subset actual, se le suman los códigos que falten y se
+subsetea a esa unión. Retranscribir cincuenta y pico de kanji para agregar uno
+es la forma más fácil de perder otro — y perderlo es silencioso.
+
+**Y la `og-image` va a protestar después de regenerar**: el subset de peso 500
+es una de sus entradas, así que la guarda avisa aunque la tarjeta sólo use 言霊
+y el PNG salga byte a byte idéntico (verificado). Se arregla con
+`python tools/make-og-image.py`. No sacar la fuente del lock por esto: un cambio
+de fuente **sí** puede mover la tarjeta, y el costo de la falsa alarma es un
+comando.
 
 **Verificar contra la tabla `cmap` de la fuente**, que es la única fuente de
 verdad sobre qué glifos contiene:
