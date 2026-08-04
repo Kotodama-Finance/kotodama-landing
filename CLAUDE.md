@@ -57,19 +57,36 @@ sesión.
 merge a `main` espera a que se resuelva la infraestructura de dominio, y ése es
 trabajo que no se hace en este repo.
 
-**Orden decidido, y el orden es la decisión:**
+**PASO 0 — HECHO. Ya se sabe dónde está el DNS**: **Namecheap BasicDNS**, con
+los seis registros del `.com` documentados (cuatro `A` de GitHub Pages, el
+`CNAME` de `www`, y el `TXT`/SPF del forwarding). **DNSSEC ya se desactivó**,
+antes de transferir. El detalle vive fuera del repo.
 
-1. **Averiguar dónde está el DNS hoy** y documentar los registros actuales.
-2. **Transferir los dominios a Xserver.**
-3. **Migrar el correo a iCloud+.**
-4. **Recién ahí, el merge a `main`.**
+**ORDEN VIGENTE — Y OJO, CAMBIÓ. Éste reemplaza al anterior**, que decía
+transferir → correo → merge:
 
-**Por qué el merge va último.** Los tres primeros pasos convergen sobre el mismo
-DNS, y publicar sobre una configuración recién movida es el peor momento posible:
-si algo falla —el sitio no resuelve, el correo se cae, un registro quedó mal
-copiado— **no se sabe cuál de los tres lo rompió**. Separarlos en el tiempo es lo
-que hace que el fallo sea diagnosticable. El paso 1 va primero por lo mismo: sin
-el registro de cómo está hoy, una transferencia no tiene a qué volver.
+1. **Configurar iCloud+ en el DNS de Namecheap**, y verificar que **recibe y
+   responde**.
+2. **Transferir el registro a Xserver.** Los nameservers **no** cambian con la
+   transferencia.
+3. **Cargar la zona completa en Xserver y verificarla** consultando sus NS
+   **directamente**, sin tocar todavía la delegación.
+4. **Recién ahí, cambiar los nameservers.**
+5. **Merge a `main`** + tag de publicación.
+
+**Por qué el correo va PRIMERO, que es el cambio de fondo.** El forwarding de
+Namecheap **muere al salir del registrador**, y `contact@kotodamafinance.com`
+está publicado en el sitio, en LinkedIn, en X y **en la propia página de
+mantenimiento** — donde además es el **único** enlace que tiene. O sea que si el
+correo se cae durante la obra, se cae junto con la única vía de contacto que
+queda cuando el sitio está abajo. Por eso se resuelve antes de mover nada.
+
+**Por qué 2, 3 y 4 están separados.** Que los nameservers no cambien con la
+transferencia es lo que permite partirlo: se puede **cargar la zona en Xserver y
+probarla contra sus propios NS mientras Namecheap sigue sirviendo el tráfico
+real**. Así el único paso que mueve tráfico —el 4— se hace contra una zona ya
+verificada, y deja de ser «cambiar y ver qué pasa». Cada paso se comprueba solo,
+que es lo que hace el fallo diagnosticable.
 
 **No es que el sitio no esté listo.** Está listo, y esa distinción importa: si
 alguien retoma y ve el merge pendiente, la pregunta no es «¿qué falta escribir?»
@@ -81,9 +98,14 @@ ella.
 **No queda nada sin decidir** dentro del sitio. El `domain` de las tarjetas, que
 era lo último, se cerró.
 
-**Al llegar al paso 4, releer primero** la sección «Antes de publicar» del
-README: son cuatro guardas, no una, y `check-ready` no mira el comportamiento
-del cubo ni la física.
+**Al llegar al paso 5 —el merge—, releer primero** la sección «Antes de
+publicar» del README: son cuatro guardas, no una, y `check-ready` no mira el
+comportamiento del cubo ni la física.
+
+**Y durante toda la obra, la rama `maintenance` es la red.** Es lo que se
+publica si hay que dejar el sitio abajo mientras se mueve el DNS; está lista y
+se activa cambiando la rama de Pages. Su única vía de contacto es ese mismo
+correo, que es la otra razón por la que el paso 1 va primero.
 
 ### Cabos abiertos vigentes — el resumen corto
 
