@@ -196,6 +196,38 @@ function setView(view) {
   }
 }
 
+/* ---- Reservar el layout 3D ANTES de hidratar ----------------------------
+   Sin esto, las anclas aterrizaban ~400px corridas. La cadena, medida: al
+   navegar de una subpágina a /#about, el scroll suave ATRAVIESA la sección del
+   cubo; eso dispara el lazy-init, y cuando el import de Three.js resuelve, el
+   escenario (620px) reemplaza a la grilla (~215px) insertando ~406px de alto
+   ARRIBA del destino — con el scroll ya aterrizado. scroll-margin-top no puede
+   arreglar eso: el destino se movió después del aterrizaje.
+
+   La reserva pone el layout 3D (escenario vacío con su alto de CSS, grilla
+   recortada, ayuda de 3D) en cuanto corre el módulo, así que la altura de la
+   página queda estable desde el primer layout y el ancla aterriza donde va a
+   quedarse. Lo que se difiere sigue siendo lo caro —crear el contexto WebGL—,
+   no la geometría de la página.
+
+   Si la hidratación falla, el catch de hydrateCube revierte a la grilla: el
+   fallback sin cubo sigue siendo el mismo de siempre. Sin JS este código no
+   corre y la capa visible es la grilla, como antes.
+
+   EL TOGGLE ENTRA EN LA RESERVA, y no es un detalle: mostrarlo recién al
+   hidratar metía ~59px (su alto + margen) DESPUÉS del aterrizaje del ancla —
+   la misma clase de corrimiento que la reserva existe para evitar, en chico.
+   Sus listeners funcionan sin cubo (setView guarda cada uso de `cube`); si el
+   usuario lo toca antes de que el import resuelva, lo peor es un escenario
+   vacío por unos cientos de ms. */
+if (toggle) {
+  toggle.hidden = false;
+  toggle.querySelectorAll('button').forEach((b) => {
+    b.addEventListener('click', () => setView(b.dataset.view));
+  });
+}
+setView('3d');
+
 /* ---- Hidratar el cubo 3D (Three.js) ------------------------------------- */
 async function hydrateCube() {
   if (!stage) return;
@@ -208,14 +240,8 @@ async function hydrateCube() {
       onDragStart: () => clearSelection(),
     });
     if (!cube) return;
-    // el cubo cargó: mostramos el escenario y el toggle
-    stage.hidden = false;
-    if (toggle) {
-      toggle.hidden = false;
-      toggle.querySelectorAll('button').forEach((b) => {
-        b.addEventListener('click', () => setView(b.dataset.view));
-      });
-    }
+    // El escenario y el toggle ya están a la vista desde la reserva; este
+    // setView es el que enciende el loop del cubo recién creado (setEnabled).
     setView('3d');
     // No forzamos snap al cargar: se conserva la vista 3/4 inicial del cubo.
     // La excepción es volver atrás: si hay una cara restaurada, el cubo tiene
@@ -223,6 +249,11 @@ async function hydrateCube() {
     if (activeFace && cube.snapTo) cube.snapTo(activeFace);
   } catch (err) {
     // Sin cubo: la grilla semántica queda como navegación. No es un fallo fatal.
+    // Deshace la reserva de layout 3D hecha en la carga: escenario oculto,
+    // grilla visible, ayuda de grilla, y el toggle se esconde — sin cubo no
+    // hay dos vistas entre las que alternar.
+    setView('grid');
+    if (toggle) toggle.hidden = true;
     // EL MENSAJE VA EN INGLÉS aunque el comentario esté en castellano, y la
     // distinción es la que vale para todo el archivo: un comentario no se
     // ejecuta, un console.warn SÍ — es salida que el programa produce en
@@ -247,13 +278,17 @@ function hydrateCubeWhenNear() {
     if (!entries.some((e) => e.isIntersecting)) return;
     io.disconnect();
     hydrateCube();
-    // Sin rootMargin a propósito: el hero mide 100vh, así que la sección del
-    // cubo arranca apenas ~20px debajo del fold. Cualquier margen de anticipación
-    // la haría intersectar ya en la carga y no se diferiría nada. Con margen 0
-    // el contexto se crea recién al scrollear, fuera del pico de carga inicial
-    // (compilación del shader del mar + fuentes). El margen de maniobra lo da el
-    // padding de la sección: el cubo queda bastante más abajo del borde.
-  }, { rootMargin: '0px' });
+    // rootMargin NEGATIVO abajo (-1px), y el signo es la parte que importa: el
+    // hero mide EXACTAMENTE 100vh, así que la sección del cubo TOCA el fold ya
+    // en la carga — y dos rects que se tocan INTERSECAN para el observer,
+    // aunque compartan sólo el borde. Con margen 0 el contexto WebGL se creaba
+    // en la carga y el lazy-init no difería nada (medido: el canvas existía
+    // antes de scrollear). El -1px encoge el viewport observado justo lo
+    // suficiente para que «tocar el borde» no cuente, y el contexto se crea
+    // recién al scrollear, fuera del pico de carga inicial (shader del mar +
+    // fuentes). Un rootMargin POSITIVO «generoso» desactiva la optimización
+    // entera: la sección intersectaría en la carga.
+  }, { rootMargin: '0px 0px -1px 0px' });
   io.observe(section);
 }
 hydrateCubeWhenNear();

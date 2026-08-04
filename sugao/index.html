@@ -86,7 +86,7 @@
         <div class="face-page__body">
           <p>Kotodama Finance began with a frustration I lived. For years I worked in risk management inside multinational insurers &mdash; a job that runs on information &mdash; and I kept hitting the same wall: what I needed existed, but it was scattered, slow to reach, and written to inform without revealing. The numbers were public and still opaque. Closing that opacity &mdash; public information that still fails to inform &mdash; is what this platform sets out to do.</p>
           <p>The instinct to close it comes from the work. Across seventeen years in financial services I moved through the whole arc of an insurance business, from underwriting and claims to management and the Board, and built the parts that turn raw figures into decisions. That is where I learned to tell a figure that has been verified from one that has merely been repeated &mdash; the difference this platform is built on.</p>
-          <p>It is also why we begin where we do. Insurance is the sector I know from the inside; Japan is where I live, work in the language, and read these sources in their original form. The first node of a larger map, not its edge.</p>
+          <p>It is also why we begin where we do. Insurance is the sector I know from the inside; Japan is where I live and work in the language. The first node of a larger map, not its edge.</p>
         </div>
         <ul class="profile-links">
           <li><a href="https://www.linkedin.com/in/manuel-vivo-casarotti/" target="_blank" rel="noopener">LinkedIn</a></li>
@@ -108,12 +108,33 @@
           <p>Away from the desk I climb and camp when I can. Japan has been generous here &mdash; Mount Fuji five times so far. Sailing is the one I still owe myself: I love being on the water, and haven&rsquo;t yet managed it on this side of the world.</p>
           <p>A slower, more personal record of what I read and watch is on the way.</p>
         </div>
-        <ul class="profile-links">
-          <li><a href="https://www.librarything.com/catalog/Manuel_Vivo" target="_blank" rel="noopener">LibraryThing</a></li>
+        <!-- TARJETAS DE PERFIL — reemplazan al enlace de texto suelto. La
+             estructura está pensada para crecer: IMDb, MyAnimeList, Steam y
+             GitHub se agregan acá CUANDO se publiquen — SIN slots vacíos ni
+             tarjetas de «próximamente», que ocupan lugar y prometen lo que no
+             existe. La tarjeta ENTERA es el enlace, no sólo el nombre.
+             EL LOGO TODAVÍA NO ESTÁ, y no es un olvido: va monocromo en oro
+             (silueta SVG, fill=currentColor — ver .profile-card__logo), pero
+             librarything.com bloquea el acceso automatizado a sus términos de
+             marca (403 en /press y en el FAQ «Use of LibraryThing Logo»,
+             /topic/45089), así que el permiso de RECOLOREAR quedó sin
+             verificar. Decisión del autor pendiente; hasta ahí, sin logo.
+             El enlace de LinkedIn del perfil profesional NO se convierte en
+             tarjeta: es una credencial dentro de esa sección, no parte de este
+             registro. -->
+        <ul class="profile-cards">
+          <li>
+            <a class="profile-card" href="https://www.librarything.com/catalog/Manuel_Vivo" target="_blank" rel="noopener">
+              <span class="profile-card__meta">
+                <span class="profile-card__name">LibraryThing</span>
+                <span class="profile-card__what"><span class="todo">TODO: una línea de qué hay en LibraryThing. La escribe Manuel.</span></span>
+              </span>
+            </a>
+          </li>
         </ul>
       </section>
 
-      <p class="face-page__back"><a href="/#cube">&larr; Back to the Cube</a></p>
+      <p class="face-page__back"><a href="/#cube-view">&larr; Back to the Cube</a></p>
     </article>
   </main>
 
@@ -125,8 +146,11 @@
           <span lang="ja">言霊</span>
           <span class="footer__word">Kotodama Finance</span>
         </p>
-        <p class="footer__tag">Where Japan&rsquo;s economic currents become visible. Open access.</p>
+        <p class="footer__tag">Where economic currents become visible. Open access.</p>
       </div>
+      <!-- SIN columna «Platform»: enlazaba a The Cube y Method — dos de cinco
+           secciones, las dos ya presentes en la nav de arriba. Una selección
+           arbitraria que duplica navegación no orienta: ruido. -->
       <div class="footer__cols">
         <div class="footer__col">
           <p class="footer__label">Reach us</p>
@@ -137,11 +161,6 @@
           <a href="https://x.com/KotodamaFinance" target="_blank" rel="noopener">X / @KotodamaFinance</a>
           <a href="https://www.linkedin.com/company/kotodamafinance/" target="_blank" rel="noopener">LinkedIn</a>
         </div>
-        <div class="footer__col">
-          <p class="footer__label">Platform</p>
-          <a href="#cube">The Cube</a>
-          <a href="#method">Method</a>
-        </div>
       </div>
     </div>
     <!-- 免責事項 CORTO — se repite en TODAS las páginas a propósito, y es la
@@ -150,9 +169,12 @@
          en el footer global y no en una página a la que haya que llegar.
          El texto COMPLETO vive UNA sola vez, en /disclaimer/, y desde acá se
          enlaza. Duplicar el largo lo haría derivar, y un sitio que se
-         contradice en su propio descargo pierde lo único que el descargo da. -->
+         contradice en su propio descargo pierde lo único que el descargo da.
+         SIN el rótulo 免責事項 delante: era la traducción japonesa de
+         «disclaimer», o sea japonés ornamental en la versión inglesa — la
+         misma textura que 立方体 o 一次資料, que ya se sacaron. Los cuatro
+         glifos se conservan en el subset para /ja/ (ver el @font-face). -->
     <p class="footer__disclaimer">
-      <span lang="ja">免責事項</span> &middot;
       Kotodama Finance is published for information only and is not investment or financial advice.
       <a href="/disclaimer/">Full disclaimer &rarr;</a>
     </p>

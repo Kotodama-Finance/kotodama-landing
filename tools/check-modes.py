@@ -169,9 +169,32 @@ def main():
         cmd("Page.enable"); cmd("Runtime.enable")
         cmd("Page.navigate", url=BASE + "/index.html")
         time.sleep(5)
+        # Altura del documento ANTES de hidratar (el cubo todavía no creó su
+        # canvas: el lazy-init espera a que la sección se acerque al viewport).
+        alto_pre = js("document.documentElement.scrollHeight")
+        hidratado_pre = js("!!document.querySelector('#cube-stage canvas')")
         # el cubo se hidrata al acercarse su sección
         js("document.getElementById('cube').scrollIntoView({behavior:'auto'}); true")
         time.sleep(3)
+
+        # LA ALTURA DE LA PÁGINA NO CAMBIA AL HIDRATAR, y es la propiedad que
+        # hace que las anclas aterricen bien. Antes el escenario aparecía recién
+        # al resolver el import de Three.js y metía ~406px de alto (620 del
+        # escenario contra ~215 de la grilla) DESPUÉS del aterrizaje del ancla:
+        # /#about, /#method y /#footer quedaban corridos exactamente eso.
+        # main.js ahora reserva el layout 3D en la carga (setView('3d') antes
+        # del lazy-init); esta comprobación existe para que esa reserva no se
+        # pierda en un refactor. Tolerancia chica por reflow de fuentes.
+        alto_post = js("document.documentElement.scrollHeight")
+        if not hidratado_pre:
+            revisar(abs(alto_post - alto_pre) <= 24,
+                    "la altura de la página es estable al hidratar (anclas)",
+                    f"{alto_pre} -> {alto_post}")
+        else:
+            # Si el cubo ya estaba hidratado al medir, la comparación no midió
+            # nada: mejor decirlo que dar un verde vacío.
+            revisar(False, "la medición pre-hidratación llegó tarde (verde vacío)",
+                    "el canvas ya existía antes del scroll")
 
         print("Transición entre páginas: reservada, no activa")
         sin_view_transitions(js, "portada")

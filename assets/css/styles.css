@@ -14,11 +14,14 @@
 
      OJO AL REGENERAR: la lista de abajo YA NO ES exactamente lo que hay en las
      páginas. Al sacar el japonés ornamental de la versión inglesa (立方体,
-     一次資料, 追跡可能, 公開 y varios nombres de organismos) esos glifos
-     quedaron sin uso, y se CONSERVAN a propósito porque vuelven con /ja/.
-     Regenerar a partir del texto actual del sitio los borraría, y el día que
-     exista la versión japonesa se caerían a una fuente del sistema sin que
-     nadie lo note. Sobran ~4 KB; volver a bajarlos no vale ese riesgo.
+     一次資料, 追跡可能, 公開, el rótulo 免責事項 del footer y de /disclaimer/,
+     y los nombres de organismos de la PORTADA — en /method/ siguen) esos
+     glifos quedaron sin uso, y se CONSERVAN a propósito porque vuelven con
+     /ja/: 免責事項 será el título real de la página legal japonesa. Regenerar
+     a partir del texto actual del sitio los borraría, y el día que exista la
+     versión japonesa se caerían a una fuente del sistema sin que nadie lo
+     note. Es el mismo trato que 守/作/中 del cartel de mantenimiento (abajo).
+     Sobran ~4 KB; volver a bajarlos no vale ese riesgo.
 
    YA NO SE LISTAN LOS GLIFOS ACÁ, Y ES UN CAMBIO DELIBERADO. Eran 51 kanji y
    se podían leer de un vistazo; con la lista de fuentes de /method/ pasaron a
@@ -245,7 +248,16 @@ body {
 a { color: var(--c-gold); text-decoration: none; }
 a:hover { color: var(--c-gold-soft); }
 
-section { scroll-margin-top: var(--nav-h); }
+/* Aterrizaje de anclas. La nav es fija y MEDIDA: 63px de alto real a 1440x900
+   y a 1280x720 (el token --nav-h=84 ya la cubre). El extra es el respiro para
+   que el destino no quede pegado al borde de la nav.
+   `footer` va listado APARTE porque no es <section>: la nav enlaza a /#footer
+   (Contact) y sin esto el footer aterrizaba con la marca tapada por la nav —
+   era el único destino sin scroll-margin y el fallo no se veía en los demás.
+   `.cube__layout` es el destino de «Back to the Cube» (/#cube-view): las caras
+   vuelven al CUBO, no al título de la sección — aterrizar en #cube dejaba el
+   cubo más de media pantalla abajo (57% visible, medido). */
+section, footer, .cube__layout { scroll-margin-top: calc(var(--nav-h) + 12px); }
 
 /* Foco visible y consistente en todo el sitio */
 a:focus-visible,
@@ -527,12 +539,13 @@ button:focus-visible {
     var(--c-surface-cube) 12%,
     var(--c-surface-cube) 100%);
   /* El padding de abajo se SUMA al de arriba de .about: son dos secciones
-     contiguas y en la costura los dos se ven como un solo hueco. Medido a
-     1440x900 daba 140+170 = 310px entre «The idea behind the cube →» y el
-     rótulo «About», o sea un tercio de pantalla vacía. Bajó a 84, y el de
-     .about a 120: 204 en total. Al tocar uno de los dos, mirar el otro — por
-     separado cada número parece razonable y es la suma la que se ve. */
-  padding: clamp(70px, 10vw, 130px) clamp(20px, 5vw, 64px) clamp(48px, 6vw, 84px);
+     contiguas y en la costura los dos se ven como un solo hueco. Segunda
+     pasada: 84+120 = 204px seguía leyéndose como dos páginas; bajó a 56, y el
+     top de .about a 84 — 140 en total, a tono con la costura About→Method
+     (161px visuales, medida como referencia de ritmo). Al tocar uno de los
+     dos, mirar el otro — por separado cada número parece razonable y es la
+     suma la que se ve. */
+  padding: clamp(70px, 10vw, 130px) clamp(20px, 5vw, 64px) clamp(32px, 4vw, 56px);
 }
 .cube__wrap { max-width: var(--maxw); margin: 0 auto; }
 .cube__head {
@@ -593,9 +606,16 @@ button:focus-visible {
 .cube__stage[hidden] { display: none; }
 .cube__stage canvas { touch-action: none; cursor: grab; }
 .cube__stage.is-dragging canvas { cursor: grabbing; }
-/* Bloque de entrada: ayuda + folio. */
+/* Bloque de entrada: ayuda + folio.
+   El hueco visible entre el cubo dibujado y la ayuda es MAYOR que este margen,
+   y la parte grande no es CSS: con una cara seleccionada (snap de frente) el
+   cubo se dibuja más chico y quedan ~108px de aire DENTRO del canvas (medido a
+   1440x900). Ese aire es la reserva del encuadre para las poses de arista
+   arriba, que el arrastre sí alcanza — el peor caso llega a 17px del borde del
+   canvas, así que ni se recorta el canvas ni se monta la ayuda encima. Lo único
+   recortable era este margen: 22 → 12. */
 .cube__enter {
-  margin-top: 22px;
+  margin-top: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -717,8 +737,11 @@ button:focus-visible {
      ser un escalón. Mismo recurso que ya usaba la sección del cubo. */
   background: linear-gradient(to bottom,
     var(--c-surface-cube) 0%, var(--c-surface-about) 16%, var(--c-surface-about) 100%);
-  /* La otra mitad de la costura con .cube: ver el comentario de su padding. */
-  padding: clamp(64px, 9vw, 120px) clamp(20px, 5vw, 64px);
+  /* La otra mitad de la costura con .cube: ver el comentario de su padding.
+     El top y el bottom van SEPARADOS a propósito: el top es la costura con el
+     cubo (bajó a 84); el bottom es la costura con .method y no se tocó — esa
+     lleva además el border-top de .method, que la marca como corte. */
+  padding: clamp(48px, 6vw, 84px) clamp(20px, 5vw, 64px) clamp(64px, 9vw, 120px);
   overflow: hidden;
 }
 .about__watermark {
@@ -817,8 +840,17 @@ button:focus-visible {
   padding: 15px 0;
   border-bottom: 1px solid var(--line-gold-faint);
 }
-.sources__ja { font-family: var(--font-ja); font-size: 1.02rem; color: var(--c-gold); min-width: 118px; }
-.sources__en { display: flex; flex-direction: column; gap: 2px; color: var(--c-text); font-size: 0.95rem; }
+/* Nombre oficial japonés — línea secundaria BAJO el nombre inglés, dentro de
+   .sources__en, no columna propia. En columna, el ancho variable del japonés
+   corría el arranque del inglés fila por fila, y el de GIROJ
+   (損害保険料率算出機構) partía en dos líneas desalineando la marca de tier.
+   En la portada directamente no hay nombres japoneses: se reservan para /ja/.
+   Acá, en /method/, se quedan porque son el nombre real con el que se llega a
+   la fuente en Japón. */
+.sources__ja { font-family: var(--font-ja); font-size: 0.92rem; color: var(--c-gold); }
+/* align-items: flex-start para que el enlace del nombre NO se estire al ancho
+   de la nota — estirado, su border-bottom subrayaba aire. */
+.sources__en { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; color: var(--c-text); font-size: 0.95rem; }
 .sources__note { font-size: 0.82rem; color: var(--c-text-muted); }
 
 /* --- La lista completa de /method/ ------------------------------------------
@@ -828,9 +860,13 @@ button:focus-visible {
    caras —lleno contra hueco, en oro— porque ya está establecido en el sitio y
    no hace falta enseñar uno nuevo. Cuadrado y no círculo para que no se
    confunda con el estado de una cara, que es otra cosa. */
+/* Títulos de grupo: claramente MÁS grandes que el contenido. A 1.25rem se
+   leían casi igual que los nombres de las fuentes, y son la estructura que
+   hace navegable una lista de 50 entradas. Quedan por debajo del h2 de la
+   sección (hasta 2rem): la jerarquía h2 > h3 > fila se tiene que ver. */
 .sources__group {
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: clamp(1.5rem, 2.2vw, 1.8rem);
   color: var(--c-gold);
   margin: clamp(30px, 4vw, 44px) 0 10px;
 }
@@ -841,6 +877,15 @@ button:focus-visible {
   flex-shrink: 0;
   align-self: center;
   border: 1px solid var(--c-gold);
+}
+/* En las FILAS la marca se alinea a la primera línea (el nombre inglés), no al
+   centro del bloque: con el japonés y la nota debajo, el centro caía en
+   cualquier altura según cuántas líneas tuviera la entrada. 8px ≈ centro
+   óptico de una línea de 0.95rem con line-height 1.6. En la leyenda sigue
+   centrada, que ahí es una sola línea. */
+.sources li .sources__mark {
+  align-self: flex-start;
+  margin-top: 8px;
 }
 .sources__mark[data-tier="1"] { background: var(--c-gold); }
 .sources__mark[data-tier="2"] { background: transparent; }
@@ -864,11 +909,18 @@ button:focus-visible {
 .sources__en a:hover { color: var(--c-gold); border-bottom-color: var(--c-gold); }
 
 /* Enlace al método completo, al pie de la sección. Mismo tratamiento discreto
-   que .cube__more: es una salida, no una llamada a la acción. */
+   que .cube__more: es una salida, no una llamada a la acción.
+   CENTRADO bajo las DOS columnas a propósito: alineado a la izquierda quedaba
+   a la altura del pie de la columna de fuentes pero pegado a la columna de
+   pasos, que termina ~260px más arriba (medido) — parecía flotar. Centrado se
+   lee como el cierre de la sección, no como la cola de una columna.
+   Es UN solo enlace y no uno por columna: dos enlaces al mismo destino a pocas
+   líneas se leen como un error. */
 .method__more {
   max-width: 1120px;
   margin: clamp(40px, 5vw, 56px) auto 0;
   font-size: 0.95rem;
+  text-align: center;
 }
 .method__more a { color: var(--c-gold); border-bottom: 1px solid var(--line-gold-soft); padding-bottom: 2px; }
 .method__more a:hover { border-bottom-color: var(--c-gold); }
@@ -948,6 +1000,15 @@ button:focus-visible {
    Va sobre <i> y no <em> a propósito — <em> es énfasis y un lector de pantalla
    lo entonaría; <i> es «término en otra voz», que es exactamente esto. */
 .face-page__body .name { font-style: italic; color: var(--c-text); }
+/* En /hajime/, los tres nombres (Taichi, Yorozu, Yūgen) ADEMÁS enlazan a su
+   subpágina, y un enlace se viste de enlace: oro y subrayado suave. La regla
+   pisa el color de .name a propósito.
+   EN /musubi/ EL MISMO MARCADO .name QUEDA SIN ENLACE, Y ES DECISIÓN: Kasen,
+   Okeanos, Kotodama, Musubi, Odysseus y Aeolus son conceptos, explicados donde
+   aparecen — no destinos. Quien los "empareje" con /hajime/ agregándoles
+   enlace estaría prometiendo páginas que no existen. */
+.face-page__body a.name { color: var(--c-gold); border-bottom: 1px solid var(--line-gold-soft); padding-bottom: 1px; }
+.face-page__body a.name:hover { color: var(--c-gold-soft); border-bottom-color: var(--c-gold); }
 /* .face-page__ref se fue con el enlace de /sugao/ al registro del operador,
    que dejó de existir junto con esa sección. */
 /* Antes era .face-page__deferred, para «lo que la cara promete y todavía no
@@ -978,6 +1039,44 @@ button:focus-visible {
   padding-bottom: 2px;
 }
 .profile-links a:hover { border-bottom-color: var(--c-gold); }
+
+/* Tarjetas de perfil — el registro de perfiles personales de /sugao/, en
+   formato tarjeta desde YA aunque haya una sola: un enlace suelto sirve para
+   uno, no para cinco, y los que vienen (IMDb, MyAnimeList, Steam, GitHub) se
+   agregan acá sin rehacer nada.
+   FILA QUE ENVUELVE con ancho fijo, no grilla auto-fill: una grilla estiraría
+   la tarjeta única al ancho completo de la columna —un banner—; con ancho
+   fijo una sola se ve deliberada y varias envuelven de a dos por fila en la
+   columna de 720. Vocabulario visual de las face-card (mismo borde, fondo y
+   hover), que ya está establecido.
+   El logo del servicio va MONOCROMO EN ORO, reducido a silueta (SVG con
+   fill=currentColor): cinco marcas con cinco identidades de color romperían
+   la paleta navy/oro justo en la página que tiene que sonar sobria. Se
+   distinguen por FORMA, no por color. El de LibraryThing está pendiente del
+   permiso de marca — ver el comentario en /sugao/. */
+.profile-cards {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 232px;
+  padding: 14px 16px;
+  border: 1px solid rgb(var(--rgb-mist) / 0.2);
+  border-radius: var(--radius);
+  background: rgb(var(--rgb-card) / 0.86);
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+.profile-card:hover { border-color: var(--c-gold); background: rgb(var(--rgb-gold) / 0.08); }
+.profile-card__logo { width: 26px; height: 26px; flex-shrink: 0; color: var(--c-gold); }
+.profile-card__meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.profile-card__name { font-family: var(--font-ui); font-size: 0.92rem; font-weight: 500; color: var(--c-text); }
+.profile-card__what { font-size: 0.78rem; line-height: 1.45; color: var(--c-text-muted); }
 .face-page__subtitle {
   font-family: var(--font-display);
   font-weight: 500;
@@ -1015,6 +1114,13 @@ button:focus-visible {
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
+  /* Fuera de la SELECCIÓN, no sólo de la vista: sin esto, copiar la sección
+     del cubo en modo 3D arrastraba las seis tarjetas invisibles al
+     portapapeles. user-select no toca la accesibilidad — lectores de pantalla
+     y foco de teclado no pasan por la selección — ni lo que ven los crawlers,
+     que leen el DOM. Se repone en :focus-within, donde la grilla vuelve a ser
+     visible y lo visible tiene que poder copiarse. */
+  user-select: none;
 }
 /* Al tabular hasta una cara, la grilla se revela como panel SOBRE el escenario
    del cubo: el foco queda visible sin provocar salto de layout. */
@@ -1040,6 +1146,7 @@ button:focus-visible {
   background: rgb(var(--rgb-navy) / 0.96);
   border: 1px solid var(--line-gold);
   border-radius: var(--radius);
+  user-select: auto;
 }
 /* Tarjetas compactas: en una sola columna angosta no entran como en la grilla */
 .face-grid.is-sr:focus-within .face-card {

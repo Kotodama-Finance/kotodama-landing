@@ -480,6 +480,15 @@ def superficie_publicada():
 def castellano_publicado():
     problemas = []
     for origen, ctx, texto in superficie_publicada():
+        # Los placeholders TODO están en castellano A PROPÓSITO (regla de
+        # CLAUDE.md: así no pueden confundirse con copy real en inglés), y
+        # check-ready ya impide publicar mientras exista uno. Marcarlos acá
+        # sería poner una regla del proyecto a pelear contra otra. La exención
+        # es angosta a propósito: sólo texto que EMPIEZA con «TODO», que es la
+        # convención de los placeholders; castellano sin esa marca sigue siendo
+        # hallazgo aunque esté en la misma página.
+        if texto.startswith("TODO"):
+            continue
         motivos = []
         hits = sorted({h.lower() for h in RE_CASTELLANO.findall(texto)})
         if hits:

@@ -3,19 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Page not found — Kotodama Finance</title>
-<!-- La description queda aunque la página sea noindex: no la va a usar un
-     buscador, pero sí la muestran algunos clientes al previsualizar un enlace,
-     y un placeholder en castellano ahí sería lo mismo que en cualquier otra
-     página. Open Graph sigue sin ir, por lo de abajo. -->
-<meta name="description" content="This address does not lead anywhere on this site. It may have been mistyped, or it may point to something that has not been built yet.">
-<!-- La única página del sitio que NO se quiere indexada: es un destino de
-     error, no contenido. Por eso tampoco está en sitemap.xml.
-     Y por eso NO lleva canonical ni Open Graph, a diferencia de las otras ocho:
-     un canonical en una página noindex no dice nada, y una tarjeta linda al
-     compartirla haría pasar un enlace roto por contenido. La ausencia es
-     deliberada; check-structure exime a esta página de exigirlos. -->
-<meta name="robots" content="noindex, follow">
+<title>Yorozu — Kotodama Finance</title>
+<meta name="description" content="TODO: description de Yorozu, la línea sectorial de Hajime. La escribe Manuel.">
+<link rel="canonical" href="https://kotodamafinance.com/hajime/yorozu/">
+<!-- Open Graph: la tarjeta que se ve al compartir el enlace en un chat o una
+     red. Sin esto el enlace viaja como una línea de texto pelada.
+     og:url y og:image tienen que ser ABSOLUTAS: el que arma la vista previa no
+     es el navegador del lector y no puede resolver una ruta relativa.
+     La imagen la genera tools/make-og-image.py. -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kotodamafinance.com/hajime/yorozu/">
+<meta property="og:title" content="Yorozu — Kotodama Finance">
+<meta property="og:description" content="TODO: description de Yorozu, la línea sectorial de Hajime. La escribe Manuel.">
+<meta property="og:image" content="https://kotodamafinance.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Kotodama Finance: the 言霊 mark in gold above the brand name, on deep navy.">
+<!-- Sin esto X muestra una miniatura cuadrada en vez de la tarjeta ancha. -->
+<meta name="twitter:card" content="summary_large_image">
+<!-- Iconos. El .ico existe porque el navegador pide /favicon.ico haya o no
+     <link>: sin el archivo, cada carga deja un 404 en la consola.
+     Se generan con tools/make-favicon.py, que documenta el porqué de cada formato. -->
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -23,13 +31,9 @@
 </head>
 <body class="page">
 
-<!-- 404 — GitHub Pages sirve este archivo ante cualquier ruta que no exista,
-     así que las rutas absolutas del nav y el footer son obligatorias: la URL
-     fallida puede tener cualquier profundidad (/tosei/algo/inexistente/) y con
-     rutas relativas los enlaces y el CSS apuntarían a la nada.
-     Lleva el mismo chrome que el resto del sitio: quien se pierde tiene que
-     poder salir por donde saldría en cualquier otra página. -->
-<header id="nav" class="nav">
+<!-- Página de texto: no carga el shader del mar ni Three.js. Sólo el CSS
+     compartido. -->
+  <header id="nav" class="nav">
     <a class="nav__brand" href="/">
       <span class="nav__mark" lang="ja">言霊</span>
       <span class="nav__word">Kotodama Finance</span>
@@ -44,38 +48,34 @@
   </header>
 
   <main>
+    <!-- /hajime/yorozu/ — la línea SECTORIAL de Hajime: las partes, sector por sector.
+         ANDAMIAJE: los tres textos son placeholders y los escribe Manuel.
+         SIN KANJI en el h1 a propósito: los nombres japoneses y su escritura
+         los cierra el autor (regla de CLAUDE.md — no se inventan ni se
+         proponen), y para Taichi / Yorozu / Yūgen todavía no hay kanji
+         decidido. Si algún día lo hay, entra con su regeneración de subset.
+         La vuelta va a /hajime/ y no al cubo: a esta página se llega desde
+         /hajime/, que es el criterio de los rótulos de vuelta. -->
     <article class="face-page">
       <header class="face-page__head">
-        <p class="eyebrow">404</p>
-        <!-- ACÁ VA UNA FRASE, NO UN KANJI, Y ES A PROPÓSITO. Las seis caras
-             llevan un nombre en kanji porque nombran algo que existe. Esta
-             página no es una cara del cubo y no tiene contenido que nombrar:
-             tiene una AUSENCIA, y un sustantivo suelto no puede decir «esto no
-             existe». Por eso rompe el patrón.
-             Si alguien la «corrige» a un kanji suelto por coherencia con las
-             otras páginas, está eligiendo la simetría por encima del sentido.
-             Usa .face-page__phrase y no .face-page__kanji: ese otro tamaño está
-             hecho para uno o dos glifos y diez no entran en el ancho. -->
         <h1 class="face-page__title">
-          <span class="face-page__phrase" lang="ja">この航路はありません</span>
-          <span class="face-page__romaji">This page does not exist.</span>
+          <span class="face-page__romaji">Yorozu</span>
         </h1>
+        <p class="face-page__gloss"><span class="todo">TODO: línea de función de Yorozu (sectorial)</span></p>
       </header>
 
+      <p class="face-page__lead"><span class="todo">TODO: lead de Yorozu. Lo escribe Manuel.</span></p>
+
       <div class="face-page__body">
-        <p>Sorry &mdash; the address you followed does not lead anywhere on this site. It may have been mistyped, or it may have pointed to something that has not been built yet.</p>
-        <!-- La invitación a escribir va CONDICIONADA a propósito: si alguien
-             tecleó mal la URL no hay nada que arreglar, y pedirle que reporte
-             su propio error de tipeo hace perder el tiempo a los dos. El mail
-             es el mismo del footer, enlazado igual. -->
-        <p>If you got here from a link on this site, something is broken and we would like to know. Write to <a href="mailto:contact@kotodamafinance.com">contact@kotodamafinance.com</a> and we will fix it.</p>
+        <p><span class="todo">TODO: párrafo único de Yorozu (sector por sector). Lo escribe Manuel.</span></p>
       </div>
 
-      <p class="face-page__back"><a href="/">&larr; Back to the start</a></p>
+      <p class="face-page__back"><a href="/hajime/">&larr; Back to Hajime</a></p>
     </article>
   </main>
 
-<footer id="footer" class="footer">
+  <!-- FOOTER -->
+  <footer id="footer" class="footer">
     <div class="footer__top">
       <div class="footer__brand">
         <p class="footer__mark">

@@ -105,7 +105,12 @@
           </div>
         </div>
 
-        <div class="cube__layout">
+        <!-- id="cube-view": el destino de «Back to the Cube» desde las caras.
+             Apunta al CUBO mismo y no a #cube (el título de la sección): quien
+             vuelve ya leyó la introducción, y aterrizar en el título dejaba el
+             cubo más de media pantalla abajo. La nav sí sigue apuntando a
+             #cube — quien llega por primera vez necesita el contexto. -->
+        <div class="cube__layout" id="cube-view">
 
           <!-- Toggle ARRIBA del escenario. Debajo saltaría: al pasar a modo
                grilla el escenario computa display:none y la grilla mide menos,
@@ -224,7 +229,8 @@
           <div class="cube__enter">
             <!-- El texto de acá es el del modo GRILLA a propósito: sin JS la
                  capa visible es la grilla y no hay nada que arrastrar. El de
-                 3D («Drag to turn. …») lo pone setView() al hidratar. -->
+                 3D («Drag to turn. …») lo pone setView('3d') en la carga del
+                 módulo, junto con la reserva del layout 3D (ver main.js). -->
             <p class="cube__hint">Click a face to select it.</p>
             <div class="cube__folio" id="cube-folio" inert>
               <div class="cube__folio-in">
@@ -248,14 +254,22 @@
       <div class="about__watermark" aria-hidden="true" lang="ja">産霊　河川　言霊</div>
       <div class="about__inner">
         <p class="eyebrow">About</p>
-        <p class="about__statement">Capital moves through Japan in currents most people never see. Kotodama Finance exists to make those currents visible &mdash; and to keep them open to everyone.</p>
+        <!-- Sin «through Japan»: el motor es global y Japón es el primer nodo,
+             no el tema. Es la misma corrección que ya pasó por el hero,
+             /musubi/ y /sugao/ — anclar el proyecto en Japón lo achicaba. -->
+        <p class="about__statement">Capital moves in currents most people never see. Kotodama Finance exists to make those currents visible &mdash; and to keep them open to everyone.</p>
         <div class="about__body">
           <p>The cube is our map. Six faces, held at the same level, because understanding a financial system means holding data, people, learning and action together &mdash; not ranking one over the rest.</p>
           <!-- Misma corrección que en el hero: «where the questions are sharpest
                and the sources richest» comparaba contra nada. Acá va la PRIMERA
                mitad de la razón de /musubi/; el hero lleva la segunda. -->
           <p>Japan is the first node, not the frontier. We start here because it is where we live. The method is meant to travel.</p>
-          <p>We lead with meaning; the Japanese is the flavour. Each face carries a word &mdash; <span lang="ja">肇</span>, <span lang="ja">素顔</span>, <span lang="ja">絆</span> &mdash; but the promise is written plainly, in language anyone can read.</p>
+          <!-- Antes decía «We lead with meaning; the Japanese is the flavour»,
+               que declaraba DECORATIVOS los kanji — y /musubi/ existe para
+               explicar que no lo son. El sitio se contradecía entre dos
+               páginas; ganó la versión de /musubi/, que es la página que
+               desarrolla la idea. -->
+          <p>Each face carries a Japanese word &mdash; <span lang="ja">肇</span>, <span lang="ja">素顔</span>, <span lang="ja">絆</span> &mdash; chosen because it names what that area does more precisely than an English label would. The words are not decoration; where they come from is a longer story. What they promise is written plainly, in language anyone can read.</p>
         </div>
       </div>
     </section>
@@ -302,28 +316,18 @@
             <!-- CINCO de ejemplo, no la lista entera: japonesas y globales, para
                  que se vea que el alcance no es sólo Japón. La lista taxativa
                  vive en /method/, a un enlace de acá.
-                 Los nombres japoneses SÍ se quedan, a diferencia de los kanji
-                 ornamentales que se sacaron arriba: son el nombre real de cada
-                 organismo, lo que uno busca para llegar a la fuente. Por eso
-                 BIS y Damodaran tienen la columna vacía — no tienen nombre
-                 japonés, y el min-width de .sources__ja mantiene la alineación. -->
+                 SIN nombres japoneses en la portada — antes BOJ y FSA los
+                 llevaban en una columna propia y las otras tres filas quedaban
+                 con la columna vacía: dispareja. Los glifos se conservan en el
+                 subset para /ja/, y en /method/ el nombre oficial japonés sigue
+                 — ahí no es adorno sino el nombre con el que se llega a la
+                 fuente, como línea secundaria bajo el nombre inglés. -->
             <ul class="sources">
-              <li><span class="sources__ja" lang="ja">日本銀行</span><span class="sources__en"><span>Bank of Japan (BOJ)</span><span class="sources__note">Monetary policy, flow of funds</span></span></li>
-              <li><span class="sources__ja" lang="ja">金融庁</span><span class="sources__en"><span>Financial Services Agency (FSA)</span><span class="sources__note">Regulation, disclosure</span></span></li>
-              <!-- EDINET va con la columna japonesa vacía aunque sea japonés: en
-                   japonés también se escribe «EDINET», así que ponerlo repetía
-                   la misma palabra dos veces en la misma fila. -->
-              <li><span class="sources__ja"></span><span class="sources__en"><span>EDINET</span><span class="sources__note">Corporate filings and disclosures</span></span></li>
-              <!-- NOTAS PROVISORIAS. Las de BOJ y FSA vienen del archivo de
-                   referencia; estas dos las redacté yo para no dejar la fila
-                   vacía, y el autor ya las corrigió. Se aplican al redactar
-                   /method/, junto con el resto de la lista:
-                     BIS       -> «Cross-border banking exposure»
-                     Damodaran -> «Valuation datasets by sector and region»
-                   No se cambian antes: la lista entera se reescribe de una vez
-                   en /method/ y la portada toma de ahí sus cinco ejemplos. -->
-              <li><span class="sources__ja"></span><span class="sources__en"><span>Bank for International Settlements (BIS)</span><span class="sources__note">Cross-border banking and settlement data</span></span></li>
-              <li><span class="sources__ja"></span><span class="sources__en"><span>Damodaran Online</span><span class="sources__note">Valuation data and cost of capital</span></span></li>
+              <li><span class="sources__en"><span>Bank of Japan (BOJ)</span><span class="sources__note">Monetary policy, flow of funds</span></span></li>
+              <li><span class="sources__en"><span>Financial Services Agency (FSA)</span><span class="sources__note">Regulation, disclosure</span></span></li>
+              <li><span class="sources__en"><span>EDINET</span><span class="sources__note">Corporate filings and disclosures</span></span></li>
+              <li><span class="sources__en"><span>Bank for International Settlements (BIS)</span><span class="sources__note">Cross-border banking and settlement data</span></span></li>
+              <li><span class="sources__en"><span>Damodaran Online</span><span class="sources__note">Valuation data and cost of capital</span></span></li>
             </ul>
           </div>
         </div>
@@ -346,8 +350,11 @@
           <span lang="ja">言霊</span>
           <span class="footer__word">Kotodama Finance</span>
         </p>
-        <p class="footer__tag">Where Japan&rsquo;s economic currents become visible. Open access.</p>
+        <p class="footer__tag">Where economic currents become visible. Open access.</p>
       </div>
+      <!-- SIN columna «Platform»: enlazaba a The Cube y Method — dos de cinco
+           secciones, las dos ya presentes en la nav de arriba. Una selección
+           arbitraria que duplica navegación no orienta: ruido. -->
       <div class="footer__cols">
         <div class="footer__col">
           <p class="footer__label">Reach us</p>
@@ -358,11 +365,6 @@
           <a href="https://x.com/KotodamaFinance" target="_blank" rel="noopener">X / @KotodamaFinance</a>
           <a href="https://www.linkedin.com/company/kotodamafinance/" target="_blank" rel="noopener">LinkedIn</a>
         </div>
-        <div class="footer__col">
-          <p class="footer__label">Platform</p>
-          <a href="#cube">The Cube</a>
-          <a href="#method">Method</a>
-        </div>
       </div>
     </div>
     <!-- 免責事項 CORTO — se repite en TODAS las páginas a propósito, y es la
@@ -371,9 +373,12 @@
          en el footer global y no en una página a la que haya que llegar.
          El texto COMPLETO vive UNA sola vez, en /disclaimer/, y desde acá se
          enlaza. Duplicar el largo lo haría derivar, y un sitio que se
-         contradice en su propio descargo pierde lo único que el descargo da. -->
+         contradice en su propio descargo pierde lo único que el descargo da.
+         SIN el rótulo 免責事項 delante: era la traducción japonesa de
+         «disclaimer», o sea japonés ornamental en la versión inglesa — la
+         misma textura que 立方体 o 一次資料, que ya se sacaron. Los cuatro
+         glifos se conservan en el subset para /ja/ (ver el @font-face). -->
     <p class="footer__disclaimer">
-      <span lang="ja">免責事項</span> &middot;
       Kotodama Finance is published for information only and is not investment or financial advice.
       <a href="/disclaimer/">Full disclaimer &rarr;</a>
     </p>
