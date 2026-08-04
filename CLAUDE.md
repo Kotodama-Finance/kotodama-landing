@@ -298,44 +298,54 @@ Detalles que ya se probó que importan:
 replegado al arrastrar, transición declarada sobre `grid-template-rows`, y **el
 cubo no se mueve** al abrirse (que es la propiedad que hace seguro el cambio).
 
-### La transición entre páginas (maelstrom) es CSS puro
-Entrar a una cara usa **`@view-transition { navigation: auto }`** —transición
-entre documentos, sin SPA ni router—, dentro de
-`@media (prefers-reduced-motion: no-preference)` para que bajo reduced-motion no
-haya nada que desactivar: la regla ni se declara. Es sólo `transform` +
-`filter: blur` + `opacity` sobre `::view-transition-old/new(root)`: la página
-que se va gira **46°** y crece a 2.1, la que llega entra desde **−38°** y 0.52 y
-se endereza, las dos en el **mismo sentido** para que se lea un solo remolino.
+### La transición entre páginas (maelstrom) está RESERVADA, fuera del lanzamiento
 
-**Calibrada dos veces, y el motivo de la segunda importa.** La primera versión
-(14°, escala 1.3, blur 16px) se leía como un fundido con desenfoque, no como un
-giro, por dos razones:
+**Hoy el sitio NO tiene transición.** Entrar a una cara es una navegación normal
+del navegador: **corte seco, sin fundido de ningún tipo.** Se apartó por
+decisión del autor —no terminaba de funcionar— y **no se borró**.
+
+**Dónde está**: `assets/css/maelstrom.css`, entero y calibrado, **no enlazado
+desde ninguna página**. Ese archivo lleva en su encabezado cómo reactivarla, los
+valores medidos y el bug conocido. En `styles.css` quedó un comentario en el
+lugar de donde salió.
+
+**Por qué en un archivo y no detrás de un flag.** Es una transición **entre
+documentos**: `@view-transition` tiene que estar en la página que se va **y** en
+la que llega. **Diez de las once páginas no cargan ningún JavaScript** —
+verificado: `document.scripts.length` es 0 en una subpágina—, así que un
+interruptor en runtime obligaría a meter JS en todas. No es una preferencia de
+estilo: es que la otra opción choca con una regla del proyecto.
+
+Lo calibrado, para no rehacerlo a ojo: **rotación 46°** (era 14°), **escala
+2.1** (era 1.3), **blur 4px** (era 16px), entrada desde **−38°** y 0.52, las dos
+rotaciones en el **mismo sentido**. Y las **dos causas** de que la primera
+versión se leyera como fundido y no como giro:
 
 1. **El desenfoque tapaba el giro.** Una rotación se percibe por el ángulo de
    los BORDES, y 16px de blur son justo lo que los borra. Bajó a 4px.
 2. **El fundido iba atado al giro**, así que la página estaba casi transparente
-   antes de haber girado lo suficiente. Ahora giro y fundido son **dos
-   animaciones con curvas distintas** sobre la misma capa: la opacidad se
-   sostiene mientras el ángulo se acumula.
+   antes de haber girado lo suficiente. Giro y fundido tienen que ser **dos
+   animaciones con curvas distintas** sobre la misma capa. Juntarlas «para
+   simplificar» reintroduce el problema.
 
-Otros detalles que ya se pagaron:
-- **`::view-transition` lleva `background-color`**: al girar, el snapshot deja
-  de cubrir el viewport y asoman cuñas — y debajo está el lienzo del navegador,
-  que es **blanco**. Con 14° casi no se veía; con 46° eran destellos en cada
-  esquina. Se pinta el fondo del árbol de la transición, que vive sólo mientras
-  dura y no toca el fondo del sitio.
-- `mix-blend-mode: normal` pisa el `plus-lighter` que el navegador pone por
-  defecto: como las capas además se mueven y escalan, sumarlas daba un fogonazo
-  claro donde se solapan.
-- **Táctil** (`pointer: coarse`): escala + fundido, **sin blur** — el desenfoque
-  a pantalla completa es lo caro y lo que peor escala en GPU de teléfono. **Sin
-  recalibrar**: la segunda pasada fue sobre la versión de escritorio, que es la
-  que se filmó; el móvil sigue sin medirse en un dispositivo real.
-- Precarga (`rel=prefetch`) **al seleccionar la cara, no al pulsar el botón**:
-  el gesto entre una cosa y otra es el tiempo que hace falta para que el
-  documento ya esté en caché. Respeta `saveData` y 2G.
-- **`feTurbulence` no se usa, y el remolino ilustrado está descartado** — ver
-  cabos abiertos. La versión actual es la definitiva por ahora.
+**HAY UN BUG CONOCIDO Y ES EL PRIMER LUGAR DONDE MIRAR.** La variante táctil
+**no hace lo que dice**: dentro de `@media (pointer: coarse)` se definen
+`kf-maelstrom-out`/`in` —escala + fundido sin blur— pero **nunca se asignan**,
+porque esas reglas sólo tocan `animation-duration`. El `animation-name` sigue
+siendo `kf-maelstrom-spin-out`, que lleva `filter: blur(4px)`. O sea que **en un
+teléfono corría la versión de escritorio con desenfoque**, apenas más rápida:
+exactamente el costo que esa variante existía para evitar. Nunca se midió en un
+dispositivo real, así que no se sabe cuánto de «no funcionaba bien» venía de
+ahí. **Cualquier documento que diga «táctil sin blur» está describiendo la
+intención, no lo que corría.**
+
+**Lo que NO se fue con ella, y no son restos olvidados:**
+- **La precarga (`rel=prefetch`) al seleccionar la cara.** Sirve igual sin
+  transición, o se nota más: ahora el corte es seco, y un corte contra una
+  página que todavía está bajando es el blanco entre una y otra.
+- **El respaldo por `sessionStorage` del botón atrás.** Nunca tuvo que ver con
+  la transición: restaura la **cara elegida** en el cubo. Verificado después de
+  apartarla — `back_forward`, cara restaurada, folio abierto.
 
 ### Volver atrás restaura el cubo por dos caminos
 Los dos hacen falta. **bfcache**: la página vuelve viva y entera sin ejecutar
@@ -670,8 +680,15 @@ Kaku, verificando contra la tabla `cmap`. Ya frenó una vez, con el 迷 de la 40
   Ahí sobra margen — la página completa mide lo mismo que no dibujar nada— y el
   único término que aparece es el shader del mar, que evalúa ruido por píxel a
   pantalla completa. **Ese resultado no dice nada de móvil**: el costo escala con
-  los píxeles y una GPU de teléfono no tiene ese margen. La media resolución, el
-  cap de 25 fps y el maelstrom táctil sin blur son **precaución, no medición**.
+  los píxeles y una GPU de teléfono no tiene ese margen. La media resolución y
+  el cap de 25 fps son **precaución, no medición**.
+
+  Y el tercer ejemplo que estaba acá —«el maelstrom táctil sin blur»— **había
+  que sacarlo, porque nunca fue cierto**: esa variante definía sus keyframes
+  pero no los asignaba, así que en táctil corría la versión con desenfoque. Es
+  el aviso más útil de todo este párrafo: una precaución que se documenta y no
+  se verifica es indistinguible de una que no existe. La transición está hoy
+  reservada; el detalle, en `assets/css/maelstrom.css`.
 - **Vista explotada del cubo.** Va **después** del pase de redacción; se discutió
   fuera de estas sesiones y el brief todavía no está escrito. Lo que sí está
   decidido, para que el brief lo dé por sentado: al abrirse, el **núcleo** del
@@ -687,8 +704,9 @@ Kaku, verificando contra la tabla `cmap`. Ya frenó una vez, con el 迷 de la 40
 - **Remolino ukiyo-e para la transición.** Ocho iteraciones fallidas entre Design
   y Claude: **el ruido procedural produce textura, no dibujo** — granulado, no la
   línea de una ola grabada. Requiere ilustrador humano o un enfoque distinto.
-  **No reintentar con los mismos medios.** La transición queda como está: giro
-  46° + escala + desenfoque leve, sin `feTurbulence`.
+  **No reintentar con los mismos medios.** Y hoy la pregunta ni se plantea: la
+  transición entera está **reservada y fuera del lanzamiento**, así que no hay
+  nada que ilustrar hasta que se decida retomarla.
 
 ### Ideas anotadas, sin probar
 
@@ -730,8 +748,11 @@ Kaku, verificando contra la tabla `cmap`. Ya frenó una vez, con el 迷 de la 40
   alguien sospecha que el cubo se pierde, se saca una captura, no un barrido.**
 - ~~`favicon.ico` 404~~ — hay `.ico` (16/32/48), `.svg` y `apple-touch-icon`,
   generados por `tools/make-favicon.py`. Consola limpia.
-- ~~Animación maelstrom~~ — implementada y calibrada dos veces (ver decisión
-  cerrada arriba).
+- ~~Animación maelstrom~~ — implementada y calibrada dos veces, y después
+  **apartada del lanzamiento** por decisión del autor. Reservada en
+  `assets/css/maelstrom.css`; ver la decisión cerrada arriba. **Reabrirla es
+  post-lanzamiento**, y ahí el punto de partida es el bug de la variante
+  táctil, no una recalibración.
 - ~~Capa de metadatos~~ — sitemap generado, robots abierto a los crawlers de IA,
   Open Graph completo, 404, y títulos/descriptions únicos verificados por guarda.
 

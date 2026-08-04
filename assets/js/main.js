@@ -125,8 +125,13 @@ function clearSelection() {
 /* ---- Precarga de la cara seleccionada ------------------------------------
    Se precarga al SELECCIONAR, no al pulsar el botón: entre una cosa y la otra
    hay un gesto entero, que es exactamente el tiempo que hace falta para que el
-   documento ya esté en caché cuando se decide entrar. Sin eso, la transición
-   de entrada arranca contra una petición de red y se ve el parpadeo.
+   documento ya esté en caché cuando se decide entrar.
+
+   ESTO NO SE FUE CON EL MAELSTROM, y no es un resto olvidado. Nació para que
+   la animación de entrada no arrancara contra una petición de red, pero sin
+   transición sirve igual o se nota más: ahora la navegación es un corte seco,
+   y un corte contra una página que todavía está bajando es el blanco entre
+   una y otra. Cuando vuelva la transición, vuelve además el motivo original.
 
    rel=prefetch y no prerender a propósito: prefetch baja el documento y para;
    prerender además ejecutaría su JS. Ninguna subpágina lo necesita, y en la

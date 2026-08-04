@@ -56,8 +56,14 @@ Y `fbm` corre **5 octavas**, o sea 5 evaluaciones de `snoise` cada una:
 
 A 3,5 Mpx eso son ~365 millones de evaluaciones de ruido por cuadro. Es un orden
 de magnitud que explica por qué el mar es el único término que aparece, y por qué
-la variante táctil de la transición entre páginas evita el desenfoque a pantalla
-completa.
+la variante táctil de la transición entre páginas **quería** evitar el desenfoque
+a pantalla completa.
+
+> **Quería, no evitaba.** Verificado en agosto de 2026: esa variante definía sus
+> keyframes sin blur pero **nunca los asignaba** —sólo cambiaba la duración—, así
+> que en táctil corría igual la versión con desenfoque. La transición está hoy
+> reservada en `assets/css/maelstrom.css`, fuera del lanzamiento, y el bug está
+> anotado en su encabezado.
 
 > **Nota sobre una cifra que circulaba.** La anotación original de esta medición
 > decía «~42 evaluaciones de ruido por píxel». Contado sobre el código son
@@ -74,9 +80,14 @@ La conclusión no se mueve: sea 42 o 105, el mar domina y el cubo no aparece.
 - **Móvil, en dispositivo real: nunca.** No hay ni un número. Y es justo donde el
   costo importa: el shader escala con los píxeles, y una GPU de teléfono no tiene
   el margen de una 4060. Por eso `background.js` ya baja a media resolución
-  (`dpr × 0.5`) y limita a 25 fps en `pointer: coarse`, y por eso el maelstrom
-  táctil va sin blur — pero **esas tres decisiones son precaución, no medición**.
-  Es el mismo hueco anotado en `CLAUDE.md` entre los congelados.
+  (`dpr × 0.5`) y limita a 25 fps en `pointer: coarse` — pero **esas decisiones
+  son precaución, no medición**. Es el mismo hueco anotado en `CLAUDE.md` entre
+  los congelados.
+
+  El tercer ejemplo que estaba acá, «el maelstrom táctil va sin blur», salió
+  porque **no era cierto** (ver la nota de arriba). Vale como advertencia por sí
+  solo: una precaución documentada y nunca verificada es indistinguible de una
+  que no existe.
 - **La creación del contexto WebGL**, que es lo que difiere el lazy-init de
   `main.js`. Es un costo de una sola vez al inicializar y no aparece en un número
   por cuadro; se difiere por criterio, no porque se haya medido.

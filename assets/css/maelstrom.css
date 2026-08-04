@@ -1,0 +1,193 @@
+/* =========================================================================
+   MAELSTROM — la transición entre documentos. RESERVADA: NO SE CARGA.
+   =========================================================================
+
+   ESTE ARCHIVO NO ESTÁ ENLAZADO DESDE NINGUNA PÁGINA. Hoy el sitio navega sin
+   transición: entrar a una cara es una navegación normal del navegador.
+
+   Se apartó antes del lanzamiento por decisión del autor —no terminaba de
+   funcionar— y se conserva ENTERO para poder retomarla después. No es código
+   muerto por descuido: es trabajo calibrado dos veces, guardado a propósito.
+
+   ─── CÓMO SE REACTIVA ────────────────────────────────────────────────────
+
+   Para PROBARLA, una línea al principio de styles.css, antes de cualquier
+   regla, que es lo que exige @import:
+
+       @import url("maelstrom.css");
+
+   Para DEJARLA, pegar este contenido de vuelta en styles.css, donde quedó el
+   comentario que dice de dónde salió. @import cuesta una petición extra que
+   bloquea el render, y eso no se paga en producción por una transición.
+
+   NO alcanza con enlazarlo desde una sola página. La transición es ENTRE
+   DOCUMENTOS: @view-transition tiene que estar en la que se va y en la que
+   llega. Y NO se puede poner tras un flag de JavaScript, porque diez de las
+   once páginas no cargan ningún script — por eso se apartó en un archivo y no
+   detrás de un interruptor.
+
+   ─── ANTES DE RETOMARLA: HAY UN BUG CONOCIDO ─────────────────────────────
+
+   LA VARIANTE TÁCTIL NO HACE LO QUE DICE, y es el primer lugar donde mirar.
+   Dentro de @media (pointer: coarse) se definen kf-maelstrom-out y
+   kf-maelstrom-in —escala + fundido, sin blur— pero NUNCA SE ASIGNAN: las
+   reglas de ahí adentro sólo tocan animation-duration. El animation-name
+   sigue siendo kf-maelstrom-spin-out, que lleva filter: blur(4px).
+
+   O sea que en un teléfono corre la versión de escritorio, con desenfoque a
+   pantalla completa, apenas más rápida — exactamente el costo que esa
+   variante existía para evitar. Para arreglarlo hay que asignar el nombre,
+   no sólo la duración:
+
+       ::view-transition-old(root) { animation: kf-maelstrom-out 0.34s both; }
+
+   Nunca se midió en un dispositivo real, así que no se sabe cuánto de «no
+   terminaba de funcionar» venía de acá.
+
+   ─── LO QUE YA ESTÁ CALIBRADO (no rehacerlo a ojo) ───────────────────────
+
+   Dos pasadas, la segunda después de filmarla. Valores vigentes:
+
+     rotación de salida    46°      (era 14°)
+     escala de salida      2.1      (era 1.3)
+     desenfoque            4px      (era 16px)
+     rotación de entrada   −38° → 0°, escala 0.52 → 1
+     duraciones            salida 0.56s · entrada 0.66s con 0.05s de retardo
+
+   Las dos rotaciones van EN EL MISMO SENTIDO, para que se lea un solo
+   remolino y no dos animaciones distintas.
+
+   POR QUÉ LA PRIMERA VERSIÓN SE LEÍA COMO UN FUNDIDO Y NO COMO UN GIRO. Son
+   dos causas independientes, y las dos hay que sostenerlas:
+
+     1. EL DESENFOQUE TAPABA EL GIRO. Una rotación se percibe por el ÁNGULO DE
+        LOS BORDES, y 16px de blur son justamente lo que borra los bordes.
+        Bajó a 4px: alcanza para dar velocidad sin comerse la evidencia.
+
+     2. EL FUNDIDO IBA ATADO AL GIRO. Con una sola curva, la página estaba casi
+        transparente antes de haber girado lo suficiente como para notarlo.
+        Ahora giro y fundido son DOS animaciones con curvas DISTINTAS sobre la
+        misma capa: la opacidad se sostiene y cae tarde mientras el ángulo se
+        acumula. Es el motivo de que haya keyframes separados -spin- y -fade-,
+        y de que juntarlos «para simplificar» reintroduzca el problema.
+
+   Y el ángulo pasó de 14° a 46° porque a 0,5s de duración 14° son ~28°/s, por
+   debajo de lo que se lee como rotación en una imagen sin ejes marcados.
+
+   ─── LO QUE NO HAY QUE REINTENTAR ────────────────────────────────────────
+
+   El remolino ilustrado tipo ukiyo-e: ocho iteraciones fallidas. El ruido
+   procedural produce TEXTURA, no dibujo — granulado, no la línea de una ola
+   grabada. Requiere ilustrador humano o un enfoque distinto. feTurbulence no
+   se usa y no conviene volver a intentarlo con los mismos medios.
+
+   ─── AL VOLVER A ENCHUFARLO, MIRAR TAMBIÉN ───────────────────────────────
+
+   - La PRECARGA de la cara seleccionada sigue viva en main.js y no hace falta
+     tocarla: sirve igual sin transición. Pero su comentario ahora dice que
+     sirve para que la navegación no arranque contra la red; cuando vuelva la
+     transición, vuelve además el motivo original (que la animación de entrada
+     no empiece esperando el documento).
+   - Page.captureScreenshot SE CUELGA durante una transición entre documentos.
+     Para filmarla hay que usar Page.startScreencast. Está en CLAUDE.md, en
+     hallazgos de método, con el detalle del hilo lector.
+
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   MAELSTROM — transición entre documentos
+
+   Entrar a una cara no es cambiar de página: es atravesar el cubo. La página
+   que se deja GIRA y crece hasta pasarse de largo; la que llega aparece girada
+   al otro lado, chica, y se endereza. Las dos rotaciones van EN EL MISMO
+   SENTIDO (la de salida hacia +46°, la de entrada desde -38° hasta 0), así que
+   se lee como un solo remolino continuo y no como dos animaciones distintas.
+
+   Es una transición ENTRE DOCUMENTOS: no hay SPA ni router. Todo el mecanismo
+   es @view-transition; el navegador saca la foto de la página que se va, carga
+   la nueva y anima entre las dos. Sin JS.
+
+   Dentro de @media (prefers-reduced-motion: no-preference) a propósito: bajo
+   reduced-motion no se atenúa la animación, no se declara la transición y la
+   navegación es la de siempre. Nada que desactivar después.
+
+   CALIBRACIÓN (2ª pasada, tras filmarla). La primera versión —14°, escala 1.3,
+   blur 16px— se leía como un fundido con desenfoque y no como un giro, por dos
+   razones que se corrigen acá:
+
+   1. El desenfoque tapaba el giro. Una rotación se percibe por el ÁNGULO DE LOS
+      BORDES, y 16px de blur son justamente lo que borra los bordes. Bajó a 4px:
+      alcanza para dar la sensación de velocidad sin comerse la evidencia.
+   2. El fundido iba atado al giro, así que la página estaba casi transparente
+      antes de haber girado lo suficiente como para notarlo. Ahora el giro y el
+      fundido son DOS animaciones con curvas distintas sobre las mismas capas:
+      la opacidad se sostiene (cae tarde) mientras el ángulo se acumula. Es el
+      motivo de que haya keyframes separados para -spin- y -fade-.
+
+   Y la rotación pasó de 14° a 46°: a 0,5 s de duración, 14° son ~28°/s, por
+   debajo de lo que se lee como rotación en una imagen sin ejes marcados.
+
+   Sigue siendo sólo transform, filter y opacity sobre el snapshot de root: la
+   versión barata, la que corre en el compositor. Sin feTurbulence.
+   ------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+}
+
+@keyframes kf-maelstrom-spin-out {
+  from { transform: rotate(0deg) scale(1);     filter: blur(0); }
+  to   { transform: rotate(46deg) scale(2.1);  filter: blur(4px); }
+}
+@keyframes kf-maelstrom-spin-in {
+  from { transform: rotate(-38deg) scale(0.52); filter: blur(3px); }
+  to   { transform: rotate(0deg) scale(1);      filter: blur(0); }
+}
+@keyframes kf-maelstrom-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes kf-maelstrom-fade-in  { from { opacity: 0; } to { opacity: 1; } }
+
+/* FONDO DE LA TRANSICIÓN. Al girar, el snapshot deja de cubrir el viewport y
+   asoman cuñas en las esquinas; debajo está el lienzo del navegador, que es
+   BLANCO. Con 14° casi no se veía, con 46° eran destellos claros en cada
+   esquina (visto en la filmación). Se pinta el fondo del propio árbol de la
+   transición, que cubre el viewport y vive sólo mientras dura: no toca el
+   fondo del sitio, así que el degradado del mar queda intacto. */
+::view-transition { background-color: var(--c-navy); }
+
+/* mix-blend-mode: normal pisa el plus-lighter que el navegador pone por
+   defecto. Ese modo existe para que un fundido cruzado sume exactamente 1 de
+   opacidad entre las dos capas; acá las capas además se mueven y se escalan,
+   así que la zona donde se solapan se sumaría y aparecería un fogonazo claro
+   en mitad de la transición. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+  transform-origin: 50% 50%;
+}
+/* Dos animaciones por capa, con curvas distintas: el giro acelera, el fundido
+   llega tarde. Atados a la misma curva, la página se apagaba antes de girar. */
+::view-transition-old(root) {
+  animation:
+    kf-maelstrom-spin-out 0.56s cubic-bezier(0.36, 0, 0.78, 0.46) both,
+    kf-maelstrom-fade-out 0.56s cubic-bezier(0.82, 0, 0.94, 0.55) both;
+}
+::view-transition-new(root) {
+  animation:
+    kf-maelstrom-spin-in 0.66s 0.05s var(--ease-rise) both,
+    kf-maelstrom-fade-in 0.42s 0.05s cubic-bezier(0.1, 0.62, 0.35, 1) both;
+}
+
+/* Táctil: el desenfoque de una capa a pantalla completa es lo caro de todo
+   esto, y es justo lo que peor escala en una GPU de teléfono. Ahí queda escala
+   + fundido, más corto. El gesto se sigue leyendo; lo que se va es el costo. */
+@media (pointer: coarse) {
+  @keyframes kf-maelstrom-out {
+    from { transform: scale(1);    opacity: 1; }
+    to   { transform: scale(1.12); opacity: 0; }
+  }
+  @keyframes kf-maelstrom-in {
+    from { transform: scale(0.94); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+  }
+  ::view-transition-old(root) { animation-duration: 0.34s; }
+  ::view-transition-new(root) { animation-duration: 0.4s; animation-delay: 0.04s; }
+}

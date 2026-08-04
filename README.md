@@ -10,6 +10,7 @@ Sitio estático: sin backend, sin frameworks, sin build step. Se sirve tal cual.
 ```
 index.html              home EN: todo el contenido y los enlaces, en el fuente
 assets/css/styles.css   tokens en :root + estilos (compartido por todas las páginas)
+assets/css/maelstrom.css la transición entre páginas, RESERVADA: no la carga nadie
 assets/js/background.js océano WebGL de fondo
 assets/js/cube.js       cubo de navegación (Three.js)
 assets/js/main.js       orquestador: toggle, nav, visibilidad
@@ -675,14 +676,20 @@ ahí ya no alcanza con listar los kanji a mano.
 - **`prefers-reduced-motion`** se respeta: el mar dibuja un único cuadro fijo y
   el cubo queda estático pero arrastrable. El degradado atmosférico vive en el
   `background` del `body`, siempre presente, para que nunca quede un hueco si el
-  contexto WebGL no arranca. También queda sin efecto el folio de entrada (que
-  aparece de una) y la transición entre páginas (que ni se declara).
+  contexto WebGL no arranca. También queda sin efecto el folio de entrada, que
+  aparece de una.
 
-- **Entrar a una cara atraviesa una transición entre documentos** (el
-  «maelstrom»), hecha sólo con `@view-transition` — sin SPA ni router. La página
-  gira, escala y se desenfoca; la nueva entra girada y se acomoda. Es progresiva:
-  un navegador sin soporte navega normal. En pantallas táctiles es más liviana
-  (sin desenfoque). Bajo `prefers-reduced-motion` no se declara.
+- **Entrar a una cara es una navegación normal: corte seco, sin fundido.** Hubo
+  una transición entre documentos —el «maelstrom», hecha sólo con
+  `@view-transition`— y **está reservada, no borrada**: vive entera en
+  `assets/css/maelstrom.css`, que **no se carga desde ninguna página**. Se
+  apartó antes del lanzamiento por decisión del autor.
+
+  No puede ir detrás de un flag: es una transición **entre documentos**, así que
+  la regla tiene que estar en las dos páginas, y **diez de las once no cargan
+  ningún JavaScript**. Por eso se apartó en un archivo. El encabezado de ese
+  archivo explica cómo reactivarla, qué valores ya están calibrados y un bug
+  conocido de la variante táctil.
 
 - **El bloque de estado + botón bajo el cubo es un folio que se despliega.**
   Arranca con altura cero y se abre animado al seleccionar una cara; se cierra al
