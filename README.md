@@ -1002,9 +1002,12 @@ ahí ya no alcanza con listar los kanji a mano.
   **Si aparece corriendo, sospechar primero de una copia vieja de `styles.css`
   en el navegador.** El maelstrom vivía dentro de `styles.css` hasta `af7c726`,
   así que cualquier copia anterior trae las seis reglas. El tamaño las
-  distingue sin interpretar nada: el viejo pesa **44054 bytes** y el vigente
-  **47738**. Un `Ctrl+Shift+R` no lo descarta —no toca los *Local Overrides* de
-  DevTools—; el detalle y la comprobación de consola, en `CLAUDE.md`.
+  distingue, **pero hay que decir la unidad**: el vigente mide 47738 bytes =
+  **47187 caracteres**, y el viejo 44054 = **43583**. Desde la consola de
+  DevTools el número que se ve es el de caracteres, y compararlo contra los
+  bytes hace aparecer un tercer archivo que no existe. Un `Ctrl+Shift+R` no lo
+  descarta —no toca los *Local Overrides* de DevTools—; el detalle y la
+  comprobación que separa el DOM de la red, en `CLAUDE.md`.
 
 - **El bloque de estado + botón bajo el cubo es un folio que se despliega.**
   Arranca con altura cero y se abre animado al seleccionar una cara; se cierra al

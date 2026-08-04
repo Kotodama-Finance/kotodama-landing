@@ -555,21 +555,45 @@ entregaba un `styles.css` sin ninguna. Las dos cosas eran ciertas sobre archivos
 distintos — **el maelstrom vivía DENTRO de `styles.css` hasta `af7c726`**, así
 que cualquier copia anterior a ese commit las trae, y son exactamente esas seis.
 
-**El fingerprint es el tamaño**, que no exige interpretar nada: el `styles.css`
-viejo pesa **44054 bytes** y el vigente **47738**. La comprobación que decide,
-desde la consola de la página donde se ve el problema:
+**EL TAMAÑO SIRVE DE FINGERPRINT, PERO HAY QUE DECIR LA UNIDAD, Y ÉSTE ES EL
+LUGAR DONDE YA SE FALLÓ.** `wc -c` cuenta **bytes**; `(await res.text()).length`
+en la consola cuenta **caracteres UTF-16**. `styles.css` tiene 428 caracteres
+no-ASCII —los comentarios están en castellano—, así que los dos números difieren
+en 551 y no son comparables:
+
+| | bytes | caracteres | `view-transition` |
+|---|---|---|---|
+| **vigente** (sin maelstrom) | 47738 | **47187** | 0 |
+| **viejo** (pre-`af7c726`) | 44054 | **43583** | 9 |
+
+Comparar el `47187` de la consola contra el `47738` de `wc -c` hace aparecer un
+tercer archivo que no existe. **Desde la consola, la referencia es 47187.**
+
+Y el tamaño solo no alcanza: hay que mirar **el contenido de lo que baja**, no
+su longitud. La comprobación que separa el DOM de la red, que es la pregunta
+real:
 
 ```js
-[...document.styleSheets].filter(s => { try { return [...s.cssRules].some(r => /view-transition/i.test(r.cssText)) } catch { return false } })
-  .forEach(async s => console.log(s.href, (await (await fetch(s.href, {cache:'reload'})).text()).length))
+(async () => { for (const s of document.styleSheets) {
+  let dom = 0; try { dom = [...s.cssRules].filter(r => /view-transition/i.test(r.cssText)).length } catch {}
+  const t = s.href ? await (await fetch(s.href, {cache:'reload'})).text() : '';
+  console.log(s.href, '| VT en el DOM:', dom, '| VT en la red:', (t.match(/view-transition/gi)||[]).length, '| chars:', t.length);
+} })()
 ```
 
-Si la hoja tiene las reglas pero la copia fresca del servidor mide 47738, el
+**`VT en el DOM: 6` con `VT en la red: 0` es el diagnóstico completo**: el
 archivo está bien y lo viejo está del lado del navegador. **Un `Ctrl+Shift+R` no
 alcanza para descartarlo**: no toca los *Local Overrides* de DevTools, que
 persisten una copia del archivo en el perfil y se sirven por encima de la red.
 Descartar el service worker —`navigator.serviceWorker.getRegistrations()`— es
 necesario y no es suficiente.
+
+**`check-modes` no puede caer en esto**, y conviene saber por qué antes de
+sospechar de su verde: borra su perfil de Chrome en cada corrida
+(`shutil.rmtree(PROFILE)` antes de lanzarlo), así que arranca sin caché y sin
+overrides. Mide contra el mismo `:8000` —`BASE` por defecto—, pero siempre
+contra lo que el servidor entrega. Si la guarda y un navegador se contradicen,
+**la copia vieja está en el navegador**.
 
 **Por qué en un archivo y no detrás de un flag.** Es una transición **entre
 documentos**: `@view-transition` tiene que estar en la página que se va **y** en
@@ -1356,3 +1380,20 @@ que produjeron conclusiones equivocadas:
   hoja, no la lista de reglas.** El primer comando que mandé devolvía
   `r.cssText` y por eso no distinguía nada — con las reglas solas, un archivo
   viejo y una regresión se ven idénticos.
+- **UN FINGERPRINT NUMÉRICO SIN UNIDAD INVENTA ARCHIVOS QUE NO EXISTEN.** Cerrando
+  lo anterior propuse distinguir el `styles.css` viejo del vigente por su tamaño,
+  y di la referencia en **bytes** (`wc -c` → 47738) para una comprobación que
+  corre en la consola y devuelve **caracteres UTF-16**
+  (`(await res.text()).length` → 47187). Los 428 caracteres no-ASCII de los
+  comentarios en castellano hacen 551 de diferencia, así que el número medido no
+  coincidía con ninguna de las dos referencias y **la conclusión razonable pasó a
+  ser «hay un tercer archivo»** — con un servidor y un worktree de más que buscar.
+  No los había: era el mismo archivo medido con dos instrumentos distintos.
+  La regla: **un número de referencia viaja con su unidad y con el comando que lo
+  produce**, y si la comprobación va a correr en otro instrumento, la referencia
+  se mide con *ése*. Lo delata tener tres números donde deberían ser dos, o una
+  diferencia chica y estable que nadie sabe explicar.
+  Y un corolario aparte: **el tamaño es un proxy, no la pregunta.** Lo que se
+  quería saber era si el archivo trae las reglas, y eso se contesta contando
+  `view-transition` en el texto que baja. Un proxy bien elegido igual contesta
+  otra cosa.
