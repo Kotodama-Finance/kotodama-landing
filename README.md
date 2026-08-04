@@ -156,9 +156,21 @@ que estar en verde siempre:
 
 - **`check-structure.py`** — nav y footer idénticos en todas las páginas,
   metadatos únicos, URLs absolutas, cobertura del subset japonés, **ningún
-  `href="#"` que haya perdido su placeholder** y **ningún placeholder nuevo**
-  respecto de `tools/placeholders-baseline.json`. Sale `0` si está bien, `1` si
-  algo se rompió.
+  `href="#"` que haya perdido su placeholder**, **ningún placeholder nuevo**
+  respecto de `tools/placeholders-baseline.json`, y **nada de castellano en lo
+  que se publica**. Sale `0` si está bien, `1` si algo se rompió.
+
+  **La guarda de castellano no busca en el repo, aísla la superficie
+  publicable** —texto visible, `<title>`, atributos que ve un usuario o un
+  crawler, strings de `main.js`/`cube.js`, el sitemap y el robots— y mira sólo
+  ahí. Los comentarios de HTML/CSS/JS, `tools/`, los `.md` y `_ref/` quedan
+  fuera a propósito: están en castellano por decisión y no se publican.
+
+  **NO ES COMPLETA, y conviene saberlo**: detecta diacríticos y una lista de
+  palabras función. Castellano sin acentos y sin esas palabras se le escapa —
+  se le escapó `«no se pudo hidratar; se mantiene la grilla»`, que apareció
+  revisando a mano los `console.*`. Cubre la reincidencia de lo conocido; **al
+  agregar una página hay que leer su superficie además de correr esto.**
 - **`check-ready.py`** — ¿puede publicarse? Sale `0` listo, **`2` falta trabajo
   previsto** (esperado, no es una regresión) y `1` si hay algo roto de verdad.
 

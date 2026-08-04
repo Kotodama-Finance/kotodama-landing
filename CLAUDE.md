@@ -516,6 +516,45 @@ aplicación, que es exactamente lo que no debe poder divergir. La portada muestr
 **cinco de ejemplo**, japonesas y globales, para que se vea que el alcance no es
 sólo Japón.
 
+### La frontera castellano/inglés es invisible, y por eso tiene guarda
+
+El repo se trabaja en castellano y el sitio se publica en inglés. **El problema
+es que la frontera no se ve**: un comentario en castellano es correcto, y la
+misma frase dentro de un `content=` viaja en cada enlace compartido. Ya pasó —
+`og:image:alt` decía «El cubo de seis caras de Kotodama Finance» **en las diez
+páginas**, y se descubrió de casualidad.
+
+**En inglés, sin excepción**: texto visible, `<title>`, `description`, todo
+Open Graph y Twitter, los atributos que ve un usuario o un crawler (`alt`,
+`aria-label`, `title`, `placeholder`), `sitemap.xml`, `robots.txt`, la 404, y
+**los mensajes de `console.*` de `main.js` y `cube.js`**.
+
+**En castellano, deliberado**: comentarios de HTML, CSS y JS; `tools/` y sus
+mensajes; `CLAUDE.md`, `README.md`, `docs/`; `_ref/`.
+
+**La línea que separa un comentario de un `console.warn`** es la que costó
+pensar: un comentario no se ejecuta; un `console.warn` **sí** — es salida que el
+programa produce en runtime, dirigida a quien mire la consola. Es interfaz,
+aunque sea técnica.
+
+**Y `robots.txt` y `sitemap.xml` no tienen «comentarios» en el sentido del
+HTML**: esos archivos **no tienen versión renderizada**, así que quien abre
+`/robots.txt` ve el archivo tal cual, comentarios incluidos. Ahí el comentario
+es superficie publicada. Por eso el de `sitemap.xml` se arregló **en el
+generador** (`make-sitemap.py`), no en el archivo: si no, vuelve a la próxima
+corrida.
+
+**Buscar acentos NO alcanza** — «el cubo de seis caras» no tiene ninguno. El
+método que sirve es **aislar la superficie publicable, que es finita, y
+revisarla entera**; sobre ese conjunto reducido un detector simple alcanza para
+las regresiones. Está en `check-structure`.
+
+**La guarda es incompleta a propósito y lo dice en su salida.** Se le escapó
+`«no se pudo hidratar; se mantiene la grilla»` —ni un acento, ni una palabra de
+su lista—, que apareció revisando a mano los `console.*`. **Una guarda que
+aparenta completitud es peor que ninguna**: cubre la reincidencia de lo
+conocido, y al agregar una página hay que leer su superficie igual.
+
 ### No redactar contenido
 Sólo **andamiaje con placeholders `TODO`**, en castellano a propósito para que no
 puedan confundirse con copy real (el sitio está en inglés). El texto final y la

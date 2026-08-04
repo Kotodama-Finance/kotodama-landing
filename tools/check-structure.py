@@ -72,6 +72,20 @@ def main():
     else:
         print('  OK     ningún href="#" quedó sin su placeholder')
 
+    print("\nCastellano en lo que se publica")
+    castellano = G.castellano_publicado()
+    if castellano:
+        for x in castellano:
+            print(f"  FALLA  {x}")
+        problemas += castellano
+        print("  -> el sitio va en inglés; los comentarios y tools/ pueden seguir")
+        print("     en castellano, pero esto no es un comentario")
+    else:
+        n = len(G.superficie_publicada())
+        print(f"  OK     {n} fragmentos publicables, ninguno con marcas de castellano")
+        print("  -> NO cubre castellano sin acentos ni palabras comunes; al agregar")
+        print("     una página, leer su superficie además de correr esto")
+
     print("\nog-image.png al día")
     vieja = G.og_desactualizada()
     if vieja:

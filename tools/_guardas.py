@@ -401,6 +401,96 @@ def hrefs_muertos():
     return problemas
 
 
+# --- Castellano en lo que se publica ----------------------------------------
+# El sitio está en inglés y el repo se trabaja en castellano. La frontera entre
+# las dos cosas es invisible: un comentario en castellano es correcto, la misma
+# frase en un `content=` viaja en cada enlace compartido. Ya pasó — og:image:alt
+# decía «El cubo de seis caras de Kotodama Finance» en las diez páginas.
+#
+# LA IDEA NO ES DETECTAR CASTELLANO EN EL REPO, sino AISLAR LA SUPERFICIE
+# PUBLICABLE —que es finita— y mirar sólo ahí. Sobre ese conjunto reducido, un
+# detector simple alcanza para las regresiones.
+#
+# QUÉ NO ATRAPA, y hay que decirlo porque una guarda que aparenta completitud es
+# peor que ninguna: castellano sin diacríticos y sin ninguna de las palabras de
+# abajo. Concretamente se le escapó «no se pudo hidratar; se mantiene la grilla»
+# —ni una palabra de la lista, ni un acento—, que apareció por inspección
+# dirigida a console.*. Esta guarda cubre la reincidencia de lo conocido, no
+# reemplaza leer la superficie cuando se agrega una página.
+CASTELLANO = """
+ el los las del que con para por una unos unas este esta esto estos estas
+ ese esa esos esas cada cuando donde como pero aunque entre hacia desde hasta
+ muy todo toda todos todas otro otra otros otras estan tiene tienen sus segun
+ tambien asi aqui porque cual cuales quien quienes cubo caras pagina paginas
+ texto nombre nombres linea lineas seccion descripcion titulo rotulo enlace
+ enlaces frase frases volver acerca pudo mantiene grilla perdido rehidratando
+""".split()
+# Se dejan FUERA a propósito: no, son, sin, hay, era, solo, van, la, de, a, o.
+# Todas son palabras inglesas y darían falso positivo, que es la forma en que
+# una guarda se vuelve ruido y se deja de mirar.
+RE_CASTELLANO = re.compile(r"\b(" + "|".join(CASTELLANO) + r")\b", re.I)
+RE_DIACRITICOS = re.compile(r"[áéíóúÁÉÍÓÚñÑ¿¡]")
+
+ATRIBUTOS_VISIBLES = ("content", "alt", "aria-label", "title", "placeholder")
+RE_ATRIBUTO = re.compile(
+    r"\b(" + "|".join(ATRIBUTOS_VISIBLES) + r")\s*=\s*\"([^\"]*)\"", re.I)
+
+
+def superficie_publicada():
+    """[(origen, contexto, texto)] de todo lo que llega a un lector o crawler.
+
+    Deja afuera a propósito los comentarios de HTML/CSS/JS, tools/, los .md y
+    _ref/: están en castellano por decisión y no se publican.
+    """
+    filas = []
+    for p in htmls():
+        n, html = nombre(p), p.read_text(encoding="utf-8")
+        sin_com = re.sub(r"<!--.*?-->", " ", html, flags=re.S)
+        for linea in texto_visible(html).splitlines():
+            t = " ".join(linea.split())
+            if t:
+                filas.append((n, "texto visible", t))
+        m = re.search(r"<title>(.*?)</title>", sin_com, flags=re.S | re.I)
+        if m:
+            filas.append((n, "<title>", m.group(1).strip()))
+        for attr, val in RE_ATRIBUTO.findall(sin_com):
+            if val.strip():
+                filas.append((n, "@" + attr.lower(), val.strip()))
+
+    for rel in ("assets/js/main.js", "assets/js/cube.js"):
+        f = RAIZ / rel
+        if not f.exists():
+            continue
+        src = re.sub(r"/\*.*?\*/", " ", f.read_text(encoding="utf-8"), flags=re.S)
+        src = re.sub(r"(?m)^\s*//.*$|(?<=[;\s{}])//.*$", " ", src)
+        for a, b in re.findall(r"'([^'\n]{2,})'|\"([^\"\n]{2,})\"", src):
+            val = (a or b).strip()
+            if val:
+                filas.append((rel, "string JS", val))
+
+    for rel in ("sitemap.xml", "robots.txt"):
+        f = RAIZ / rel
+        if f.exists():
+            for linea in f.read_text(encoding="utf-8").splitlines():
+                if linea.strip():
+                    filas.append((rel, "archivo", linea.strip()))
+    return filas
+
+
+def castellano_publicado():
+    problemas = []
+    for origen, ctx, texto in superficie_publicada():
+        motivos = []
+        hits = sorted({h.lower() for h in RE_CASTELLANO.findall(texto)})
+        if hits:
+            motivos.append("palabras: " + " ".join(hits))
+        if RE_DIACRITICOS.search(texto):
+            motivos.append("diacríticos")
+        if motivos:
+            problemas.append(f"{origen} [{ctx}] {texto[:70]!r} -> " + "; ".join(motivos))
+    return problemas
+
+
 def chrome_divergente():
     """El nav y el footer están duplicados en las ocho páginas: no hay build step
     que los comparta. La duplicación es aceptable si está vigilada, así que en

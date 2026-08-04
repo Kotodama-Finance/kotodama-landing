@@ -1,16 +1,16 @@
 # Kotodama Finance — https://kotodamafinance.com
 #
-# Todo abierto, a propósito. Que el sitio sea legible por máquinas es un
-# OBJETIVO del proyecto, no una concesión: es la misma razón por la que todo el
-# contenido va en el HTML y no inyectado por JS.
+# Everything is open, deliberately. Being legible to machines is a GOAL of this
+# project, not a concession: it is the same reason the content lives in the HTML
+# and is not injected by JavaScript.
 #
-# Los crawlers de IA (GPTBot, ClaudeBot, CCBot, PerplexityBot, Google-Extended…)
-# NO se bloquean. No hace falta nombrarlos uno por uno para permitirlos: el
-# User-agent: * de abajo ya los cubre. Se los menciona acá para que quede por
-# escrito que la omisión es deliberada y nadie los agregue "por las dudas"
-# copiando un robots.txt ajeno.
+# AI crawlers (GPTBot, ClaudeBot, CCBot, PerplexityBot, Google-Extended…) are
+# NOT blocked. They do not need to be named one by one to be allowed — the
+# User-agent: * below already covers them. They are mentioned here so that the
+# omission is on the record as deliberate, and nobody adds them "just in case"
+# by copying someone else's robots.txt.
 #
-# Acceso abierto significa acceso abierto también para quien lee a máquina.
+# Open access means open access to whoever reads by machine, too.
 
 User-agent: *
 Allow: /

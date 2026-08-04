@@ -212,7 +212,12 @@ async function hydrateCube() {
     if (activeFace && cube.snapTo) cube.snapTo(activeFace);
   } catch (err) {
     // Sin cubo: la grilla semántica queda como navegación. No es un fallo fatal.
-    console.warn('[cube] no se pudo hidratar; se mantiene la grilla.', err);
+    // EL MENSAJE VA EN INGLÉS aunque el comentario esté en castellano, y la
+    // distinción es la que vale para todo el archivo: un comentario no se
+    // ejecuta, un console.warn SÍ — es salida que el programa produce en
+    // runtime, dirigida a quien esté mirando la consola. Es interfaz, aunque
+    // sea técnica, y esta interfaz está en inglés como el resto del sitio.
+    console.warn('[cube] could not hydrate; falling back to the grid.', err);
   }
 }
 
@@ -286,7 +291,7 @@ window.addEventListener('pageshow', (e) => {
   if (cube.isContextLost && cube.isContextLost()) {
     // El canvas volvió sin GPU. Se tira y se rehidrata: es la única salida y
     // cuesta lo mismo que la primera vez.
-    console.warn('[cube] contexto perdido al volver del bfcache; rehidratando.');
+    console.warn('[cube] context lost after bfcache restore; rehydrating.');
     cube.dispose();
     cube = null;
     hydrateCube();
