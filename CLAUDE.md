@@ -30,33 +30,36 @@ fallidos ya corregidos, y las capturas intermedias.
 - **`main` no se toca**: publica kotodamafinance.com y todavía sirve la landing
   vieja. Nada de esto está publicado.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-05, los kanji de las tres subcaras de Hajime**
-  (太一 · 万 · 幽玄, cerrados por el autor), con subset regenerado y og-image
-  resellada. **Árbol limpio y todo pusheado** en `redesign-trust`, con las
-  guardas corridas (structure y modes en verde, pendulum en verde, ready en
-  `2` — ver el punto siguiente).
+- Último cierre: **2026-08-05, segunda tanda del día: la tarjeta de
+  LibraryThing completa** (logo oficial sin alterar + «My Library at Home»),
+  que cerró los DOS últimos pendientes del autor; la primera tanda fueron
+  los kanji de las subcaras (太一 · 万 · 幽玄) con subset regenerado. **Árbol
+  limpio y todo pusheado** en `redesign-trust`, con las guardas corridas
+  (structure y modes en verde, pendulum en verde, ready en `2` — ver el punto
+  siguiente).
   *(Este bloque no puede nombrar su propio commit, así que siempre queda uno
   atrás: `git log -1 redesign-trust` es la respuesta exacta. El ancla fija que no
   deriva es el tag.)*
 - **EL CONTENIDO REDACTADO SIGUE ENTERO, PERO EL SITIO YA NO ESTÁ EN CERO
   PLACEHOLDERS — Y ES DELIBERADO.** La revisión de quince puntos agregó a
-  pedido del autor tres subpáginas de andamiaje (`/hajime/taichi|yorozu|yugen/`)
-  y la tarjeta de LibraryThing en `/sugao/`: **16 placeholders en 4 páginas,
-  que redacta Manuel** (5+5+5 en las subpáginas, 1 en /sugao/). Con eso
-  **`check-ready` volvió a salir `2`, y es LO ESPERADO** — el significado del
+  pedido del autor tres subpáginas de andamiaje (`/hajime/taichi|yorozu|yugen/`):
+  **15 placeholders en 3 páginas, que redacta Manuel** (5+5+5; el de la
+  tarjeta de LibraryThing en /sugao/ ya se redactó — «My Library at Home»).
+  Con eso **`check-ready` sale `2`, y es LO ESPERADO** — el significado del
   código 2 ya cambió dos veces; la historia está en el docstring de
-  `check-ready.py`. El baseline fija el techo en 16 y `check-structure` sigue
+  `check-ready.py`. El baseline fija el techo en 15 y `check-structure` sigue
   teniendo que estar SIEMPRE verde.
 - **Ahora son CATORCE páginas**, no once: se sumaron las tres subpáginas de
   Hajime. El sitemap tiene 13 URLs (todas menos la 404).
-- **Queda UNA decisión del autor pendiente**: el permiso de marca para
-  recolorear el logo de LibraryThing (ver la decisión de tarjetas de perfil).
-  La otra —los kanji de Taichi/Yorozu/Yūgen— **se cerró el 2026-08-05**:
-  **太一 Taichi · 万 Yorozu · 幽玄 Yūgen**, dictados por el autor desde la
-  tabla del cubo de su `context.md` (no localizable desde este repo: los
-  valores se copiaron literales de su mensaje, que es la misma regla de no
-  inventar). Aplicados con el patrón de las seis caras y con su regeneración
-  de subset — ver la decisión de las subpáginas.
+- **NO queda ninguna decisión del autor pendiente.** Las dos últimas se
+  cerraron el 2026-08-05: los kanji de las subcaras (**太一 Taichi · 万
+  Yorozu · 幽玄 Yūgen**, dictados por el autor desde la tabla del cubo de su
+  `context.md` — no localizable desde este repo: se copiaron literales de su
+  mensaje, la misma regla de no inventar), y **el logo de LibraryThing, que
+  ya está puesto**: va el archivo oficial EN SU PALETA ORIGINAL, sin alterar
+  — criterio nuevo del autor que REVIERTE el monocromo en oro y DISUELVE el
+  pendiente de permiso de marca (usar la marca tal cual se distribuye es lo
+  que cualquier guía permite). Ver la decisión de tarjetas de perfil.
 
 **Lo que dejó la última tanda (la revisión de quince puntos)**, todo integrado
 en las decisiones de abajo: las anclas de la nav aterrizando con el layout ya
@@ -99,9 +102,10 @@ sesión.
 
 **LO QUE FALTA ES INFRAESTRUCTURA — Y, DESDE LA REVISIÓN DE QUINCE PUNTOS, UN
 PASE DE REDACCIÓN CHICO Y DELIBERADO.** El merge a `main` espera dos cosas: la
-infraestructura de dominio (trabajo fuera de este repo) y los **16 placeholders
-que la revisión reintrodujo a propósito** (las tres subpáginas de Hajime y la
-línea de LibraryThing — los escribe Manuel; `check-ready` los bloquea solo).
+infraestructura de dominio (trabajo fuera de este repo) y los **15 placeholders
+que quedan de la revisión** (las tres subpáginas de Hajime, 5+5+5 — los
+escribe Manuel; `check-ready` los bloquea solo. El de LibraryThing ya se
+redactó el 2026-08-05, junto con el logo).
 
 **PASO 0 — HECHO. Ya se sabe dónde está el DNS**: **Namecheap BasicDNS**, con
 los seis registros del `.com` documentados (cuatro `A` de GitHub Pages, el
@@ -128,9 +132,9 @@ transferir → correo → merge:
    inventario del paso 0 — el inventario vigente es el de después del paso 1.
 4. **Recién ahí, cambiar los nameservers.**
 5. **Merge a `main`** + tag de publicación. **Ojo: desde la revisión de quince
-   puntos este paso tiene un prerrequisito nuevo** — redactar los 16
-   placeholders de las subpáginas de Hajime y de la tarjeta de LibraryThing
-   (`check-ready` tiene que volver a `0`).
+   puntos este paso tiene un prerrequisito nuevo** — redactar los 15
+   placeholders de las subpáginas de Hajime (`check-ready` tiene que volver
+   a `0`).
 
 **Por qué el correo fue PRIMERO, que era el cambio de fondo.** El forwarding de
 Namecheap **muere al salir del registrador**, y `contact@kotodamafinance.com`
@@ -173,8 +177,8 @@ Ninguno bloquea publicar. Cada uno tiene su sección con el detalle.
 
 | Cabo | Estado |
 |---|---|
-| **Redacción de Hajime** | **16 placeholders deliberados** (taichi/yorozu/yugen ×5, LibraryThing ×1). Los escribe Manuel. `check-ready` sale `2` hasta entonces — esperado. |
-| **Logo de LibraryThing** | **pendiente del permiso de marca.** librarything.com devuelve 403 al acceso automatizado (/press y /topic/45089); el autor tiene que verificar desde su navegador si se puede recolorear a oro. La tarjeta ya tiene el hueco (`.profile-card__logo`). |
+| **Redacción de Hajime** | **15 placeholders deliberados** (taichi/yorozu/yugen ×5). Los escribe Manuel. `check-ready` sale `2` hasta entonces — esperado. |
+| ~~Logo de LibraryThing~~ | **CERRADO 2026-08-05**: va el archivo oficial en su paleta original, sin alterar — criterio nuevo que disuelve el pendiente de permiso (ver la decisión de tarjetas y `assets/img/README.md`). |
 | ~~Kanji de Taichi/Yorozu/Yūgen~~ | **CERRADO 2026-08-05**: 太一 · 万 · 幽玄, del `context.md` del autor. Aplicados en h1 y `<title>` con el patrón de las caras; subset regenerado (太/幽/玄 eran nuevos). |
 | **Móvil** | **nunca medido en dispositivo real.** Congelado por decisión del autor. La única medición de rendimiento es de escritorio. |
 | **Maelstrom** | apartado en `assets/css/maelstrom.css`, **no lo carga nadie** —ahora con guarda en `check-modes`—, reactivable. Al retomarlo, empezar por el **bug de la variante táctil** —definía keyframes sin blur y nunca los asignaba—, no por recalibrar. |
@@ -499,7 +503,7 @@ ninguna parte.
   Está anotado en el HTML de /musubi/, en el de /hajime/ y en el CSS de
   `a.name`.
 
-### Tarjetas de perfil en /sugao/ — estructura lista, logo pendiente de marca
+### Tarjetas de perfil en /sugao/ — completa: logo oficial sin alterar y texto
 
 El registro de perfiles personales va en **tarjetas** desde ya, aunque haya una
 sola (LibraryThing): un enlace suelto sirve para uno, no para los cinco que
@@ -509,14 +513,41 @@ completo como un banner. **Sin slots vacíos ni «próximamente»**. La tarjeta
 entera es el enlace. El LinkedIn del perfil profesional NO se convierte en
 tarjeta: es credencial de esa sección, no parte del registro.
 
-**El logo va monocromo en ORO, silueta SVG con `fill=currentColor`** — cinco
-marcas con cinco colores romperían la paleta; se distinguen por forma. **Y
-TODAVÍA NO ESTÁ, por una razón que no es olvido**: librarything.com devuelve
-403 al acceso automatizado en su página de prensa y en el FAQ «Use of
-LibraryThing Logo» (`/topic/45089`), así que **el permiso de RECOLOREAR quedó
-sin verificar y no se recolorea sin eso** — la condición la puso el autor.
-Cuando lo verifique desde su navegador, el hueco (`.profile-card__logo`) ya
-está.
+**EL LOGO VA EN SU PALETA ORIGINAL, SIN ALTERAR — criterio fijado por el
+autor (ago 2026), y REVIERTE el «monocromo en oro, silueta con
+`fill=currentColor`» que decía acá.** El motivo del cambio: recolorear la
+marca de otro es apropiársela; los logos de instituciones ajenas se muestran
+como ellas los publican. El costo aceptado es que entren colores ajenos a la
+paleta navy/oro, y **lo controla el TAMAÑO (26px, un sello, no una mancha),
+no el recoloreo**. Aplica también a los cuatro que vienen. Quien encuentre la
+instrucción del oro en el historial: la vigente es ésta, no hay que
+"corregirla" de vuelta.
+
+**Y el cambio de criterio DISUELVE el pendiente de permiso de marca**: los
+términos siguen ilegibles por vía automatizada (403 en /press y /topic/45089),
+pero usar el archivo oficial tal cual se distribuye es exactamente lo que
+cualquier guía de marca permite — eso es lo que hace el uso defendible sin
+haberlos leído, y está anotado en `assets/img/README.md`, al lado del archivo.
+
+Lo puesto, verificado midiendo (2026-08-05): `flat-logo-rounded_1024w.png`
+oficial, byte-idéntico al original (sha256 comprobado), en
+`assets/img/librarything-flat-logo-rounded_1024w.png`. **El SVG oficial NO
+sirve** — dibuja la L como `<text>` con una tipografía que el visitante no
+tiene (análisis del autor, anotado en el README de img). Esquinas del PNG ya
+transparentes (alfa 0, medido); sobre la tarjeta: anillo exterior sin halo
+(delta de luminancia 0.0 contra el fondo), esquinas a +1,9 unidades (el
+antialias del redondeo — bajo el umbral de 3 unidades sRGB que este proyecto
+ya fijó como invisible), centro exacto `#553B39`, nítido a @2x (1024px de
+origen para 52px de dispositivo). El `alt` va **vacío a propósito**: el
+nombre «LibraryThing» está al lado y un lector de pantalla lo diría dos veces.
+
+**El texto de la tarjeta es del autor y va tal cual: «My Library at Home»**,
+con esas mayúsculas. No se ajustó al patrón en minúscula de los descriptores
+de las seis tarjetas del cubo porque ése es otro sistema (dominios comprimidos
+que se leen entre seis); `.profile-card__what` no tiene hermanos todavía, y en
+mayúsculas se lee como el nombre propio de la colección — el registro justo
+para esta tarjeta. Con esto **/sugao/ quedó en cero placeholders** y el
+baseline bajó a 15.
 
 ### `素顔 Sugao` es la persona entera, en su propia página — no una sección de la portada
 Sugao es **la persona detrás del proyecto, completa**: perfil profesional y

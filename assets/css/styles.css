@@ -1049,11 +1049,14 @@ button:focus-visible {
    fijo una sola se ve deliberada y varias envuelven de a dos por fila en la
    columna de 720. Vocabulario visual de las face-card (mismo borde, fondo y
    hover), que ya está establecido.
-   El logo del servicio va MONOCROMO EN ORO, reducido a silueta (SVG con
-   fill=currentColor): cinco marcas con cinco identidades de color romperían
-   la paleta navy/oro justo en la página que tiene que sonar sobria. Se
-   distinguen por FORMA, no por color. El de LibraryThing está pendiente del
-   permiso de marca — ver el comentario en /sugao/. */
+   El logo del servicio va EN SU PALETA ORIGINAL, SIN ALTERAR — criterio del
+   autor (ago 2026), y REVIERTE el «monocromo en oro, fill=currentColor» que
+   decía acá: recolorear la marca de otro es apropiársela, y usar el archivo
+   oficial tal cual es lo que hace el uso defendible (assets/img/README.md).
+   El costo aceptado es que entren colores ajenos a la paleta navy/oro; lo
+   controla el TAMAÑO —26px, un sello, no una mancha—, no el recoloreo. Vale
+   para los que vienen (IMDb, MyAnimeList, Steam, GitHub). No hay que
+   "corregirlo" de vuelta a oro. */
 .profile-cards {
   list-style: none;
   display: flex;
@@ -1073,7 +1076,7 @@ button:focus-visible {
   transition: border-color 0.25s ease, background 0.25s ease;
 }
 .profile-card:hover { border-color: var(--c-gold); background: rgb(var(--rgb-gold) / 0.08); }
-.profile-card__logo { width: 26px; height: 26px; flex-shrink: 0; color: var(--c-gold); }
+.profile-card__logo { width: 26px; height: 26px; flex-shrink: 0; display: block; }
 .profile-card__meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .profile-card__name { font-family: var(--font-ui); font-size: 0.92rem; font-weight: 500; color: var(--c-text); }
 .profile-card__what { font-size: 0.78rem; line-height: 1.45; color: var(--c-text-muted); }

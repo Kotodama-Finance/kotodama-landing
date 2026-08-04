@@ -14,6 +14,8 @@ así que la historia completa antes de interpretar una corrida:
    todas con placeholders que redacta Manuel. `2` vuelve a ser lo esperado
    hasta ese pase; el baseline fija el techo y `check-structure` sigue
    atajando cualquier placeholder NUEVO por encima de él.
+   (La línea de LibraryThing se redactó el 2026-08-05 — «My Library at
+   Home», del autor — y el baseline bajó a 15: quedan las tres subpáginas.)
 
 O sea: hoy `0` significa que la redacción de las subpáginas terminó, `2` es el
 estado normal, y `1` sigue siendo estructura rota — eso sí es regresión.

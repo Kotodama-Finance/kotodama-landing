@@ -152,7 +152,7 @@ historial sea un punto de restauración seguro por construcción, no por suerte.
 | `tools/check-structure.py` | siempre | instantánea, sin navegador | **verde** |
 | `tools/check-modes.py` | siempre | ~40 s | **verde** |
 | `tools/check-pendulum.py` | antes de push, o al tocar la física del cubo | ~2–4 min | **verde** |
-| `tools/check-ready.py` | antes de publicar a `main` | instantánea | `2` hasta redactar las subpáginas de Hajime y la línea de LibraryThing |
+| `tools/check-ready.py` | antes de publicar a `main` | instantánea | `2` hasta redactar las subpáginas de Hajime |
 
 `check-pendulum.py` es la única demasiado lenta para cada commit: mide dos
 períodos de una oscilación real en un navegador, y encima el loop corre a un
