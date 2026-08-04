@@ -1003,10 +1003,15 @@ button:focus-visible {
 /* En /hajime/, los tres nombres (Taichi, Yorozu, Yūgen) ADEMÁS enlazan a su
    subpágina, y un enlace se viste de enlace: oro y subrayado suave. La regla
    pisa el color de .name a propósito.
-   EN /musubi/ EL MISMO MARCADO .name QUEDA SIN ENLACE, Y ES DECISIÓN: Kasen,
-   Okeanos, Kotodama, Musubi, Odysseus y Aeolus son conceptos, explicados donde
-   aparecen — no destinos. Quien los "empareje" con /hajime/ agregándoles
-   enlace estaría prometiendo páginas que no existen. */
+   EN /musubi/ EL MISMO MARCADO .name QUEDA SIN ENLACE, Y ES DECISIÓN, por dos
+   razones que no hay que mezclar: Kasen, Okeanos, Kotodama, Musubi, Odysseus
+   y Aeolus son conceptos sin página — enlazarlos prometería páginas que no
+   existen—; y Taichi, Yorozu y Yūgen (bloque 5, desde 2026-08-05) SÍ tienen
+   página y aun así no enlazan: ahí se los presenta como parte del sistema
+   conceptual, no como destinos —el camino es /hajime/, de donde cuelgan—, y
+   mezclar nombres enlazados y sin enlazar con el mismo marcado en la misma
+   página sería inconsistente. Es la excepción más discutible del marcado y
+   está anotada también junto al bloque 5 de /musubi/. */
 .face-page__body a.name { color: var(--c-gold); border-bottom: 1px solid var(--line-gold-soft); padding-bottom: 1px; }
 .face-page__body a.name:hover { color: var(--c-gold-soft); border-bottom-color: var(--c-gold); }
 /* .face-page__ref se fue con el enlace de /sugao/ al registro del operador,

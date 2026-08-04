@@ -30,14 +30,15 @@ fallidos ya corregidos, y las capturas intermedias.
 - **`main` no se toca**: publica kotodamafinance.com y todavía sirve la landing
   vieja. Nada de esto está publicado.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-05, tercera tanda del día: la redacción de las
-  tres subpáginas de Hajime, con texto del autor — LA REDACCIÓN DEL SITIO
-  TERMINÓ POR SEGUNDA VEZ.** Las dos tandas anteriores del día: los kanji de
-  las subcaras (太一 · 万 · 幽玄, con subset regenerado) y la tarjeta de
-  LibraryThing completa (logo oficial sin alterar + «My Library at Home»).
-  **Árbol limpio y todo pusheado** en `redesign-trust`, con las guardas
-  corridas (structure y modes en verde, pendulum en verde, **ready en `0`:
-  LISTO PARA PUBLICAR** — ver el punto siguiente).
+- Último cierre: **2026-08-05, cuarta tanda del día: el bloque 5 de /musubi/
+  («How the reading divides», texto del autor)** — la página pasó de cuatro a
+  CINCO bloques. Las tandas anteriores del día: los kanji de las subcaras
+  (太一 · 万 · 幽玄, con subset regenerado), la tarjeta de LibraryThing
+  completa, y la redacción de las tres subpáginas de Hajime — **LA REDACCIÓN
+  DEL SITIO ESTÁ TERMINADA.** **Árbol limpio y todo pusheado** en
+  `redesign-trust`, con las guardas corridas (structure y modes en verde,
+  pendulum en verde, **ready en `0`: LISTO PARA PUBLICAR** — ver el punto
+  siguiente).
   *(Este bloque no puede nombrar su propio commit, así que siempre queda uno
   atrás: `git log -1 redesign-trust` es la respuesta exacta. El ancla fija que no
   deriva es el tag.)*
@@ -510,10 +511,12 @@ Dos compromisos del texto que NO son redacción libre, anotados en los HTML:
   este archivo) y la guarda los habría marcado: era una regla del proyecto
   peleando contra otra. La exención es angosta: castellano sin esa marca sigue
   siendo hallazgo.
-- **En /musubi/ los seis nombres `.name` NO enlazan, y no hay que
-  "emparejarlos"**: son conceptos explicados en esa misma página, no destinos.
-  Está anotado en el HTML de /musubi/, en el de /hajime/ y en el CSS de
-  `a.name`.
+- **En /musubi/ los nombres `.name` NO enlazan, y no hay que "emparejarlos"**
+  — ahora son nueve, con dos razones que no hay que mezclar: los seis del
+  marco no tienen página (enlazarlos prometería páginas que no existen), y
+  los tres de Hajime del bloque 5 SÍ la tienen pero ahí se presentan como
+  sistema conceptual, no como destinos. Está anotado en el HTML de /musubi/,
+  en el de /hajime/ y en el CSS de `a.name`.
 
 ### Tarjetas de perfil en /sugao/ — completa: logo oficial sin alterar y texto
 
@@ -1025,17 +1028,34 @@ nombres»: siete bloques sobre por qué hay nombres japoneses, cómo se deriva c
 uno, y una tabla con las seis caras y su razón. Se redactó entero de nuevo, en
 **cuatro bloques** que explican la idea de la que sale la plataforma — el agua
 (`Kasen`, `Okeanos`), el nombrar (`Kotodama`), el vínculo (`Musubi`) y quién es
-el lector (`Odysseus`, `Aeolus`).
+el lector (`Odysseus`, `Aeolus`). **Desde el 2026-08-05 son CINCO**: el autor
+sumó «How the reading divides» (la división de la lectura: `Taichi`, `Yorozu`,
+`Yūgen`), entre el bloque del cubo y el del lector — el 3 explica por qué el
+mapa es un cubo de caras al mismo nivel; el 5, cómo se divide el trabajo
+DENTRO de una cara. Dos decisiones del bloque, anotadas junto al HTML:
+
+- **Los tres nombres van en `.name` SIN enlace aunque SÍ tienen página** — la
+  excepción más discutible del marcado: acá se presentan como parte del
+  sistema conceptual, no como destinos (el camino es /hajime/, de donde
+  cuelgan), y mezclar nombres enlazados y sin enlazar con el mismo marcado en
+  la misma página sería inconsistente. También en el CSS de `a.name`.
+- **Sin referentes filosóficos, a propósito**: el `context.md` respalda el
+  bloque con Hegel, Jung, el yin-yang, Agustín y Amaterasu, y no se nombra
+  ninguno — la página ya maneja seis conceptos de dos tradiciones, y cinco
+  referencias más de otras tres la convierten en un ensayo, justo en la
+  página cuya función es desactivar la lectura esotérica. Que nadie los
+  agregue creyendo que faltan.
 
 - **La tabla de las seis caras salió a propósito, no se perdió.** Cada cara dice
   lo suyo en su propia página; la tabla obligaba a mantener sincronizadas dos
   listas de la misma cosa.
 - **La página no explica los nombres de las caras, y no hay que reponer eso.**
   Es la consecuencia buscada del punto anterior.
-- **Los seis nombres del marco van en `<i class="name">`**, cursiva y a color
-  de texto pleno. `<i>` y no `<em>` porque `<em>` es énfasis y un lector de
-  pantalla lo entonaría; cada nombre se marca **una sola vez**, donde se lo
-  presenta. Y no van en oro: el oro es de los subtítulos y los enlaces.
+- **Los nombres del marco van en `<i class="name">`** (los seis originales y,
+  desde el bloque 5, también Taichi/Yorozu/Yūgen), cursiva y a color de texto
+  pleno. `<i>` y no `<em>` porque `<em>` es énfasis y un lector de pantalla
+  lo entonaría; cada nombre se marca **una sola vez**, donde se lo presenta.
+  Y no van en oro: el oro es de los subtítulos y los enlaces.
 - **Usa `.face-page`, como las otras nueve subpáginas.** Antes usaba `.naming*`,
   que ya no existe: se borró con la tabla. De paso ganó el `<h1>` que le
   faltaba — era la única subpágina que no tenía, sólo un `<h2>`.
