@@ -847,6 +847,16 @@ que produjeron conclusiones equivocadas:
   sospechosa es la métrica.**
 - **Un test roto se disfraza de bug de la página.** Si el JS de una guarda lanza,
   tiene que reventar el script, no devolver `undefined` en silencio.
+- **DOS GUARDAS DE NAVEGADOR A LA VEZ SE ARRUINAN, y una de las dos puede dar
+  VERDE EN FALSO.** Lanzando `check-pendulum` en segundo plano y otra encima, la
+  segunda murió con `ConnectionResetError` —se pelean el mismo Chrome— y la
+  primera **terminó en 0 diciendo TODO OK**. Pero su número era
+  `máx |vel| dentro 0.0000`, cuando lo sano es ~0.11: la ventana de medición
+  quedó vacía y la comprobación pasó **por no tener nada que comprobar**.
+  El rojo se ve; el verde vacío no. **Correrlas de a una**, y desconfiar de una
+  métrica que da exactamente 0 donde antes daba otra cosa — un valor que no se
+  parece a los anteriores es motivo de repetir la corrida, aunque el resultado
+  sea el que uno quería.
 - **Una variante que sólo se LEE no está verificada.** No es una métrica mal
   elegida: es la ausencia de métrica, disfrazada de código presente. La variante
   táctil del maelstrom definía sus keyframes sin blur y **nunca los asignaba**
