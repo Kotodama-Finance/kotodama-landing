@@ -35,9 +35,9 @@ fallidos ya corregidos, y las capturas intermedias.
 - Último cierre: **2026-08-03**, en `fd7ee89`. **Árbol limpio y todo pusheado**,
   con `check-structure`, `check-modes` y `check-pendulum` en verde.
   `check-ready` sigue en `2` por la redacción, que es lo esperado.
-- La redacción va por la mitad: el hero, `/sugao/`, `/disclaimer/`, `/musubi/`
-  y el `免責事項` ya tienen texto definitivo. Quedan **41 placeholders en 8
-  páginas**, y **12 de ellos son `/method/`**.
+- La redacción está casi terminada: el hero, las **seis caras**, `/musubi/`,
+  `/disclaimer/` y el `免責事項` tienen texto definitivo. Quedan **14
+  placeholders en 2 páginas**: `/method/` (12) y la 404 (2).
 - **No queda ningún pendiente técnico.** Los tres que había se cerraron el
   2026-08-04.
 
@@ -510,6 +510,12 @@ del sistema filosófico ni las razones de los nombres.
 - **Cada texto japonés nuevo obliga a regenerar el subset** de Zen Kaku. Ver
   README. **`document.fonts.check()` no sirve** para verificarlo: informa si la
   fuente está cargada, no si contiene el glifo.
+- **Y el subset LATINO tiene el mismo problema, sin guarda que lo mire.** La
+  verificación automática cubre sólo el japonés. Ya mordió dos veces con
+  caracteres que uno da por sentados: los **paréntesis de ancho completo**
+  （U+FF08/U+FF09), que no entran por el rango latino, y **ū (U+016B)** de
+  «Yūgen», que no entraba en ninguno de los rangos declarados. **Al escribir
+  romaji con macrón —ō, ū— verificar contra la `cmap` antes de publicar.**
 
 ---
 
@@ -601,19 +607,43 @@ traduciendo de acá**.
 
 ### El único frente activo: la redacción
 
-**41 placeholders `TODO`** en **8 páginas**, y **se escriben fuera de Code** —
+**14 placeholders `TODO`** en **2 páginas**, y **se escriben fuera de Code** —
 son decisiones de contenido del autor, no tareas de implementación.
 
 | Página | Placeholders |
 |---|---|
 | `/method/` | 12 |
-| `/hajime/` `/tosei/` `/kamon/` `/torii/` `/kizuna/` | 5 c/u |
-| `404.html` · portada | 2 c/u |
-| `/musubi/` · `/sugao/` · `/disclaimer/` | **0 — no les falta nada** |
+| `404.html` | 2 |
+| las otras nueve | **0 — no les falta nada** |
 
-**`/method/` es la última página que sigue siendo andamiaje puro.** Las cinco
-caras tienen 5 cada una y son todas del mismo molde: las dos `description`, el
-lead y dos párrafos de cuerpo.
+**`/method/` es lo único que queda**, y con eso se cierra la redacción. Los 2 de
+la 404 son su `description` y una o dos frases de cuerpo.
+
+### Las seis caras quedaron con un molde común — y el eyebrow se fue
+
+Al redactarlas se unificó la cabecera con la de `/sugao/`: **`<h1>` con kanji y
+romaji, línea de función en `.face-page__gloss`, y nada más.** El
+`<p class="eyebrow">` se eliminó de las cinco.
+
+Había **tres capas diciendo lo mismo**: el eyebrow (`Data / Analysis`), el gloss
+(`«the beginning»`) y el lead, que abre glosando el nombre. Dos señales de que
+sobraban: el eyebrow de `/tosei/` ya decía literal la línea de función que se le
+iba a poner, y el significado del kanji que llevaba el gloss lo dice ahora el
+lead en prosa, en las cinco.
+
+**Queda una divergencia abierta, y es del autor.** El `domain` de las tarjetas
+de la portada sale del archivo de referencia y ya no coincide con las líneas de
+función:
+
+| Tarjeta (portada) | Línea de función (página) |
+|---|---|
+| Connect | Community and network |
+| Learn / Resources | Learning and resources |
+| Act / Business | Understanding to action |
+
+Las otras tres sí coinciden. Alinearlas implica apartarse del archivo de
+referencia en tres campos; dejarlas implica que la tarjeta rotula y la página
+describe, con palabras distintas. **Sin decidir.**
 
 **Al redactar `/method/`, aplicar también las dos notas de fuentes provisorias**
 que hoy están en la portada, ya corregidas por el autor y anotadas en el

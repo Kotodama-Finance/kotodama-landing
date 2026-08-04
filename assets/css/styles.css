@@ -48,8 +48,25 @@
      pyftsubset ZenKakuGothicNew-Medium.ttf  \
        --output-file=assets/fonts/zen-kaku-gothic-new-500-subset.woff2 \
        --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000,U+FF08,U+FF09
-   Latín (Cormorant/Inter), --unicodes:
-     U+0020-007F,U+00A0-00FF,U+2010-2027,U+2030-2044,U+2190-2193,U+2212
+   Latín (Cormorant/Inter). DOS COSAS QUE NO SE VEN EN LOS RANGOS:
+
+   1. Va **--layout-features='*'**. No estaba escrito y hace falta: sin él, los
+      subsets salen un 35% MÁS CHICOS porque se pierden 374 glifos de Inter y
+      503 de Cormorant (smcp, onum, dlig, ss01…). O sea que los archivos
+      commiteados NO los produjo el comando que estaba documentado acá. Hoy el
+      sitio no pide ninguna de esas features —cero font-feature-settings, cero
+      font-variant— así que se conservan por prudencia, no por uso. Sacarlas
+      ahorraría ~79 KB y es una decisión aparte, no un efecto secundario.
+   2. **U+016B (ū)** entra suelto, fuera de todo rango. Es de «Yūgen», en
+      /hajime/. No estaba, y NINGUNA GUARDA LO HABRÍA VISTO: la de cobertura
+      mira el subset japonés. Es la misma trampa que los paréntesis de ancho
+      completo, en el otro alfabeto — y peor, porque una letra latina en una
+      fuente latina se da por sentada. Al escribir romaji con macrón (ō, ū),
+      verificar contra la cmap ANTES de publicar.
+
+     --unicodes=U+0020-007F,U+00A0-00FF,U+016B,U+2010-2027,U+2030-2044,\
+                U+2190-2193,U+2212
+     --layout-features=*
    ------------------------------------------------------------------------- */
 @font-face {
   font-family: 'Cormorant Garamond';

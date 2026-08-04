@@ -285,6 +285,23 @@ python tools/check-ready.py
 cargada, no si contiene el glifo: devuelve `true` para caracteres que la fuente
 no puede dibujar. Ya dio un falso positivo con 免責事項.
 
+### El subset LATINO también se queda corto, y ahí no hay guarda
+
+La verificación automática cubre el subset japonés. **El latino no lo mira
+nadie**, y tiene el mismo problema: `Yūgen` en `/hajime/` trae **ū (U+016B)**,
+que no entraba en ninguno de los rangos declarados. Un carácter latino en una
+fuente latina se da por sentado, y ahí está la trampa. **Al escribir romaji con
+macrón —ō, ū— verificar contra la `cmap` antes de publicar**, igual que con el
+japonés.
+
+Y una divergencia encontrada al regenerarlos: **el comando documentado no
+reproducía los archivos commiteados**. Le faltaba `--layout-features='*'`, y sin
+eso los subsets salen un 35% más chicos porque se pierden 374 glifos de Inter y
+503 de Cormorant (`smcp`, `onum`, `dlig`, `ss01`…). Ya está corregido en
+`styles.css`. Hoy el sitio **no pide ninguna** de esas features, así que se
+conservan por prudencia; quitarlas ahorraría ~79 KB por carga y es una decisión
+aparte, no un efecto secundario de agregar un glifo.
+
 ## Iconos (favicon)
 
 Los tres iconos —`favicon.ico` (16/32/48 px), `favicon.svg` y
