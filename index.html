@@ -222,7 +222,10 @@
                `inert` de arranque: plegado no es sólo invisible, tampoco es
                tabulable ni lo lee un lector de pantalla. -->
           <div class="cube__enter">
-            <p class="cube__hint">Drag to turn. Click a face to select it.</p>
+            <!-- El texto de acá es el del modo GRILLA a propósito: sin JS la
+                 capa visible es la grilla y no hay nada que arrastrar. El de
+                 3D («Drag to turn. …») lo pone setView() al hidratar. -->
+            <p class="cube__hint">Click a face to select it.</p>
             <div class="cube__folio" id="cube-folio" inert>
               <div class="cube__folio-in">
                 <p class="status" id="cube-status" data-state="active">

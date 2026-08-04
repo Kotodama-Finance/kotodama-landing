@@ -183,6 +183,17 @@ function setView(view) {
       b.setAttribute('aria-selected', String(b.dataset.view === view));
     });
   }
+  // La ayuda dice lo del modo activo: en la grilla no hay nada que arrastrar,
+  // así que «Drag to turn» ahí es una instrucción para un control que no
+  // existe. El HTML trae el texto de GRILLA: sin JS la capa visible es la
+  // grilla, y este código no corre para corregirlo. El de 3D lo pone el
+  // arranque, que ya pasa por acá con setView('3d').
+  const hint = document.querySelector('.cube__hint');
+  if (hint) {
+    hint.textContent = is3d
+      ? 'Drag to turn. Click a face to select it.'
+      : 'Click a face to select it.';
+  }
 }
 
 /* ---- Hidratar el cubo 3D (Three.js) ------------------------------------- */

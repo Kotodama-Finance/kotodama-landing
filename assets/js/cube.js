@@ -293,23 +293,54 @@ export function initCube(stage, opts) {
   const camera = new THREE.PerspectiveCamera(24, 1, 0.1, 100);
   camera.lookAt(0, 0, 0);
 
-  /* Encuadre calculado, no una distancia fija.
-     La esfera envolvente del cubo tiene radio sqrt(3)*(CELL + CUBIE/2) ~ 2.58:
-     la diagonal del cuerpo mide 1.73 veces el lado, así que al girar el cubo
-     "crece" mucho más allá de su cara. Con la cámara clavada a z=11 y FOV
-     vertical de 24°, la media altura visible es 11*tan(12°) ~ 2.34 < 2.58, y el
-     cubo se recortaba en toda rotación con un vértice cerca de la vertical.
-     Usar la esfera envolvente garantiza que no toque un borde en NINGÚN ángulo,
-     y recalcularlo en cada resize lo hace inmune a cambios de tamaño o aspecto. */
-  const CUBE_RADIUS = Math.sqrt(3) * (CELL + CUBIE / 2);
+  /* Encuadre calculado, no una distancia fija — y ANISOTRÓPICO, no esférico.
+     ESTO REEMPLAZA al encuadre por esfera envolvente completa.
+
+     El cubo rota SOLO en dos ejes: rx (péndulo / arrastre / snap) y ry (giro
+     libre). rotation.z es siempre 0 —order 'YXZ' y nadie lo toca—, y eso acota
+     la altura alcanzable: como ry no cambia la coordenada vertical, la media
+     altura máxima del cuerpo es √2·S —una ARISTA arriba, rx≈45°—, y el vértice
+     arriba (√3·S) es INALCANZABLE: necesitaría roll. La versión anterior
+     encuadraba la esfera completa (√3·S ≈ 2.58) y pagaba ~8% de distancia por
+     una pose que no existe.
+
+     Las dos condiciones, por función soporte del cuerpo barrido (el peor punto
+     real, no una esfera que lo contiene):
+
+       vertical:   d ≥ M · (√2·S / tan(halfV) + S)
+                   El punto más alto (arista a rx≈45°) queda a radio S del eje
+                   de ry, y su peor azimut lo acerca S hacia la cámara: de ahí
+                   el «+ S». VA CON TANGENTE A PROPÓSITO: la regla «con seno,
+                   no tangente» era de la ESFERA (la recta tangente a la
+                   esfera); para un punto concreto la tangente es exacta.
+                   Quien la «corrija» a seno aleja la cámara sin ganar nada.
+
+       horizontal: d ≥ M · √3·S / sin(halfH)
+                   ry gira libre, así que el radio horizontal máximo sí es el
+                   de la esfera (√3·S, con la diagonal horizontal a rx≈45°), y
+                   para un radio de revolución la fórmula del seno es la
+                   correcta — acá no cambió nada.
+
+     Manda la mayor de las dos, recalculado en cada resize. La garantía sigue
+     siendo geométrica y cubre TODAS las rotaciones alcanzables: el péndulo, el
+     snap (rx=±90) y el arrastre manual, que no está acotado. NO asume la
+     amplitud del péndulo — cambiar PEND_AMP/PEND_CENTER no invalida el
+     encuadre. Lo ÚNICO que lo invalida es introducir roll (rotation.z ≠ 0):
+     ese día vuelve la esfera, d = M·√3·S/sin(min(halfV, halfH)).
+
+     Verificado con barrido de poses (rx −8..180 × ry 0..345, y las dos de
+     snap): ninguna pose recorta; el margen mínimo queda en el peor caso
+     teórico (rx≈45°). Los números, en docs/mediciones/encuadre.md. */
+  const HALF_SIDE = CELL + CUBIE / 2;
+  const CUBE_RADIUS = Math.sqrt(3) * HALF_SIDE;   // sólo la horizontal lo usa
   const FIT_MARGIN = 1.06;
 
   function frameCamera() {
     const halfV = (camera.fov / 2) * DEG;
     const halfH = Math.atan(Math.tan(halfV) * camera.aspect);
-    // el lado más angosto manda: en un canvas apaisado, la vertical
-    const half = Math.min(halfV, halfH);
-    camera.position.z = (CUBE_RADIUS * FIT_MARGIN) / Math.sin(half);
+    const dv = FIT_MARGIN * HALF_SIDE * (Math.SQRT2 / Math.tan(halfV) + 1);
+    const dh = (CUBE_RADIUS * FIT_MARGIN) / Math.sin(halfH);
+    camera.position.z = Math.max(dv, dh);
     camera.updateProjectionMatrix();
   }
 

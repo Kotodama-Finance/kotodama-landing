@@ -616,19 +616,44 @@ deja de leerse como junta y se abre en rombo. La malla es
 ### Encuadre de cámara
 
 `PerspectiveCamera(fov 24, near 0.1, far 100)`, con la distancia **calculada en
-cada `resize()`**, nunca fija:
+cada `resize()`**, nunca fija. **Anisotrópico desde 2026-08-04** — reemplaza a
+la esfera envolvente completa:
 
 ```
-CUBE_RADIUS = √3 · (CELL + CUBIE/2) ≈ 2.579     // esfera envolvente
+S           = CELL + CUBIE/2 ≈ 1.489            // media arista del cuerpo 3×3
+CUBE_RADIUS = √3 · S ≈ 2.579                    // sólo la horizontal lo usa
 FIT_MARGIN  = 1.06
-camera.z    = CUBE_RADIUS · FIT_MARGIN / sin(min(halfV, halfH))
+d_vertical   = FIT_MARGIN · S · (√2 / tan(halfV) + 1)
+d_horizontal = FIT_MARGIN · CUBE_RADIUS / sin(halfH)
+camera.z     = max(d_vertical, d_horizontal)
 ```
 
-Dos detalles que importan: es **seno, no tangente** (la esfera envolvente, no la
-cara), y **manda el semiángulo más chico de los dos**. En un escenario apaisado
-gana la vertical y `camera.z ≈ 13.2`; en uno más alto que ancho gana la
-horizontal y la cámara se aleja más. Ésa es la variable que queda sin medir en
-móvil, donde el escenario cambia de proporción.
+**La clave es que el cubo no tiene roll**: rota sólo en `rx` y `ry`
+(`rotation.z` es siempre 0, order `'YXZ'`), y como `ry` no cambia la coordenada
+vertical, la altura máxima alcanzable es **√2·S** —una arista arriba, `rx≈45°`—
+y el vértice arriba (√3·S) **es inalcanzable**. La esfera completa pagaba ~8 %
+de distancia por esa pose imposible; a 720×620 la cámara pasó de `z≈13.15` a
+`z≈12.08` y el cubo dibujado creció de 442 a 483 px de alto.
+
+Tres detalles que importan:
+
+- **La vertical va con tangente y la horizontal con seno, y no es un error.**
+  La regla «con seno, no tangente» era de la esfera; la vertical ahora acota un
+  punto concreto (la arista más alta, que queda a radio S del eje y su peor
+  azimut la acerca S a la cámara — de ahí el «+ 1»), y para un punto la
+  tangente es exacta. La horizontal sigue siendo un radio de revolución (`ry`
+  gira libre), y ahí el seno sigue siendo el correcto.
+- **La garantía cubre TODAS las rotaciones alcanzables** — péndulo, snap
+  (`rx=±90`) y arrastre manual, que no está acotado. **No asume la amplitud del
+  péndulo**: cambiar `PEND_AMP` no la invalida. Lo único que la invalida es
+  introducir roll; ese día vuelve la esfera, `√3·S / sin(min(halfV, halfH))`.
+- **Manda la condición más exigente de las dos.** En apaisado la vertical; en
+  un escenario más alto que ancho, la horizontal — que sigue siendo la variable
+  sin medir en móvil.
+
+Verificado con barrido de 360 poses (`rx` −8…180 × `ry` cada 15°): ninguna
+recorta, margen mínimo **17 px** exactamente en el peor caso teórico (`rx`
+44–45°). Detalle en `docs/mediciones/encuadre.md`.
 
 `setPixelRatio(min(devicePixelRatio, 2))`, y **1.5 en punteros gruesos**, donde
 además se apaga el antialias.
@@ -764,6 +789,7 @@ medición sin condiciones no se puede repetir ni comparar:
 |---|---|---|
 | `luz-arco.md` | contraste del cubo contra su fondo a lo largo del arco del péndulo | cerrado: no había problema, y explica por qué la métrica engañaba |
 | `rendimiento.md` | tiempo por cuadro de la página completa (escritorio, julio 2026) | en escritorio sobra margen; **móvil sin medir en dispositivo real** |
+| `encuadre.md` | el encuadre anisotrópico: barrido de 360 poses sin recorte y el efecto en la portada | cerrado: margen mínimo 17 px en el peor caso teórico (rx≈45°) |
 
 ## Metadatos y descubribilidad
 

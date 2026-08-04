@@ -221,18 +221,43 @@ péndulo; un signo heredado del último tiro pelearía contra la oscilación.
 Consecuencia asumida: `鳥居` y `絆` (arriba y abajo) no se muestran solas en
 reposo. Se llega por arrastre o por la grilla.
 
-### Encuadre de cámara por esfera envolvente
-`d = R · margen / sin(fov/2)`, **con seno, no tangente**. La esfera envolvente
-del cubo tiene radio `√3·(CELL + CUBIE/2) ≈ 2.58`: la diagonal del cuerpo mide
-1.73 veces el lado, así que al girar el cubo "crece" mucho más allá de su cara.
-Con una distancia fija se recortaba en toda rotación con un vértice cerca de la
-vertical. Se recalcula en cada `resize`, así que es inmune a cambios de tamaño.
-Es una **garantía**, no un ajuste: si la esfera entra, ninguna rotación se sale.
+### Encuadre de cámara ANISOTRÓPICO — esto REEMPLAZA a la esfera envolvente
 
-**Manda el semiángulo más chico**, `min(halfV, halfH)`, no la vertical siempre:
-en un escenario apaisado gana la vertical, pero en uno más alto que ancho gana la
-horizontal y la cámara tiene que alejarse más. Es la misma variable que queda sin
-medir en móvil, donde el escenario cambia de proporción.
+**Cambió el 2026-08-04, a pedido del autor.** La esfera completa (`√3·S`) pagaba
+~8 % de distancia por la pose de vértice arriba, que **es inalcanzable**: el
+cubo no tiene roll (`rotation.z` siempre 0, order `'YXZ'`), y como `ry` no
+cambia la coordenada vertical, la altura máxima real es `√2·S` — arista arriba,
+`rx≈45°`. Fórmula vigente, en `frameCamera()`:
+
+```
+d_vertical   = M · S · (√2/tan(halfV) + 1)
+d_horizontal = M · √3·S / sin(halfH)
+camera.z     = max(d_vertical, d_horizontal)
+```
+
+Sigue siendo una **garantía geométrica, no un ajuste empírico**, y cubre TODAS
+las rotaciones alcanzables: péndulo, snap (`rx=±90`) y **arrastre manual sin
+acotar**. El hallazgo que salió del cálculo: restringir al arco del péndulo
+**no ganaba nada** — el máximo vertical está en `rx=45°` y el arco llega a 44°,
+o sea que ya contiene el peor caso. Por eso **cambiar `PEND_AMP` no invalida el
+encuadre**; lo único que lo invalida es **introducir roll**, y ese día vuelve
+la esfera (`√3·S/sin(min(halfV,halfH))`). Está anotado en `frameCamera()`.
+
+**«Con seno, no tangente» ya no es la regla entera**: la vertical va con
+tangente A PROPÓSITO (acota un punto concreto — la arista más alta, a radio S
+del eje, cuyo peor azimut la acerca S a la cámara: de ahí el «+1»), y la
+horizontal sigue con seno (radio de revolución, `ry` libre). Quien "corrija" la
+tangente a seno aleja la cámara sin ganar nada.
+
+Verificado con barrido de 360 poses: cero recortes, margen mínimo **17 px**
+exactamente en el peor caso teórico. Efecto en la portada: el cubo pasó de 442
+a **483 px** de alto (71 % → 78 % del canvas). El aire restante (~137 px) es la
+reserva para las poses de arista arriba, que el arrastre sí alcanza — no es
+recortable por encuadre. Números y condiciones en `docs/mediciones/encuadre.md`.
+
+**Manda la condición más exigente de las dos**: en apaisado la vertical, en uno
+más alto que ancho la horizontal. Es la misma variable que queda sin medir en
+móvil, donde el escenario cambia de proporción.
 
 ### Los números del cubo se leen del código, y se tabulan en UN solo lugar
 

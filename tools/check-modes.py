@@ -204,6 +204,7 @@ def main():
             folioDuracion: fcs.transitionDuration,
             botonTexto: document.getElementById('cube-open').textContent.trim(),
             botonHref: document.getElementById('cube-open').getAttribute('href'),
+            ayuda: document.querySelector('.cube__hint').textContent.trim(),
           };})()"""
 
         # tras abrir/cerrar el folio hay que esperar la transición (0.42s) para
@@ -229,6 +230,12 @@ def main():
         revisar("grid-template-rows" in e["folioTransicion"] and e["folioDuracion"] not in ("0s", "0.01ms"),
                 "el despliegue del folio está animado",
                 f"{e['folioTransicion']} / {e['folioDuracion']}")
+        # La ayuda es POR MODO: en la grilla no hay nada que arrastrar, así que
+        # «Drag to turn» ahí sería una instrucción para un control que no
+        # existe. El HTML trae el texto de grilla (baseline sin JS) y setView()
+        # pone el que corresponde.
+        revisar(e["ayuda"] == "Drag to turn. Click a face to select it.",
+                "la ayuda en modo 3D menciona el arrastre", e["ayuda"])
 
         print("\nClic en una cara (渡世 Tosei)")
         js("document.querySelectorAll('.face-card')[2].click(); true")
@@ -312,6 +319,8 @@ def main():
         e = js(estado)
         revisar(e["stageDisplay"] == "none", "el escenario computa display:none", e["stageDisplay"])
         revisar(not e["gridRecortada"], "la grilla se ve completa")
+        revisar(e["ayuda"] == "Click a face to select it.",
+                "la ayuda en modo grilla NO menciona el arrastre", e["ayuda"])
         pos2 = js("Math.round(document.querySelector('.cube__toggle').getBoundingClientRect().top + window.scrollY)")
         revisar(abs(pos2 - pos_toggle) <= 2, "el toggle NO se mueve al cambiar de modo",
                 f"saltó {pos2 - pos_toggle}px")
@@ -322,6 +331,8 @@ def main():
         e = js(estado)
         revisar(e["gridRecortada"], "la grilla vuelve a recortarse")
         revisar(e["stageDisplay"] != "none", "el escenario vuelve")
+        revisar(e["ayuda"] == "Drag to turn. Click a face to select it.",
+                "y la ayuda vuelve a mencionar el arrastre", e["ayuda"])
         time.sleep(0.8)
         cubo_visible("y se repinta al volver de modo grilla")
 
