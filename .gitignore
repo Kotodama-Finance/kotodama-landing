@@ -1,3 +1,36 @@
+# Material de trabajo que no se publica.
 _ref/
 _dev/
 __pycache__/
+
+# ---------------------------------------------------------------------------
+# CREDENCIALES. Agregado ANTES de que exista el primer archivo que protege, que
+# es el único momento en que sirve: un patrón de ignore NO desprotege nada que
+# ya esté trackeado, y tampoco borra lo que ya se commiteó.
+#
+# ESTO ES UNA RED, NO EL MECANISMO. La regla de verdad está en CLAUDE.md
+# («Ninguna credencial entra al repo»): las claves van en variables de entorno,
+# o en un archivo ignorado desde el primer día. Esta lista sólo ataja el
+# descuido de nombre previsible; una key pegada dentro de un .py con cualquier
+# otro nombre pasa igual.
+#
+# El repo es PÚBLICO: acá «se commiteó» equivale a «se publicó».
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+*.keystore
+secret
+secrets
+secret.*
+secrets.*
+credential.*
+credentials.*
+*credentials.json
+*.token
+.netrc
+_netrc

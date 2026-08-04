@@ -94,6 +94,47 @@ Ninguno bloquea publicar. Cada uno tiene su sección con el detalle.
 
 ## Decisiones cerradas — no rediscutir
 
+### NINGUNA CREDENCIAL ENTRA AL REPO. Nunca.
+
+Ninguna clave, token ni secreto se commitea. **Ni siquiera en un commit que
+después se borra**: git guarda el historial, así que un archivo commiteado y
+después ignorado **sigue siendo accesible**. Agregarlo al `.gitignore` no lo
+saca de la historia — sólo evita el próximo.
+
+**Y este repo es PÚBLICO, o sea que «se commiteó» equivale a «se publicó».** No
+hay ventana entre una cosa y la otra: en cuanto el push termina, el objeto está
+servido por GitHub y puede haber sido clonado, indexado o barrido por un bot que
+justamente busca eso.
+
+**Dónde van**: en variables de entorno, o en un archivo **ignorado desde el
+primer día** —antes de escribirle nada adentro—. El `.gitignore` ya trae los
+patrones típicos (`.env`, `*.key`, `*.pem`, `secrets.*`, `credentials.*`,
+`*.token`), probados en las dos direcciones. **Pero eso es una red, no el
+mecanismo**: sólo ataja el descuido de nombre previsible, y una key pegada
+dentro de un `.py` cualquiera pasa igual.
+
+**El error típico tiene nombre y es «sólo para probar».** Se pega la key en el
+código para ver si el endpoint responde, con la intención de sacarla antes de
+commitear. Cuando el commit sale, ya es tarde: lo único que queda por hacer es
+rotarla. Si hace falta probar, la variable de entorno funciona igual de rápido.
+
+**Va a importar pronto**, y por eso está escrito antes de que exista el primer
+archivo: el pipeline de datos necesita la key de **不動産情報ライブラリ**
+(solicitada desde abril de 2024), la de **J-Quants**, y las que vengan.
+
+**SI PASA IGUAL, EL ORDEN ES: ROTAR PRIMERO, LIMPIAR DESPUÉS.** Y conviene tener
+claro por qué, porque el instinto es al revés. Reescribir la historia
+—`filter-repo`, `force-push`— **no des-publica nada**: lo que ya estuvo arriba
+pudo haber sido copiado, y GitHub conserva objetos alcanzables por forks y por
+la API un tiempo. La única acción que revoca el acceso de verdad es **invalidar
+la credencial en el proveedor**. La limpieza del historial es prolijidad
+posterior, reescribe commits, y **se decide con el autor** — nunca de oficio.
+
+**Estado verificado al 2026-08-04**: se auditó el historial completo —78 commits,
+todas las ramas y el tag— y **no hay ni hubo nunca** credenciales, `.env`,
+`.ttf`, `_ref/` ni ningún archivo sensible. Ese cero es el punto de partida: de
+acá en más, cualquier hallazgo es nuevo y hay que tratarlo como incidente.
+
 ### Los seis nombres de las caras
 `肇 Hajime` · `素顔 Sugao` · `渡世 Tosei` · `家紋 Kamon` · `鳥居 Torii` ·
 `絆 Kizuna`. **Cerrados por el autor.** No se traducen, no se reinterpretan, no
