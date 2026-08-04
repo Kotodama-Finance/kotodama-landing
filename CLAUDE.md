@@ -386,6 +386,42 @@ se adelanta es sólo la geometría de la página. Si la hidratación falla, el
 altura del documento sea estable al hidratar, midiendo ANTES y DESPUÉS — con
 detección de verde vacío si la medición pre-hidratación llega tarde.
 
+**Tres reglas que la reserva arrastra, cerradas al día siguiente de escribirla**
+(auditoría instrumentada + análisis adversarial, mismo día):
+
+- **La hidratación re-aplica el modo VIGENTE, no `'3d'` fijo.** El toggle está
+  vivo desde la reserva, así que el usuario puede elegir la grilla mientras el
+  import de Three.js resuelve — y el `setView('3d')` incondicional de la
+  versión inicial le pisaba la elección. `stage.hidden` es el modo. Verificado
+  con red a 40KB/s: la elección sobrevive al import.
+- **`initCube` devolviendo null se trata como fallo (throw)**: con la reserva
+  puesta, el `return` silencioso de antes dejaba el escenario visible y VACÍO
+  para siempre, sin catch y sin reintento. Hoy es camino muerto (initCube o
+  devuelve el cubo o lanza), pero la semántica de fallo tiene que ser segura
+  por defecto.
+- **El camino de fallo se EJECUTA en la guarda, no se lee**: `check-modes`
+  fuerza la hidratación a fallar (cube.js bloqueado por CDP) y verifica el
+  estado del fallback completo, y además lee la ayuda ANTES del scroll — el
+  momento que un usuario ve primero, que ninguna otra comprobación cubría.
+  Las dos probadas en rojo con `main.js` mutilado antes de confiar en su
+  verde (sin el bloque del hint: 3 fallas; sin la reversión del catch: 4).
+
+**EL FINGERPRINT DE UN `main.js` VIEJO EJECUTANDO** (para el diagnóstico
+DOM-contra-red): `15edc84` hizo DOS cosas a la vez — agregó la escritura del
+hint a `setView()` Y cambió el baseline del HTML al texto de grilla. Un
+`main.js` anterior corriendo contra el HTML vigente da **cubo 3D funcional con
+el hint de grilla congelado**, sin ningún error de consola: el síntoma exacto.
+La prueba de un segundo, desde la pestaña afectada: **alternar Grid↔3D con el
+toggle — si el texto de la ayuda no cambia, el módulo ejecutado es
+pre-`15edc84`**. Y ojo con el instrumento: `fetch(..., {cache:'reload'})` mide
+la RED, no el módulo EJECUTADO — un module script se evalúa una vez por
+documento (module map), y la caché heurística de Chrome (sin `Cache-Control`,
+el 10% del Last-Modified) puede servir el módulo viejo aun tras un F5, porque
+desde 2017 el reload normal sólo revalida el documento principal. El que
+delata al módulo ejecutado es
+`performance.getEntriesByType('resource')` sobre main.js (`transferSize: 0` =
+salió de caché) y `performance.timeOrigin` (¿la pestaña cargó antes del push?).
+
 ### Las anclas aterrizan con el layout ya estable — y cada destino tiene el suyo
 
 Cerrado en la revisión de quince puntos (2026-08-04):
@@ -1576,6 +1612,18 @@ que produjeron conclusiones equivocadas:
   hoja, no la lista de reglas.** El primer comando que mandé devolvía
   `r.cssText` y por eso no distinguía nada — con las reglas solas, un archivo
   viejo y una regresión se ven idénticos.
+- **UN FETCH MIDE LA RED; EL DOM MIDE LA EJECUCIÓN — y pueden estar los dos
+  bien y contradecirse.** «`fetch(main.js, {cache:'reload'}) trae el texto
+  correcto» convivía con «el DOM muestra el texto viejo», y las dos mediciones
+  eran correctas: el fetch va a la red, pero el módulo que ESCRIBIÓ el DOM se
+  evaluó una sola vez por documento (module map) y pudo salir de la caché
+  heurística — sin `Cache-Control`, Chrome le da el 10% del Last-Modified de
+  frescura y el reload normal no revalida subrecursos desde 2017. Para saber
+  qué ejecutó, preguntarle a la ejecución: una huella observable de la versión
+  (acá: si el hint cambia al alternar el toggle) o
+  `performance.getEntriesByType('resource')` con su `transferSize`. Es la
+  variante de «no están mirando el mismo archivo» donde el tercer archivo es
+  el que corre en memoria.
 - **UN FINGERPRINT NUMÉRICO SIN UNIDAD INVENTA ARCHIVOS QUE NO EXISTEN.** Cerrando
   lo anterior propuse distinguir el `styles.css` viejo del vigente por su tamaño,
   y di la referencia en **bytes** (`wc -c` → 47738) para una comprobación que

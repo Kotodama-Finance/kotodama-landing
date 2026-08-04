@@ -173,6 +173,15 @@ def main():
         # canvas: el lazy-init espera a que la sección se acerque al viewport).
         alto_pre = js("document.documentElement.scrollHeight")
         hidratado_pre = js("!!document.querySelector('#cube-stage canvas')")
+        # La ayuda TAMBIÉN se mira acá, ANTES del scroll y de la hidratación:
+        # es el momento que un usuario real ve primero, y el que las demás
+        # comprobaciones (post-hidratación, post-toggle) no cubren. La reserva
+        # de layout escribe el texto de 3D en la carga del módulo; si un
+        # refactor lo devuelve a la hidratación, esta línea es la que lo ve.
+        ayuda_pre = js("document.querySelector('.cube__hint').textContent.trim()")
+        revisar(ayuda_pre == "Drag to turn. Click a face to select it.",
+                "la ayuda ya es la de 3D ANTES de hidratar (reserva de layout)",
+                ayuda_pre)
         # el cubo se hidrata al acercarse su sección
         js("document.getElementById('cube').scrollIntoView({behavior:'auto'}); true")
         time.sleep(3)
@@ -376,6 +385,31 @@ def main():
         revisar(e["anim"] == "none" and e["op"] == "1",
                 "/hajime/ entra seca (sin animación de llegada)",
                 f"{e['anim']} / opacity {e['op']}")
+
+        # --- El camino de FALLO se EJECUTA, no se lee -----------------------
+        # El catch de hydrateCube (revertir a grilla, esconder el toggle, ayuda
+        # de grilla) es código que en el flujo normal no corre nunca — la clase
+        # de código que ya mordió dos veces (variante táctil del maelstrom,
+        # kf-fade): legal, silencioso y sin verificar. Acá se lo fuerza:
+        # cube.js bloqueado, la hidratación tiene que fallar y dejar el estado
+        # COHERENTE del fallback. Si alguien rompe el catch, esto lo ve.
+        print("\nHidratación forzada a fallar (cube.js bloqueado)")
+        cmd("Network.enable")
+        cmd("Network.setBlockedURLs", urls=["*assets/js/cube.js*"])
+        cmd("Page.navigate", url=BASE + "/index.html")
+        time.sleep(2)
+        js("document.getElementById('cube').scrollIntoView({behavior:'auto'}); true")
+        time.sleep(2.5)
+        e = js(estado)
+        revisar(not e["hidratado"], "el cubo NO hidrató (el bloqueo funcionó)")
+        revisar(e["stageDisplay"] == "none", "el escenario se revirtió (display:none)",
+                e["stageDisplay"])
+        revisar(not e["gridRecortada"], "la grilla volvió a la vista")
+        revisar(e["ayuda"] == "Click a face to select it.",
+                "la ayuda revirtió al texto de grilla", e["ayuda"])
+        toggle_oculto = js("document.querySelector('.cube__toggle').hidden")
+        revisar(toggle_oculto, "el toggle se escondió (sin cubo no hay dos vistas)")
+        cmd("Network.setBlockedURLs", urls=[])
 
         ws.close()
     finally:

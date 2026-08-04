@@ -217,16 +217,20 @@ function setView(view) {
    EL TOGGLE ENTRA EN LA RESERVA, y no es un detalle: mostrarlo recién al
    hidratar metía ~59px (su alto + margen) DESPUÉS del aterrizaje del ancla —
    la misma clase de corrimiento que la reserva existe para evitar, en chico.
-   Sus listeners funcionan sin cubo (setView guarda cada uso de `cube`); si el
-   usuario lo toca antes de que el import resuelva, lo peor es un escenario
-   vacío por unos cientos de ms. */
-if (toggle) {
-  toggle.hidden = false;
-  toggle.querySelectorAll('button').forEach((b) => {
-    b.addEventListener('click', () => setView(b.dataset.view));
-  });
+   Sus listeners funcionan sin cubo (setView guarda cada uso de `cube`), y la
+   elección hecha ANTES de que el import resuelva se respeta: la hidratación
+   re-aplica el modo vigente en vez de forzar 3D (ver hydrateCube).
+   Condicionado a `stage`: sin escenario en el DOM no hay layout 3D que
+   reservar, y recortar la grilla sola dejaría la sección vacía. */
+if (stage) {
+  if (toggle) {
+    toggle.hidden = false;
+    toggle.querySelectorAll('button').forEach((b) => {
+      b.addEventListener('click', () => setView(b.dataset.view));
+    });
+  }
+  setView('3d');
 }
-setView('3d');
 
 /* ---- Hidratar el cubo 3D (Three.js) ------------------------------------- */
 async function hydrateCube() {
@@ -239,10 +243,20 @@ async function hydrateCube() {
       onSelect: (key) => setActiveFace(key),
       onDragStart: () => clearSelection(),
     });
-    if (!cube) return;
-    // El escenario y el toggle ya están a la vista desde la reserva; este
-    // setView es el que enciende el loop del cubo recién creado (setEnabled).
-    setView('3d');
+    // initCube hoy no devuelve null (o devuelve el cubo o lanza), pero si
+    // alguna versión futura lo hiciera, con la reserva puesta un return
+    // silencioso dejaría el escenario visible y VACÍO para siempre — sin
+    // pasar por el catch y sin reintento (el observer ya se desconectó).
+    // Null se trata como fallo: mismo camino que el catch.
+    if (!cube) throw new Error('initCube returned null');
+    // Se RE-APLICA el modo VIGENTE, no '3d' incondicional: el toggle está
+    // vivo desde la reserva, así que el usuario pudo elegir la grilla
+    // mientras el import resolvía — y un setView('3d') fijo acá le pisaba
+    // la elección devolviéndolo a 3D solo. stage.hidden es el modo: la
+    // reserva lo puso en false y sólo el toggle lo cambia. En 3D esto
+    // enciende el loop del cubo recién creado (setEnabled); en grilla lo
+    // deja creado y apagado, listo para cuando vuelva.
+    setView(stage.hidden ? 'grid' : '3d');
     // No forzamos snap al cargar: se conserva la vista 3/4 inicial del cubo.
     // La excepción es volver atrás: si hay una cara restaurada, el cubo tiene
     // que aparecer mirándola, no en la pose de bienvenida.
