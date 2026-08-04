@@ -323,10 +323,22 @@ button:focus-visible {
   box-shadow: 0 0 10px rgb(var(--rgb-gold) / 0.7);
   animation: kf-pulse 2.6s ease-in-out infinite;
 }
+/* LOS DOS AROS LATEN JUNTOS, A PROPÓSITO, y antes no lo hacían.
+   `light` iba a 3.2s y `soon` a 3.4s —las tres duraciones entraron juntas en
+   92e2b3b, sin comentario—, o sea 6% de diferencia: se vuelven a alinear cada
+   54s. Eso no alcanza para leerse como otro ritmo y sobra para romper la
+   sincronía, así que caía en el peor lugar posible — se lee como parpadeo
+   desprolijo y no como sistema.
+   Ahora el reparto dice algo: la cara VIVA tiene su propio pulso (2.6s, el
+   mismo del badge del hero) y las cinco que todavía no lo están respiran
+   juntas. La sincronía pasa a ser la marca de «no publicado».
+   Y el pulso NO es lo que distingue los estados: eso lo cargan el relleno y el
+   tono, los dos estáticos. Medido con prefers-reduced-motion, donde el pulso
+   no existe. Ver la nota de reduced-motion más abajo. */
 .dot[data-state="light"] {
   background: transparent;
   border: 1.5px solid var(--c-gold);
-  animation: kf-pulse 3.2s ease-in-out infinite;
+  animation: kf-pulse 3.4s ease-in-out infinite;
 }
 .dot[data-state="soon"] {
   background: transparent;
@@ -514,7 +526,13 @@ button:focus-visible {
     rgb(var(--rgb-surface-cube) / 0) 0%,
     var(--c-surface-cube) 12%,
     var(--c-surface-cube) 100%);
-  padding: clamp(70px, 10vw, 130px) clamp(20px, 5vw, 64px) clamp(80px, 10vw, 140px);
+  /* El padding de abajo se SUMA al de arriba de .about: son dos secciones
+     contiguas y en la costura los dos se ven como un solo hueco. Medido a
+     1440x900 daba 140+170 = 310px entre «The idea behind the cube →» y el
+     rótulo «About», o sea un tercio de pantalla vacía. Bajó a 84, y el de
+     .about a 120: 204 en total. Al tocar uno de los dos, mirar el otro — por
+     separado cada número parece razonable y es la suma la que se ve. */
+  padding: clamp(70px, 10vw, 130px) clamp(20px, 5vw, 64px) clamp(48px, 6vw, 84px);
 }
 .cube__wrap { max-width: var(--maxw); margin: 0 auto; }
 .cube__head {
@@ -699,7 +717,8 @@ button:focus-visible {
      ser un escalón. Mismo recurso que ya usaba la sección del cubo. */
   background: linear-gradient(to bottom,
     var(--c-surface-cube) 0%, var(--c-surface-about) 16%, var(--c-surface-about) 100%);
-  padding: clamp(90px, 13vw, 170px) clamp(20px, 5vw, 64px);
+  /* La otra mitad de la costura con .cube: ver el comentario de su padding. */
+  padding: clamp(64px, 9vw, 120px) clamp(20px, 5vw, 64px);
   overflow: hidden;
 }
 .about__watermark {
@@ -865,7 +884,14 @@ button:focus-visible {
   z-index: 3;
   max-width: 720px;
   margin: 0 auto;
-  padding: clamp(60px, 8vw, 110px) clamp(20px, 5vw, 64px) clamp(80px, 10vw, 140px);
+  /* Mismo caso que la costura .cube/.about, en las diez subpáginas: este
+     padding de abajo se suma a `padding-top: 110px` del footer, y a 1440x900
+     daban 250px entre el enlace de vuelta y el footer. NO era un min-height
+     empujando el footer —`main` computa min-height 0 y mide bastante más que
+     el viewport en todas—: eran dos paddings sumándose en la costura. Bajó a
+     80, o sea 190 en total. El footer NO se toca: su padding-top es el mismo
+     en las once páginas y en la portada la costura es con .method. */
+  padding: clamp(60px, 8vw, 110px) clamp(20px, 5vw, 64px) clamp(48px, 6vw, 80px);
 }
 .face-page__head { margin-bottom: clamp(32px, 5vw, 48px); }
 .face-page .eyebrow { display: block; margin-bottom: 22px; }
@@ -1185,6 +1211,21 @@ button:focus-visible {
    El mar animado se reemplaza por el fallback estático desde el JS.
    Acá desactivamos toda animación CSS.
    ------------------------------------------------------------------------- */
+/* LOS TRES PUNTOS DE ESTADO SOBREVIVEN A ESTO, Y ESTÁ MEDIDO — la pregunta era
+   si apagar el pulso los colapsa, justo para quien no puede distinguirlos por
+   el movimiento. No los colapsa: los MEJORA, y conviene el número porque el
+   resultado es al revés de lo que uno espera.
+   Con reduced-motion los tres quedan clavados en opacity 1, que es su punto de
+   máxima separación (sRGB absoluto, máx |Δcanal|):
+     active vs light   centro 191   (relleno contra hueco)
+     active vs soon    centro 191   aro 108
+     light  vs soon    centro   0   aro 104   (oro contra mist: tono, no brillo)
+   Con el pulso corriendo cada punto BARRE de opacity 1 a 0.35, así que en un
+   instante cualquiera dos estados pueden coincidir: muestreado al azar, `light`
+   contra `soon` daba 30 de separación en el aro donde estáticos dan 108. O sea
+   que la animación empeora la distinción instantánea; el estado lo cargan el
+   relleno y el tono, que no dependen del movimiento. No hace falta color nuevo
+   ni nada que reponga el pulso. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
