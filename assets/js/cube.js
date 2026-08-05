@@ -282,13 +282,17 @@ export function initCube(stage, opts) {
   const inlay = params.get('kanji') !== 'engraved';
 
   /* ---- Vista explotada: estado -------------------------------------------
-     Los 26 cubies se separan hacia un RADIO COMÚN — no en línea recta desde el
-     centro. La distinción es la que decide la forma: alejando cada cubie por
-     su propio radio, las esquinas (√3) siguen más lejos que los centros de
-     cara (1) y el resultado es un cubo grande y hueco. Normalizando al mismo
-     radio, las esquinas viajan menos, los centros más, y todos terminan sobre
-     la misma esfera: se lee globo. Cada cubie CONSERVA su orientación (nada
-     rota sobre sí mismo), que es lo que mantiene las caras legibles.
+     Los 26 cubies viajan hacia afuera con un modelo INTERPOLADO entre dos
+     extremos que ya se probaron y fallan cada uno a su manera:
+     · RADIAL RECTO: cada cubie aleja su posición original en proporción —
+       las esquinas (√3) siguen más lejos que los centros de cara (1) y el
+       resultado es un cubo grande y hueco, no un globo;
+     · RADIO COMÚN: todos sobre la misma esfera — pero los centros de cara,
+       que parten más cerca del centro, viajan DE MÁS, y con la expansión
+       grande (5.0) sobresalen y rompen la lectura de globo (lo vio el autor
+       en vivo; a 2.6-4.2 el efecto no saltaba).
+     EXPLODE_MIX (abajo) mezcla los dos. Cada cubie CONSERVA su orientación
+     (nada rota sobre sí mismo), que es lo que mantiene las caras legibles.
      `?explodeR=` permite comparar radios sin tocar el código (calibración
      visual del autor); 5.0 es el que ELIGIÓ mirando la grilla de combos:
      a 5.0 las caras se agrupan menos que a 4.2, y prefiere errar del lado
@@ -296,6 +300,16 @@ export function initCube(stage, opts) {
   const EXPLODE_R = (() => {
     const v = parseFloat(params.get('explodeR'));
     return Number.isFinite(v) && v > 1.4 ? v : 5.0;
+  })();
+  /* Mezcla radial↔común (`?explodeMix=`, 0 a 1), normalizada por la ESQUINA:
+     a cualquier mix las esquinas terminan en EXPLODE_R, y el factor sólo
+     decide cuánto se meten hacia adentro aristas y centros — la silueta del
+     globo no cambia al calibrar. 0 = radial recto, 1 = radio común. 0.65
+     elegido sobre el barrido capturado: a 0.5 todavía se lee grilla cúbica,
+     a 0.8 el centro de cara superior ya se despega del arco. */
+  const EXPLODE_MIX = (() => {
+    const v = parseFloat(params.get('explodeMix'));
+    return Number.isFinite(v) && v >= 0 && v <= 1 ? v : 0.65;
   })();
   /* Radio del núcleo, también calibrable (`?coreR=`). 0.5 elegido por el
      autor en la misma pasada que el 5.0 — los dos se calibran JUNTOS porque
@@ -467,9 +481,15 @@ export function initCube(stage, opts) {
         if (x === 0 && y === 0 && z === 0) continue;   // el centro es del núcleo
         const m = new THREE.Mesh(geo, bodyMat);
         m.position.set(x * CELL, y * CELL, z * CELL);
-        // Datos de la explosión: posición armada y dirección radial unitaria.
+        // Datos de la explosión: posición armada, dirección radial unitaria,
+        // y el factor de radio de la mezcla radial↔común (ver EXPLODE_MIX):
+        // propio = |home| relativo a la esquina (1/√3 centros, √2/√3 aristas,
+        // 1 esquinas); a mix 0 cada cual conserva su proporción, a mix 1
+        // todos igualan a la esquina.
         m.userData.home = m.position.clone();
         m.userData.dir = m.position.clone().normalize();
+        const propio = m.userData.home.length() / (Math.sqrt(3) * CELL);
+        m.userData.rFactor = propio + (1 - propio) * EXPLODE_MIX;
         group.add(m);
         cubies.push(m);
         cubieAt[`${x},${y},${z}`] = m;
@@ -558,16 +578,17 @@ export function initCube(stage, opts) {
      péndulo NO gira el núcleo (está en la escena); quien gira es el CASCARÓN
      DE PALABRAS, sobre su propio eje, lento y continuo. Las palabras quedan
      pegadas a la superficie y aun así desfilan: se leen todas, por turnos.
-     EN DORADO DURO (--c-gold-ink), y las dos alternativas ya se probaron y
+     EN ORO LUMINOSO (--c-gold-ink): más claro y más saturado que la esfera,
+     el trazo resalta brillando. TRES alternativas ya se probaron y
      descartaron — no volver a ninguna: --c-gold sobre la esfera dorada
-     perdía el trazo (medido en la v1), y el NAVY que lo reemplazó daba
-     contraste pero el autor lo descartó: sobre el oro se ve sucio y rompe
-     el sistema de color del sitio metiendo el color del fondo en la única
-     pieza enteramente dorada. El contraste tiene que salir del TEXTO — la
-     tinta es un dorado más saturado y oscuro que --c-gold, mismo matiz:
-     sigue siendo oro, con luminancia propia para que el trazo se lea.
-     Glifos del subset vía canvas, verificados contra cmap; fonts.ready los
-     rehornea abajo. */
+     perdía el trazo (medido en la v1); el NAVY daba contraste pero el autor
+     lo descartó (sobre el oro se ve sucio y mete el color del fondo en la
+     única pieza enteramente dorada); y el BRONCE OSCURO fue interpretación
+     equivocada de «dorado duro» — daba más delta que la serie luminosa,
+     pero el autor quería un oro que resalte brillando, no hundiéndose. El
+     techo del lado luminoso: si el trazo llega a blanco deja de ser oro
+     (las series medidas viven junto al token, en :root). Glifos del subset
+     vía canvas, verificados contra cmap; fonts.ready los rehornea abajo. */
   const WORD_SPIN = 0.00018;   // rad/ms: vuelta entera en ~35 s, un frente cada ~12
   const WORD_FIXED = 0.6;      // reduce: ángulo quieto con una palabra de frente
   const CORE_WORDS = ['産霊', '河川', '言霊'];
@@ -657,7 +678,7 @@ export function initCube(stage, opts) {
   function applyExplode(ts) {
     const k = easeInOut(X.t);
     cubies.forEach((m) => {
-      tmpV.copy(m.userData.dir).multiplyScalar(EXPLODE_R);
+      tmpV.copy(m.userData.dir).multiplyScalar(EXPLODE_R * m.userData.rFactor);
       m.position.lerpVectors(m.userData.home, tmpV, k);
     });
     /* Pulso del núcleo: los valores de la v1, A PROPÓSITO — esto REVIERTE un

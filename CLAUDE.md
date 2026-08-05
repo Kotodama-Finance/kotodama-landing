@@ -733,16 +733,38 @@ tres puntos de la primera; lo vigente es esto:**
   de leerse como vidrio. **QUE EL PULSO NO SE PERCIBA ESTÁ BIEN**: el vidrio
   vale más que el pulso, y no se compensa por otra vía (ni escala, ni color,
   ni keyframes). Que nadie lo "arregle" de vuelta.
-- **La tinta de los kanji es DORADO DURO (`--c-gold-ink`), no navy** — el
-  navy de la primera tanda daba contraste pero ensuciaba la esfera y rompía
-  el sistema de color del sitio; el contraste tiene que salir del TEXTO.
-  Elegido midiendo tres candidatos sobre el render (delta tinta-cuerpo:
-  `#9c7616` 20,7 · `#84620b` 30,0 · `#6b4906` 39,9 unidades sRGB): quedó
-  **`#6b4906`**, el único donde el trazo se lee claro sin dejar de ser oro.
-  No vuelven ni el navy ni `--c-gold` (perdía el trazo, medido en la v1).
+- **La tinta de los kanji dejó el navy** — daba contraste pero ensuciaba la
+  esfera y rompía el sistema de color; el contraste tiene que salir del
+  TEXTO. En esta tanda se fue al bronce oscuro (`#6b4906`, delta 39,9), y
+  **la TERCERA tanda lo REVIRTIÓ**: fue interpretación equivocada de
+  «dorado duro» — ver abajo, donde está la dirección vigente.
 - **Los kanji, proporcionalmente MÁS chicos**: el factor de la textura bajó
   de 0.24 a 0.19, ADEMÁS del arrastre del núcleo (0.72→0.5 ya los achicaba
   solo).
+
+**Tercera tanda (2026-08-05) — el modelo de expansión y el sentido de la
+tinta:**
+
+- **El RADIO COMÚN puro se quedó corto y el modelo pasó a ser INTERPOLADO.**
+  La instrucción original del autor pedía radio común, y él mismo la
+  corrigió al verla a 5.0: los centros de cara, que parten más cerca del
+  centro, viajan DE MÁS y sobresalen del globo (a 2.6-4.2 no saltaba).
+  `EXPLODE_MIX` (`?explodeMix=`, 0 radial - 1 común) mezcla los dos
+  extremos, **normalizado por la ESQUINA**: a cualquier mix las esquinas
+  terminan en `EXPLODE_R` y el factor sólo decide cuánto se meten centros y
+  aristas — calibrar no cambia la silueta. **Default 0.65, del barrido
+  capturado**: a 0.5 todavía se lee grilla cúbica, a 0.8 el centro superior
+  ya se despega del arco.
+- **La tinta es ORO LUMINOSO: más clara y más saturada que la esfera, no
+  más oscura.** «Dorado más duro» significaba un oro que RESALTE brillando,
+  no hundiéndose — la serie bronce (deltas −20,7/−30,0/−39,9) se midió y se
+  descartó entera. Serie luminosa medida con el mismo método de máscara de
+  diff: `#ffd24a` +14,2 (el más saturado y más oro) · `#fae59a` +21,9 ·
+  `#fdf3cf` +27,2 (roza el techo: se lee blanco). **Default `#fae59a`**, el
+  punto medio. **El techo es regla**: si el trazo llega a blanco deja de
+  ser dorado. Los deltas luminosos son más chicos que los del bronce porque
+  el tone mapping comprime arriba — y aun así se leen mejor: en polaridad
+  positiva el trazo brilla.
 
 ### El `免責事項`: el corto se repite, el completo vive una sola vez
 
