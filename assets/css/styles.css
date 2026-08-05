@@ -991,17 +991,24 @@ button:focus-visible {
 .face-page__kanji {
   font-family: var(--font-ja);
   font-weight: 500;
-  /* El doble del tamaño anterior (tope 4rem → 7.2rem con la raíz ya subida). */
-  font-size: clamp(5rem, 11vw, 7.2rem);
+  /* LA CABECERA ESCALA CON EL VIEWPORT (pedido del autor, 2026-08-05): su
+     queja no era la columna angosta —77 CPL, medido, ya en el techo— sino que
+     la página «parece una versión móvil sin ajustar a PC», y la causa era que
+     el titular medía lo mismo a 1440 que a 2560. 9vw da EXACTAMENTE los
+     129.6px aprobados a 1440 (el doble del tamaño anterior) y crece con la
+     pantalla: 172.8 a 1920, tope 10rem (180px) desde 2000px. El cuerpo NO
+     escala: lo que crece con el viewport es la cabecera; lo que vive en la
+     columna escala con la columna. */
+  font-size: clamp(5rem, 9vw, 10rem);
   line-height: 1;
   color: var(--c-text);
 }
-/* AL DOBLE EXACTO (tope 2rem → 4rem), pedido del autor del 2026-08-05 que
-   REVIERTE el 3.4rem intermedio: el doble restaura la proporción original
-   (0.556 del kanji, la misma que tenían 2rem/3.6rem), y con el centrado
-   vertical al ecuador la pareja se juzga de nuevo. A veredicto del autor
-   sobre la captura. */
-.face-page__romaji { font-family: var(--font-display); font-size: clamp(3rem, 6vw, 4rem); color: var(--c-gold); }
+/* EL PUNTO MEDIO (3.7rem a 1440), ELEGIDO POR EL AUTOR sobre las capturas
+   doble-contra-medio (2026-08-05) — cierra la serie 3.4 → 4 → 3.7. El
+   centrado al ecuador quedó CONFIRMADO con la misma decisión. 4.625vw da
+   exactamente 66.6px (= 3.7rem) a 1440 y escala con la cabecera; el tope
+   5.15rem mantiene la proporción (~0.515) contra el tope del kanji. */
+.face-page__romaji { font-family: var(--font-display); font-size: clamp(2.75rem, 4.625vw, 5.15rem); color: var(--c-gold); }
 /* La 404 lleva una FRASE japonesa donde las caras llevan su kanji, y por eso no
    puede usar .face-page__kanji: ese tamaño —hasta 4rem— está dimensionado para
    uno o dos glifos, y diez a ese cuerpo miden más que el ancho de la página.
@@ -1019,7 +1026,11 @@ button:focus-visible {
 .face-page__gloss {
   font-family: var(--font-display);
   font-style: italic;
-  font-size: 1.15rem;
+  /* Subida de 1.15rem con la reconstrucción de jerarquía (2026-08-05): al
+     duplicar el h1, la línea de función a 20.7px quedaba plana al lado de un
+     kanji de 129.6. 1.875vw = 27px a 1440, 36 a 1920 (tope): escala con la
+     cabecera, de la que es parte. */
+  font-size: clamp(1.3rem, 1.875vw, 2rem);
   color: var(--c-text-dim);
   margin-bottom: 20px;
 }
@@ -1155,16 +1166,20 @@ button:focus-visible {
 .face-page__subtitle {
   font-family: var(--font-display);
   font-weight: 500;
-  /* Al doble (tope 2rem → 4rem) con los títulos, pedido del autor del
-     2026-08-05 — «los h2/h3 dentro de las subpáginas». Los rótulos de grupo
-     de la lista de /method/ (.sources__group) NO entraron: son taxonomía de
-     una lista densa, no subtítulos de sección — está consultado.
-     El line-height va EXPLÍCITO porque al doble el heredado del body (1.6)
-     quedó a la vista: en /musubi/ cuatro subtítulos parten en dos líneas y
-     con 1.6 la segunda flotaba a ~115px — interlineado de prosa en cuerpo de
-     titular. text-wrap: balance empareja el corte («Capital moves / like
-     water», no «Capital moves like / water»). */
-  font-size: clamp(3rem, 6vw, 4rem);
+  /* 2.75rem (49.5px a 1440) — LA ESCALA PROPUESTA en la reconstrucción de
+     jerarquía (2026-08-05), que REEMPLAZA el doble (4rem) del pase anterior:
+     a 72px el h2 quedaba MÁS GRANDE que el romaji del h1 (66.6) — jerarquía
+     invertida. Con esto la escalera queda 129.6 / 66.6 / 49.5 / 30.6 (lead)
+     / 27 (gloss) / 18.4 (cuerpo): varios niveles legibles, que era el
+     criterio del autor. NO escala con el viewport: es contenido de la
+     columna, no de la cabecera. Los rótulos de grupo de la lista de /method/
+     (.sources__group) quedan COMO ESTÁN — el autor los miró y lo confirmó:
+     son taxonomía de lista densa, no subtítulos de sección.
+     El line-height va EXPLÍCITO porque al agrandarlos el heredado del body
+     (1.6) quedó a la vista: subtítulos de dos líneas con la segunda flotando
+     — interlineado de prosa en cuerpo de titular. text-wrap: balance
+     empareja el corte («Capital moves / like water»). */
+  font-size: clamp(2.2rem, 3.44vw, 2.75rem);
   line-height: 1.15;
   text-wrap: balance;
   color: var(--c-text);

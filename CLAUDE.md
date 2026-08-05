@@ -541,27 +541,44 @@ Dos compromisos del texto que NO son redacción libre, anotados en los HTML:
 - **Títulos de las 13 subpáginas al DOBLE y CENTRADOS** (cabecera entera:
   eyebrow, título, gloss; el lead y el cuerpo siguen a la izquierda). La
   frase de la 404 subió acotada por ancho (verificado: una línea).
-  **La corrección del mismo día REVIRTIÓ el romaji intermedio**: el primer
-  pase lo dejó en 3.4rem («duplicado quedaba gigante», juzgado ~0.45 del
-  kanji) y el autor pidió probarlo AL DOBLE EXACTO igual (tope 2rem→4rem,
-  0.556 del kanji — la MISMA proporción que tenían 2rem/3.6rem). Con el
-  punto siguiente, la pareja equilibra: **el «gigante» era el eje, no el
-  tamaño** — se había juzgado con alineación baseline. A veredicto del
-  autor sobre las capturas (doble contra punto medio 3.7rem, capturados).
+  **El romaji quedó EN EL PUNTO MEDIO (3.7rem a 1440), veredicto del autor
+  sobre las capturas doble-contra-medio** — cierra la serie 3.4 → 4 → 3.7.
+  El hallazgo del camino: **el «gigante» del primer pase era el eje, no el
+  tamaño** — se había juzgado con alineación baseline, y con el ecuador la
+  pareja equilibra. Ese centrado quedó CONFIRMADO con la misma decisión.
 - **El romaji alinea al ECUADOR del kanji, no a su baseline**
   (`align-items: center` en `.face-page__title`): con baseline no
   compartían eje y la pareja se veía desproporcionada. line-height 1 en el
   kanji hace caja = em, así que centro de caja ≈ centro visual del glifo.
   Medido: diff de centros 0.0px en /hajime/, /sugao/ y /hajime/yugen/.
-- **Los subtítulos (`.face-page__subtitle`) también al DOBLE** (tope
-  2rem→4rem), y el doble DESTAPÓ un heredado invisible: sin line-height
-  propio tomaban el 1.6 del body — interlineado de prosa en cuerpo de
-  titular; a 36px nunca se vio porque ninguno partía en dos líneas, a 72px
-  cuatro de /musubi/ parten y la segunda línea flotaba a ~115px. Quedó
-  `line-height: 1.15` + `text-wrap: balance` (corte parejo: «Capital
-  moves / like water»). Los `.sources__group` de la lista de /method/ NO
-  entraron — son taxonomía de lista densa, no subtítulos de sección; está
-  consultado al autor.
+- **Los subtítulos (`.face-page__subtitle`) quedaron en 2.75rem (49.5px),
+  NO al doble — la escala propuesta para reconstruir la jerarquía** tras el
+  «h1 enorme y el resto plano» del autor. El doble (4rem=72px) se probó
+  primero y quedaba MÁS GRANDE que el romaji del h1 (66.6): jerarquía
+  invertida — probable causa de que «todo lo demás quedara plano»: dos
+  gigantes y el resto uniforme. La escalera vigente a 1440:
+  **129.6 (kanji) / 66.6 (romaji) / 49.5 (h2) / 30.6 (lead) / 27 (gloss) /
+  18.4 (cuerpo)** — seis niveles. La línea de función subió de 1.15rem a
+  esos 27px por lo mismo. De paso, a 49.5 los subtítulos de /musubi/
+  vuelven a UNA línea; el `line-height: 1.15` + `text-wrap: balance` que
+  destapó el doble QUEDAN (heredaban el 1.6 del body — interlineado de
+  prosa en cuerpo de titular; protegen los anchos angostos). Los
+  `.sources__group` de /method/ quedan COMO ESTÁN — **el autor los miró y
+  lo confirmó**: taxonomía de lista densa, no subtítulos de sección.
+- **LA CABECERA ESCALA CON EL VIEWPORT; el cuerpo no** (2026-08-05). La
+  queja real del autor no era la columna angosta —77 CPL, ya medido— sino
+  que la página «parece una versión móvil sin ajustar a PC», y la causa
+  era que la cabecera medía LO MISMO a 1440 que a 2560. Además ya estaba
+  centrada respecto de la página (columna centrada ⇒ mismo centro,
+  medido): lo que faltaba no era centrarla sino que USE el ancho. Kanji
+  `clamp(5rem, 9vw, 10rem)` — 9vw da EXACTAMENTE los 129.6px aprobados a
+  1440, 172.8 a 1920, tope 180 desde 2000px—; romaji 4.625vw (66.6 a
+  1440, 88.8 a 1920, tope 5.15rem ≈ 0.515 del kanji); gloss 1.875vw (27 →
+  36). El cuerpo, el lead y los h2 NO escalan: viven en la columna. Costo
+  asumido: entre ~1000 y 1440px la cabecera es algo menor que antes (9vw
+  < el tope viejo) — escala con la página, que es el punto. La 404 no se
+  tocó: su frase está acotada por el ancho de la columna (verificado: una
+  línea).
 - **«Read the full method →» al pie de la COLUMNA IZQUIERDA** — REVIERTE el
   centrado bajo las dos columnas; como hijo de `.method__how` no se estira
   al fondo de la columna de fuentes.
@@ -606,15 +623,30 @@ Dos compromisos del texto que NO son redacción libre, anotados en los HTML:
   consola, sobre cualquier subpágina: raíz y body `18px` y
   `.face-page` maxWidth `810px` (la copia vieja da `16px`/`720px`). Ojo:
   esos números describen el estado VIGENTE — si el veredicto cambia la
-  escala, cambian con ella. **El centrado se re-midió a 1440/1920/2560**
-  (sospecha del autor tras el pase a rem): left = right EXACTOS en
-  `.face-page`, `.hero__inner`, `.about__inner`, `.method__wrap` y
-  `.footer__top` en los tres anchos.
-- **Pendiente del autor: dos veredictos.** (1) El romaji AL DOBLE contra
-  el punto medio (3.7rem), sobre las capturas — el doble está commiteado
-  como vigente; cambiarlo es un clamp. (2) Si los `.sources__group` de la
-  lista de /method/ entran o no en el doble de subtítulos — quedaron
-  afuera por ser taxonomía de lista, consultado.
+  escala, cambian con ella. **El fingerprint se corrió y dio 18px/810px:
+  Manuel veía la versión vigente — copia vieja DESCARTADA para este
+  caso** (la primera vez que el patrón DOM-contra-red se descarta
+  midiendo en vez de confirmarse). **El centrado se re-midió a
+  1440/1920/2560** (sospecha del autor tras el pase a rem): left = right
+  EXACTOS en `.face-page`, `.hero__inner`, `.about__inner`,
+  `.method__wrap` y `.footer__top` en los tres anchos.
+- **Pendiente del autor: dos cosas.** (1) Su veredicto sobre las capturas
+  de la jerarquía reconstruida y la cabecera escalando (1440 y 1920) —
+  todo commiteado como vigente; cada nivel es un clamp. (2) **Su elección
+  sobre los costados vacíos de las subpáginas** — preguntó qué se puede
+  hacer para que se lean como espacio deliberado y se le propusieron tres
+  opciones EN EL CHAT, sin implementar nada: (A) la marca de agua del
+  propio kanji de cada cara en el costado, patrón que la portada ya tiene
+  con `.about__watermark` — costo cero de red, glifos ya en el subset por
+  ser el título de la página; método y disclaimer no tienen kanji propio
+  y necesitarían decisión aparte; (B) atmósfera lateral por CSS con los
+  tokens de `:root` (dos-tres resplandores radiales al 3-6%) — costo
+  cero, sin tocar el shader; (C) el mar en las subpáginas: C1 vivo
+  (rompe la propiedad «diez páginas sin JS») o C2 un frame estático
+  oscurecido como fondo (~100 KB + artefacto derivado con lock, patrón
+  og-image; `initSea` ya dibuja un solo frame con `preserveDrawingBuffer`
+  y `stillTime`). Recomendado: A+B; C sólo si quiere el mar en sí, y
+  entonces C2.
 
 ### Tarjetas de perfil en /sugao/ — completa: logo oficial sin alterar y texto
 
