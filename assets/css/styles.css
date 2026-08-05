@@ -950,6 +950,54 @@ button:focus-visible {
 }
 .sources__en a:hover { color: var(--c-gold); border-bottom-color: var(--c-gold); }
 
+/* --- La lista de /method/ a ANCHO COMPLETO (2026-08-06, decisión del autor) --
+   El único elemento estructurado del sitio que vivía preso en la columna de
+   lectura (45rem): 50 entradas es una tabla de referencia, se ESCANEA, no se
+   lee renglón a renglón — no necesita la restricción que hace legible a la
+   prosa. La sección sale al ancho y la página baja ~30% de alto (10.401 →
+   7.272px a 1920, medido). El h2 y la prosa de la sección QUEDAN en la
+   columna a propósito: el salto de la columna centrada a la lista ancha
+   marca dónde termina el argumento y empieza la referencia, que es la
+   estructura real de la página.
+   Sólo /method/ lleva el modificador; la lista de cinco de la portada usa
+   las mismas filas .sources y NO se toca (vive en el marco de 70rem).
+
+   Tres decisiones dentro de la regla:
+   · column-width y NO columns: 3 — el número de columnas se ADAPTA al ancho
+     en vez de quedar fijo: 26rem (468px) da 2 columnas a 1200-1700, 3 a
+     1920, 4 a 2560. Con un conteo fijo, 2560 estiraba tres columnas a
+     ~770px y las entradas quedaban ralas.
+   · display: block — multicol NO corre sobre un contenedor flex, y
+     .sources es flex-column para el formato de la portada. El bloque
+     conserva el border-top, que ahora cruza todas las columnas.
+   · El breakout usa el truco del centro compartido: la columna está
+     centrada en el viewport, así que margin-left: calc(50% - 50vw + 64px)
+     ancla el borde izquierdo a 64px del viewport (el mismo padding lateral
+     que la columna tiene a estos anchos). Con scrollbar real, 100vw la
+     incluye y el margen efectivo baja a ~55px por lado — simétrico y sin
+     overflow (verificado midiendo scrollWidth).
+
+   Bajo 1200px NO hay breakout: calc(100vw - 128px) se vuelve MÁS ANGOSTO
+   que la columna (a 375px daría 247px contra ~335 de columna) — el formato
+   actual de una entrada por fila ya es el correcto ahí. 1200 es el mismo
+   umbral de la marca de agua: donde el vacío lateral deja de existir. */
+@media (min-width: 1200px) {
+  .face-page__section--wide .sources__legend,
+  .face-page__section--wide .sources__group,
+  .face-page__section--wide .sources {
+    width: calc(100vw - 128px);
+    margin-left: calc(50% - 50vw + 64px);
+  }
+  .face-page__section--wide .sources {
+    display: block;
+    column-width: 26rem;
+    column-gap: 56px;
+  }
+  /* Una entrada no se parte entre columnas: nombre arriba de una y nota
+     arriba de la otra no es una fila, son dos huérfanos. */
+  .face-page__section--wide .sources li { break-inside: avoid; }
+}
+
 /* Enlace al método completo, al pie de la sección. Mismo tratamiento discreto
    que .cube__more: es una salida, no una llamada a la acción.
    AL PIE DE LA COLUMNA IZQUIERDA, debajo de los cuatro pasos — esto REVIERTE
@@ -1119,6 +1167,32 @@ button:focus-visible {
   text-wrap: pretty;
 }
 .face-page__body { display: flex; flex-direction: column; gap: 22px; font-size: 1.02rem; line-height: 1.8; color: var(--c-text-soft); }
+/* JUSTIFICADO en el cuerpo de prosa (2026-08-06, a pedido del autor): elimina
+   el borde derecho dentado, que era parte de la sensación de «sobra espacio»
+   contra el margen. Sólo los <p> del cuerpo: el lead y el gloss son texto de
+   display y quedan afuera — menos palabras por línea a cuerpo grande es donde
+   el justificado abre agujeros.
+
+   OJO CON hyphens: auto — ESTÁ PUESTO Y PUEDE NO HACER NADA, y las dos cosas
+   están medidas (2026-08-06). Los diccionarios de partición de Chromium NO
+   vienen con el binario: llegan por component updater al PERFIL, así que un
+   perfil sin el componente (headless con perfil fresco, Chromium embebido, un
+   Chrome recién instalado) justifica SIN partir palabras, sin error y sin
+   aviso. Probado con caja de control de 80px y «hyphenation»: dos Chromium de
+   esta máquina desbordan en vez de partir. Por eso el criterio de aceptación
+   fue el caso SIN partición, medido sobre /musubi/ y /sugao/ a 1920:
+   separación normal entre palabras 5px, mediana justificada 6.2-6.9, máxima
+   12.3, CERO sobre 16px — a 77 CPL hay palabras de sobra por línea y no se
+   abren ríos. hyphens queda como mejora progresiva (Firefox y Safari traen
+   diccionarios; Chrome con el componente también).
+   SI LA COLUMNA SE ANGOSTA ALGUNA VEZ, ESTO SE RE-MIDE: el riesgo de ríos
+   crece al caer los caracteres por línea, y el veredicto de hoy es de esta
+   medida, no del justificado en abstracto. */
+.face-page__body p {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
 /* Rótulos de cláusula del 免責事項, en línea con su texto.
    OJO con el peso: <strong> pide 700, pero el @font-face de Inter declara
    `font-weight: 400 500`, así que el navegador lo recorta a 500 y el rótulo

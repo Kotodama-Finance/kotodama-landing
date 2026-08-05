@@ -105,7 +105,12 @@
         </div>
       </section>
 
-      <section class="face-page__section" aria-labelledby="method-fuentes">
+      <!-- El modificador --wide saca la LISTA (leyenda, grupos y entradas) de
+           la columna de lectura al ancho completo, en pantallas anchas. El h2
+           y la prosa de la sección se quedan EN la columna: el salto marca
+           dónde termina el argumento y empieza la referencia. Decisión y
+           reglas en styles.css (.face-page__section--wide). -->
+      <section class="face-page__section face-page__section--wide" aria-labelledby="method-fuentes">
         <h2 id="method-fuentes" class="face-page__subtitle">The sources</h2>
         <div class="face-page__body">
           <p>What is on this list. Two kinds of source, kept separate on purpose.</p>

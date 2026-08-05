@@ -39,18 +39,17 @@ fallidos ya corregidos, y las capturas intermedias.
 - **`main` no se toca**: publica kotodamafinance.com y todavía sirve la landing
   vieja. Nada de esto está publicado.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-06, la calibración de los costados: el halo (B)
-  se probó y SE DESCARTÓ (borrado del CSS), la marca de agua (A) quedó
-  APROBADA** — ver la decisión de los costados. Antes de eso, el 2026-08-05:
-  el bloque 5 de /musubi/, los kanji de las subcaras (太一 · 万 · 幽玄), la
-  tarjeta de LibraryThing y las tres subpáginas de Hajime — **LA REDACCIÓN
-  DEL SITIO ESTÁ TERMINADA** y las tandas tipográficas y de costados que
-  siguieron. **Árbol limpio y todo pusheado** en `redesign-trust`, con las
-  guardas corridas (structure y modes en verde, pendulum en verde, **ready
-  en `0`: LISTO PARA PUBLICAR** — ver el punto siguiente). **Frente abierto
-  con el autor: los elementos estructurados fuera de la columna de lectura**
-  — propuesta entregada, sin implementar; el detalle al final de la decisión
-  de los costados.
+- Último cierre: **2026-08-06, la tanda del cuerpo: la lista de /method/ al
+  ANCHO COMPLETO (columnas adaptativas) y el cuerpo de prosa JUSTIFICADO,
+  con el análisis de elementos estructurados cerrado** — ver «El cuerpo» en
+  las decisiones. El mismo día, antes: el halo (B) probado y DESCARTADO, la
+  marca de agua (A) aprobada. El 2026-08-05: el bloque 5 de /musubi/, los
+  kanji de las subcaras (太一 · 万 · 幽玄), la tarjeta de LibraryThing y las
+  tres subpáginas de Hajime — **LA REDACCIÓN DEL SITIO ESTÁ TERMINADA** y
+  las tandas tipográficas que siguieron. **Árbol limpio y todo pusheado** en
+  `redesign-trust`, con las guardas corridas (structure y modes en verde,
+  pendulum en verde, **ready en `0`: LISTO PARA PUBLICAR** — ver el punto
+  siguiente).
   *(Este bloque no puede nombrar su propio commit, así que siempre queda uno
   atrás: `git log -1 redesign-trust` es la respuesta exacta. El ancla fija que no
   deriva es el tag.)*
@@ -688,15 +687,52 @@ romper:
   `z-index: -1` (el contenido del footer entra en la zona del vacío al
   scrollear y no debe recibir tinte) y se oculta bajo 1200px.
 
-**El frente que este cierre abre: el CUERPO.** Lo que molesta es la columna
-angosta y el vacío que deja, y ya está medido qué NO lo arregla: ensanchar
-(77 CPL, techo del rango) y rellenar los costados (el halo). La vía elegida
-por el autor: **los elementos ESTRUCTURADOS (listas, tablas, tarjetas)
-salen de la columna de lectura y usan el ancho; el texto corrido se queda
-en su columna, eso no se discute**. El test: ¿se lee renglón a renglón (se
-queda) o se escanea (puede salir)? Pedido concreto: análisis del sitio
-entero con criterio propio + maqueta de /method/ a 1920 con la lista de
-fuentes a ancho completo (el caso más claro), SIN implementar todavía.
+El frente que este cierre abrió —el CUERPO— se resolvió al día siguiente:
+ver la sección que sigue.
+
+### El cuerpo: la lista de /method/ al ancho, el justificado, y el análisis
+
+**Cerrado el 2026-08-06.** El test del autor —¿se lee renglón a renglón (se
+queda en la columna) o se escanea (puede salir)?— aplicado a las catorce
+páginas, con su veredicto sobre el resultado. **La conclusión general, que
+es lo más valioso del análisis: el sitio tenía UN SOLO elemento
+estructurado preso en la columna de lectura — la lista de /method/.** Para
+las páginas de prosa pura la respuesta al vacío ya está dada (la marca de
+agua y la cabecera que escala), y **la columna angosta es el formato
+correcto de una página de prosa, no un defecto a corregir.** Ya está
+medido qué NO arregla el vacío: ensanchar la columna (77 CPL, techo del
+rango) y rellenar los costados (el halo).
+
+- **La lista de /method/ salió al ANCHO COMPLETO** (variante elegida por el
+  autor sobre la maqueta, contra la alternativa de 70rem). El modificador
+  `face-page__section--wide` en el HTML; las reglas y sus porqués en el
+  comentario del CSS. El h2 y la prosa de la sección QUEDAN en la columna:
+  el salto marca dónde termina el argumento y empieza la referencia.
+  **`column-width: 26rem` y NO `columns: 3`** — el conteo se adapta:
+  2/3/4 columnas a 1440/1920/2560, medido, con la página bajando de
+  10.401px a 7.747/7.272/6.739. Sin overflow horizontal, la lista de cinco
+  de la portada intacta (flex, una por fila), sin breakout bajo 1200px
+  (ahí `100vw - 128px` sería MÁS angosto que la columna).
+- **Los NO del análisis, con el acuerdo del autor**: la portada no tiene el
+  problema (sus secciones ya viven en marcos de 70rem y el mar y el cubo
+  usan el ancho); **los títulos de /musubi/ NO salen de la columna** — un
+  título se escanea PARA ENTRAR a la prosa que encabeza, y hacia la
+  izquierda invadiría el vacío donde vive 産霊, la marca de agua aprobada;
+  /disclaimer/ y toda la prosa, renglón a renglón, se quedan.
+- **Las tarjetas de /sugao/: candidata EN POTENCIA, no-op hoy.** Con una
+  sola tarjeta de 232px no cambia ni un píxel. Cuando sean cinco
+  (5×232 + separaciones ≈ 1.230px contra 682 de columna: partirían en dos
+  filas), el desborde a 70rem las pone en una. Ése es el momento de
+  implementarlo, no antes.
+- **El cuerpo de prosa quedó JUSTIFICADO** (`.face-page__body p`), a pedido
+  del autor y tras pasar su gate: sin ríos. La medición (2026-08-06, a
+  1920 sobre /musubi/ y /sugao/): espacio normal 5px, mediana justificada
+  6.2–6.9, máxima 12.3, **cero separaciones sobre 16px** — a 77 CPL hay
+  palabras de sobra por línea. El lead y el gloss quedan afuera (texto de
+  display: menos palabras por línea es donde el justificado se agujerea).
+  **El criterio de aceptación fue el caso SIN partición de palabras** —
+  ver el hallazgo de hyphens en los hallazgos de método y el comentario
+  junto a la regla. Si la columna se angosta alguna vez, esto se re-mide.
 
 ### Tarjetas de perfil en /sugao/ — completa: logo oficial sin alterar y texto
 
@@ -2059,3 +2095,16 @@ que produjeron conclusiones equivocadas:
   lo cazó antes que un lector. Referencia fija sólo la da lo que no cambia (un
   blob histórico, un conteo estructural); si el número describe el presente,
   hay que escribirle al lado cómo regenerarlo, no su valor.
+- **`hyphens: auto` PUEDE NO HACER NADA, Y NADA LO DELATA.** Los
+  diccionarios de partición de Chromium no vienen en el binario: llegan por
+  component updater al PERFIL. Un perfil sin el componente —headless con
+  perfil fresco, un Chromium embebido, un Chrome recién instalado—
+  justifica sin partir una sola palabra, sin error y sin aviso; la
+  propiedad computa `auto` igual. Medido el 2026-08-06: los DOS Chromium de
+  esta máquina (el headless de las guardas y el del panel) dieron cero
+  particiones. La prueba es un glifo de control tipográfico, familia del 猫
+  de la cmap: caja de 80px con la palabra «hyphenation» (mide ~114px) — si
+  desborda, no hay diccionario; si parte en sílabas, hay. Sin ese control,
+  «puse hyphens: auto» pasa por verificado. Corolario de diseño: una página
+  con justificado se acepta midiendo el caso SIN partición, porque una
+  fracción real de los lectores no la va a tener.
