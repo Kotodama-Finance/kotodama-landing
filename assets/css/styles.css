@@ -239,7 +239,12 @@
    No se hizo ahora porque el sitio no lo usa y la forma corta se lee mejor. */
 [hidden] { display: none !important; }
 
-html { scroll-behavior: smooth; }
+/* Escala tipográfica global (2026-08-05, a pedido del autor: el cuerpo se
+   veía chico). 112.5% = 18px de raíz. TODO el sitio mide en rem, así que esta
+   perilla escala consistente y la escala relativa existente se conserva; las
+   columnas de prosa están en rem por lo mismo (eran px y no acompañaban a la
+   letra — ver los max-width). Los marcos de grilla y el cubo no se tocan. */
+html { scroll-behavior: smooth; font-size: 112.5%; }
 
 body {
   /* Piso atmosférico: SIEMPRE presente, no depende de JS ni de WebGL. El canvas
@@ -498,8 +503,11 @@ button:focus-visible {
      el titular caía en tres líneas con el corte en el peor lugar posible.
      El ancho sólo lo usa el titular: la bajada tiene su propio max-width (38rem)
      y el resto va centrado, así que subirlo no recompone nada más.
-     Si alguna vez cambia el titular, esta medida se vuelve a verificar. */
-  max-width: 880px;
+     Si alguna vez cambia el titular, esta medida se vuelve a verificar.
+     EN REM (55rem = 880px a raíz 16) desde la escala global del 2026-08-05:
+     el titular mide en rem, así que la caja tiene que escalar CON él — en px,
+     subir la raíz habría repetido el corte por dos píxeles que motivó el 880. */
+  max-width: 55rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -571,7 +579,7 @@ button:focus-visible {
   flex-wrap: wrap;
   margin-bottom: clamp(40px, 5vw, 64px);
 }
-.cube__head > div { max-width: 640px; }
+.cube__head > div { max-width: 40rem; }  /* 640px a raíz 16; en rem, acompaña a la letra */
 .cube__head .eyebrow { margin-bottom: 18px; }
 .cube__head .section-title { margin-bottom: 16px; }
 
@@ -774,7 +782,7 @@ button:focus-visible {
   white-space: nowrap;
   pointer-events: none;
 }
-.about__inner { position: relative; max-width: 760px; margin: 0 auto; }
+.about__inner { position: relative; max-width: 47.5rem; margin: 0 auto; }  /* era 760px */
 .about .eyebrow { display: block; margin-bottom: 30px; }
 .about__statement {
   font-family: var(--font-display);
@@ -806,8 +814,8 @@ button:focus-visible {
   border-top: 1px solid var(--line-gold-faint);
   padding: clamp(90px, 12vw, 160px) clamp(20px, 5vw, 64px);
 }
-.method__wrap { max-width: 1120px; margin: 0 auto; }
-.method__head { max-width: 720px; margin-bottom: clamp(52px, 6vw, 80px); }
+.method__wrap { max-width: 70rem; margin: 0 auto; }   /* era 1120px */
+.method__head { max-width: 45rem; margin-bottom: clamp(52px, 6vw, 80px); }  /* era 720px */
 .method__head .eyebrow { display: block; margin-bottom: 24px; }
 .method__head .section-title { margin-bottom: 20px; }
 .method__head .section-lead { color: var(--c-text-soft); font-size: 1.05rem; line-height: 1.75; }
@@ -867,6 +875,12 @@ button:focus-visible {
    de la nota — estirado, su border-bottom subrayaba aire. */
 .sources__en { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; color: var(--c-text); font-size: 0.95rem; }
 .sources__note { font-size: 0.82rem; color: var(--c-text-muted); }
+/* Logo institucional al final de la fila (la columna que dejó el japonés).
+   Criterio LibraryThing: archivo oficial SIN alterar, paleta original; el
+   tamaño (24px, un sello) es lo que controla que no se vuelva una feria de
+   colores. Hoy sólo la FSA lo tiene — el porqué de las otras cuatro filas
+   está anotado en el HTML de la portada. */
+.sources__logo { width: 24px; height: 24px; margin-left: auto; align-self: center; flex-shrink: 0; }
 
 /* --- La lista completa de /method/ ------------------------------------------
    Extiende .sources, no la duplica: la portada muestra cinco de ejemplo y
@@ -925,17 +939,17 @@ button:focus-visible {
 
 /* Enlace al método completo, al pie de la sección. Mismo tratamiento discreto
    que .cube__more: es una salida, no una llamada a la acción.
-   CENTRADO bajo las DOS columnas a propósito: alineado a la izquierda quedaba
-   a la altura del pie de la columna de fuentes pero pegado a la columna de
-   pasos, que termina ~260px más arriba (medido) — parecía flotar. Centrado se
-   lee como el cierre de la sección, no como la cola de una columna.
-   Es UN solo enlace y no uno por columna: dos enlaces al mismo destino a pocas
-   líneas se leen como un error. */
+   AL PIE DE LA COLUMNA IZQUIERDA, debajo de los cuatro pasos — esto REVIERTE
+   el centrado bajo las dos columnas, a pedido del autor (2026-08-05). La
+   versión centrada existió por el motivo contrario (alineado a la izquierda
+   pero FUERA de la columna quedaba flotando a la altura del pie de la columna
+   de fuentes); ahora el enlace vive DENTRO de .method__how, así que queda
+   pegado al final de los pasos y no se estira al fondo de la altura de la
+   columna de al lado. Sigue siendo UN solo enlace: dos al mismo destino a
+   pocas líneas se leen como un error. */
 .method__more {
-  max-width: 1120px;
-  margin: clamp(40px, 5vw, 56px) auto 0;
+  margin-top: clamp(28px, 3.5vw, 40px);
   font-size: 0.95rem;
-  text-align: center;
 }
 .method__more a { color: var(--c-gold); border-bottom: 1px solid var(--line-gold-soft); padding-bottom: 2px; }
 .method__more a:hover { border-bottom-color: var(--c-gold); }
@@ -949,7 +963,9 @@ button:focus-visible {
 .face-page {
   position: relative;
   z-index: 3;
-  max-width: 720px;
+  /* 45rem = 720px a raíz 16. En rem desde la escala global del 2026-08-05:
+     la columna acompaña a la letra, que es lo que reduce el vacío lateral. */
+  max-width: 45rem;
   margin: 0 auto;
   /* Mismo caso que la costura .cube/.about, en las diez subpáginas: este
      padding de abajo se suma a `padding-top: 110px` del footer, y a 1440x900
@@ -960,17 +976,25 @@ button:focus-visible {
      en las once páginas y en la portada la costura es con .method. */
   padding: clamp(60px, 8vw, 110px) clamp(20px, 5vw, 64px) clamp(48px, 6vw, 80px);
 }
-.face-page__head { margin-bottom: clamp(32px, 5vw, 48px); }
+/* Cabecera al DOBLE y CENTRADA (2026-08-05, a pedido del autor: los títulos
+   se veían muy chicos). Se centra la cabecera entera —eyebrow, título y
+   gloss—, no sólo el h1: centrar una sola línea con el resto a la izquierda
+   se leía desalineado. El lead y el cuerpo siguen a la izquierda. */
+.face-page__head { margin-bottom: clamp(32px, 5vw, 48px); text-align: center; }
 .face-page .eyebrow { display: block; margin-bottom: 22px; }
-.face-page__title { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; margin-bottom: 10px; }
+.face-page__title { display: flex; align-items: baseline; justify-content: center; gap: 22px; flex-wrap: wrap; margin-bottom: 12px; }
 .face-page__kanji {
   font-family: var(--font-ja);
   font-weight: 500;
-  font-size: clamp(2.8rem, 6vw, 4rem);
+  /* El doble del tamaño anterior (tope 4rem → 7.2rem con la raíz ya subida). */
+  font-size: clamp(5rem, 11vw, 7.2rem);
   line-height: 1;
   color: var(--c-text);
 }
-.face-page__romaji { font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2rem); color: var(--c-gold); }
+/* El romaji NO se duplicó exacto (tope 2rem → 3.4rem, no 4): duplicado quedaba
+   gigante al lado del kanji — la pareja se equilibra con el romaji cerca de
+   0.45 del kanji, ajustado mirando la captura. */
+.face-page__romaji { font-family: var(--font-display); font-size: clamp(2.5rem, 5.5vw, 3.4rem); color: var(--c-gold); }
 /* La 404 lleva una FRASE japonesa donde las caras llevan su kanji, y por eso no
    puede usar .face-page__kanji: ese tamaño —hasta 4rem— está dimensionado para
    uno o dos glifos, y diez a ese cuerpo miden más que el ancho de la página.
@@ -978,7 +1002,10 @@ button:focus-visible {
 .face-page__phrase {
   font-family: var(--font-ja);
   font-weight: 500;
-  font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+  /* Subida con la cabecera nueva pero NO al doble: son diez glifos y el techo
+     lo pone el ancho de la columna (45rem) — verificado midiendo que la frase
+     entra en una línea. */
+  font-size: clamp(2rem, 4.5vw, 3rem);
   line-height: 1.3;
   color: var(--c-text);
 }
@@ -1027,7 +1054,14 @@ button:focus-visible {
    mezclar nombres enlazados y sin enlazar con el mismo marcado en la misma
    página sería inconsistente. Es la excepción más discutible del marcado y
    está anotada también junto al bloque 5 de /musubi/. */
-.face-page__body a.name { color: var(--c-gold); border-bottom: 1px solid var(--line-gold-soft); padding-bottom: 1px; }
+/* El aire tras el enlace: el espacio SIEMPRE estuvo en el HTML (medido: 4,5px
+   de avance), pero la cursiva de .name es OBLICUA SINTÉTICA —el @font-face de
+   Inter no carga itálica— y la última letra pinta inclinada ENCIMA del
+   espacio, con el subrayado marcando el borde: visualmente quedaban ~2px y el
+   enlace se leía pegado a la palabra siguiente. El margen compensa la tinta
+   inclinada. MARGEN y no padding: el padding estiraría el subrayado DENTRO
+   del espacio, que es justo el efecto que se quería sacar. */
+.face-page__body a.name { color: var(--c-gold); border-bottom: 1px solid var(--line-gold-soft); padding-bottom: 1px; margin-right: 0.14em; }
 .face-page__body a.name:hover { color: var(--c-gold-soft); border-bottom-color: var(--c-gold); }
 /* .face-page__ref se fue con el enlace de /sugao/ al registro del operador,
    que dejó de existir junto con esa sección. */
@@ -1281,7 +1315,7 @@ button:focus-visible {
   padding: clamp(70px, 9vw, 110px) clamp(20px, 5vw, 64px) 48px;
 }
 .footer__top {
-  max-width: 1120px;
+  max-width: 70rem;   /* era 1120px; en rem, el marco acompaña a la letra */
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
@@ -1310,7 +1344,7 @@ button:focus-visible {
    Destacarlo lo convertiría en ruido en cada página; esconderlo lo haría
    inútil. El enlace lleva al texto completo, que vive sólo en /disclaimer/. */
 .footer__disclaimer {
-  max-width: 1120px;
+  max-width: 70rem;   /* era 1120px */
   margin: 48px auto 0;
   font-size: 0.78rem;
   line-height: 1.6;
@@ -1321,7 +1355,7 @@ button:focus-visible {
 .footer__disclaimer a:hover { color: var(--c-gold); }
 
 .footer__bottom {
-  max-width: 1120px;
+  max-width: 70rem;   /* era 1120px */
   margin: 24px auto 0;
   padding-top: 28px;
   border-top: 1px solid rgb(var(--rgb-gold) / 0.1);

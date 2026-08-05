@@ -317,6 +317,13 @@
               <li><span class="steps__n">03</span><span><strong>Cite</strong> the origin, date and revision on every number.</span></li>
               <li><span class="steps__n">04</span><span><strong>Publish</strong> the analysis and its method, openly and for free.</span></li>
             </ol>
+            <!-- Al pie de ESTA columna, pegado a los cuatro pasos — REVIERTE el
+                 centrado bajo las dos columnas, a pedido del autor (2026-08-05).
+                 Es hijo de .method__how (no ítem de la grilla), así que queda al
+                 final del contenido y NO se estira al fondo de la altura de la
+                 columna de fuentes. Sigue siendo UN solo enlace: dos al mismo
+                 destino a pocas líneas se leen como un error. -->
+            <p class="method__more"><a href="/method/">Read the full method &rarr;</a></p>
           </div>
           <div class="method__sources">
             <p class="eyebrow eyebrow--muted">Sources we read directly</p>
@@ -328,22 +335,26 @@
                  con la columna vacía: dispareja. Los glifos se conservan en el
                  subset para /ja/, y en /method/ el nombre oficial japonés sigue
                  — ahí no es adorno sino el nombre con el que se llega a la
-                 fuente, como línea secundaria bajo el nombre inglés. -->
+                 fuente, como línea secundaria bajo el nombre inglés.
+                 LOGOS (2026-08-05, criterio LibraryThing: archivo OFICIAL sin
+                 alterar, paleta original, tamaño sello): sólo la FSA sirve un
+                 archivo utilizable (su símbolo, PNG transparente de 192px,
+                 byte-idéntico en assets/img). Las otras cuatro filas van SIN
+                 logo y no es olvido: BOJ sólo publica su logotipo con fondo
+                 opaco (JPG blanco / GIF gris — limpiarlo es alterarlo), EDINET
+                 no tiene logo (favicon de 198 bytes), el servidor de BIS
+                 rechaza conexiones desde acá (sin archivo oficial no hay
+                 logo), y Damodaran es una página académica personal sin marca.
+                 El alt va vacío: el nombre está al lado. -->
             <ul class="sources">
               <li><span class="sources__en"><span>Bank of Japan (BOJ)</span><span class="sources__note">Monetary policy, flow of funds</span></span></li>
-              <li><span class="sources__en"><span>Financial Services Agency (FSA)</span><span class="sources__note">Regulation, disclosure</span></span></li>
+              <li><span class="sources__en"><span>Financial Services Agency (FSA)</span><span class="sources__note">Regulation, disclosure</span></span><img class="sources__logo" src="/assets/img/fsa-icon.png" alt="" width="24" height="24"></li>
               <li><span class="sources__en"><span>EDINET</span><span class="sources__note">Corporate filings and disclosures</span></span></li>
               <li><span class="sources__en"><span>Bank for International Settlements (BIS)</span><span class="sources__note">Cross-border banking and settlement data</span></span></li>
               <li><span class="sources__en"><span>Damodaran Online</span><span class="sources__note">Valuation data and cost of capital</span></span></li>
             </ul>
           </div>
         </div>
-
-        <!-- Un solo enlace al pie de la sección, no uno por columna: cae debajo
-             de las dos, y dos enlaces al mismo destino a pocas líneas se leen
-             como un error. Lleva al método completo Y a la lista taxativa de
-             fuentes, que viven los dos en /method/. -->
-        <p class="method__more"><a href="/method/">Read the full method &rarr;</a></p>
       </div>
     </section>
 

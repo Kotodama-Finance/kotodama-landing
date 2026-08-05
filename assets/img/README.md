@@ -28,3 +28,20 @@ dibuja la L como forma — la escribe como `<text>` con la tipografía
 visitante, así que la L saldría con una fuente de reemplazo y la marca se
 vería mal. Verificado por el autor; el PNG de 1024 px sobra para el tamaño
 de sello al que se muestra (@2x incluido).
+
+---
+
+`fsa-icon.png` es el **símbolo oficial de la 金融庁 (FSA) tal cual lo sirve
+su propio sitio, sin modificar**: `https://www.fsa.go.jp/images/icon.png`
+(192×192, RGBA con fondo transparente — alfa 0 en las esquinas, medido;
+11.912 bytes, sha256 `87E9C947…4FF447AF` idéntico al descargado). Mismo
+criterio que LibraryThing: paleta original, sin recolorear; se muestra a
+24px (sello) en la lista de fuentes de la portada.
+
+**Las otras cuatro fuentes de la portada NO tienen logo, y no es olvido**
+(2026-08-05): BOJ sólo publica su logotipo sobre fondo opaco (JPG blanco y
+GIF con fondo gris — quitarle el fondo sería alterar el archivo, que es lo
+que este criterio prohíbe; su favicon es de 16px, insuficiente); EDINET no
+distribuye ningún logo (favicon de 198 bytes); el servidor de bis.org
+rechaza conexiones desde este entorno, y sin archivo oficial no hay logo; y
+Damodaran Online es una página académica personal sin marca gráfica.

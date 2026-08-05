@@ -527,6 +527,44 @@ Dos compromisos del texto que NO son redacción libre, anotados en los HTML:
   sistema conceptual, no como destinos. Está anotado en el HTML de /musubi/,
   en el de /hajime/ y en el CSS de `a.name`.
 
+### La tanda tipográfica y de logos del 2026-08-05 — seis pedidos del autor
+
+- **Escala global al 112.5% (18px de raíz)** — el cuerpo se veía chico. Todo
+  el sitio mide en rem, así que es UNA perilla y la escala relativa se
+  conserva. **Las columnas de prosa pasaron de px a rem** (45rem la
+  subpágina, 47.5 el About, 55 el hero, 70 los marcos de método y footer):
+  en px no acompañaban a la letra y agrandar la fuente no reducía el vacío
+  lateral, que era el efecto buscado. OJO con el hero: su caja estaba en px
+  por una razón medida (el corte por dos píxeles del titular) y en rem esa
+  garantía escala CON el titular — está anotado en el CSS. El cubo y su
+  `--maxw` NO se tocaron.
+- **Títulos de las 13 subpáginas al DOBLE y CENTRADOS** (cabecera entera:
+  eyebrow, título, gloss; el lead y el cuerpo siguen a la izquierda). El
+  romaji NO se duplicó exacto (tope 2rem→3.4rem): duplicado quedaba gigante
+  al lado del kanji — la pareja equilibra con el romaji ~0.45 del kanji. La
+  frase de la 404 subió acotada por ancho (verificado: una línea).
+- **«Read the full method →» al pie de la COLUMNA IZQUIERDA** — REVIERTE el
+  centrado bajo las dos columnas; como hijo de `.method__how` no se estira
+  al fondo de la columna de fuentes.
+- **El aire tras los enlaces de /hajime/**: el espacio SIEMPRE estuvo
+  (4,5px de avance, medido) — la cursiva de `.name` es OBLICUA SINTÉTICA
+  (Inter no carga itálica) y la última letra pintaba sobre el espacio.
+  Margen de 0.14em, no padding (el padding estira el subrayado). 7,6px
+  después, medido.
+- **Logos de las fuentes de la portada: SÓLO LA FSA** (su símbolo oficial,
+  transparente, byte-idéntico — mismo criterio LibraryThing). **Las otras
+  cuatro filas SIN logo y NO es olvido**: BOJ sólo publica fondo opaco
+  (limpiarlo = alterarlo, prohibido), EDINET no tiene logo, bis.org rechaza
+  conexiones desde acá, Damodaran es página personal sin marca. **Que nadie
+  lo "complete" con SVGs de Wikipedia**: no son el archivo oficial. Detalle
+  en `assets/img/README.md` y en el HTML de la portada.
+- **El © del footer QUEDA** — aclarado por el autor: © es copyright del
+  contenido (existe sin registro); marca registrada sería ®/™. Sin cambios.
+- **Pendiente del autor: su veredicto sobre las capturas** (títulos al
+  doble y cuerpo a 18px — «mostrame antes de fijarlo»). Está commiteado
+  como estado vigente para que el árbol quede verde; si pide otro tamaño,
+  son dos clamps y una perilla.
+
 ### Tarjetas de perfil en /sugao/ — completa: logo oficial sin alterar y texto
 
 El registro de perfiles personales va en **tarjetas** desde ya, aunque haya una
