@@ -706,27 +706,46 @@ el fallback). Explotar limpia la selección y cierra el folio; las caras dejan
 de ser clicables; pasar a grilla rearma al instante; reduced-motion salta al
 estado final sin transición y sin pulso (verificado midiendo, no leyendo).
 
-**Correcciones del autor sobre la v1 (2026-08-05), con dos reversiones:**
+**Correcciones del autor sobre la v1 (2026-08-05):**
 
 - **Los kanji van EN LA SUPERFICIE de la esfera, no como sprites orbitando** —
   revierte la elección de la v1. La objeción que motivó los sprites (una
   textura clavada a la esfera se va de vista media órbita con el péndulo) se
   resuelve de otro modo: el péndulo no gira el núcleo; quien gira es el
   CASCARÓN de palabras, sobre su propio eje, lento (~35 s/vuelta) e
-  independiente — las palabras desfilan y se leen todas, por turnos. **En
-  NAVY sobre el oro**: medido en la v1, oro sobre la esfera dorada perdía el
-  trazo; navy/oro es la pareja de las caras invertida y no entra tercer color.
+  independiente — las palabras desfilan y se leen todas, por turnos.
 - **Explotado se esconden la ayuda y el toggle — visualmente**: la ayuda con
   `visibility` (conserva su caja: nada se mueve bajo el cursor), el toggle
   con `opacity`+`pointer-events` para que SIGA en el árbol de accesibilidad
   y reaparezca con `:focus-within` — la salida de teclado queda.
-- **El pulso se subió tras MEDIRLO**: corría (emisiva 0.16→0.26, ±1.5%
-  escala) pero quedaba sepultado bajo el vaivén que el caparazón produce a
-  través del vidrio. Ahora respira 0.10→0.55 de emisiva y ±3% de escala.
-- **Núcleo más chico y caparazón más abierto, calibrados JUNTOS** (se
-  refuerzan): defaults `EXPLODE_R` 4.2 y `CORE_R` 0.72, con `?explodeR=` y
-  `?coreR=` para la calibración visual del autor — que prefiere errar del
-  lado del globo, no del cubo.
+
+**Segunda tanda (2026-08-05, tras la calibración en vivo del autor) — REVIERTE
+tres puntos de la primera; lo vigente es esto:**
+
+- **Radios fijados: `EXPLODE_R` 5.0 y `CORE_R` 0.5** (antes 4.2/0.72).
+  Caparazón bien abierto y núcleo chico es el punto donde se lee como plasma
+  globe: a 5.0 las caras se agrupan menos que a 4.2, y el autor prefiere
+  errar del lado del globo. `?explodeR=` y `?coreR=` siguen para recalibrar.
+- **El material y el pulso VOLVIERON a la v1, tal cual** (emisiva 0.16→0.26,
+  ±1.5% de escala). El boost de la primera tanda (0.10→0.55, ±3%) se probó,
+  se MIDIÓ —el vaivén pasó de 34 a 73,9 unidades sRGB, senoidal limpio— y el
+  autor lo DESCARTÓ por costo visual: con la emisiva alta la esfera dejaba
+  de leerse como vidrio. **QUE EL PULSO NO SE PERCIBA ESTÁ BIEN**: el vidrio
+  vale más que el pulso, y no se compensa por otra vía (ni escala, ni color,
+  ni keyframes). Que nadie lo "arregle" de vuelta.
+- **La tinta de los kanji es DORADO DURO (`--c-gold-ink`), no navy** — el
+  navy de la primera tanda daba contraste pero ensuciaba la esfera y rompía
+  el sistema de color del sitio; el contraste tiene que salir del TEXTO.
+  Elegido midiendo tres candidatos sobre el render (delta tinta-cuerpo:
+  `#9c7616` 20,7 · `#84620b` 30,0 · `#6b4906` 39,9 unidades sRGB): quedó
+  **`#6b4906`**, el único donde el trazo se lee claro sin dejar de ser oro.
+  No vuelven ni el navy ni `--c-gold` (perdía el trazo, medido en la v1).
+- **Los kanji, proporcionalmente MÁS chicos**: el factor de la textura bajó
+  de 0.24 a 0.19, ADEMÁS del arrastre del núcleo (0.72→0.5 ya los achicaba
+  solo).
+
+### El `免責事項`: el corto se repite, el completo vive una sola vez
+
 Son **dos textos con dos reglas opuestas**, y confundirlas es lo que hay que
 evitar:
 

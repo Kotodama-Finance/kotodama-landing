@@ -290,18 +290,20 @@ export function initCube(stage, opts) {
      la misma esfera: se lee globo. Cada cubie CONSERVA su orientación (nada
      rota sobre sí mismo), que es lo que mantiene las caras legibles.
      `?explodeR=` permite comparar radios sin tocar el código (calibración
-     visual del autor); el default es el punto medio elegido. */
+     visual del autor); 5.0 es el que ELIGIÓ mirando la grilla de combos:
+     a 5.0 las caras se agrupan menos que a 4.2, y prefiere errar del lado
+     del globo, no del cubo. */
   const EXPLODE_R = (() => {
     const v = parseFloat(params.get('explodeR'));
-    return Number.isFinite(v) && v > 1.4 ? v : 4.2;
+    return Number.isFinite(v) && v > 1.4 ? v : 5.0;
   })();
-  /* Radio del núcleo, también calibrable (`?coreR=`). Achicado de 1.05 a 0.72
-     a pedido del autor: el núcleo es el CENTRO de un plasma globe, no una bola
-     grande adentro de una cáscara — y con el caparazón más abierto (4.2) las
-     dos decisiones se refuerzan. */
+  /* Radio del núcleo, también calibrable (`?coreR=`). 0.5 elegido por el
+     autor en la misma pasada que el 5.0 — los dos se calibran JUNTOS porque
+     se refuerzan: caparazón bien abierto y núcleo chico es el punto donde se
+     lee como plasma globe, no una bola grande adentro de una cáscara. */
   const CORE_R = (() => {
     const v = parseFloat(params.get('coreR'));
-    return Number.isFinite(v) && v > 0.3 ? v : 0.72;
+    return Number.isFinite(v) && v > 0.3 ? v : 0.5;
   })();
   const EXPLODE_MS = 1100;
   const X = { t: 0, target: 0, last: 0 };
@@ -320,6 +322,7 @@ export function initCube(stage, opts) {
   const bodyHex = tok('--c-cube-body');       // cuerpo del cubie
   const goldHex = tok('--c-gold');
   const goldSoftHex = tok('--c-gold-soft');
+  const goldInkHex = tok('--c-gold-ink');     // tinta de los kanji del núcleo
   const navyDeepHex = tok('--c-navy');
   const keyLightHex = tok('--c-cube-key-light');
 
@@ -555,11 +558,16 @@ export function initCube(stage, opts) {
      péndulo NO gira el núcleo (está en la escena); quien gira es el CASCARÓN
      DE PALABRAS, sobre su propio eje, lento y continuo. Las palabras quedan
      pegadas a la superficie y aun así desfilan: se leen todas, por turnos.
-     EN NAVY sobre el oro, no en oro: medido en la v1, oro sobre la esfera
-     dorada perdía el trazo (el problema exacto que las caras resuelven al
-     revés — cuerpo navy, trazo oro; esto es la misma pareja invertida, y no
-     entra ningún tercer color). Glifos del subset vía canvas, verificados
-     contra cmap; fonts.ready los rehornea abajo. */
+     EN DORADO DURO (--c-gold-ink), y las dos alternativas ya se probaron y
+     descartaron — no volver a ninguna: --c-gold sobre la esfera dorada
+     perdía el trazo (medido en la v1), y el NAVY que lo reemplazó daba
+     contraste pero el autor lo descartó: sobre el oro se ve sucio y rompe
+     el sistema de color del sitio metiendo el color del fondo en la única
+     pieza enteramente dorada. El contraste tiene que salir del TEXTO — la
+     tinta es un dorado más saturado y oscuro que --c-gold, mismo matiz:
+     sigue siendo oro, con luminancia propia para que el trazo se lea.
+     Glifos del subset vía canvas, verificados contra cmap; fonts.ready los
+     rehornea abajo. */
   const WORD_SPIN = 0.00018;   // rad/ms: vuelta entera en ~35 s, un frente cada ~12
   const WORD_FIXED = 0.6;      // reduce: ángulo quieto con una palabra de frente
   const CORE_WORDS = ['産霊', '河川', '言霊'];
@@ -570,10 +578,12 @@ export function initCube(stage, opts) {
     cv.width = W; cv.height = H;
     const ctx = cv.getContext('2d');
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = navyDeepHex;
+    ctx.fillStyle = goldInkHex;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = `500 ${Math.round(H * 0.24)}px 'Zen Kaku Gothic New', sans-serif`;
+    // 0.19, bajado de 0.24 a pedido del autor: proporcionalmente MÁS chicos
+    // que el arrastre del cambio de radio (coreR 0.72→0.5 ya los achica solo).
+    ctx.font = `500 ${Math.round(H * 0.19)}px 'Zen Kaku Gothic New', sans-serif`;
     // Sobre el ecuador (donde la proyección equirrectangular no deforma), con
     // corrimientos verticales chicos para que no desfilen en fila perfecta.
     const dy = [-0.055, 0.03, -0.01];
@@ -650,17 +660,20 @@ export function initCube(stage, opts) {
       tmpV.copy(m.userData.dir).multiplyScalar(EXPLODE_R);
       m.position.lerpVectors(m.userData.home, tmpV, k);
     });
-    /* Pulso del núcleo. Subido tras medirlo: la primera versión oscilaba la
-       emisiva 0.16→0.26 y ±1.5% de escala, y sobre el vaivén que el propio
-       caparazón produce a través del vidrio no se percibía como pulso. Ahora
-       la emisiva respira 0.10→0.55 y la escala ±3% — claramente visible,
-       medido de nuevo abajo en la calibración. Con reduce, quieto. */
+    /* Pulso del núcleo: los valores de la v1, A PROPÓSITO — esto REVIERTE un
+       boost que se probó, se MIDIÓ y se descartó. Subir la emisiva a
+       0.10→0.55 con ±3% de escala hacía el pulso claramente visible (el
+       vaivén pasó de 34 a 73,9 unidades sRGB, senoidal limpio), pero a ese
+       costo la esfera dejaba de leerse como vidrio. El autor eligió el
+       vidrio: QUE EL PULSO NO SE PERCIBA ESTÁ BIEN, y no se compensa por
+       otra vía (ni escala, ni color, ni keyframes). Con reduce, quieto. */
     const pulsing = X.t === 1 && !reduce;
-    const fase = 0.5 + 0.5 * Math.sin(ts * 0.0014);
-    const pulse = pulsing ? 1 + 0.03 * Math.sin(ts * 0.0014) : 1;
+    const pulse = pulsing ? 1 + 0.015 * Math.sin(ts * 0.0014) : 1;
     coreGroup.scale.setScalar((0.4 + 0.6 * k) * pulse);
     coreGroup.visible = k > 0.02;
-    coreMat.emissiveIntensity = pulsing ? 0.10 + 0.45 * fase : 0.16;
+    coreMat.emissiveIntensity = pulsing
+      ? 0.16 + 0.1 * (0.5 + 0.5 * Math.sin(ts * 0.0014))
+      : 0.16;
     // El cascarón de palabras gira sobre su eje, independiente del péndulo.
     wordShell.rotation.y = reduce ? WORD_FIXED : ts * WORD_SPIN;
     wordMat.opacity = Math.max(0, (k - 0.55) / 0.45);

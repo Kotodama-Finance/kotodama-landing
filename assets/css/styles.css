@@ -167,6 +167,14 @@
   /* Marca */
   --c-gold: #c8a85a;
   --c-gold-soft: #e7d6a6;       /* hover / brillo */
+  /* Tinta de los kanji del núcleo explotado (cube.js): un dorado más saturado
+     y oscuro que --c-gold, MISMO matiz — el contraste sobre la esfera dorada
+     sale del texto, no de meterle otro color (el navy se probó y el autor lo
+     descartó: ensuciaba la esfera). Elegido midiendo el render, no el hex:
+     tres candidatos sobre captura, delta tinta-cuerpo en unidades sRGB —
+     #9c7616 dio 20,7 (el trazo se pierde), #84620b 30,0, #6b4906 39,9 y el
+     trazo se lee claro sin dejar de ser oro. Cambiarlo es tocar este hex. */
+  --c-gold-ink: #6b4906;
 
   /* Texto */
   --c-text: #eaf1f8;            /* alto contraste */
