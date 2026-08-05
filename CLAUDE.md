@@ -785,11 +785,10 @@ tinta:**
   (±30°) dio un +47 FALSO en una pose, midiendo contra un hueco sin
   vecinos de anillo — **el árbitro es el contorno de PÍXELES** (ahí: meseta
   de 231 px contra arcos de 240-250, sin bulto).
-- **PROPUESTA PENDIENTE de decisión del autor — no implementada**: los 20
-  del anillo (esquinas y aristas) al radio pleno, los 6 centros a
-  **~0.85·EXPLODE_R**, expuesto como parámetro de URL para su calibración
-  en vivo — y EXPLODE_MIX se retira, porque quedó medido que ese eje no
-  arregla el bulto.
+- **PROPUESTA que la quinta tanda APROBÓ E IMPLEMENTÓ** (ver abajo): los
+  20 del anillo (esquinas y aristas) al radio pleno, los 6 centros a
+  ~0.85·EXPLODE_R con parámetro de URL — y EXPLODE_MIX retirado, porque
+  quedó medido que ese eje no arregla el bulto.
 - **El giro de los kanji se INVIRTIÓ** (desfile derecha→izquierda: signo
   negativo en WORD_SPIN) y la velocidad quedó calibrable EN VIVO con
   `?wordSpin=` (segundos por vuelta), **default 18** — el ~35 s original
@@ -800,6 +799,27 @@ tinta:**
   **ORO SOBRE CONTRASTE**, criterio del autor: D es la que se lee como oro
   puro, y +14,2 de delta alcanza porque en polaridad positiva el trazo
   brilla sobre la esfera.
+
+**Quinta tanda (2026-08-05) — la propuesta aprobada, y los valores del
+autor:**
+
+- **El modelo de silueta quedó IMPLEMENTADO** (aprobación explícita del
+  autor): anillo —esquinas y aristas— al radio pleno, los 6 centros de
+  cara a `CENTER_F`·R (`?centerF=`, default **0.85**, el valor medido).
+  **`EXPLODE_MIX` SE RETIRÓ**, con la anotación en cube.js para que nadie
+  lo reponga creyendo que falta: interpolaba radial↔común para los 26 a la
+  vez y quedó medido que no arregla el bulto — una perilla que no hacía lo
+  que prometía. Y la aparente contradicción, cerrada por el autor: el
+  modelo vigente parte del extremo mix=1 (radio común) y corrige sólo los
+  centros — retirar la perilla no contradice haber elegido ese extremo
+  como base.
+- **Valores elegidos EN VIVO con el modelo nuevo**: `EXPLODE_R` **5.5** y
+  `CORE_R` **0.7** — reemplazan 5.0/0.5, que se habían elegido con el
+  radio común puro. Caparazón un poco más abierto, núcleo algo más grande.
+- **`wordSpin` default 24 s** — probado en vivo contra 18 y 12: a 24 el
+  desfile deja leer sin apurar.
+- **La tinta D `#ffd24a`, CONFIRMADA** en vivo: se lee como oro, no como
+  blanco. Sin cambios.
 
 ### El `免責事項`: el corto se repite, el completo vive una sola vez
 

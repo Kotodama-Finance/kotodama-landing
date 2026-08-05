@@ -304,10 +304,11 @@ export function initCube(stage, opts) {
      y corrige SÓLO los centros: retirar la perilla no contradice haber
      elegido ese extremo como base.
      `?explodeR=` permite comparar radios sin tocar el código (calibración
-     visual del autor). */
+     visual del autor); 5.5 lo eligió EN VIVO con este modelo puesto —
+     reemplaza al 5.0 que había elegido con el radio común puro. */
   const EXPLODE_R = (() => {
     const v = parseFloat(params.get('explodeR'));
-    return Number.isFinite(v) && v > 1.4 ? v : 5.0;
+    return Number.isFinite(v) && v > 1.4 ? v : 5.5;
   })();
   /* Fracción del radio para los 6 centros de cara (`?centerF=`), calibrable
      en vivo. 0.85 sale de la medición de la cuarta tanda: a radio pleno el
@@ -321,13 +322,14 @@ export function initCube(stage, opts) {
     const v = parseFloat(params.get('centerF'));
     return Number.isFinite(v) && v > 0.4 && v <= 1 ? v : 0.85;
   })();
-  /* Radio del núcleo, también calibrable (`?coreR=`). 0.5 elegido por el
-     autor en la misma pasada que el 5.0 — los dos se calibran JUNTOS porque
-     se refuerzan: caparazón bien abierto y núcleo chico es el punto donde se
-     lee como plasma globe, no una bola grande adentro de una cáscara. */
+  /* Radio del núcleo, también calibrable (`?coreR=`). 0.7 elegido por el
+     autor EN VIVO junto con el 5.5 — los dos se calibran JUNTOS porque se
+     refuerzan: caparazón bien abierto y núcleo proporcionado es el punto
+     donde se lee como plasma globe. Reemplaza al 0.5 elegido con el radio
+     común puro. */
   const CORE_R = (() => {
     const v = parseFloat(params.get('coreR'));
-    return Number.isFinite(v) && v > 0.3 ? v : 0.5;
+    return Number.isFinite(v) && v > 0.3 ? v : 0.7;
   })();
   const EXPLODE_MS = 1100;
   const X = { t: 0, target: 0, last: 0 };
@@ -603,11 +605,12 @@ export function initCube(stage, opts) {
      Negar la rotación NO espeja los glifos: la textura es la misma, sólo
      cambia el sentido del viaje (verificado en captura). La velocidad se
      calibra EN VIVO con `?wordSpin=` (segundos por vuelta): la legibilidad
-     en movimiento no se juzga en captura estática. Default 18 s — el ~35 s
-     original lo marcó el autor como demasiado lento. */
+     en movimiento no se juzga en captura estática. Default 24 s, probado
+     por el autor contra 18 y 12: a 24 el desfile deja leer sin apurar. El
+     ~35 s original era demasiado lento. */
   const WORD_TURN_S = (() => {
     const v = parseFloat(params.get('wordSpin'));
-    return Number.isFinite(v) && v >= 4 && v <= 120 ? v : 18;
+    return Number.isFinite(v) && v >= 4 && v <= 120 ? v : 24;
   })();
   const WORD_SPIN = -(2 * Math.PI) / (WORD_TURN_S * 1000);   // rad/ms
   const WORD_FIXED = 0.6;      // reduce: ángulo quieto con una palabra de frente
