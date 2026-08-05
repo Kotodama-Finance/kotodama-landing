@@ -282,34 +282,44 @@ export function initCube(stage, opts) {
   const inlay = params.get('kanji') !== 'engraved';
 
   /* ---- Vista explotada: estado -------------------------------------------
-     Los 26 cubies viajan hacia afuera con un modelo INTERPOLADO entre dos
-     extremos que ya se probaron y fallan cada uno a su manera:
-     · RADIAL RECTO: cada cubie aleja su posición original en proporción —
-       las esquinas (√3) siguen más lejos que los centros de cara (1) y el
-       resultado es un cubo grande y hueco, no un globo;
-     · RADIO COMÚN: todos sobre la misma esfera — pero los centros de cara,
-       que parten más cerca del centro, viajan DE MÁS, y con la expansión
-       grande (5.0) sobresalen y rompen la lectura de globo (lo vio el autor
-       en vivo; a 2.6-4.2 el efecto no saltaba).
-     EXPLODE_MIX (abajo) mezcla los dos. Cada cubie CONSERVA su orientación
-     (nada rota sobre sí mismo), que es lo que mantiene las caras legibles.
+     El ANILLO —las 20 piezas: esquinas y aristas— viaja a un RADIO COMÚN
+     sobre la esfera, y los 6 CENTROS DE CARA van algo más adentro
+     (CENTER_F, abajo). Las dos formas puras ya se probaron y fallan, cada
+     una medida:
+     · RADIAL RECTO (cada cual en proporción a su radio original): las
+       esquinas (√3) quedan más lejos que los centros (1) y el resultado es
+       un cubo grande y hueco, no un globo;
+     · RADIO COMÚN PARA LOS 26: los centros de cara quedan SOLOS en su
+       ángulo y sobresalen del arco de sus vecinos (+31 px medidos en la
+       pose de carga) — no porque proyecten más silueta (el tamaño
+       proyectado es igual en las tres clases, 70-95 px), sino por posición.
+     Cada cubie CONSERVA su orientación (nada rota sobre sí mismo), que es
+     lo que mantiene las caras legibles.
+     ACÁ HUBO UN PARÁMETRO QUE SE RETIRÓ, para que nadie lo reponga creyendo
+     que falta: EXPLODE_MIX (?explodeMix=) interpolaba radial↔común para los
+     26 A LA VEZ, y quedó MEDIDO que ese eje no arregla el bulto de los
+     centros — mueve centros y aristas JUNTOS, así que el exceso relativo
+     entre vecinos casi no cambia de 0 a 1. Era una perilla que no hacía lo
+     que prometía. El modelo vigente parte de su extremo mix=1 (radio común)
+     y corrige SÓLO los centros: retirar la perilla no contradice haber
+     elegido ese extremo como base.
      `?explodeR=` permite comparar radios sin tocar el código (calibración
-     visual del autor); 5.0 es el que ELIGIÓ mirando la grilla de combos:
-     a 5.0 las caras se agrupan menos que a 4.2, y prefiere errar del lado
-     del globo, no del cubo. */
+     visual del autor). */
   const EXPLODE_R = (() => {
     const v = parseFloat(params.get('explodeR'));
     return Number.isFinite(v) && v > 1.4 ? v : 5.0;
   })();
-  /* Mezcla radial↔común (`?explodeMix=`, 0 a 1), normalizada por la ESQUINA:
-     a cualquier mix las esquinas terminan en EXPLODE_R, y el factor sólo
-     decide cuánto se meten hacia adentro aristas y centros — la silueta del
-     globo no cambia al calibrar. 0 = radial recto, 1 = radio común. 0.65
-     elegido sobre el barrido capturado: a 0.5 todavía se lee grilla cúbica,
-     a 0.8 el centro de cara superior ya se despega del arco. */
-  const EXPLODE_MIX = (() => {
-    const v = parseFloat(params.get('explodeMix'));
-    return Number.isFinite(v) && v >= 0 && v <= 1 ? v : 0.65;
+  /* Fracción del radio para los 6 centros de cara (`?centerF=`), calibrable
+     en vivo. 0.85 sale de la medición de la cuarta tanda: a radio pleno el
+     centro superior sobresalía +31 px del arco de sus vecinos angulares; a
+     0.85·R el peor exceso local queda en −5,6 px y el contorno de PÍXELES
+     no muestra bulto en ninguna pose del péndulo. La otra salida —achicar
+     los centros en vez de acercarlos— NO funciona y también quedó medida:
+     al 78% del tamaño el exceso seguía en +25 px, porque manda la distancia
+     del centro, no el tamaño del cubie. */
+  const CENTER_F = (() => {
+    const v = parseFloat(params.get('centerF'));
+    return Number.isFinite(v) && v > 0.4 && v <= 1 ? v : 0.85;
   })();
   /* Radio del núcleo, también calibrable (`?coreR=`). 0.5 elegido por el
      autor en la misma pasada que el 5.0 — los dos se calibran JUNTOS porque
@@ -481,15 +491,14 @@ export function initCube(stage, opts) {
         if (x === 0 && y === 0 && z === 0) continue;   // el centro es del núcleo
         const m = new THREE.Mesh(geo, bodyMat);
         m.position.set(x * CELL, y * CELL, z * CELL);
-        // Datos de la explosión: posición armada, dirección radial unitaria,
-        // y el factor de radio de la mezcla radial↔común (ver EXPLODE_MIX):
-        // propio = |home| relativo a la esquina (1/√3 centros, √2/√3 aristas,
-        // 1 esquinas); a mix 0 cada cual conserva su proporción, a mix 1
-        // todos igualan a la esquina.
+        // Datos de la explosión: posición armada, dirección radial unitaria
+        // y el factor de radio — anillo al radio pleno, centros de cara a
+        // CENTER_F. La clase sale de |home|²/CELL²: 1 centro, 2 arista,
+        // 3 esquina.
         m.userData.home = m.position.clone();
         m.userData.dir = m.position.clone().normalize();
-        const propio = m.userData.home.length() / (Math.sqrt(3) * CELL);
-        m.userData.rFactor = propio + (1 - propio) * EXPLODE_MIX;
+        const clase2 = Math.round(m.userData.home.lengthSq() / (CELL * CELL));
+        m.userData.rFactor = clase2 === 1 ? CENTER_F : 1;
         group.add(m);
         cubies.push(m);
         cubieAt[`${x},${y},${z}`] = m;
