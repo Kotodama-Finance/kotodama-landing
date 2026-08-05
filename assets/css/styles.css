@@ -1201,6 +1201,30 @@ button:focus-visible {
   transition: color 0.25s ease;
 }
 
+/* MODO EXPLOTADO (main.js pone .is-exploded en el layout): la ayuda y el
+   toggle no aplican —las caras no se seleccionan y la grilla no tiene
+   equivalente explotado— y se esconden SOLO VISUALMENTE, cada uno a su
+   manera y por su motivo:
+   - La ayuda va con visibility (sale también del árbol de accesibilidad, y
+     está bien: describe interacciones que en este modo son falsas). CONSERVA
+     SU CAJA a propósito — con display:none todo lo de abajo, incluido el
+     botón que el usuario acaba de clickear, subiría justo bajo el cursor.
+   - El toggle va con opacity + pointer-events: invisible y sin clics
+     fantasma, pero SIGUE en el árbol de accesibilidad y sigue siendo
+     tabulable — es la salida de teclado (pasar a grilla rearma), y al
+     recibir foco REAPARECE para que quien lo opera vea qué está tocando.
+     El mismo criterio que la grilla recortada con :focus-within. */
+.cube__toggle { transition: opacity 0.3s ease; }
+.cube__layout.is-exploded .cube__hint { visibility: hidden; }
+.cube__layout.is-exploded .cube__toggle {
+  opacity: 0;
+  pointer-events: none;
+}
+.cube__layout.is-exploded .cube__toggle:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* -------------------------------------------------------------------------
    PLACEHOLDERS DE REDACCIÓN
    Marca visible para el texto que todavía no está escrito. Al reemplazarlo se

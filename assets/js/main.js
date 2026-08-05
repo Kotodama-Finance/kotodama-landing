@@ -44,7 +44,15 @@ let cube = null;
 // Estado de la vista explotada. Vive acá y no en cube.js porque quien decide
 // qué se puede hacer en cada modo (seleccionar, explotar, alternar vista) es
 // este orquestador; el cubo sólo ejecuta.
+// setExploded es la ÚNICA vía de cambio: además del flag conmuta la clase
+// .is-exploded del layout, de la que cuelga el CSS que esconde la ayuda y el
+// toggle en modo explotado (visual solamente — la salida de teclado queda).
 let exploded = false;
+function setExploded(on) {
+  exploded = on;
+  const layout = document.querySelector('.cube__layout');
+  if (layout) layout.classList.toggle('is-exploded', on);
+}
 
 /* El estado de cada cara venía del panel lateral, que se quitó. No puede
    desaparecer de la vista 3D: alguien navegando en modo cubo entraría a una
@@ -104,7 +112,7 @@ function setActiveFace(key) {
      el gesto vale como «volver al cubo y elegir»: se rearma y se sigue. Es la
      salida coherente entre bloquear el teclado (peor) e ignorar el estado. */
   if (exploded) {
-    exploded = false;
+    setExploded(false);
     if (cube && cube.reassemble) cube.reassemble();
     setMore('button');
   }
@@ -205,7 +213,7 @@ if (moreP && moreLink) {
     // criterio que el toggle, cuyos listeners también viven sin cubo.
     if (!cube || !cube.explode) return;
     if (!exploded) {
-      exploded = true;
+      setExploded(true);
       // La selección se limpia y el folio se cierra: un folio abierto de una
       // selección que ya no se puede cambiar es incoherente.
       clearSelection();
@@ -213,7 +221,7 @@ if (moreP && moreLink) {
       // El núcleo lleva a /musubi/: precargarla ahora, igual que las caras.
       prefetchFace('musubi');
     } else {
-      exploded = false;
+      setExploded(false);
       cube.reassemble();
     }
     setMore('button');
@@ -238,7 +246,7 @@ function setView(view) {
      usable en modo explotado a propósito: es la salida de accesibilidad, y
      esconder un control por el estado del canvas sería quitársela. */
   if (!is3d && exploded) {
-    exploded = false;
+    setExploded(false);
     if (cube && cube.reassemble) cube.reassemble(true);
   }
   // Vistas excluyentes: en modo cubo se ve el cubo, en modo grilla la grilla.
@@ -322,7 +330,7 @@ async function hydrateCube() {
     // Un cubo recién creado arranca ARMADO. Importa en la rehidratación tras
     // perder el contexto (bfcache): si la página volvió con exploded=true, el
     // flag describiría un estado que el cubo nuevo no tiene.
-    exploded = false;
+    setExploded(false);
     // initCube hoy no devuelve null (o devuelve el cubo o lanza), pero si
     // alguna versión futura lo hiciera, con la reserva puesta un return
     // silencioso dejaría el escenario visible y VACÍO para siempre — sin

@@ -697,17 +697,36 @@ caparazón esférico —los 26 cubies viajan a un RADIO COMÚN, no en línea rec
 en línea recta el resultado es un cubo grande y hueco, porque las esquinas
 siguen más lejos que los centros— con el núcleo en el centro: esfera de vidrio
 dorada (transmission REAL: el vendor es **r160**, no el r128 que circulaba en
-papeles — leído de REVISION en three.module.js) con 産霊 · 河川 · 言霊 como
-sprites orbitando (elegidos sobre textura horneada: el pedido de «navegando
-sobre la superficie» pide movimiento independiente del giro, y un sprite nunca
-se ve en escorzo). Clic en el núcleo → /musubi/, único clicable explotado.
+papeles — leído de REVISION en three.module.js). Clic en el núcleo →
+/musubi/, único clicable explotado.
 El control es el pie del cubo: «Explode the Cube» ↔ «Reassemble the Cube»
 reemplaza al enlace «The idea behind the cube →» en modo 3D (decisión del
 autor; el `<a>` queda en el HTML como capa sin JS y vuelve en modo grilla y en
 el fallback). Explotar limpia la selección y cierra el folio; las caras dejan
 de ser clicables; pasar a grilla rearma al instante; reduced-motion salta al
 estado final sin transición y sin pulso (verificado midiendo, no leyendo).
-Radio default 2.6, calibración visual del autor pendiente con `?explodeR=`.
+
+**Correcciones del autor sobre la v1 (2026-08-05), con dos reversiones:**
+
+- **Los kanji van EN LA SUPERFICIE de la esfera, no como sprites orbitando** —
+  revierte la elección de la v1. La objeción que motivó los sprites (una
+  textura clavada a la esfera se va de vista media órbita con el péndulo) se
+  resuelve de otro modo: el péndulo no gira el núcleo; quien gira es el
+  CASCARÓN de palabras, sobre su propio eje, lento (~35 s/vuelta) e
+  independiente — las palabras desfilan y se leen todas, por turnos. **En
+  NAVY sobre el oro**: medido en la v1, oro sobre la esfera dorada perdía el
+  trazo; navy/oro es la pareja de las caras invertida y no entra tercer color.
+- **Explotado se esconden la ayuda y el toggle — visualmente**: la ayuda con
+  `visibility` (conserva su caja: nada se mueve bajo el cursor), el toggle
+  con `opacity`+`pointer-events` para que SIGA en el árbol de accesibilidad
+  y reaparezca con `:focus-within` — la salida de teclado queda.
+- **El pulso se subió tras MEDIRLO**: corría (emisiva 0.16→0.26, ±1.5%
+  escala) pero quedaba sepultado bajo el vaivén que el caparazón produce a
+  través del vidrio. Ahora respira 0.10→0.55 de emisiva y ±3% de escala.
+- **Núcleo más chico y caparazón más abierto, calibrados JUNTOS** (se
+  refuerzan): defaults `EXPLODE_R` 4.2 y `CORE_R` 0.72, con `?explodeR=` y
+  `?coreR=` para la calibración visual del autor — que prefiere errar del
+  lado del globo, no del cubo.
 Son **dos textos con dos reglas opuestas**, y confundirlas es lo que hay que
 evitar:
 

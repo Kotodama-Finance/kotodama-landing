@@ -293,7 +293,15 @@ export function initCube(stage, opts) {
      visual del autor); el default es el punto medio elegido. */
   const EXPLODE_R = (() => {
     const v = parseFloat(params.get('explodeR'));
-    return Number.isFinite(v) && v > 1.4 ? v : 2.6;
+    return Number.isFinite(v) && v > 1.4 ? v : 4.2;
+  })();
+  /* Radio del núcleo, también calibrable (`?coreR=`). Achicado de 1.05 a 0.72
+     a pedido del autor: el núcleo es el CENTRO de un plasma globe, no una bola
+     grande adentro de una cáscara — y con el caparazón más abierto (4.2) las
+     dos decisiones se refuerzan. */
+  const CORE_R = (() => {
+    const v = parseFloat(params.get('coreR'));
+    return Number.isFinite(v) && v > 0.3 ? v : 0.72;
   })();
   const EXPLODE_MS = 1100;
   const X = { t: 0, target: 0, last: 0 };
@@ -518,7 +526,6 @@ export function initCube(stage, opts) {
      distintos. El pulso (emissive + escala) corre sólo explotado y sin
      reduced-motion, en el tick — no hay keyframes CSS que puedan quedar
      declarados sin asignar. */
-  const CORE_R = 1.05;
   const coreMat = new THREE.MeshPhysicalMaterial({
     color: new THREE.Color(goldHex),
     metalness: 0.0,
@@ -531,70 +538,68 @@ export function initCube(stage, opts) {
     emissive: new THREE.Color(goldHex),
     emissiveIntensity: 0.16,
   });
+  /* Grupo del núcleo: la esfera de vidrio y el cascarón de palabras escalan y
+     aparecen JUNTOS (applyExplode escala el grupo). Vive en la ESCENA, no en
+     `group`: el péndulo gira el caparazón alrededor de un núcleo quieto. */
+  const coreGroup = new THREE.Group();
+  coreGroup.visible = false;
+  scene.add(coreGroup);
   const core = new THREE.Mesh(new THREE.SphereGeometry(CORE_R, 48, 32), coreMat);
-  core.visible = false;
-  scene.add(core);
+  coreGroup.add(core);
 
-  /* Los tres conceptos del centro — 産霊 · 河川 · 言霊 — como SPRITES que
-     orbitan la esfera a radio fijo, no como textura horneada en ella. Elegido
-     así por tres razones: «navegando sobre la superficie» pide movimiento
-     INDEPENDIENTE del giro (una textura viaja clavada a la esfera); un sprite
-     mira siempre a cámara, así que el kanji nunca se ve en escorzo ni
-     invertido; y el péndulo hace girar el caparazón, no el núcleo — con
-     textura, media órbita quedaría siempre de espaldas. Los glifos salen del
-     subset de Zen Kaku vía canvas (mismo camino que las caras): 産霊河川言
-     están en la cmap (verificado) y fonts.ready los rehornea abajo. */
-  const ORBIT_R = CORE_R * 1.3;
+  /* Los tres conceptos del centro — 産霊 · 河川 · 言霊 — EN LA SUPERFICIE:
+     textura equirrectangular sobre un cascarón apenas mayor que la esfera.
+     ESTO REVIERTE la primera versión (sprites orbitando), a pedido del autor.
+     La objeción que motivó los sprites —una textura clavada a la esfera se va
+     de vista media órbita con el péndulo— se resuelve de otro modo: el
+     péndulo NO gira el núcleo (está en la escena); quien gira es el CASCARÓN
+     DE PALABRAS, sobre su propio eje, lento y continuo. Las palabras quedan
+     pegadas a la superficie y aun así desfilan: se leen todas, por turnos.
+     EN NAVY sobre el oro, no en oro: medido en la v1, oro sobre la esfera
+     dorada perdía el trazo (el problema exacto que las caras resuelven al
+     revés — cuerpo navy, trazo oro; esto es la misma pareja invertida, y no
+     entra ningún tercer color). Glifos del subset vía canvas, verificados
+     contra cmap; fonts.ready los rehornea abajo. */
+  const WORD_SPIN = 0.00018;   // rad/ms: vuelta entera en ~35 s, un frente cada ~12
+  const WORD_FIXED = 0.6;      // reduce: ángulo quieto con una palabra de frente
   const CORE_WORDS = ['産霊', '河川', '言霊'];
-  function wordTexture(word) {
-    const W = 512;
-    const H = 256;
+  function bakeWordsTexture() {
+    const W = 2048;
+    const H = 1024;
     const cv = document.createElement('canvas');
     cv.width = W; cv.height = H;
     const ctx = cv.getContext('2d');
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = goldHex;
+    ctx.fillStyle = navyDeepHex;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = `500 ${Math.round(H * 0.62)}px 'Zen Kaku Gothic New', sans-serif`;
-    ctx.fillText(word, W / 2, H / 2 + H * 0.03);
+    ctx.font = `500 ${Math.round(H * 0.24)}px 'Zen Kaku Gothic New', sans-serif`;
+    // Sobre el ecuador (donde la proyección equirrectangular no deforma), con
+    // corrimientos verticales chicos para que no desfilen en fila perfecta.
+    const dy = [-0.055, 0.03, -0.01];
+    CORE_WORDS.forEach((word, i) => {
+      ctx.fillText(word, W * ((i + 0.5) / 3), H * (0.5 + dy[i]));
+    });
     const tex = new THREE.CanvasTexture(cv);
     tex.colorSpace = THREE.SRGBColorSpace;
-    tex.anisotropy = 4;
+    tex.anisotropy = 8;
     return tex;
   }
-  const coreWords = CORE_WORDS.map((word, i) => {
-    const mat = new THREE.SpriteMaterial({
-      map: wordTexture(word), transparent: true, opacity: 0, depthTest: true,
-    });
-    const sp = new THREE.Sprite(mat);
-    sp.scale.set(0.84, 0.42, 1);
-    sp.visible = false;
-    // Órbita propia: fase repartida en tercios, inclinación y ritmo distintos
-    // para que no viajen en formación. Con reduce quedan quietas en su fase.
-    sp.userData = {
-      word,
-      phase: (i * Math.PI * 2) / 3,
-      incl: 0.45 + i * 0.4,
-      speed: 0.00016 + i * 0.00005,
-    };
-    scene.add(sp);
-    return sp;
+  const wordMat = new THREE.MeshBasicMaterial({
+    map: bakeWordsTexture(),
+    transparent: true,
+    opacity: 0,
+    depthWrite: false,
   });
-  function placeWords(ts, k) {
-    coreWords.forEach((sp) => {
-      const u = sp.userData;
-      const a = reduce ? u.phase : u.phase + ts * u.speed;
-      sp.position.set(
-        Math.cos(a) * ORBIT_R,
-        Math.sin(a) * ORBIT_R * Math.sin(u.incl),
-        Math.sin(a) * ORBIT_R * Math.cos(u.incl)
-      );
-      const vis = Math.max(0, (k - 0.55) / 0.45);
-      sp.material.opacity = vis;
-      sp.visible = vis > 0.01;
-    });
-  }
+  const wordShell = new THREE.Mesh(
+    new THREE.SphereGeometry(CORE_R * 1.012, 48, 32), wordMat
+  );
+  // Eje del giro apenas inclinado: un desfile perfectamente horizontal se lee
+  // mecánico. La inclinación es del PADRE; el hijo gira sobre su Y local.
+  const wordTilt = new THREE.Group();
+  wordTilt.rotation.set(0.10, 0, 0.14);
+  wordTilt.add(wordShell);
+  coreGroup.add(wordTilt);
 
   // Si la fuente Zen no estaba lista, rehacer los mapas de cada cara — y las
   // texturas de las palabras del núcleo, que usan la misma fuente.
@@ -606,10 +611,8 @@ export function initCube(stage, opts) {
         f.mat.normalMap = m.normalTex;
         f.mat.needsUpdate = true;
       });
-      coreWords.forEach((sp) => {
-        sp.material.map = wordTexture(sp.userData.word);
-        sp.material.needsUpdate = true;
-      });
+      wordMat.map = bakeWordsTexture();
+      wordMat.needsUpdate = true;
     });
   }
 
@@ -647,14 +650,20 @@ export function initCube(stage, opts) {
       tmpV.copy(m.userData.dir).multiplyScalar(EXPLODE_R);
       m.position.lerpVectors(m.userData.home, tmpV, k);
     });
+    /* Pulso del núcleo. Subido tras medirlo: la primera versión oscilaba la
+       emisiva 0.16→0.26 y ±1.5% de escala, y sobre el vaivén que el propio
+       caparazón produce a través del vidrio no se percibía como pulso. Ahora
+       la emisiva respira 0.10→0.55 y la escala ±3% — claramente visible,
+       medido de nuevo abajo en la calibración. Con reduce, quieto. */
     const pulsing = X.t === 1 && !reduce;
-    const pulse = pulsing ? 1 + 0.015 * Math.sin(ts * 0.0014) : 1;
-    core.scale.setScalar((0.4 + 0.6 * k) * pulse);
-    core.visible = k > 0.02;
-    coreMat.emissiveIntensity = pulsing
-      ? 0.16 + 0.1 * (0.5 + 0.5 * Math.sin(ts * 0.0014))
-      : 0.16;
-    placeWords(ts, k);
+    const fase = 0.5 + 0.5 * Math.sin(ts * 0.0014);
+    const pulse = pulsing ? 1 + 0.03 * Math.sin(ts * 0.0014) : 1;
+    coreGroup.scale.setScalar((0.4 + 0.6 * k) * pulse);
+    coreGroup.visible = k > 0.02;
+    coreMat.emissiveIntensity = pulsing ? 0.10 + 0.45 * fase : 0.16;
+    // El cascarón de palabras gira sobre su eje, independiente del péndulo.
+    wordShell.rotation.y = reduce ? WORD_FIXED : ts * WORD_SPIN;
+    wordMat.opacity = Math.max(0, (k - 0.55) / 0.45);
     applyCamera();
   }
 
@@ -702,7 +711,7 @@ export function initCube(stage, opts) {
   /* Explotado, el ÚNICO clicable es el núcleo (lleva a /musubi/ vía
      onCoreOpen). Las caras dejan de ser seleccionables — lo decide onUp. */
   function pickCore(clientX, clientY) {
-    if (!core.visible) return false;
+    if (!coreGroup.visible) return false;
     const r = renderer.domElement.getBoundingClientRect();
     ndc.x = ((clientX - r.left) / r.width) * 2 - 1;
     ndc.y = -((clientY - r.top) / r.height) * 2 + 1;
