@@ -669,7 +669,45 @@ siguen siendo cuatro: ésta mira una rama que no cambia entre commits, así que
 en el flujo de siempre sería ruido. Probada en las dos direcciones, con cuatro
 ramas rotas armadas al lado.
 
-### El `免責事項`: el corto se repite, el completo vive una sola vez
+### La rama `cube-exploded` existe y es donde vive la vista explotada
+
+**Creada el 2026-08-05 desde `redesign-trust` (`6de21bd`), por instrucción del
+autor.** Como `maintenance`, no se ve desde ninguna otra rama y es fácil
+olvidar que existe — que exista es lo que hay que recordar.
+
+**Por qué aparte**: el sitio en `redesign-trust` está LISTO PARA PUBLICAR
+(cero placeholders, `check-ready` en `0`) y la publicación depende sólo del
+DNS, que ocurre en días. La vista explotada es la pieza más grande que queda y
+tiene antecedente de sesiones largas (el shader del mar, las ocho iteraciones
+del remolino). Si no sale, se publica `redesign-trust` tal cual y no hay nada
+que revertir.
+
+**Las condiciones, fijadas por el autor:**
+
+- `redesign-trust` queda intacta. Correcciones del sitio van AHÍ, y
+  `cube-exploded` se rebasea — nunca al revés.
+- **El merge `cube-exploded` → `redesign-trust` es decisión explícita de
+  Manuel**, cuando esté terminado y verde. No se mergea por estar «casi».
+- Las guardas corren igual en esta rama; si `check-pendulum` rompe, la vista
+  no está lista — no es que la guarda sobre.
+
+**Qué es (primera versión, SIN corrientes de agua — van después si ésta
+funciona; no se compensa la ausencia con otro efecto):** el cubo se abre a un
+caparazón esférico —los 26 cubies viajan a un RADIO COMÚN, no en línea recta:
+en línea recta el resultado es un cubo grande y hueco, porque las esquinas
+siguen más lejos que los centros— con el núcleo en el centro: esfera de vidrio
+dorada (transmission REAL: el vendor es **r160**, no el r128 que circulaba en
+papeles — leído de REVISION en three.module.js) con 産霊 · 河川 · 言霊 como
+sprites orbitando (elegidos sobre textura horneada: el pedido de «navegando
+sobre la superficie» pide movimiento independiente del giro, y un sprite nunca
+se ve en escorzo). Clic en el núcleo → /musubi/, único clicable explotado.
+El control es el pie del cubo: «Explode the Cube» ↔ «Reassemble the Cube»
+reemplaza al enlace «The idea behind the cube →» en modo 3D (decisión del
+autor; el `<a>` queda en el HTML como capa sin JS y vuelve en modo grilla y en
+el fallback). Explotar limpia la selección y cierra el folio; las caras dejan
+de ser clicables; pasar a grilla rearma al instante; reduced-motion salta al
+estado final sin transición y sin pulso (verificado midiendo, no leyendo).
+Radio default 2.6, calibración visual del autor pendiente con `?explodeR=`.
 Son **dos textos con dos reglas opuestas**, y confundirlas es lo que hay que
 evitar:
 

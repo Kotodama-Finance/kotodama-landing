@@ -41,6 +41,10 @@ if (sea && sea.setHeroVisible) {
 /* ---- Caras: grilla, estado y botón de entrada ---------------------------- */
 // Declarado antes de setActiveFace: esta lo referencia y se llama en la carga.
 let cube = null;
+// Estado de la vista explotada. Vive acá y no en cube.js porque quien decide
+// qué se puede hacer en cada modo (seleccionar, explotar, alternar vista) es
+// este orquestador; el cubo sólo ejecuta.
+let exploded = false;
 
 /* El estado de cada cara venía del panel lateral, que se quitó. No puede
    desaparecer de la vista 3D: alguien navegando en modo cubo entraría a una
@@ -94,6 +98,16 @@ function setFolio(open) {
 function setActiveFace(key) {
   const face = FACES[key];
   if (!face) return;
+  /* Explotado, las caras no se seleccionan — pero la GRILLA recortada sigue
+     siendo focusable por teclado (es la capa semántica y no se le quita el
+     foco a propósito). Si un foco de teclado llega acá con el cubo explotado,
+     el gesto vale como «volver al cubo y elegir»: se rearma y se sigue. Es la
+     salida coherente entre bloquear el teclado (peor) e ignorar el estado. */
+  if (exploded) {
+    exploded = false;
+    if (cube && cube.reassemble) cube.reassemble();
+    setMore('button');
+  }
   activeFace = key;
   cards.forEach((c) => c.classList.toggle('is-active', c.dataset.face === key));
 
@@ -168,8 +182,65 @@ const toggle = document.querySelector('.cube__toggle');
 const stage = document.getElementById('cube-stage');
 const grid = document.querySelector('.face-grid');
 
+/* ---- Control de la vista explotada ---------------------------------------
+   El enlace «The idea behind the cube →» de .cube__more se REEMPLAZA en modo
+   3D por el botón Explode/Reassemble — decisión del autor: explotar el cubo
+   es una invitación más fuerte que un enlace a leer, y /musubi/ sigue
+   accesible por la nav y por el núcleo. El <a> QUEDA en el HTML como capa
+   sin JS (y como destino en modo grilla, donde no hay cubo que explotar);
+   acá sólo se alterna cuál de los dos se ve. Si la hidratación falla, el
+   catch pasa a grilla y el enlace vuelve solo. */
+const moreP = document.querySelector('.cube__more');
+const moreLink = moreP ? moreP.querySelector('a') : null;
+let moreBtn = null;
+if (moreP && moreLink) {
+  moreBtn = document.createElement('button');
+  moreBtn.type = 'button';
+  moreBtn.className = 'cube__more-action';
+  moreBtn.hidden = true;
+  moreBtn.textContent = 'Explode the Cube';
+  moreP.appendChild(moreBtn);
+  moreBtn.addEventListener('click', () => {
+    // Sin cubo todavía (el import resuelve), el botón no hace nada: mismo
+    // criterio que el toggle, cuyos listeners también viven sin cubo.
+    if (!cube || !cube.explode) return;
+    if (!exploded) {
+      exploded = true;
+      // La selección se limpia y el folio se cierra: un folio abierto de una
+      // selección que ya no se puede cambiar es incoherente.
+      clearSelection();
+      cube.explode();
+      // El núcleo lleva a /musubi/: precargarla ahora, igual que las caras.
+      prefetchFace('musubi');
+    } else {
+      exploded = false;
+      cube.reassemble();
+    }
+    setMore('button');
+  });
+}
+/* 'button' muestra el control de explotar (con el rótulo según el estado);
+   'link' devuelve el enlace a /musubi/ (grilla y fallback sin cubo). */
+function setMore(mode) {
+  if (!moreLink || !moreBtn) return;
+  moreLink.hidden = mode === 'button';
+  moreBtn.hidden = mode !== 'button';
+  if (mode === 'button') {
+    moreBtn.textContent = exploded ? 'Reassemble the Cube' : 'Explode the Cube';
+  }
+}
+
 function setView(view) {
   const is3d = view === '3d';
+  /* La grilla no tiene equivalente explotado: pasar a grilla REARMA el cubo
+     al instante (sin animación — el escenario se oculta en el mismo gesto) y
+     volver a 3D lo encuentra armado, igual que al cargar. El toggle queda
+     usable en modo explotado a propósito: es la salida de accesibilidad, y
+     esconder un control por el estado del canvas sería quitársela. */
+  if (!is3d && exploded) {
+    exploded = false;
+    if (cube && cube.reassemble) cube.reassemble(true);
+  }
   // Vistas excluyentes: en modo cubo se ve el cubo, en modo grilla la grilla.
   if (stage) stage.hidden = !is3d;
   // En 3D la grilla no se elimina del DOM ni va a display:none: se oculta
@@ -194,6 +265,9 @@ function setView(view) {
       ? 'Drag to turn. Click a face to select it.'
       : 'Click a face to select it.';
   }
+  // El control de abajo acompaña al modo: botón de explotar en 3D, enlace a
+  // /musubi/ en grilla (y en el fallback sin cubo, que pasa por acá).
+  setMore(is3d ? 'button' : 'link');
 }
 
 /* ---- Reservar el layout 3D ANTES de hidratar ----------------------------
@@ -242,7 +316,13 @@ async function hydrateCube() {
       reduce,
       onSelect: (key) => setActiveFace(key),
       onDragStart: () => clearSelection(),
+      // Único elemento clicable en modo explotado: el núcleo lleva a Musubi.
+      onCoreOpen: () => { window.location.assign('/musubi/'); },
     });
+    // Un cubo recién creado arranca ARMADO. Importa en la rehidratación tras
+    // perder el contexto (bfcache): si la página volvió con exploded=true, el
+    // flag describiría un estado que el cubo nuevo no tiene.
+    exploded = false;
     // initCube hoy no devuelve null (o devuelve el cubo o lanza), pero si
     // alguna versión futura lo hiciera, con la reserva puesta un return
     // silencioso dejaría el escenario visible y VACÍO para siempre — sin

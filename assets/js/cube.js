@@ -20,6 +20,12 @@
 
    Física portada del objeto CUBE de la referencia. Los signos de rotación en X
    se invierten respecto de CSS porque CSS usa Y-abajo y Three.js Y-arriba.
+
+   VISTA EXPLOTADA (rama cube-exploded): los 26 cubies se separan hacia un
+   radio común formando un caparazón esférico —plasma globe, esta versión sin
+   las corrientes— con el núcleo de vidrio dorado en el centro (産霊 · 河川 ·
+   言霊 orbitándolo). Reversible en el mismo contexto. Ver los bloques
+   marcados «Vista explotada» y «Núcleo».
    ========================================================================= */
 
 import * as THREE from 'three';
@@ -232,30 +238,28 @@ function makeFaceMaps(kanji, romaji, { navy, gold, inlay }) {
   return { colorTex, normalTex };
 }
 
-/* Placa de una cara: 9 quads, uno por cubie, cada uno mapeando su sub-rect de
-   la textura de la cara. El recorte por la junta hace que el trazo alinee entre
-   cubies y se interrumpa solo en la junta. */
-function buildFacePlate(material) {
-  const g = new THREE.Group();
+/* Quad de una cara: uno por cubie, mapeando su sub-rect de la textura de la
+   cara. El recorte por la junta hace que el trazo alinee entre cubies y se
+   interrumpa solo en la junta.
+   DESDE LA VISTA EXPLOTADA cada quad es HIJO de su cubie, no de un grupo
+   aparte por cara: la explosión mueve los 26 cubies, y las caras tienen que
+   viajar CON ellos o quedarían flotando donde estaba el cubo. La posición
+   local dentro del cubie es n·(CUBIE/2 + 0.006) — la misma transformación de
+   mundo que tenía el grupo (d − CELL = CUBIE/2 + 0.006), así que el render
+   armado es idéntico al de antes del cambio. */
+function buildFaceQuad(material, r, c) {
   const du = PLATE / (3 * CELL);   // fracción de textura que cubre un quad
-  for (let r = 0; r < 3; r++) {
-    for (let c = 0; c < 3; c++) {
-      const geo = new THREE.PlaneGeometry(PLATE, PLATE);
-      const uc = (c + 0.5) / 3;
-      const vc = 1 - (r + 0.5) / 3;
-      const u0 = uc - du / 2;
-      const v0 = vc - du / 2;
-      const uv = geo.attributes.uv;
-      for (let i = 0; i < uv.count; i++) {
-        uv.setXY(i, u0 + uv.getX(i) * du, v0 + uv.getY(i) * du);
-      }
-      uv.needsUpdate = true;
-      const m = new THREE.Mesh(geo, material);
-      m.position.set((c - 1) * CELL, (1 - r) * CELL, 0);
-      g.add(m);
-    }
+  const geo = new THREE.PlaneGeometry(PLATE, PLATE);
+  const uc = (c + 0.5) / 3;
+  const vc = 1 - (r + 0.5) / 3;
+  const u0 = uc - du / 2;
+  const v0 = vc - du / 2;
+  const uv = geo.attributes.uv;
+  for (let i = 0; i < uv.count; i++) {
+    uv.setXY(i, u0 + uv.getX(i) * du, v0 + uv.getY(i) * du);
   }
-  return g;
+  uv.needsUpdate = true;
+  return new THREE.Mesh(geo, material);
 }
 
 /**
@@ -264,13 +268,36 @@ function buildFacePlate(material) {
  * @param {{reduce:boolean, onSelect:(key:string)=>void}} opts
  */
 export function initCube(stage, opts) {
-  const { reduce = false, onSelect = () => {}, onDragStart = () => {} } = opts || {};
+  const {
+    reduce = false,
+    onSelect = () => {},
+    onDragStart = () => {},
+    onCoreOpen = () => {},
+  } = opts || {};
 
   const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
 
   // Variante del kanji: incrustado en oro (default) o grabado puro.
   const params = new URLSearchParams(location.search);
   const inlay = params.get('kanji') !== 'engraved';
+
+  /* ---- Vista explotada: estado -------------------------------------------
+     Los 26 cubies se separan hacia un RADIO COMÚN — no en línea recta desde el
+     centro. La distinción es la que decide la forma: alejando cada cubie por
+     su propio radio, las esquinas (√3) siguen más lejos que los centros de
+     cara (1) y el resultado es un cubo grande y hueco. Normalizando al mismo
+     radio, las esquinas viajan menos, los centros más, y todos terminan sobre
+     la misma esfera: se lee globo. Cada cubie CONSERVA su orientación (nada
+     rota sobre sí mismo), que es lo que mantiene las caras legibles.
+     `?explodeR=` permite comparar radios sin tocar el código (calibración
+     visual del autor); el default es el punto medio elegido. */
+  const EXPLODE_R = (() => {
+    const v = parseFloat(params.get('explodeR'));
+    return Number.isFinite(v) && v > 1.4 ? v : 2.6;
+  })();
+  const EXPLODE_MS = 1100;
+  const X = { t: 0, target: 0, last: 0 };
+  const easeInOut = (u) => (u < 0.5 ? 4 * u * u * u : 1 - ((-2 * u + 2) ** 3) / 2);
 
   /* Colores: SIEMPRE desde los tokens de :root. Sin fallback hardcodeado —
      un hex de repuesto hace que un token faltante parezca funcionar (fue lo que
@@ -335,12 +362,29 @@ export function initCube(stage, opts) {
   const CUBE_RADIUS = Math.sqrt(3) * HALF_SIDE;   // sólo la horizontal lo usa
   const FIT_MARGIN = 1.06;
 
+  /* La vista explotada tiene su propia distancia, y ahí la fórmula de la
+     ESFERA es exacta —no una cota floja—: el caparazón explotado ES una
+     esfera (radio común + media diagonal del cubie), invariante ante
+     cualquier rotación, así que el razonamiento anisotrópico de arriba no
+     aplica. La cámara interpola entre las dos distancias con la misma curva
+     de la explosión. */
+  let distAssembled = 10;
+  let distExploded = 12;
+
+  function applyCamera() {
+    const k = easeInOut(X.t);
+    camera.position.z = distAssembled + (distExploded - distAssembled) * k;
+  }
+
   function frameCamera() {
     const halfV = (camera.fov / 2) * DEG;
     const halfH = Math.atan(Math.tan(halfV) * camera.aspect);
     const dv = FIT_MARGIN * HALF_SIDE * (Math.SQRT2 / Math.tan(halfV) + 1);
     const dh = (CUBE_RADIUS * FIT_MARGIN) / Math.sin(halfH);
-    camera.position.z = Math.max(dv, dh);
+    distAssembled = Math.max(dv, dh);
+    const rOut = EXPLODE_R + Math.sqrt(3) * (CUBIE / 2) + 0.15;
+    distExploded = (FIT_MARGIN * rOut) / Math.sin(Math.min(halfV, halfH));
+    applyCamera();
     camera.updateProjectionMatrix();
   }
 
@@ -405,14 +449,19 @@ export function initCube(stage, opts) {
   });
 
   const cubies = [];
+  const cubieAt = {};   // "x,y,z" de grilla -> mesh; lo usan los quads de cara
   for (let x = -1; x <= 1; x++)
     for (let y = -1; y <= 1; y++)
       for (let z = -1; z <= 1; z++) {
-        if (x === 0 && y === 0 && z === 0) continue;   // núcleo: nunca visible
+        if (x === 0 && y === 0 && z === 0) continue;   // el centro es del núcleo
         const m = new THREE.Mesh(geo, bodyMat);
         m.position.set(x * CELL, y * CELL, z * CELL);
+        // Datos de la explosión: posición armada y dirección radial unitaria.
+        m.userData.home = m.position.clone();
+        m.userData.dir = m.position.clone().normalize();
         group.add(m);
         cubies.push(m);
+        cubieAt[`${x},${y},${z}`] = m;
       }
 
   /* ---- Kanji abarcando la cara entera ---- */
@@ -432,18 +481,123 @@ export function initCube(stage, opts) {
     });
     faceMats.push({ mat, maps, kanji: def.kanji, romaji: def.romaji });
 
-    const plate = buildFacePlate(mat);
-    if (nz === -1) plate.rotation.y = Math.PI;
-    else if (nx === 1) plate.rotation.y = Math.PI / 2;
-    else if (nx === -1) plate.rotation.y = -Math.PI / 2;
-    else if (ny === 1) plate.rotation.x = -Math.PI / 2;
-    else if (ny === -1) plate.rotation.x = Math.PI / 2;
-    const d = CELL + CUBIE / 2 + 0.006;
-    plate.position.set(nx * d, ny * d, nz * d);
-    group.add(plate);
+    /* Cada quad va como hijo de SU cubie (ver buildFaceQuad): la rotación de
+       la placa se aplica al quad y la posición local es la normal por
+       CUBIE/2 + 0.006 — la misma transformación de mundo que tenía el grupo
+       por cara. El dueño se deriva de la geometría: rotar el offset local
+       (c−1, 1−r, 0) de la placa y sumarle la normal da la celda de grilla. */
+    const rotE = new THREE.Euler();
+    if (nz === -1) rotE.y = Math.PI;
+    else if (nx === 1) rotE.y = Math.PI / 2;
+    else if (nx === -1) rotE.y = -Math.PI / 2;
+    else if (ny === 1) rotE.x = -Math.PI / 2;
+    else if (ny === -1) rotE.x = Math.PI / 2;
+    const rotQ = new THREE.Quaternion().setFromEuler(rotE);
+    const v = new THREE.Vector3();
+    for (let r = 0; r < 3; r++)
+      for (let c = 0; c < 3; c++) {
+        const quad = buildFaceQuad(mat, r, c);
+        v.set(c - 1, 1 - r, 0).applyQuaternion(rotQ);
+        const owner = cubieAt[
+          `${Math.round(v.x + nx)},${Math.round(v.y + ny)},${Math.round(v.z + nz)}`
+        ];
+        quad.quaternion.copy(rotQ);
+        quad.position.set(nx, ny, nz).multiplyScalar(CUBIE / 2 + 0.006);
+        owner.add(quad);
+      }
   });
 
-  // Si la fuente Zen no estaba lista, rehacer los mapas de cada cara.
+  /* ---- Núcleo: esfera de vidrio dorada, sólo visible explotado ------------
+     MeshPhysicalMaterial con transmission REAL: el vendor es r160 (leído de
+     REVISION en three.module.js — el «r128» que circulaba en papeles quedó
+     viejo), así que hay pase de transmisión completo con ior y thickness: a
+     través del vidrio se ve el caparazón de atrás, refractado. El tinte va en
+     `color`, que en un material transmisivo colorea la luz transmitida.
+     Vive en la ESCENA, no en el grupo: el péndulo hace girar el caparazón
+     alrededor de un núcleo quieto, que es lo que deja verlo desde ángulos
+     distintos. El pulso (emissive + escala) corre sólo explotado y sin
+     reduced-motion, en el tick — no hay keyframes CSS que puedan quedar
+     declarados sin asignar. */
+  const CORE_R = 1.05;
+  const coreMat = new THREE.MeshPhysicalMaterial({
+    color: new THREE.Color(goldHex),
+    metalness: 0.0,
+    roughness: 0.12,
+    transmission: 0.82,
+    thickness: 1.3,
+    ior: 1.5,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.18,
+    emissive: new THREE.Color(goldHex),
+    emissiveIntensity: 0.16,
+  });
+  const core = new THREE.Mesh(new THREE.SphereGeometry(CORE_R, 48, 32), coreMat);
+  core.visible = false;
+  scene.add(core);
+
+  /* Los tres conceptos del centro — 産霊 · 河川 · 言霊 — como SPRITES que
+     orbitan la esfera a radio fijo, no como textura horneada en ella. Elegido
+     así por tres razones: «navegando sobre la superficie» pide movimiento
+     INDEPENDIENTE del giro (una textura viaja clavada a la esfera); un sprite
+     mira siempre a cámara, así que el kanji nunca se ve en escorzo ni
+     invertido; y el péndulo hace girar el caparazón, no el núcleo — con
+     textura, media órbita quedaría siempre de espaldas. Los glifos salen del
+     subset de Zen Kaku vía canvas (mismo camino que las caras): 産霊河川言
+     están en la cmap (verificado) y fonts.ready los rehornea abajo. */
+  const ORBIT_R = CORE_R * 1.3;
+  const CORE_WORDS = ['産霊', '河川', '言霊'];
+  function wordTexture(word) {
+    const W = 512;
+    const H = 256;
+    const cv = document.createElement('canvas');
+    cv.width = W; cv.height = H;
+    const ctx = cv.getContext('2d');
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = goldHex;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = `500 ${Math.round(H * 0.62)}px 'Zen Kaku Gothic New', sans-serif`;
+    ctx.fillText(word, W / 2, H / 2 + H * 0.03);
+    const tex = new THREE.CanvasTexture(cv);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = 4;
+    return tex;
+  }
+  const coreWords = CORE_WORDS.map((word, i) => {
+    const mat = new THREE.SpriteMaterial({
+      map: wordTexture(word), transparent: true, opacity: 0, depthTest: true,
+    });
+    const sp = new THREE.Sprite(mat);
+    sp.scale.set(0.84, 0.42, 1);
+    sp.visible = false;
+    // Órbita propia: fase repartida en tercios, inclinación y ritmo distintos
+    // para que no viajen en formación. Con reduce quedan quietas en su fase.
+    sp.userData = {
+      word,
+      phase: (i * Math.PI * 2) / 3,
+      incl: 0.45 + i * 0.4,
+      speed: 0.00016 + i * 0.00005,
+    };
+    scene.add(sp);
+    return sp;
+  });
+  function placeWords(ts, k) {
+    coreWords.forEach((sp) => {
+      const u = sp.userData;
+      const a = reduce ? u.phase : u.phase + ts * u.speed;
+      sp.position.set(
+        Math.cos(a) * ORBIT_R,
+        Math.sin(a) * ORBIT_R * Math.sin(u.incl),
+        Math.sin(a) * ORBIT_R * Math.cos(u.incl)
+      );
+      const vis = Math.max(0, (k - 0.55) / 0.45);
+      sp.material.opacity = vis;
+      sp.visible = vis > 0.01;
+    });
+  }
+
+  // Si la fuente Zen no estaba lista, rehacer los mapas de cada cara — y las
+  // texturas de las palabras del núcleo, que usan la misma fuente.
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(() => {
       faceMats.forEach((f) => {
@@ -451,6 +605,10 @@ export function initCube(stage, opts) {
         f.mat.map = m.colorTex;
         f.mat.normalMap = m.normalTex;
         f.mat.needsUpdate = true;
+      });
+      coreWords.forEach((sp) => {
+        sp.material.map = wordTexture(sp.userData.word);
+        sp.material.needsUpdate = true;
       });
     });
   }
@@ -477,6 +635,28 @@ export function initCube(stage, opts) {
     group.rotation.y = C.ry * DEG;
   }
   applyRotation();
+
+  /* Aplica el estado de explosión con curva: posiciones de los 26 cubies
+     (lerp entre su casa y su punto sobre la esfera de radio común), núcleo
+     (aparece creciendo desde el hueco central: a t chico su escala lo deja
+     dentro de la cavidad del cubie ausente), palabras y cámara. */
+  const tmpV = new THREE.Vector3();
+  function applyExplode(ts) {
+    const k = easeInOut(X.t);
+    cubies.forEach((m) => {
+      tmpV.copy(m.userData.dir).multiplyScalar(EXPLODE_R);
+      m.position.lerpVectors(m.userData.home, tmpV, k);
+    });
+    const pulsing = X.t === 1 && !reduce;
+    const pulse = pulsing ? 1 + 0.015 * Math.sin(ts * 0.0014) : 1;
+    core.scale.setScalar((0.4 + 0.6 * k) * pulse);
+    core.visible = k > 0.02;
+    coreMat.emissiveIntensity = pulsing
+      ? 0.16 + 0.1 * (0.5 + 0.5 * Math.sin(ts * 0.0014))
+      : 0.16;
+    placeWords(ts, k);
+    applyCamera();
+  }
 
   function snapTo(key) {
     const def = FACE_DEFS[key];
@@ -519,6 +699,16 @@ export function initCube(stage, opts) {
     if (!hits.length || !hits[0].face) return null;
     return faceKeyFromNormal(hits[0].face.normal);
   }
+  /* Explotado, el ÚNICO clicable es el núcleo (lleva a /musubi/ vía
+     onCoreOpen). Las caras dejan de ser seleccionables — lo decide onUp. */
+  function pickCore(clientX, clientY) {
+    if (!core.visible) return false;
+    const r = renderer.domElement.getBoundingClientRect();
+    ndc.x = ((clientX - r.left) / r.width) * 2 - 1;
+    ndc.y = -((clientY - r.top) / r.height) * 2 + 1;
+    raycaster.setFromCamera(ndc, camera);
+    return raycaster.intersectObject(core, false).length > 0;
+  }
 
   /* ---- Drag (Pointer Events, sin librería de controles) ---- */
   const el = renderer.domElement;
@@ -531,7 +721,14 @@ export function initCube(stage, opts) {
     try { el.setPointerCapture(e.pointerId); } catch (err) {}
   }
   function onMove(e) {
-    if (!C.dragging) return;
+    if (!C.dragging) {
+      // Explotado, el cursor avisa que el núcleo es clicable. '' devuelve el
+      // cursor al que diga el CSS del escenario.
+      if (X.t === 1) {
+        el.style.cursor = pickCore(e.clientX, e.clientY) ? 'pointer' : '';
+      }
+      return;
+    }
     const dx = e.movementX || 0, dy = e.movementY || 0;
     if (Math.abs(dx) + Math.abs(dy) > 3) C.moved = true;
     C.ry += dx * 0.45;
@@ -546,9 +743,15 @@ export function initCube(stage, opts) {
     const wasClick = !C.moved;
     setTimeout(() => { C.moved = false; }, 40);
     if (wasClick) {
-      // Click limpio: selecciona la cara; snapTo deja el cubo detenido (parked).
-      const key = pickFace(e.clientX, e.clientY);
-      if (key) { onSelect(key); snapTo(key); }
+      if (X.target === 1 || X.t > 0.02) {
+        // Modo explotado (o en transición): las caras NO se seleccionan.
+        // El único clic que hace algo es el del núcleo, ya explotado del todo.
+        if (X.t === 1 && pickCore(e.clientX, e.clientY)) onCoreOpen();
+      } else {
+        // Click limpio: selecciona la cara; snapTo deja el cubo detenido (parked).
+        const key = pickFace(e.clientX, e.clientY);
+        if (key) { onSelect(key); snapTo(key); }
+      }
     } else {
       // Soltó arrastrando: la autorrotación hereda el sentido del tiro.
       if (Math.abs(C.velRy) > 0.01) C.signRy = Math.sign(C.velRy);
@@ -653,10 +856,31 @@ export function initCube(stage, opts) {
       }
     }
 
-    // Render bajo demanda: quieto (parked) no redibuja, ahorra GPU y batería.
-    if (lastRx === null || Math.abs(C.rx - lastRx) > 0.002 || Math.abs(C.ry - lastRy) > 0.002) {
+    /* Animación de la explosión: t avanza hacia el objetivo por RELOJ, no por
+       tick — en headless los ticks caen a ~7-15/s y una animación por tick
+       duraría cualquier cosa. El paso se acota para que volver de una pestaña
+       oculta no salte media transición de golpe. */
+    let explodeMoved = false;
+    if (X.t !== X.target) {
+      const dt = Math.min(100, ts - (X.last || ts));
+      const step = dt / EXPLODE_MS;
+      X.t = X.target > X.t
+        ? Math.min(X.target, X.t + step)
+        : Math.max(X.target, X.t - step);
+      explodeMoved = true;
+    }
+    X.last = ts;
+
+    /* Render bajo demanda: quieto (parked) no redibuja, ahorra GPU y batería.
+       Explotado sin reduce se redibuja siempre: el pulso del núcleo y las
+       palabras en órbita son movimiento propio, sin cambio de rx/ry. Con
+       reduce, explotado queda quieto de verdad y vuelve el bajo demanda. */
+    const selfMotion = X.t > 0 && !reduce;
+    if (explodeMoved || selfMotion || lastRx === null
+        || Math.abs(C.rx - lastRx) > 0.002 || Math.abs(C.ry - lastRy) > 0.002) {
       lastRx = C.rx; lastRy = C.ry;
       applyRotation();
+      applyExplode(ts);
       renderer.render(scene, camera);
     }
   }
@@ -664,6 +888,26 @@ export function initCube(stage, opts) {
 
   return {
     snapTo,
+    /* Vista explotada. Reversible por diseño: mismo contexto WebGL, misma
+       escena — sólo cambian posiciones, escala del núcleo y cámara. explode()
+       despierta el cubo (parked fuera) porque quieto se ve muerto; la
+       selección la limpia main.js ANTES de llamar. Con reduce no hay
+       transición: t salta al estado final, como el resto de las animaciones
+       del sitio. */
+    explode() {
+      C.parked = false;
+      C.snapping = false;
+      X.target = 1;
+      if (reduce) X.t = 1;
+      lastRx = null;   // fuerza el próximo redibujo aunque rx/ry no cambien
+    },
+    reassemble(instant) {
+      X.target = 0;
+      if (reduce || instant) X.t = 0;
+      el.style.cursor = '';
+      lastRx = null;
+    },
+    isExploded() { return X.target === 1; },
     /* Pausa/reanuda el loop. En modo grilla el cubo se oculta y no debe seguir
        consumiendo GPU. */
     setEnabled(v) {

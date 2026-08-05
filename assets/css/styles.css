@@ -1178,14 +1178,28 @@ button:focus-visible {
   .face-grid.is-sr:focus-within .face-card__domain { display: block; }
 }
 
-/* Enlace discreto a /musubi/ al pie de la sección del cubo */
+/* Pie de la sección del cubo. Dos controles que se turnan (main.js): el
+   enlace a /musubi/ (sin JS, modo grilla, fallback sin cubo) y el botón de la
+   vista explotada (modo 3D). El botón se viste EXACTAMENTE como el enlace —
+   mismo color, mismo hover — para que el reemplazo no cambie la voz del pie;
+   la fila de resets de abajo es lo que le quita el traje de <button>. */
 .cube__more {
   margin-top: clamp(32px, 4vw, 48px);
   text-align: center;
   font-size: 0.9rem;
 }
-.cube__more a { color: var(--c-text-muted); }
-.cube__more a:hover { color: var(--c-gold); }
+.cube__more a,
+.cube__more-action { color: var(--c-text-muted); }
+.cube__more a:hover,
+.cube__more-action:hover { color: var(--c-gold); }
+.cube__more-action {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
 
 /* -------------------------------------------------------------------------
    PLACEHOLDERS DE REDACCIÓN
