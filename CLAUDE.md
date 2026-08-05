@@ -632,21 +632,49 @@ Dos compromisos del texto que NO son redacción libre, anotados en los HTML:
   `.method__wrap` y `.footer__top` en los tres anchos.
 - **Pendiente del autor: dos cosas.** (1) Su veredicto sobre las capturas
   de la jerarquía reconstruida y la cabecera escalando (1440 y 1920) —
-  todo commiteado como vigente; cada nivel es un clamp. (2) **Su elección
-  sobre los costados vacíos de las subpáginas** — preguntó qué se puede
-  hacer para que se lean como espacio deliberado y se le propusieron tres
-  opciones EN EL CHAT, sin implementar nada: (A) la marca de agua del
-  propio kanji de cada cara en el costado, patrón que la portada ya tiene
-  con `.about__watermark` — costo cero de red, glifos ya en el subset por
-  ser el título de la página; método y disclaimer no tienen kanji propio
-  y necesitarían decisión aparte; (B) atmósfera lateral por CSS con los
-  tokens de `:root` (dos-tres resplandores radiales al 3-6%) — costo
-  cero, sin tocar el shader; (C) el mar en las subpáginas: C1 vivo
-  (rompe la propiedad «diez páginas sin JS») o C2 un frame estático
-  oscurecido como fondo (~100 KB + artefacto derivado con lock, patrón
-  og-image; `initSea` ya dibuja un solo frame con `preserveDrawingBuffer`
-  y `stillTime`). Recomendado: A+B; C sólo si quiere el mar en sí, y
-  entonces C2.
+  todo commiteado como vigente; cada nivel es un clamp. (2) **Su
+  calibración en vivo de los costados** (A+B ya elegidos e implementados
+  — ver la decisión cerrada): las perillas son `--wm-alpha` y
+  `--halo-alpha` en `:root`, capturas tenue/default/fuerte entregadas.
+
+### Los costados de las subpáginas: marca de agua + atmósfera — decisión cerrada
+
+**Elegido por el autor (2026-08-05) sobre tres opciones propuestas; el
+detalle operativo vive en el comentario de `.face-page__watermark` en
+`styles.css`.** Las reglas que no hay que romper:
+
+- **A) La marca de agua es el kanji de LA PROPIA cara**, vertical, en el
+  centro del vacío izquierdo — mismo vocabulario y MISMA opacidad (0.045)
+  que `.about__watermark` de la portada. Sólo en las diez páginas con
+  kanji propio. **/method/, /disclaimer/ y la 404 llevan únicamente B, y
+  NO se sustituye con el logo 言霊**: es la marca del sitio, no el nombre
+  de la página — que unas páginas sean caras del cubo y otras no es
+  información real (criterio del autor).
+- **B) La atmósfera lateral** (`.page::before`): dos radiales con tokens
+  de `:root` — oro arriba-derecha, bruma abajo-izquierda, asimétricos a
+  propósito para complementar la marca del lado izquierdo. En las trece
+  subpáginas; la portada tiene el mar y no lleva halo (verificado: 0
+  radiales ahí).
+- **Las perillas son TOKENS (`--wm-alpha`, `--halo-alpha`), no parámetros
+  de URL, a propósito**: leer `?wm=` necesita JavaScript y las trece
+  subpáginas no cargan ninguno (verificado tras el cambio:
+  `document.scripts.length` = 0) — el mismo argumento que descartó el
+  interruptor runtime de la transición. Calibración en vivo por consola:
+  `document.documentElement.style.setProperty('--wm-alpha', '0.07')`.
+- **La opción C (el mar en las subpáginas) se evaluó y se DESCARTÓ con el
+  autor**: C1 vivo rompía la propiedad de cero JS en las subpáginas — «esa
+  propiedad no se rompe por un fondo», sus palabras—; C2 estático eran
+  ~100 KB contra la restricción explícita de peso, más un artefacto
+  derivado con lock que mantener. Si alguien la propone de nuevo, ésa es
+  la respuesta.
+- **El hallazgo del camino: `white-space: nowrap` no es opcional.** Sin
+  él, los nombres de DOS glifos partían en DOS columnas verticales
+  (medido: ancho 647px ≈ 2 font-size, invadiendo la columna 46px, y
+  leyéndose al revés): con `top: 50%` el alto disponible para la línea es
+  media pantalla y en `vertical-rl` la línea rompe contra el ALTO. Es el
+  mismo remedio que ya usaba la marca del About. Ambas capas van con
+  `z-index: -1` (el contenido del footer entra en la zona del vacío al
+  scrollear y no debe recibir tinte) y la marca se oculta bajo 1200px.
 
 ### Tarjetas de perfil en /sugao/ — completa: logo oficial sin alterar y texto
 

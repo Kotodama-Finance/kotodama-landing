@@ -200,6 +200,18 @@
   --rgb-surface-cube: 5 17 29;  /* = --c-surface-cube, para alfa */
   --rgb-card: 9 20 34;          /* fondo de las face-card */
 
+  /* Los costados de las subpáginas (2026-08-05): las PERILLAS de la marca de
+     agua (--wm-alpha) y de la atmósfera lateral (--halo-alpha). Son tokens y
+     NO parámetros de URL a propósito: leer «?wm=» necesita JavaScript y las
+     trece subpáginas no cargan ninguno — el mismo argumento que descartó el
+     interruptor runtime de la transición. La calibración en vivo va por
+     consola, sin editar archivos:
+       document.documentElement.style.setProperty('--wm-alpha', '0.07')
+     El 0.045 de arranque es EL MISMO valor de .about__watermark en la
+     portada: vocabulario ya establecido, no un número nuevo. */
+  --wm-alpha: 0.045;
+  --halo-alpha: 0.05;
+
   /* Líneas / overlays derivados */
   --line-gold: rgb(var(--rgb-gold) / 0.35);
   --line-gold-soft: rgb(var(--rgb-gold) / 0.18);
@@ -959,6 +971,76 @@ button:focus-visible {
    No cargan el shader ni el cubo: el fondo lo da el degradado del body.
    ------------------------------------------------------------------------- */
 .page main { padding-top: var(--nav-h); }
+
+/* --- Los costados de las subpáginas (A+B, elegidos por el autor 2026-08-05) --
+   La queja de origen: el vacío plano a los lados se leía como sobrante — «una
+   versión móvil sin ajustar a PC». Dos capas, con el criterio del autor de
+   que el costado deje de leerse como sobrante SIN que se note qué hay ahí a
+   primera vista:
+
+   A) .face-page__watermark — el kanji de LA PROPIA cara, enorme y vertical,
+      en el centro del vacío izquierdo. Mismo vocabulario que la marca de
+      agua del About (oro, opacidad 0.045); los glifos ya están en el subset
+      porque son el título de la página. SÓLO en las diez páginas con kanji
+      propio: /method/, /disclaimer/ y la 404 llevan únicamente el halo (B),
+      y NO se sustituye con el logo 言霊 — es la marca del sitio, no el
+      nombre de la página; que unas páginas sean caras del cubo y otras no
+      es información real, decisión del autor.
+   B) .page::before — atmósfera lateral: dos resplandores radiales con los
+      tokens de :root (oro arriba-derecha, bruma abajo-izquierda,
+      asimétricos a propósito: complementan la marca de agua del lado
+      izquierdo). En las TRECE subpáginas; la portada tiene el mar.
+
+   Los dos van con z-index -1: detrás de TODO el flujo — el contenido del
+   footer entra en la zona del vacío al scrollear y no debe recibir tinte —
+   y encima del fondo atmosférico del body. Las perillas (--wm-alpha,
+   --halo-alpha) están en :root, con el porqué de que no sean parámetros
+   de URL. La opción C (el mar en las subpáginas) se evaluó y se DESCARTÓ:
+   C1 vivo rompía la propiedad de que ninguna subpágina carga JS, C2
+   estático eran ~100 KB contra una restricción explícita más un lock que
+   mantener. */
+.page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 34% at 85% 16%, rgb(var(--rgb-gold) / var(--halo-alpha)) 0%, transparent 70%),
+    radial-gradient(48% 40% at 10% 80%, rgb(var(--rgb-mist) / calc(var(--halo-alpha) * 1.4)) 0%, transparent 72%);
+}
+.face-page__watermark {
+  position: fixed;
+  top: 50%;
+  /* El centro del vacío izquierdo: (100vw - columna) / 4 desde el borde. */
+  left: calc((100vw - 45rem) / 4);
+  transform: translate(-50%, -50%);
+  writing-mode: vertical-rl;
+  font-family: var(--font-ja);
+  font-weight: 500;
+  /* El ancho del glifo es el font-size (vertical-rl): llena el vacío menos
+     un respiro, con techo en 30vh para que dos glifos apilados (60vh) entren
+     siempre en el viewport. */
+  font-size: min(30vh, calc((100vw - 45rem) / 2 - 48px));
+  line-height: 1;
+  letter-spacing: 0.1em;
+  /* SIN nowrap, los nombres de DOS glifos partían en DOS columnas verticales
+     (medido: ancho 647 ≈ 2 font-size, invadiendo la columna 46px): con
+     top: 50% el alto disponible para la línea es media pantalla, y en
+     vertical-rl la línea rompe contra el ALTO. Partido además se lee al
+     revés (columnas de derecha a izquierda). Mismo remedio que ya usa
+     .about__watermark. */
+  white-space: nowrap;
+  color: var(--c-gold);
+  opacity: var(--wm-alpha);
+  user-select: none;
+  pointer-events: none;
+  z-index: -1;
+}
+/* Debajo de ~1200px el vacío lateral baja de ~150px y el glifo achicado y
+   tenue es ruido, no atmósfera. La 404 y las páginas sin kanji nunca llevan
+   el elemento, así que acá no hay nada más que esconder. */
+@media (max-width: 1200px) { .face-page__watermark { display: none; } }
 
 .face-page {
   position: relative;
