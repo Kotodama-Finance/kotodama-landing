@@ -200,17 +200,18 @@
   --rgb-surface-cube: 5 17 29;  /* = --c-surface-cube, para alfa */
   --rgb-card: 9 20 34;          /* fondo de las face-card */
 
-  /* Los costados de las subpáginas (2026-08-05): las PERILLAS de la marca de
-     agua (--wm-alpha) y de la atmósfera lateral (--halo-alpha). Son tokens y
-     NO parámetros de URL a propósito: leer «?wm=» necesita JavaScript y las
+  /* La marca de agua de las subpáginas (2026-08-05): su PERILLA. Es token y
+     NO parámetro de URL a propósito: leer «?wm=» necesita JavaScript y las
      trece subpáginas no cargan ninguno — el mismo argumento que descartó el
      interruptor runtime de la transición. La calibración en vivo va por
      consola, sin editar archivos:
        document.documentElement.style.setProperty('--wm-alpha', '0.07')
-     El 0.045 de arranque es EL MISMO valor de .about__watermark en la
-     portada: vocabulario ya establecido, no un número nuevo. */
+     El 0.045 es EL MISMO valor de .about__watermark en la portada:
+     vocabulario ya establecido, no un número nuevo. Calibrada y APROBADA por
+     el autor a este valor (2026-08-06). Hubo una segunda perilla,
+     --halo-alpha, de la atmósfera lateral que se probó y se descartó — ver
+     el registro junto a .face-page__watermark. */
   --wm-alpha: 0.045;
-  --halo-alpha: 0.05;
 
   /* Líneas / overlays derivados */
   --line-gold: rgb(var(--rgb-gold) / 0.35);
@@ -972,43 +973,36 @@ button:focus-visible {
    ------------------------------------------------------------------------- */
 .page main { padding-top: var(--nav-h); }
 
-/* --- Los costados de las subpáginas (A+B, elegidos por el autor 2026-08-05) --
+/* --- La marca de agua de las subpáginas (opción A, la que quedó) -----------
    La queja de origen: el vacío plano a los lados se leía como sobrante — «una
-   versión móvil sin ajustar a PC». Dos capas, con el criterio del autor de
-   que el costado deje de leerse como sobrante SIN que se note qué hay ahí a
-   primera vista:
+   versión móvil sin ajustar a PC». El kanji de LA PROPIA cara, enorme y
+   vertical, en el centro del vacío izquierdo. Mismo vocabulario que la marca
+   de agua del About (oro, opacidad 0.045 — perilla --wm-alpha en :root, con
+   el porqué de que no sea parámetro de URL); los glifos ya están en el
+   subset porque son el título de la página. APROBADA por el autor tras su
+   calibración en vivo (2026-08-06). SÓLO en las diez páginas con kanji
+   propio: /method/, /disclaimer/ y la 404 no llevan nada, y NO se sustituye
+   con el logo 言霊 — es la marca del sitio, no el nombre de la página; que
+   unas páginas sean caras del cubo y otras no es información real, decisión
+   del autor. TAMPOCO se duplica a la derecha: el segundo kanji enfrentado se
+   evaluó y el autor lo descartó — dos marcas iguales encaradas se leen como
+   marco decorativo, no como marca.
 
-   A) .face-page__watermark — el kanji de LA PROPIA cara, enorme y vertical,
-      en el centro del vacío izquierdo. Mismo vocabulario que la marca de
-      agua del About (oro, opacidad 0.045); los glifos ya están en el subset
-      porque son el título de la página. SÓLO en las diez páginas con kanji
-      propio: /method/, /disclaimer/ y la 404 llevan únicamente el halo (B),
-      y NO se sustituye con el logo 言霊 — es la marca del sitio, no el
-      nombre de la página; que unas páginas sean caras del cubo y otras no
-      es información real, decisión del autor.
-   B) .page::before — atmósfera lateral: dos resplandores radiales con los
-      tokens de :root (oro arriba-derecha, bruma abajo-izquierda,
-      asimétricos a propósito: complementan la marca de agua del lado
-      izquierdo). En las TRECE subpáginas; la portada tiene el mar.
+   LO QUE SE PROBÓ Y NO QUEDÓ, para que no vuelva:
+   · B) atmósfera lateral (.page::before, dos radiales oro/bruma con perilla
+     --halo-alpha) — IMPLEMENTADA, PROBADA por el autor de 0 a 0.5 con la
+     perilla, y DESCARTADA (2026-08-06): a 0.05 no aportaba nada (el costado
+     seguía leyéndose como sobrante) y a valores visibles se veía como dos
+     manchas radiales feas. No hay punto intermedio que sirva. Si alguien
+     propone «un degradado sutil en los costados», es esto: ya se vio.
+   · C) el mar en las subpáginas — evaluada y descartada SIN implementar:
+     C1 vivo rompía la propiedad de que ninguna subpágina carga JS, C2
+     estático eran ~100 KB contra una restricción explícita más un lock que
+     mantener.
 
-   Los dos van con z-index -1: detrás de TODO el flujo — el contenido del
-   footer entra en la zona del vacío al scrollear y no debe recibir tinte —
-   y encima del fondo atmosférico del body. Las perillas (--wm-alpha,
-   --halo-alpha) están en :root, con el porqué de que no sean parámetros
-   de URL. La opción C (el mar en las subpáginas) se evaluó y se DESCARTÓ:
-   C1 vivo rompía la propiedad de que ninguna subpágina carga JS, C2
-   estático eran ~100 KB contra una restricción explícita más un lock que
-   mantener. */
-.page::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(40% 34% at 85% 16%, rgb(var(--rgb-gold) / var(--halo-alpha)) 0%, transparent 70%),
-    radial-gradient(48% 40% at 10% 80%, rgb(var(--rgb-mist) / calc(var(--halo-alpha) * 1.4)) 0%, transparent 72%);
-}
+   Va con z-index -1: detrás de TODO el flujo — el contenido del footer entra
+   en la zona del vacío al scrollear y no debe recibir tinte — y encima del
+   fondo atmosférico del body. */
 .face-page__watermark {
   position: fixed;
   top: 50%;

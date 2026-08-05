@@ -39,15 +39,18 @@ fallidos ya corregidos, y las capturas intermedias.
 - **`main` no se toca**: publica kotodamafinance.com y todavía sirve la landing
   vieja. Nada de esto está publicado.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-05, cuarta tanda del día: el bloque 5 de /musubi/
-  («How the reading divides», texto del autor)** — la página pasó de cuatro a
-  CINCO bloques. Las tandas anteriores del día: los kanji de las subcaras
-  (太一 · 万 · 幽玄, con subset regenerado), la tarjeta de LibraryThing
-  completa, y la redacción de las tres subpáginas de Hajime — **LA REDACCIÓN
-  DEL SITIO ESTÁ TERMINADA.** **Árbol limpio y todo pusheado** en
-  `redesign-trust`, con las guardas corridas (structure y modes en verde,
-  pendulum en verde, **ready en `0`: LISTO PARA PUBLICAR** — ver el punto
-  siguiente).
+- Último cierre: **2026-08-06, la calibración de los costados: el halo (B)
+  se probó y SE DESCARTÓ (borrado del CSS), la marca de agua (A) quedó
+  APROBADA** — ver la decisión de los costados. Antes de eso, el 2026-08-05:
+  el bloque 5 de /musubi/, los kanji de las subcaras (太一 · 万 · 幽玄), la
+  tarjeta de LibraryThing y las tres subpáginas de Hajime — **LA REDACCIÓN
+  DEL SITIO ESTÁ TERMINADA** y las tandas tipográficas y de costados que
+  siguieron. **Árbol limpio y todo pusheado** en `redesign-trust`, con las
+  guardas corridas (structure y modes en verde, pendulum en verde, **ready
+  en `0`: LISTO PARA PUBLICAR** — ver el punto siguiente). **Frente abierto
+  con el autor: los elementos estructurados fuera de la columna de lectura**
+  — propuesta entregada, sin implementar; el detalle al final de la decisión
+  de los costados.
   *(Este bloque no puede nombrar su propio commit, así que siempre queda uno
   atrás: `git log -1 redesign-trust` es la respuesta exacta. El ancla fija que no
   deriva es el tag.)*
@@ -630,51 +633,70 @@ Dos compromisos del texto que NO son redacción libre, anotados en los HTML:
   1440/1920/2560** (sospecha del autor tras el pase a rem): left = right
   EXACTOS en `.face-page`, `.hero__inner`, `.about__inner`,
   `.method__wrap` y `.footer__top` en los tres anchos.
-- **Pendiente del autor: dos cosas.** (1) Su veredicto sobre las capturas
-  de la jerarquía reconstruida y la cabecera escalando (1440 y 1920) —
-  todo commiteado como vigente; cada nivel es un clamp. (2) **Su
-  calibración en vivo de los costados** (A+B ya elegidos e implementados
-  — ver la decisión cerrada): las perillas son `--wm-alpha` y
-  `--halo-alpha` en `:root`, capturas tenue/default/fuerte entregadas.
+- **Los dos pendientes del autor de esta tanda se CERRARON el 2026-08-06:**
+  (1) la cabecera escalando con el viewport **FUNCIONÓ, confirmado por el
+  autor** — el diagnóstico correcto era que la cabecera medía lo mismo a
+  1440 que a 2560, no el centrado; (2) su calibración en vivo de los
+  costados terminó con **el halo descartado y la marca de agua aprobada**
+  — ver la decisión de los costados, que quedó reescrita con ese
+  resultado.
 
-### Los costados de las subpáginas: marca de agua + atmósfera — decisión cerrada
+### Los costados de las subpáginas: quedó SOLO la marca de agua — cerrada
 
-**Elegido por el autor (2026-08-05) sobre tres opciones propuestas; el
-detalle operativo vive en el comentario de `.face-page__watermark` en
-`styles.css`.** Las reglas que no hay que romper:
+**De las tres opciones propuestas se implementaron dos (A+B, 2026-08-05) y
+la calibración en vivo del autor (2026-08-06) dejó UNA**: la marca de agua.
+El detalle operativo y el registro de lo descartado viven en el comentario
+de `.face-page__watermark` en `styles.css`. Las reglas que no hay que
+romper:
 
 - **A) La marca de agua es el kanji de LA PROPIA cara**, vertical, en el
   centro del vacío izquierdo — mismo vocabulario y MISMA opacidad (0.045)
-  que `.about__watermark` de la portada. Sólo en las diez páginas con
-  kanji propio. **/method/, /disclaimer/ y la 404 llevan únicamente B, y
-  NO se sustituye con el logo 言霊**: es la marca del sitio, no el nombre
-  de la página — que unas páginas sean caras del cubo y otras no es
-  información real (criterio del autor).
-- **B) La atmósfera lateral** (`.page::before`): dos radiales con tokens
-  de `:root` — oro arriba-derecha, bruma abajo-izquierda, asimétricos a
-  propósito para complementar la marca del lado izquierdo. En las trece
-  subpáginas; la portada tiene el mar y no lleva halo (verificado: 0
-  radiales ahí).
-- **Las perillas son TOKENS (`--wm-alpha`, `--halo-alpha`), no parámetros
-  de URL, a propósito**: leer `?wm=` necesita JavaScript y las trece
-  subpáginas no cargan ninguno (verificado tras el cambio:
-  `document.scripts.length` = 0) — el mismo argumento que descartó el
-  interruptor runtime de la transición. Calibración en vivo por consola:
+  que `.about__watermark` de la portada. **Aprobada explícitamente por el
+  autor, al valor default.** Sólo en las diez páginas con kanji propio.
+  **/method/, /disclaimer/ y la 404 no llevan nada, y NO se sustituye con
+  el logo 言霊**: es la marca del sitio, no el nombre de la página — que
+  unas páginas sean caras del cubo y otras no es información real
+  (criterio del autor). **Tampoco se duplica a la derecha**: el segundo
+  kanji enfrentado se descartó — dos marcas iguales encaradas se leen
+  como marco decorativo, no como marca, y sería el mismo relleno que
+  falló con el halo.
+- **B) La atmósfera lateral se IMPLEMENTÓ, SE PROBÓ Y SE DESCARTÓ
+  (2026-08-06)** — dos radiales oro/bruma en `.page::before` con perilla
+  `--halo-alpha`. El autor la probó de 0 a 0.5: **a 0.05 no aportaba nada
+  (el costado seguía leyéndose como sobrante) y a valores visibles se
+  veía como dos manchas radiales feas. No hay punto intermedio que
+  sirva.** La regla y su token se borraron; si alguien propone «un
+  degradado sutil en los costados», es esto y ya se vio.
+- **La perilla que queda es TOKEN (`--wm-alpha`), no parámetro de URL, a
+  propósito**: leer `?wm=` necesita JavaScript y las trece subpáginas no
+  cargan ninguno (verificado: `document.scripts.length` = 0) — el mismo
+  argumento que descartó el interruptor runtime de la transición.
+  Calibración en vivo por consola:
   `document.documentElement.style.setProperty('--wm-alpha', '0.07')`.
 - **La opción C (el mar en las subpáginas) se evaluó y se DESCARTÓ con el
-  autor**: C1 vivo rompía la propiedad de cero JS en las subpáginas — «esa
-  propiedad no se rompe por un fondo», sus palabras—; C2 estático eran
-  ~100 KB contra la restricción explícita de peso, más un artefacto
-  derivado con lock que mantener. Si alguien la propone de nuevo, ésa es
-  la respuesta.
+  autor, sin implementar**: C1 vivo rompía la propiedad de cero JS en las
+  subpáginas — «esa propiedad no se rompe por un fondo», sus palabras—;
+  C2 estático eran ~100 KB contra la restricción explícita de peso, más
+  un artefacto derivado con lock que mantener. Si alguien la propone de
+  nuevo, ésa es la respuesta.
 - **El hallazgo del camino: `white-space: nowrap` no es opcional.** Sin
   él, los nombres de DOS glifos partían en DOS columnas verticales
   (medido: ancho 647px ≈ 2 font-size, invadiendo la columna 46px, y
   leyéndose al revés): con `top: 50%` el alto disponible para la línea es
   media pantalla y en `vertical-rl` la línea rompe contra el ALTO. Es el
-  mismo remedio que ya usaba la marca del About. Ambas capas van con
+  mismo remedio que ya usaba la marca del About. La marca va con
   `z-index: -1` (el contenido del footer entra en la zona del vacío al
-  scrollear y no debe recibir tinte) y la marca se oculta bajo 1200px.
+  scrollear y no debe recibir tinte) y se oculta bajo 1200px.
+
+**El frente que este cierre abre: el CUERPO.** Lo que molesta es la columna
+angosta y el vacío que deja, y ya está medido qué NO lo arregla: ensanchar
+(77 CPL, techo del rango) y rellenar los costados (el halo). La vía elegida
+por el autor: **los elementos ESTRUCTURADOS (listas, tablas, tarjetas)
+salen de la columna de lectura y usan el ancho; el texto corrido se queda
+en su columna, eso no se discute**. El test: ¿se lee renglón a renglón (se
+queda) o se escanea (puede salir)? Pedido concreto: análisis del sitio
+entero con criterio propio + maqueta de /method/ a 1920 con la lista de
+fuentes a ancho completo (el caso más claro), SIN implementar todavía.
 
 ### Tarjetas de perfil en /sugao/ — completa: logo oficial sin alterar y texto
 
