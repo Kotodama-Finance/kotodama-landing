@@ -875,12 +875,12 @@ button:focus-visible {
    de la nota — estirado, su border-bottom subrayaba aire. */
 .sources__en { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; color: var(--c-text); font-size: 0.95rem; }
 .sources__note { font-size: 0.82rem; color: var(--c-text-muted); }
-/* Logo institucional al final de la fila (la columna que dejó el japonés).
-   Criterio LibraryThing: archivo oficial SIN alterar, paleta original; el
-   tamaño (24px, un sello) es lo que controla que no se vuelva una feria de
-   colores. Hoy sólo la FSA lo tiene — el porqué de las otras cuatro filas
-   está anotado en el HTML de la portada. */
-.sources__logo { width: 24px; height: 24px; margin-left: auto; align-self: center; flex-shrink: 0; }
+/* Acá vivió .sources__logo (24px, sello al final de la fila): lo llevó sólo
+   la FSA un día y el autor lo quitó — cuatro filas sin logo y una con quedaba
+   más raro que la columna pareja. La regla se borra y no se deja «por si
+   vuelve» (misma política que .face-page__minor, más abajo); la
+   investigación de los cinco logos y el criterio de reposición están en
+   assets/img/README.md. */
 
 /* --- La lista completa de /method/ ------------------------------------------
    Extiende .sources, no la duplica: la portada muestra cinco de ejemplo y
@@ -982,7 +982,12 @@ button:focus-visible {
    se leía desalineado. El lead y el cuerpo siguen a la izquierda. */
 .face-page__head { margin-bottom: clamp(32px, 5vw, 48px); text-align: center; }
 .face-page .eyebrow { display: block; margin-bottom: 22px; }
-.face-page__title { display: flex; align-items: baseline; justify-content: center; gap: 22px; flex-wrap: wrap; margin-bottom: 12px; }
+/* align-items: CENTER, no baseline (corrección del autor, 2026-08-05): el
+   romaji alinea al ECUADOR del kanji — la mitad de su altura—, no a su línea
+   de base. Con baseline, kanji y romaji no compartían eje y la pareja se veía
+   desproporcionada. line-height 1 en el kanji hace que su caja sea su em, así
+   que el centro de caja ≈ centro visual del glifo CJK. */
+.face-page__title { display: flex; align-items: center; justify-content: center; gap: 22px; flex-wrap: wrap; margin-bottom: 12px; }
 .face-page__kanji {
   font-family: var(--font-ja);
   font-weight: 500;
@@ -991,10 +996,12 @@ button:focus-visible {
   line-height: 1;
   color: var(--c-text);
 }
-/* El romaji NO se duplicó exacto (tope 2rem → 3.4rem, no 4): duplicado quedaba
-   gigante al lado del kanji — la pareja se equilibra con el romaji cerca de
-   0.45 del kanji, ajustado mirando la captura. */
-.face-page__romaji { font-family: var(--font-display); font-size: clamp(2.5rem, 5.5vw, 3.4rem); color: var(--c-gold); }
+/* AL DOBLE EXACTO (tope 2rem → 4rem), pedido del autor del 2026-08-05 que
+   REVIERTE el 3.4rem intermedio: el doble restaura la proporción original
+   (0.556 del kanji, la misma que tenían 2rem/3.6rem), y con el centrado
+   vertical al ecuador la pareja se juzga de nuevo. A veredicto del autor
+   sobre la captura. */
+.face-page__romaji { font-family: var(--font-display); font-size: clamp(3rem, 6vw, 4rem); color: var(--c-gold); }
 /* La 404 lleva una FRASE japonesa donde las caras llevan su kanji, y por eso no
    puede usar .face-page__kanji: ese tamaño —hasta 4rem— está dimensionado para
    uno o dos glifos, y diez a ese cuerpo miden más que el ancho de la página.
@@ -1040,8 +1047,17 @@ button:focus-visible {
    Cursiva y color de texto pleno, no oro: el oro es de los subtítulos y los
    enlaces, y seis palabras doradas en el cuerpo competirían con ambos.
    Va sobre <i> y no <em> a propósito — <em> es énfasis y un lector de pantalla
-   lo entonaría; <i> es «término en otra voz», que es exactamente esto. */
-.face-page__body .name { font-style: italic; color: var(--c-text); }
+   lo entonaría; <i> es «término en otra voz», que es exactamente esto.
+   EL MARGEN VA EN LA CLASE ENTERA, no sólo en los enlaces (corrección del
+   autor, 2026-08-05): el culpable es la OBLICUA SINTÉTICA —ver el comentario
+   del aire, abajo—, que afecta a todo .name por igual. Medido en /musubi/
+   antes del cambio: 5,02px de avance ante palabra (la tinta inclinada comía
+   ~2,5) y 0,00px ante coma — en «Okeanos,» y «Aeolus,» la última letra
+   apoyaba directo sobre la coma. El 0.14em ahí es la corrección itálica
+   clásica. Las tres subcaras no usan .name (sus nombres van en prosa plana,
+   decisión del romaji solo): no hay nada que corregir en ellas, y si algún
+   día llevan el marcado, esta regla ya las cubre. */
+.face-page__body .name { font-style: italic; color: var(--c-text); margin-right: 0.14em; }
 /* En /hajime/, los tres nombres (Taichi, Yorozu, Yūgen) ADEMÁS enlazan a su
    subpágina, y un enlace se viste de enlace: oro y subrayado suave. La regla
    pisa el color de .name a propósito.
@@ -1060,8 +1076,10 @@ button:focus-visible {
    espacio, con el subrayado marcando el borde: visualmente quedaban ~2px y el
    enlace se leía pegado a la palabra siguiente. El margen compensa la tinta
    inclinada. MARGEN y no padding: el padding estiraría el subrayado DENTRO
-   del espacio, que es justo el efecto que se quería sacar. */
-.face-page__body a.name { color: var(--c-gold); border-bottom: 1px solid var(--line-gold-soft); padding-bottom: 1px; margin-right: 0.14em; }
+   del espacio, que es justo el efecto que se quería sacar.
+   El margin-right vive ahora en .face-page__body .name (arriba): el problema
+   es de la oblicua, no del enlace. */
+.face-page__body a.name { color: var(--c-gold); border-bottom: 1px solid var(--line-gold-soft); padding-bottom: 1px; }
 .face-page__body a.name:hover { color: var(--c-gold-soft); border-bottom-color: var(--c-gold); }
 /* .face-page__ref se fue con el enlace de /sugao/ al registro del operador,
    que dejó de existir junto con esa sección. */
@@ -1137,7 +1155,18 @@ button:focus-visible {
 .face-page__subtitle {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  /* Al doble (tope 2rem → 4rem) con los títulos, pedido del autor del
+     2026-08-05 — «los h2/h3 dentro de las subpáginas». Los rótulos de grupo
+     de la lista de /method/ (.sources__group) NO entraron: son taxonomía de
+     una lista densa, no subtítulos de sección — está consultado.
+     El line-height va EXPLÍCITO porque al doble el heredado del body (1.6)
+     quedó a la vista: en /musubi/ cuatro subtítulos parten en dos líneas y
+     con 1.6 la segunda flotaba a ~115px — interlineado de prosa en cuerpo de
+     titular. text-wrap: balance empareja el corte («Capital moves / like
+     water», no «Capital moves like / water»). */
+  font-size: clamp(3rem, 6vw, 4rem);
+  line-height: 1.15;
+  text-wrap: balance;
   color: var(--c-text);
 }
 

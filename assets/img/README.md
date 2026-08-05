@@ -31,17 +31,32 @@ de sello al que se muestra (@2x incluido).
 
 ---
 
-`fsa-icon.png` es el **símbolo oficial de la 金融庁 (FSA) tal cual lo sirve
-su propio sitio, sin modificar**: `https://www.fsa.go.jp/images/icon.png`
-(192×192, RGBA con fondo transparente — alfa 0 en las esquinas, medido;
-11.912 bytes, sha256 `87E9C947…4FF447AF` idéntico al descargado). Mismo
-criterio que LibraryThing: paleta original, sin recolorear; se muestra a
-24px (sello) en la lista de fuentes de la portada.
+## La lista de fuentes de la portada va SIN logos — y la investigación queda
 
-**Las otras cuatro fuentes de la portada NO tienen logo, y no es olvido**
-(2026-08-05): BOJ sólo publica su logotipo sobre fondo opaco (JPG blanco y
-GIF con fondo gris — quitarle el fondo sería alterar el archivo, que es lo
-que este criterio prohíbe; su favicon es de 16px, insuficiente); EDINET no
-distribuye ningún logo (favicon de 198 bytes); el servidor de bis.org
-rechaza conexiones desde este entorno, y sin archivo oficial no hay logo; y
-Damodaran Online es una página académica personal sin marca gráfica.
+**Ninguna de las cinco filas lleva logo, por decisión del autor
+(2026-08-05).** Se investigaron los cinco y sólo la FSA servía un archivo
+oficial utilizable; con cuatro filas sin logo y una con, el sello suelto
+quedaba más raro que la columna pareja, así que se quitó también ése.
+
+Lo investigado, para el día que se reponga:
+
+- **FSA**: SÍ tiene archivo utilizable — su símbolo oficial en
+  `https://www.fsa.go.jp/images/icon.png` (192×192, RGBA con fondo
+  transparente — alfa 0 en las esquinas, medido; 11.912 bytes, sha256
+  `87E9C94739B9E5B2B19F282058DF8BAB9AF6FB33846A80AE1D4ED8624FF447AF`,
+  verificado byte-idéntico al descargado). Estuvo puesto como
+  `fsa-icon.png` y se retiró del árbol con esta decisión; el blob vive en
+  la historia (commit `ca96c72`) si hay que recuperarlo sin red.
+- **BOJ**: sólo publica su logotipo sobre fondo opaco (JPG blanco y GIF con
+  fondo gris — quitarle el fondo sería alterar el archivo, que es lo que
+  este criterio prohíbe; su favicon es de 16px, insuficiente).
+- **EDINET**: no distribuye ningún logo (favicon de 198 bytes).
+- **BIS**: el servidor de bis.org rechaza conexiones desde este entorno, y
+  sin archivo oficial no hay logo.
+- **Damodaran Online**: página académica personal sin marca gráfica.
+
+**El criterio de reposición no cambió**: el día que alguna de estas fuentes
+publique un archivo oficial utilizable, se repone con el criterio
+LibraryThing — oficial SIN alterar, paleta original, tamaño sello. **Y que
+nadie "complete" las filas con SVGs de Wikipedia o similares**: no son el
+archivo oficial, que es lo único que este criterio admite.

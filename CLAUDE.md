@@ -539,10 +539,29 @@ Dos compromisos del texto que NO son redacción libre, anotados en los HTML:
   garantía escala CON el titular — está anotado en el CSS. El cubo y su
   `--maxw` NO se tocaron.
 - **Títulos de las 13 subpáginas al DOBLE y CENTRADOS** (cabecera entera:
-  eyebrow, título, gloss; el lead y el cuerpo siguen a la izquierda). El
-  romaji NO se duplicó exacto (tope 2rem→3.4rem): duplicado quedaba gigante
-  al lado del kanji — la pareja equilibra con el romaji ~0.45 del kanji. La
+  eyebrow, título, gloss; el lead y el cuerpo siguen a la izquierda). La
   frase de la 404 subió acotada por ancho (verificado: una línea).
+  **La corrección del mismo día REVIRTIÓ el romaji intermedio**: el primer
+  pase lo dejó en 3.4rem («duplicado quedaba gigante», juzgado ~0.45 del
+  kanji) y el autor pidió probarlo AL DOBLE EXACTO igual (tope 2rem→4rem,
+  0.556 del kanji — la MISMA proporción que tenían 2rem/3.6rem). Con el
+  punto siguiente, la pareja equilibra: **el «gigante» era el eje, no el
+  tamaño** — se había juzgado con alineación baseline. A veredicto del
+  autor sobre las capturas (doble contra punto medio 3.7rem, capturados).
+- **El romaji alinea al ECUADOR del kanji, no a su baseline**
+  (`align-items: center` en `.face-page__title`): con baseline no
+  compartían eje y la pareja se veía desproporcionada. line-height 1 en el
+  kanji hace caja = em, así que centro de caja ≈ centro visual del glifo.
+  Medido: diff de centros 0.0px en /hajime/, /sugao/ y /hajime/yugen/.
+- **Los subtítulos (`.face-page__subtitle`) también al DOBLE** (tope
+  2rem→4rem), y el doble DESTAPÓ un heredado invisible: sin line-height
+  propio tomaban el 1.6 del body — interlineado de prosa en cuerpo de
+  titular; a 36px nunca se vio porque ninguno partía en dos líneas, a 72px
+  cuatro de /musubi/ parten y la segunda línea flotaba a ~115px. Quedó
+  `line-height: 1.15` + `text-wrap: balance` (corte parejo: «Capital
+  moves / like water»). Los `.sources__group` de la lista de /method/ NO
+  entraron — son taxonomía de lista densa, no subtítulos de sección; está
+  consultado al autor.
 - **«Read the full method →» al pie de la COLUMNA IZQUIERDA** — REVIERTE el
   centrado bajo las dos columnas; como hijo de `.method__how` no se estira
   al fondo de la columna de fuentes.
@@ -550,20 +569,52 @@ Dos compromisos del texto que NO son redacción libre, anotados en los HTML:
   (4,5px de avance, medido) — la cursiva de `.name` es OBLICUA SINTÉTICA
   (Inter no carga itálica) y la última letra pintaba sobre el espacio.
   Margen de 0.14em, no padding (el padding estira el subrayado). 7,6px
-  después, medido.
-- **Logos de las fuentes de la portada: SÓLO LA FSA** (su símbolo oficial,
-  transparente, byte-idéntico — mismo criterio LibraryThing). **Las otras
-  cuatro filas SIN logo y NO es olvido**: BOJ sólo publica fondo opaco
-  (limpiarlo = alterarlo, prohibido), EDINET no tiene logo, bis.org rechaza
-  conexiones desde acá, Damodaran es página personal sin marca. **Que nadie
-  lo "complete" con SVGs de Wikipedia**: no son el archivo oficial. Detalle
-  en `assets/img/README.md` y en el HTML de la portada.
+  después, medido. **La corrección del mismo día lo llevó a LA CLASE
+  ENTERA** (`.face-page__body .name`, no sólo `a.name`): el culpable es la
+  oblicua, que afecta igual a los nueve `i.name` de /musubi/ — medido
+  antes: 5,02px ante palabra y **0,00px ante coma** («Okeanos,» y
+  «Aeolus,», la letra inclinada apoyaba sobre la coma); después: 7,58 y
+  2,56 (la corrección itálica clásica). **Las tres subcaras NO usan
+  `.name`** — sus nombres van en prosa plana por la decisión del romaji
+  solo—, así que ahí no había nada pegado; si algún día llevan el marcado,
+  la regla ya las cubre.
+- **Logos de las fuentes de la portada: NINGUNA fila lleva logo — esto
+  REEMPLAZA el «sólo la FSA» del mismo día.** La FSA era la única con
+  archivo oficial utilizable y estuvo puesta unas horas; el autor la quitó
+  en la corrección siguiente: **cuatro filas sin logo y una con queda más
+  raro que la columna pareja**. La investigación de los cinco NO se tiró —
+  vive en `assets/img/README.md` (qué publica cada uno y por qué no sirve:
+  BOJ sólo fondo opaco —limpiarlo = alterarlo, prohibido—, EDINET no tiene
+  logo, bis.org rechaza conexiones, Damodaran sin marca; el PNG de la FSA
+  queda en la historia, commit `ca96c72`) junto con el criterio de
+  reposición: si alguna publica un archivo oficial utilizable, se repone
+  con el criterio LibraryThing. **Que nadie lo "complete" con SVGs de
+  Wikipedia**: no son el archivo oficial. La regla `.sources__logo` se
+  borró con el `<img>` — una regla sin usar es legal y silenciosa, y este
+  proyecto ya pagó ese costo dos veces.
 - **El © del footer QUEDA** — aclarado por el autor: © es copyright del
   contenido (existe sin registro); marca registrada sería ®/™. Sin cambios.
-- **Pendiente del autor: su veredicto sobre las capturas** (títulos al
-  doble y cuerpo a 18px — «mostrame antes de fijarlo»). Está commiteado
-  como estado vigente para que el árbol quede verde; si pide otro tamaño,
-  son dos clamps y una perilla.
+- **El texto y el vacío a los costados — MEDIDO, no tocado** (pedido del
+  autor en la corrección: separar «no me llegó el cambio» de «sigue
+  angosto»). **La columna de 45rem mide 77 caracteres por línea completa**
+  (primer párrafo largo de /musubi/, bisección con Range hasta el salto de
+  renglón — el promedio por párrafo subestima: cuenta la última línea
+  corta). 77 ya está en el TECHO del rango cómodo (45–75, ideal ~66):
+  ensanchar a 50rem da ~83–85 y a 55rem ~96 — **no hay margen de ensanche;
+  el vacío lateral a 1920/2560 es el costo de una medida legible, no una
+  columna tacaña**. El fingerprint para diagnosticar copia vieja en
+  consola, sobre cualquier subpágina: raíz y body `18px` y
+  `.face-page` maxWidth `810px` (la copia vieja da `16px`/`720px`). Ojo:
+  esos números describen el estado VIGENTE — si el veredicto cambia la
+  escala, cambian con ella. **El centrado se re-midió a 1440/1920/2560**
+  (sospecha del autor tras el pase a rem): left = right EXACTOS en
+  `.face-page`, `.hero__inner`, `.about__inner`, `.method__wrap` y
+  `.footer__top` en los tres anchos.
+- **Pendiente del autor: dos veredictos.** (1) El romaji AL DOBLE contra
+  el punto medio (3.7rem), sobre las capturas — el doble está commiteado
+  como vigente; cambiarlo es un clamp. (2) Si los `.sources__group` de la
+  lista de /method/ entran o no en el doble de subtítulos — quedaron
+  afuera por ser taxonomía de lista, consultado.
 
 ### Tarjetas de perfil en /sugao/ — completa: logo oficial sin alterar y texto
 
