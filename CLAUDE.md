@@ -27,6 +27,11 @@ fallidos ya corregidos, y las capturas intermedias.
 ## Estado
 
 - Rama de trabajo: **`redesign-trust`**. `rebuild-static` está congelada.
+- **Existe la rama `cube-exploded`** (2026-08-05, desde `6de21bd`): la vista
+  explotada del cubo — caparazón esférico + núcleo de vidrio. No se ve desde
+  acá; su registro completo vive en el CLAUDE.md de ESA rama. Correcciones del
+  sitio van acá y la rama se rebasea; **el merge es decisión explícita del
+  autor**, no por estar «casi».
 - **`main` no se toca**: publica kotodamafinance.com y todavía sirve la landing
   vieja. Nada de esto está publicado.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
