@@ -760,11 +760,46 @@ tinta:**
   no hundiéndose — la serie bronce (deltas −20,7/−30,0/−39,9) se midió y se
   descartó entera. Serie luminosa medida con el mismo método de máscara de
   diff: `#ffd24a` +14,2 (el más saturado y más oro) · `#fae59a` +21,9 ·
-  `#fdf3cf` +27,2 (roza el techo: se lee blanco). **Default `#fae59a`**, el
-  punto medio. **El techo es regla**: si el trazo llega a blanco deja de
-  ser dorado. Los deltas luminosos son más chicos que los del bronce porque
-  el tone mapping comprime arriba — y aun así se leen mejor: en polaridad
+  `#fdf3cf` +27,2 (roza el techo: se lee blanco). El default fue `#fae59a`
+  y **la cuarta tanda lo movió a `#ffd24a`**: el autor vio la E demasiado
+  blanca. **El techo es regla**: si el trazo llega a blanco deja de ser
+  dorado. Los deltas luminosos son más chicos que los del bronce porque el
+  tone mapping comprime arriba — y aun así se leen mejor: en polaridad
   positiva el trazo brilla.
+
+**Cuarta tanda (2026-08-05) — la medición de la silueta, y tres ajustes:**
+
+- **La medición que pidió el autor, con veredicto.** (a) **No hay bug**:
+  las posiciones de los 26 coinciden con la fórmula con error 0, en mix
+  0.2/0.65/1.0. (b) La hipótesis óptica se confirma con un matiz: los
+  centros NO proyectan más silueta que el resto (tamaño proyectado 70-95 px
+  en las tres clases) — sobresalen **LOCALMENTE**: en la pose de carga el
+  centro superior queda **+31 px por encima del arco de sus vecinos
+  angulares**. Y el mix nunca pudo arreglarlo porque ese eje mueve centros
+  y aristas JUNTOS: el exceso relativo casi no cambia — era el eje
+  equivocado, como sospechó el autor. (c) **ACERCAR sólo los centros
+  funciona; ACHICAR no**: a 0.85·R el peor exceso local queda en −5,6 px y
+  el contorno de píxeles no muestra bulto en poses adversarias; achicados
+  al 78% el exceso sigue en +25 px — lo domina la distancia del centro, no
+  el tamaño del cubie. Y un aviso de método: la métrica de ventana angular
+  (±30°) dio un +47 FALSO en una pose, midiendo contra un hueco sin
+  vecinos de anillo — **el árbitro es el contorno de PÍXELES** (ahí: meseta
+  de 231 px contra arcos de 240-250, sin bulto).
+- **PROPUESTA PENDIENTE de decisión del autor — no implementada**: los 20
+  del anillo (esquinas y aristas) al radio pleno, los 6 centros a
+  **~0.85·EXPLODE_R**, expuesto como parámetro de URL para su calibración
+  en vivo — y EXPLODE_MIX se retira, porque quedó medido que ese eje no
+  arregla el bulto.
+- **El giro de los kanji se INVIRTIÓ** (desfile derecha→izquierda: signo
+  negativo en WORD_SPIN) y la velocidad quedó calibrable EN VIVO con
+  `?wordSpin=` (segundos por vuelta), **default 18** — el ~35 s original
+  era demasiado lento para el autor. Verificado midiendo: centroide de la
+  tinta −50 px en 2,5 s, glifos sin espejar. La legibilidad en movimiento
+  la juzga el autor en vivo, no una captura.
+- **La tinta quedó en D `#ffd24a`** — la E resultó demasiado blanca.
+  **ORO SOBRE CONTRASTE**, criterio del autor: D es la que se lee como oro
+  puro, y +14,2 de delta alcanza porque en polaridad positiva el trazo
+  brilla sobre la esfera.
 
 ### El `免責事項`: el corto se repite, el completo vive una sola vez
 

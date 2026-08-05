@@ -589,7 +589,18 @@ export function initCube(stage, opts) {
      techo del lado luminoso: si el trazo llega a blanco deja de ser oro
      (las series medidas viven junto al token, en :root). Glifos del subset
      vía canvas, verificados contra cmap; fonts.ready los rehornea abajo. */
-  const WORD_SPIN = 0.00018;   // rad/ms: vuelta entera en ~35 s, un frente cada ~12
+  /* Giro del cascarón de palabras: SIGNO NEGATIVO a pedido del autor — el
+     desfile va de derecha a izquierda (con rotation.y positiva iba al revés).
+     Negar la rotación NO espeja los glifos: la textura es la misma, sólo
+     cambia el sentido del viaje (verificado en captura). La velocidad se
+     calibra EN VIVO con `?wordSpin=` (segundos por vuelta): la legibilidad
+     en movimiento no se juzga en captura estática. Default 18 s — el ~35 s
+     original lo marcó el autor como demasiado lento. */
+  const WORD_TURN_S = (() => {
+    const v = parseFloat(params.get('wordSpin'));
+    return Number.isFinite(v) && v >= 4 && v <= 120 ? v : 18;
+  })();
+  const WORD_SPIN = -(2 * Math.PI) / (WORD_TURN_S * 1000);   // rad/ms
   const WORD_FIXED = 0.6;      // reduce: ángulo quieto con una palabra de frente
   const CORE_WORDS = ['産霊', '河川', '言霊'];
   function bakeWordsTexture() {

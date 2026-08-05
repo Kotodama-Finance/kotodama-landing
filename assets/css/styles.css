@@ -175,10 +175,13 @@
        interpretación equivocada de «dorado duro» — el autor quería un oro
        que RESALTE brillando, no hundiéndose.
      Serie luminosa medida (delta tinta-cuerpo): #ffd24a +14,2 (el más
-     saturado, el más oro), #fae59a +21,9, #fdf3cf +27,2 (roza el techo:
-     se lee blanco, deja de ser dorado). El techo es la regla: si el trazo
-     llega a blanco deja de ser oro. Cambiarlo es tocar este hex. */
-  --c-gold-ink: #fae59a;
+     saturado, el más oro), #fae59a +21,9 (probada como default y DESCARTADA
+     por el autor: demasiado blanca), #fdf3cf +27,2 (roza el techo: se lee
+     blanco, deja de ser dorado). Vigente #ffd24a por decisión del autor:
+     ORO SOBRE CONTRASTE — es el que se lee como oro puro, y el delta +14,2
+     alcanza porque en polaridad positiva el trazo brilla. El techo es la
+     regla: si el trazo llega a blanco deja de ser oro. */
+  --c-gold-ink: #ffd24a;
 
   /* Texto */
   --c-text: #eaf1f8;            /* alto contraste */
