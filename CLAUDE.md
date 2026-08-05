@@ -27,11 +27,15 @@ fallidos ya corregidos, y las capturas intermedias.
 ## Estado
 
 - Rama de trabajo: **`redesign-trust`**. `rebuild-static` está congelada.
-- **Existe la rama `cube-exploded`** (2026-08-05, desde `6de21bd`): la vista
-  explotada del cubo — caparazón esférico + núcleo de vidrio. No se ve desde
-  acá; su registro completo vive en el CLAUDE.md de ESA rama. Correcciones del
-  sitio van acá y la rama se rebasea; **el merge es decisión explícita del
-  autor**, no por estar «casi».
+- **La vista explotada del cubo está INTEGRADA acá (2026-08-05)**: el merge
+  `cube-exploded` → `redesign-trust` lo decidió explícitamente el autor, tras
+  dos verificaciones previas (móvil emulado y no-divergencia). Fue
+  fast-forward sobre `0693216` — la rama venía rebaseada — con las cuatro
+  guardas corridas DESPUÉS del merge. **La rama `cube-exploded` se borró**
+  (local y origin): tras el fast-forward no tenía historia propia, y un
+  puntero viejo se lee como trabajo pendiente que no existe. El registro
+  completo de sus decisiones (las cinco tandas) está en la sección de la
+  vista explotada, más abajo.
 - **`main` no se toca**: publica kotodamafinance.com y todavía sirve la landing
   vieja. Nada de esto está publicado.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
@@ -185,9 +189,9 @@ Ninguno bloquea publicar. Cada uno tiene su sección con el detalle.
 | ~~Redacción de Hajime~~ | **CERRADA 2026-08-05**: los 15, con texto del autor. Baseline en cero, `check-ready` en `0`. Cualquier placeholder nuevo es regresión. |
 | ~~Logo de LibraryThing~~ | **CERRADO 2026-08-05**: va el archivo oficial en su paleta original, sin alterar — criterio nuevo que disuelve el pendiente de permiso (ver la decisión de tarjetas y `assets/img/README.md`). |
 | ~~Kanji de Taichi/Yorozu/Yūgen~~ | **CERRADO 2026-08-05**: 太一 · 万 · 幽玄, del `context.md` del autor. Aplicados en h1 y `<title>` con el patrón de las caras; subset regenerado (太/幽/玄 eran nuevos). |
-| **Móvil** | **nunca medido en dispositivo real.** Congelado por decisión del autor. La única medición de rendimiento es de escritorio. |
+| **Móvil** | **nunca medido en dispositivo real.** Congelado por decisión del autor. Mediciones: la de escritorio, y la EMULACIÓN de la vista explotada (2026-08-05, `docs/mediciones/explotada-movil-emulada.md` — verde del lado CPU; no reemplaza al dispositivo real). |
 | **Maelstrom** | apartado en `assets/css/maelstrom.css`, **no lo carga nadie** —ahora con guarda en `check-modes`—, reactivable. Al retomarlo, empezar por el **bug de la variante táctil** —definía keyframes sin blur y nunca los asignaba—, no por recalibrar. |
-| **Vista explotada del cubo** | después de publicar. El núcleo mostrará 産霊 · 河川 · 言霊 y llevará a `/musubi/`. Sin glifos nuevos. |
+| ~~Vista explotada del cubo~~ | **INTEGRADA 2026-08-05**: mergeada a esta rama por decisión del autor, guardas en verde después del merge. Lo que sigue siendo posterior a publicar es la v2 (corrientes de agua) — sólo si el autor la pide. |
 | **Dieta de fuentes** | **~79 KB disponibles** quitando features que el sitio no usa. **Decidido: no se hace ahora.** Se revisa si el CSS llega a usar `font-feature-settings`, `font-variant` o `small-caps`. |
 | **Guarda de castellano** | **incompleta a propósito, y lo dice en su salida.** Cubre diacríticos y una lista de palabras; se le escapa castellano sin ninguna de las dos. Al agregar una página, leer su superficie además de correrla. |
 | **Rama `maintenance`** | **existe, está lista y NO está activa.** Se activa cambiando la rama que publica Pages. Ver la decisión cerrada más abajo. |
@@ -669,27 +673,21 @@ siguen siendo cuatro: ésta mira una rama que no cambia entre commits, así que
 en el flujo de siempre sería ruido. Probada en las dos direcciones, con cuatro
 ramas rotas armadas al lado.
 
-### La rama `cube-exploded` existe y es donde vive la vista explotada
+### La vista explotada del cubo — INTEGRADA; la historia de sus decisiones
 
-**Creada el 2026-08-05 desde `redesign-trust` (`6de21bd`), por instrucción del
-autor.** Como `maintenance`, no se ve desde ninguna otra rama y es fácil
-olvidar que existe — que exista es lo que hay que recordar.
+**Se desarrolló en la rama `cube-exploded`** (creada el 2026-08-05 desde
+`6de21bd`, por instrucción del autor) **y se INTEGRÓ acá el 2026-08-05, por
+su decisión explícita**, con dos verificaciones previas: la medición emulada
+de móvil (`docs/mediciones/explotada-movil-emulada.md`) y la no-divergencia
+(merge-base = punta de `redesign-trust`: fast-forward). **La rama se borró
+después del merge** — sin historia propia tras el fast-forward, un puntero
+viejo sólo invita a creer que hay trabajo pendiente ahí.
 
-**Por qué aparte**: el sitio en `redesign-trust` está LISTO PARA PUBLICAR
-(cero placeholders, `check-ready` en `0`) y la publicación depende sólo del
-DNS, que ocurre en días. La vista explotada es la pieza más grande que queda y
-tiene antecedente de sesiones largas (el shader del mar, las ocho iteraciones
-del remolino). Si no sale, se publica `redesign-trust` tal cual y no hay nada
-que revertir.
-
-**Las condiciones, fijadas por el autor:**
-
-- `redesign-trust` queda intacta. Correcciones del sitio van AHÍ, y
-  `cube-exploded` se rebasea — nunca al revés.
-- **El merge `cube-exploded` → `redesign-trust` es decisión explícita de
-  Manuel**, cuando esté terminado y verde. No se mergea por estar «casi».
-- Las guardas corren igual en esta rama; si `check-pendulum` rompe, la vista
-  no está lista — no es que la guarda sobre.
+**Las condiciones bajo las que se trabajó** (cumplidas, quedan como registro
+del método): `redesign-trust` intacta con las correcciones del sitio yendo
+ahí y la rama rebaseándose encima — nunca al revés—; el merge como decisión
+explícita de Manuel, no por estar «casi»; y las guardas corriendo igual en
+la rama — `check-pendulum` verde en cada tanda.
 
 **Qué es (primera versión, SIN corrientes de agua — van después si ésta
 funciona; no se compensa la ausencia con otro efecto):** el cubo se abre a un
@@ -1606,7 +1604,12 @@ Kaku, verificando contra la tabla `cmap`. Ya frenó una vez, con el 迷 de la 40
   horizontal que manda con el escenario más alto que ancho, el maelstrom táctil).
   Se retoma cuando el autor lo diga.
 
-  **Hay una sola medición de rendimiento y es de escritorio**:
+  **Hay dos mediciones de rendimiento y ninguna es de teléfono real**: la de
+  escritorio, y la emulación móvil de la vista explotada (2026-08-05,
+  `docs/mediciones/explotada-movil-emulada.md`: DPR 1.5 y sin antialias
+  verificados EJECUTANDO, cadencia dentro del presupuesto de 60 Hz con CPU
+  ×4 — pero la GPU era la de escritorio, así que no levanta este congelado).
+  La de escritorio:
   `docs/mediciones/rendimiento.md` (julio de 2026, RTX 4060 Laptop a 165 Hz).
   Ahí sobra margen — la página completa mide lo mismo que no dibujar nada— y el
   único término que aparece es el shader del mar, que evalúa ruido por píxel a
@@ -1620,18 +1623,17 @@ Kaku, verificando contra la tabla `cmap`. Ya frenó una vez, con el 迷 de la 40
   el aviso más útil de todo este párrafo: una precaución que se documenta y no
   se verifica es indistinguible de una que no existe. La transición está hoy
   reservada; el detalle, en `assets/css/maelstrom.css`.
-- **Vista explotada del cubo.** Va **después** del pase de redacción; se discutió
-  fuera de estas sesiones y el brief todavía no está escrito. Lo que sí está
-  decidido, para que el brief lo dé por sentado: al abrirse, el **núcleo** del
-  cubo muestra los **tres conceptos** del centro conceptual del proyecto en
-  kanji —**産霊 · 河川 · 言霊** (Musubi · Kasen · Kotodama)— y al hacer clic
-  lleva a **`/musubi/`**. **No hacen falta glifos nuevos** en el subset, pero
-  ojo con el motivo, porque el que estaba escrito acá dejó de ser cierto: los
-  tres ya NO viven en el HTML de `/musubi/` —esa página se redactó y ahora
-  nombra a Kasen y Kotodama en romaji, no en kanji—. Siguen cubiertos porque
-  están en la **marca de agua de la portada** (`.about__watermark`) y porque
-  `言` y `霊` son además el logo del nav. Si algún día se toca esa marca de
-  agua, esta suposición se cae. No hay nada visual que construir hoy.
+- **Vista explotada del cubo — YA NO ESTÁ CONGELADA: se construyó y está
+  INTEGRADA** (2026-08-05, cinco tandas de calibración con el autor; el
+  registro completo está en su sección). El núcleo muestra 産霊 · 河川 · 言霊
+  horneados en la textura del cascarón (cube.js) y el clic lleva a
+  `/musubi/`, como estaba decidido. La advertencia del subset sigue viva:
+  los tres glifos están cubiertos porque viven en la marca de agua de la
+  portada (`.about__watermark`) y `言`/`霊` son además el logo del nav —
+  **si algún día se toca esa marca de agua, la cobertura de la textura del
+  núcleo hay que re-verificarla contra la cmap**. Lo que queda para después
+  de publicar es la **v2 (corrientes de agua)**, sólo si el autor la pide —
+  no se compensa la ausencia con otro efecto.
 - **Remolino ukiyo-e para la transición.** Ocho iteraciones fallidas entre Design
   y Claude: **el ruido procedural produce textura, no dibujo** — granulado, no la
   línea de una ola grabada. Requiere ilustrador humano o un enfoque distinto.
