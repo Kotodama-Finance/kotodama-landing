@@ -52,8 +52,19 @@ fallidos ya corregidos, y las capturas intermedias.
   prosa es lead y tarjetas, texto de display); y los dos párrafos del perfil
   profesional de /sugao/ con **insurance operations** sumado al arco (primero
   operations, después risk management — la secuencia real; la enumeración del
-  arco a guiones; descriptions derivadas ajustadas igual). Publicados con el
-  SEGUNDO deploy, con confirmación del autor antes del push. Antes, el mismo
+  arco a guiones; descriptions derivadas ajustadas igual). **El SEGUNDO
+  deploy quedó PUSHEADO (`03f9f79`, de fuente `b8be22e`, con confirmación
+  del autor) pero AL CIERRE DE LA SESIÓN TODAVÍA NO SERVIDO**: el primer
+  intento del build de Pages falló en el paso «Deploy to GitHub Pages» —el
+  build en verde, la falla del lado de GitHub; Pages estuvo lento todo el
+  día—, el re-run quedó ENCOLADO, y el dominio seguía sirviendo el primer
+  deploy (verificado al cierre: titular con puntos). **AL RETOMAR, LO
+  PRIMERO: comprobar que kotodamafinance.com sirva el titular SIN puntos, y
+  ahí verificar los cuatro cambios en el dominio** (titular, About
+  justificado, /sugao/ con operations, las descriptions). El run:
+  `actions/runs/31100279554`. Si sigue fallando, NO fabricar commits en
+  `main` para retriggerear —ensucia la rama-artefacto—: re-run desde la UI
+  de Actions. Antes, el mismo
   día: **LA PUBLICACIÓN: EL SITIO ESTÁ VIVO EN
   kotodamafinance.com.** El procedimiento de «Publicar» del README se siguió
   completo y alcanzó tal como está escrito: cinco guardas en verde (pendulum
@@ -2073,10 +2084,13 @@ al mirar la página, así que sobreviven al reemplazo del texto que describen.
   dependencia anotada en el propio `<head>`.
 - `LINEA` de `make-og-image.py` es ahora **el titular del hero, literal**;
   imagen regenerada y lock resellado. Verificada a 500 px. **Desde el
-  2026-08-06 la única divergencia permitida es la PUNTUACIÓN**: el hero
-  perdió los puntos (sus frases viven en filas separadas) y la tarjeta los
-  conserva (las dibuja en una línea: el punto es su separador) — anotado en
-  el propio script, para que nadie los «sincronice» de vuelta.
+  2026-08-06 la única divergencia permitida es la PUNTUACIÓN**, confirmada
+  por el autor con su regla: **el punto sale del hero porque el `<br>` hace
+  su trabajo, y se queda en la tarjeta porque ahí el titular va en una sola
+  línea y no hay salto que separe — MISMA REGLA, DOS RESULTADOS DISTINTOS
+  SEGÚN EL MEDIO.** Parece una inconsistencia y no lo es; quien quiera
+  «sincronizarlos» está aplicando la regla a medias. Anotado también en el
+  propio script (`LINEA`) y en el comentario del hero en `index.html`.
 - **`og:image:alt` describía «El cubo de seis caras», y la tarjeta no lleva el
   cubo desde que pasó a ser sólo tipografía.** Además estaba **en castellano**,
   la única cadena así fuera de los `TODO`, y viaja en cada enlace compartido.
