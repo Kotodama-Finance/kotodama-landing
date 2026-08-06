@@ -16,8 +16,10 @@ assets/js/cube.js       cubo de navegación (Three.js)
 assets/js/main.js       orquestador: toggle, nav, visibilidad
 assets/fonts/           tipografías auto-hospedadas y subseteadas
 assets/vendor/          Three.js vendoreado (sin CDN en runtime)
-favicon.ico/.svg        iconos del sitio (generados, ver más abajo)
+favicon.ico/.svg/-*.png iconos del sitio (generados, ver más abajo)
 apple-touch-icon.png    icono para «añadir a inicio» en iOS
+android-chrome-*.png    192/512 para Android/PWA — los enlaza el manifest
+site.webmanifest        manifest mínimo (generado junto con los iconos)
 sitemap.xml             generado por tools/make-sitemap.py
 robots.txt              todo abierto, incluidos los crawlers de IA
 404.html                la sirve GitHub Pages ante cualquier ruta inexistente
@@ -570,17 +572,28 @@ reproducía el suyo — y le habría roto el flag. Por eso son distintos.
 
 ## Iconos (favicon)
 
-Los tres iconos —`favicon.ico` (16/32/48 px), `favicon.svg` y
-`apple-touch-icon.png`— **se generan**, no se editan a mano:
+El juego completo **se genera**, no se edita a mano — ocho archivos:
+`favicon.ico` (16/32/48 px), `favicon.svg`, `favicon-16x16.png` y
+`favicon-32x32.png` (sueltos, sin `<link>`), `apple-touch-icon.png` (180),
+`android-chrome-192x192.png` y `-512x512.png` (sin `<link>`: los referencia
+`site.webmanifest`), y el propio `site.webmanifest`:
 
 ```
-python tools/make-favicon.py            # regenera los tres
+python tools/make-favicon.py            # regenera los ocho
 python tools/make-favicon.py --strip    # además, la tira de comparación en _dev/
 ```
 
 Salen del **mismo subset de la marca** (Zen Kaku peso 500), así que el icono es
-literalmente la misma letra 言 que el logo del nav, en oro sobre navy. El SVG
-lleva el glifo como `<path>` y no como `<text>`: un favicon no carga webfonts.
+literalmente la misma letra 言 que el logo del nav, en oro sobre navy **sólido**
+— transparente, el kanji dorado desaparece sobre la barra clara de un navegador
+en modo claro. El SVG lleva el glifo como `<path>` y no como `<text>`: un
+favicon no carga webfonts.
+
+**El 16px lleva un tratamiento propio, y salió de medir**: con el render normal
+los trazos de 言 se embarraban (el punto se fundía con el primer trazo). Lleva
+más relleno, un enfoque tras la reducción y un tope por canal al oro para que
+el enfoque no lave el trazo a blanco. El detalle y los números están en el
+docstring de `dibujar_kanji` en el script.
 
 Los colores (`--c-navy`, `--c-gold`) están **copiados** en el script, porque un
 icono se renderiza aislado y no ve el CSS. Es la misma excepción que el shader
@@ -588,6 +601,10 @@ del mar: si cambia la paleta, hay que volver a correr el script.
 
 El `favicon.ico` existe aunque haya `<link>`: el navegador pide `/favicon.ico`
 igual, y sin el archivo cada carga deja un 404 en la consola.
+
+Las cuatro etiquetas `<link>` (ico, svg, apple-touch, manifest) están
+duplicadas en las catorce páginas, y `check-structure` verifica que el bloque
+sea idéntico carácter por carácter — el mismo trato que el nav y el footer.
 
 ## El cubo: parámetros vigentes
 

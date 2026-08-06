@@ -39,10 +39,13 @@ fallidos ya corregidos, y las capturas intermedias.
 - **`main` no se toca**: publica kotodamafinance.com y todavía sirve la landing
   vieja. Nada de esto está publicado.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-06, la tanda del cuerpo: la lista de /method/ al
-  ANCHO COMPLETO (columnas adaptativas) y el cuerpo de prosa JUSTIFICADO,
-  con el análisis de elementos estructurados cerrado** — ver «El cuerpo» en
-  las decisiones. El mismo día, antes: el halo (B) probado y DESCARTADO, la
+- Último cierre: **2026-08-06, el favicon: 言 solo en oro sobre navy, juego
+  completo (ico/svg/pngs/apple/android/manifest) con el 16px tratado y
+  medido, y el bloque de iconos vigilado por check-structure** — ver su
+  decisión. El mismo día, antes: **la tanda del cuerpo — la lista de
+  /method/ al ANCHO COMPLETO (columnas adaptativas) y el cuerpo de prosa
+  JUSTIFICADO, con el análisis de elementos estructurados cerrado** — ver
+  «El cuerpo» en las decisiones. El mismo día, antes: el halo (B) probado y DESCARTADO, la
   marca de agua (A) aprobada. El 2026-08-05: el bloque 5 de /musubi/, los
   kanji de las subcaras (太一 · 万 · 幽玄), la tarjeta de LibraryThing y las
   tres subpáginas de Hajime — **LA REDACCIÓN DEL SITIO ESTÁ TERMINADA** y
@@ -733,6 +736,37 @@ rango) y rellenar los costados (el halo).
   **El criterio de aceptación fue el caso SIN partición de palabras** —
   ver el hallazgo de hyphens en los hallazgos de método y el comentario
   junto a la regla. Si la columna se angosta alguna vez, esto se re-mide.
+
+### El favicon: 言 solo en oro sobre navy — juego completo, cerrado
+
+**2026-08-06, especificación del autor.** El diseño ya era ése (la variante A
+del generador, elegida en su momento); lo que esta tanda agregó es el juego
+completo y la verificación medida. Las reglas:
+
+- **言 solo, no 言霊**: dos kanji a 16px son dos manchas; 言 es el núcleo del
+  nombre y no se despega del logo. **Fondo navy SÓLIDO, no transparente**:
+  transparente, el kanji dorado desaparece sobre la barra clara de un
+  navegador en modo claro. Colores = tokens (copiados en el script, la
+  excepción documentada de siempre).
+- **Ocho archivos generados** por `tools/make-favicon.py`: ico (16/32/48 — el
+  48 va de más respecto del pedido «16 y 32», es para el acceso directo de
+  Windows), svg (glifo como path), 16/32 png sueltos sin `<link>`, apple-touch
+  180, android-chrome 192/512 sin `<link>` (los enlaza `site.webmanifest`), y
+  el manifest — **en INGLÉS: se sirve tal cual, superficie publicada**, con
+  `display: "browser"` a propósito (sitio de contenido, no app).
+- **El 16px lleva tratamiento propio MEDIDO** (perfil de luminancia por fila):
+  relleno 0.86 + UnsharpMask + tope por canal al oro. Sin él, 4 picos y
+  separación pico-valle de 23 unidades sRGB (el punto fundido con el primer
+  trazo); con él, **6 picos / 5 valles / separación 81, y el píxel más claro
+  es EXACTAMENTE el oro** — el tope existe porque el enfoque desbordaba a
+  amarillo pálido (255,255,146), la misma regla que la tinta de la esfera.
+  Verificado sobre los archivos ESCRITOS, incluido el 16 de adentro del ico.
+- **El bloque de iconos entró a `check-structure`**: cuatro `<link>` (ico,
+  svg, apple-touch, manifest) idénticos carácter por carácter en las catorce
+  páginas, dentro de la misma comprobación del nav y el footer. **Probada en
+  rojo antes de confiar en su verde** (manifest faltante y orden alterado:
+  las dos detectadas).
+- cmap verificada por costumbre: 言 presente, 猫 de control ausente.
 
 ### Tarjetas de perfil en /sugao/ — completa: logo oficial sin alterar y texto
 

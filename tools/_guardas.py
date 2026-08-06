@@ -501,10 +501,14 @@ def castellano_publicado():
 
 
 def chrome_divergente():
-    """El nav y el footer están duplicados en las ocho páginas: no hay build step
-    que los comparta. La duplicación es aceptable si está vigilada, así que en
-    vez de templetizar se verifica que no derive: los bloques tienen que ser
-    idénticos carácter por carácter en todas las páginas."""
+    """El nav, el footer y el bloque de iconos están duplicados en todas las
+    páginas: no hay build step que los comparta. La duplicación es aceptable si
+    está vigilada, así que en vez de templetizar se verifica que no derive: los
+    bloques tienen que ser idénticos carácter por carácter en todas las páginas.
+
+    El bloque de iconos va del primer <link rel="icon"> al <link rel="manifest">
+    (2026-08-06): son cuatro etiquetas seguidas y el manifest cierra el grupo —
+    si una página agrega, saca o reordena una, el bloque difiere y esto lo ve."""
     def bloque(html, ini, fin):
         try:
             a = html.index(ini)
@@ -517,7 +521,10 @@ def chrome_divergente():
     for p in htmls():
         html = p.read_text(encoding="utf-8")
         for etiqueta, ini, fin in (("nav", '<header id="nav"', "</header>"),
-                                   ("footer", '<footer id="footer"', "</footer>")):
+                                   ("footer", '<footer id="footer"', "</footer>"),
+                                   ("bloque de iconos",
+                                    '<link rel="icon" href="/favicon.ico"',
+                                    '<link rel="manifest" href="/site.webmanifest">')):
             b = bloque(html, ini, fin)
             if b is None:
                 problemas.append(f"{nombre(p)}: no tiene {etiqueta}")

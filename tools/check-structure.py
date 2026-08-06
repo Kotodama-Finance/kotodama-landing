@@ -6,9 +6,9 @@
 
 Comprueba tres cosas que nunca deberían romperse, ni durante el andamiaje:
 
-1. El nav y el footer son idénticos carácter por carácter en las ocho páginas.
-   Están duplicados porque no hay build step; la duplicación se banca sólo si
-   está vigilada.
+1. El nav, el footer y el bloque de iconos son idénticos carácter por carácter
+   en todas las páginas. Están duplicados porque no hay build step; la
+   duplicación se banca sólo si está vigilada.
 2. El subset de Zen Kaku cubre todos los glifos japoneses del sitio. Si falta
    uno, ese carácter cae a una fuente del sistema y desentona en silencio.
 3. No aparecieron placeholders NUEVOS respecto del baseline. Los ~70 que hay
@@ -35,7 +35,7 @@ def main():
     actualizar = "--actualizar-baseline" in sys.argv
     problemas = []
 
-    print("Nav y footer compartidos")
+    print("Nav, footer e iconos compartidos")
     divergencias = G.chrome_divergente()
     if divergencias:
         for x in divergencias:

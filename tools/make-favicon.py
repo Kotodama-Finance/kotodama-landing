@@ -7,11 +7,20 @@
 Produce, en la raíz del sitio (que es donde el navegador los busca):
   favicon.ico          16+32+48 px, PNG embebido. Mata el 404 implícito:
                        el navegador pide /favicon.ico haya o no <link>.
+                       (El 48 va de más respecto del pedido «16 y 32»: es
+                       para el acceso directo de Windows y no cuesta nada.)
   favicon.svg          vectorial, con el kanji como PATH (no como <text>):
                        un favicon no carga webfonts, así que un <text
                        font-family="Zen Kaku..."> caería a una fuente del
                        sistema y el trazo no sería el de la marca.
+  favicon-16x16.png    los dos tamaños clásicos, sueltos, para quien los
+  favicon-32x32.png    quiera referenciar directo (el <link> del sitio usa
+                       el .ico + el .svg; estos dos no se enlazan).
   apple-touch-icon.png 180x180, para «añadir a pantalla de inicio» en iOS.
+  android-chrome-192x192.png  los de Android/PWA. NO llevan <link>: se
+  android-chrome-512x512.png  referencian desde site.webmanifest.
+  site.webmanifest     el manifest mínimo que los enlaza (en INGLÉS: es
+                       superficie publicada, la regla de la frontera).
 
 El glifo sale del MISMO subset que usa la página (peso 500, el de la marca en
 el nav), así que el icono y el logo son literalmente la misma letra.
@@ -27,7 +36,7 @@ import struct
 import sys
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 RAIZ = Path(__file__).resolve().parent.parent
 FUENTE = RAIZ / "assets" / "fonts" / "zen-kaku-gothic-new-500-subset.woff2"
@@ -58,11 +67,31 @@ def dibujar_kanji(px: int, texto: str, ttf: Path, fondo, tinta, relleno=0.76) ->
 
     Centrar por métricas deja el glifo alto: la caja em reserva espacio para
     descendentes que un kanji no usa. A 16px ese desplazamiento se ve.
+
+    A 16px, ADEMÁS, el glifo lleva un tratamiento propio, y las tres partes
+    salieron de medir (2026-08-06, perfil de luminancia por fila del cuerpo
+    del glifo — los cinco trazos horizontales de 言 más la caja 口 deben dar
+    picos separados por valles):
+      · relleno 0.86 en vez de 0.76 — con 0.76 el paso entre trazos cae bajo
+        el píxel y el punto se funde con el primer trazo (4 picos, separación
+        pico-valle 23 unidades sRGB);
+      · UnsharpMask tras el LANCZOS — ahonda los valles (la separación sube
+        a ~84);
+      · TOPE POR CANAL A LA TINTA — el enfoque desborda a amarillo pálido
+        (255,255,146 contra el oro 200,168,90), la misma regla que la tinta
+        de la esfera explotada: si el trazo llega a blanco deja de ser
+        dorado. Con el tope, el píxel más claro es EXACTAMENTE el oro y la
+        separación queda en 81 (picos 101-157, valles -10 a 20).
+    Resultado medido del archivo final: 6 picos / 5 valles — el glifo se
+    resuelve entero. A 32px o más nada de esto hace falta: el paso entre
+    trazos ya es de varios píxeles.
     """
     grande = px * SS
     im = lienzo(grande, fondo)
     d = ImageDraw.Draw(im)
 
+    if px <= 16:
+        relleno = max(relleno, 0.86)
     objetivo = grande * relleno
     tam = int(objetivo)
     for _ in range(40):
@@ -78,7 +107,14 @@ def dibujar_kanji(px: int, texto: str, ttf: Path, fondo, tinta, relleno=0.76) ->
     x = (grande - (der - izq)) / 2 - izq
     y = (grande - (aba - arr)) / 2 - arr
     d.text((x, y), texto, font=fuente, fill=tinta + (255,))
-    return im.resize((px, px), Image.LANCZOS)
+    im = im.resize((px, px), Image.LANCZOS)
+    if px <= 16:
+        im = im.filter(ImageFilter.UnsharpMask(radius=1.2, percent=130, threshold=0))
+        canales = im.split()
+        tope = tinta + (255,)
+        im = Image.merge("RGBA", tuple(
+            c.point(lambda v, t=tope[i]: min(v, t)) for i, c in enumerate(canales)))
+    return im
 
 
 def dibujar_cubo(px: int, fondo, tinta) -> Image.Image:
@@ -208,6 +244,29 @@ def tira(ttf: Path, destino: Path):
     return hoja.size
 
 
+def escribir_manifest(destino: Path):
+    """El manifest mínimo que enlaza los iconos de Android/PWA.
+
+    EN INGLÉS: se sirve tal cual (no tiene versión renderizada, como
+    robots.txt), así que es superficie publicada. display «browser» a
+    propósito: esto es un sitio de contenido, no una app instalable.
+    Los colores salen de las mismas constantes que los iconos."""
+    navy = "#%02x%02x%02x" % NAVY
+    destino.write_text(
+        "{\n"
+        '  "name": "Kotodama Finance",\n'
+        '  "short_name": "Kotodama",\n'
+        '  "icons": [\n'
+        '    { "src": "/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" },\n'
+        '    { "src": "/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png" }\n'
+        "  ],\n"
+        f'  "theme_color": "{navy}",\n'
+        f'  "background_color": "{navy}",\n'
+        '  "start_url": "/",\n'
+        '  "display": "browser"\n'
+        "}\n", encoding="utf-8")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--strip", action="store_true", help="genera la tira de comparación")
@@ -218,11 +277,18 @@ def main():
     elegida = dict(zip("ABCD", [v[1] for v in variantes(ttf)]))[args.variante.upper()]
 
     escribir_ico(RAIZ / "favicon.ico", [elegida(t) for t in (16, 32, 48)])
-    elegida(180).convert("RGB").save(RAIZ / "apple-touch-icon.png")
+    for lado, archivo in ((16, "favicon-16x16.png"), (32, "favicon-32x32.png"),
+                          (180, "apple-touch-icon.png"),
+                          (192, "android-chrome-192x192.png"),
+                          (512, "android-chrome-512x512.png")):
+        elegida(lado).convert("RGB").save(RAIZ / archivo, optimize=True)
     escribir_svg(RAIZ / "favicon.svg", ttf)
+    escribir_manifest(RAIZ / "site.webmanifest")
 
-    for n in ("favicon.ico", "favicon.svg", "apple-touch-icon.png"):
-        print(f"  {n:22} {os.path.getsize(RAIZ / n):>6} B")
+    for n in ("favicon.ico", "favicon.svg", "favicon-16x16.png", "favicon-32x32.png",
+              "apple-touch-icon.png", "android-chrome-192x192.png",
+              "android-chrome-512x512.png", "site.webmanifest"):
+        print(f"  {n:28} {os.path.getsize(RAIZ / n):>6} B")
 
     if args.strip:
         destino = RAIZ / "_dev" / "favicon-opciones.png"
