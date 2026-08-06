@@ -208,12 +208,39 @@ Ninguno bloquea publicar. Cada uno tiene su sección con el detalle.
 
 ## Decisiones cerradas — no rediscutir
 
-### Analytics: GoatCounter en modo PIXEL, en las CATORCE — decidido, sin ejecutar
+### Analytics: GoatCounter en modo PIXEL, en las CATORCE — IMPLEMENTADO
 
 **Decidido por el autor el 2026-08-06, contra la documentación primaria del
 servicio (leída del repo arp242/goatcounter; goatcounter.com estaba caído ese
-día — dato en sí mismo). NO ESTÁ IMPLEMENTADO: falta que el autor cree la
-cuenta y configure ignorar-su-IP. Avisa él.** Las reglas del día que se haga:
+día — dato en sí mismo). IMPLEMENTADO EL MISMO DÍA**, con la cuenta
+`realshinka` creada y las exclusiones configuradas por el autor ANTES del
+primer push. El registro de la ejecución, primero; las reglas con las que se
+hizo, después:
+
+- **La forma final**: `<img src="https://realshinka.goatcounter.com/count?p=/ruta"
+  alt="" width="1" height="1" loading="eager" class="gc-pixel">` antes de
+  `</body>` en las 14. La clase (y no `style=` inline) conserva el «`style=`
+  en lo publicado: 0» del inventario de seguridad; el `loading="eager"` es
+  contrato, no default — un pixel lazy solo mediría si entra al viewport; el
+  `alt=""` lo saca del árbol de accesibilidad (el criterio LibraryThing).
+- **EL HALLAZGO DEL CAMINO: un absoluto SIN anclas extiende el documento.**
+  La primera versión (`position:absolute` a secas) sumaba EXACTAMENTE 1px de
+  scrollHeight en las 14 — el absoluto queda en su posición estática, después
+  del footer, y ese píxel alarga la página. Lo cazó la medición contra línea
+  base pre-pixel; anclado a `top:0;left:0` (bajo la nav) quedó idéntico. Quien
+  toque `.gc-pixel` creyendo que las anclas sobran, lo reintroduce.
+- **Verificado midiendo (2026-08-06)**: las 14 disparan exactamente UNA
+  petición con su `p=` correcto — interceptada por red, no leída del HTML—,
+  el endpoint responde 202 `image/gif`, y el layout quedó byte-idéntico a la
+  línea base.
+- **La no-contaminación de las guardas la confirmó EL PROPIO SERVIDOR**:
+  `X-Goatcounter: ignored because "126.117.178.175" is in the IP ignore
+  list`, y esa es la IP pública de esta máquina. **Caveat de dos partes**: la
+  exclusión de navegador vive en el perfil y las guardas usan perfiles
+  frescos — la de IP es el único escudo que las cubre—, y si el ISP rota la
+  IP, caduca en silencio: re-verificar la lista al cambiar de conexión.
+
+Las reglas con las que se ejecutó (cumplidas):
 
 - **Pixel `<img>` puro en las catorce páginas, NO la variante mixta**
   (count.js en portada + pixel en subpáginas). Elegido por simplicidad: el
@@ -238,15 +265,18 @@ cuenta y configure ignorar-su-IP. Avisa él.** Las reglas del día que se haga:
 - **Prerrequisito duro: ignorar-la-IP-propia configurado ANTES del primer
   push con pixel.** El pixel no tiene la exclusión de localhost que trae
   count.js: cada corrida de `check-modes` y cada sesión de desarrollo
-  contaría como visita.
-- Al implementarlo: **actualizar la revisión de seguridad** del `.md` de
-  infraestructura del autor (§3 dice «0 cargas de terceros»), y el día del
-  PaaS la CSP necesita `img-src` con el host de GoatCounter (su doc lo pide).
-- **La retención no está declarada en su doc** — sin límite escrito (a
-  diferencia del 30 días que descartó a Cloudflare); el diseño por agregados
-  diarios sugiere indefinida. **Confirmar al crear la cuenta.** El riesgo
-  real para la serie de meses es que es el servicio gratuito de una persona:
-  lo desactivan el export CSV/API y la salida a self-hosted.
+  contaría como visita. **CUMPLIDO y verificado por header del servidor.**
+- **La revisión de seguridad quedó actualizada** en el `.md` de
+  infraestructura del autor (§3: de «0 cargas de terceros» a «1 por página»,
+  fechado), y la CSP del PaaS necesita `img-src` con
+  `realshinka.goatcounter.com` (su doc lo pide) — anotado allá y acá.
+- **La retención quedó CONFIRMADA al crear la cuenta: 0 = nunca borrar** —
+  cierra la duda que su doc dejaba abierta, y es lo que Cloudflare no ofrecía
+  (30 días). El panel confirmó además Sessions activo (únicas server-side,
+  funcionan con pixel) y descartó el custom domain (no evita adblockers, lo
+  avisa el propio panel). El riesgo restante para la serie de meses es que es
+  el servicio gratuito de una persona: lo desactivan el export CSV/API y la
+  salida a self-hosted.
 
 ### NINGUNA CREDENCIAL ENTRA AL REPO. Nunca.
 
@@ -816,8 +846,10 @@ completo y la verificación medida. Las reglas:
 **2026-08-06, revisión de seguridad de la etapa estática** (el informe completo
 vive en `kotodama_infraestructura.md` del autor, §3 — TLS verde por conducta,
 barrido limpio: 80 `_blank` todos con noopener, 0 formularios, 0 cargas de
-terceros, 0 sumideros de inyección en el JS). La decisión que pertenece a ESTE
-repo: **no se pone `<meta http-equiv="Content-Security-Policy">`**, y el motivo
+terceros, 0 sumideros de inyección en el JS — **el «0 terceros» describe el
+estado PRE-pixel: desde el pixel de GoatCounter del mismo día hay UNA carga
+de terceros por página, adoptada a sabiendas; ver la decisión de analytics**).
+La decisión que pertenece a ESTE repo: **no se pone `<meta http-equiv="Content-Security-Policy">`**, y el motivo
 importa más que la decisión:
 
 - La superficie de inyección del sitio es CERO (sin input, sin params

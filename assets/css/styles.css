@@ -264,6 +264,16 @@
    No se hizo ahora porque el sitio no lo usa y la forma corta se lee mejor. */
 [hidden] { display: none !important; }
 
+/* Pixel de GoatCounter (las 14 páginas, antes de </body>). Anclado al ORIGEN
+   a propósito: un absoluto sin anclas queda en su posición estática —después
+   del footer— y su píxel EXTENDÍA el scrollHeight en 1 (medido contra la
+   línea base pre-pixel, en las 14). En 0,0 queda bajo la nav y no puede
+   extender nada. Es clase y no style= inline para conservar el «style= en lo
+   publicado: 0» del inventario de seguridad. SI EL PIXEL SE RETIRA, RETIRAR
+   ESTA REGLA CON ÉL: una regla sin uso es legal y silenciosa, y este proyecto
+   ya pagó ese costo dos veces. */
+.gc-pixel { position: absolute; top: 0; left: 0; }
+
 /* Escala tipográfica global (2026-08-05, a pedido del autor: el cuerpo se
    veía chico). 112.5% = 18px de raíz. TODO el sitio mide en rem, así que esta
    perilla escala consistente y la escala relativa existente se conserva; las
