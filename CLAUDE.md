@@ -768,6 +768,29 @@ completo y la verificación medida. Las reglas:
   las dos detectadas).
 - cmap verificada por costumbre: 言 presente, 猫 de control ausente.
 
+### CSP por meta: evaluada y NO va — que nadie la agregue por completitud
+
+**2026-08-06, revisión de seguridad de la etapa estática** (el informe completo
+vive en `kotodama_infraestructura.md` del autor, §3 — TLS verde por conducta,
+barrido limpio: 80 `_blank` todos con noopener, 0 formularios, 0 cargas de
+terceros, 0 sumideros de inyección en el JS). La decisión que pertenece a ESTE
+repo: **no se pone `<meta http-equiv="Content-Security-Policy">`**, y el motivo
+importa más que la decisión:
+
+- La superficie de inyección del sitio es CERO (sin input, sin params
+  reflejados — los `?explodeR=` van por `URLSearchParams` a `parseFloat`), así
+  que el aporte real de una CSP acá es ~nulo; lo único valioso que daría un
+  header —anti-clickjacking— la meta NO lo puede: `frame-ancestors` se ignora
+  en meta CSP, y GitHub Pages no permite headers.
+- El costo sí es real: **el único script inline del sitio es el import map**,
+  y `script-src` exigiría su hash sha256 — **que caduca con cada edición del
+  import map y rompe el cubo EN SILENCIO para todo visitante**. Exactamente la
+  clase de rotura invisible que este proyecto no acepta.
+- **La batería completa de headers va al pasar a PaaS** (CSP con Report-Only
+  primero, frame-ancestors, HSTS, nosniff, Referrer-Policy, COOP) — está
+  anotada allá, con el detalle. Si alguien propone «sumar seguridad» al HTML
+  antes de eso, la respuesta es este bloque.
+
 ### Tarjetas de perfil en /sugao/ — completa: logo oficial sin alterar y texto
 
 El registro de perfiles personales va en **tarjetas** desde ya, aunque haya una
