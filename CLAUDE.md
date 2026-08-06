@@ -53,18 +53,19 @@ fallidos ya corregidos, y las capturas intermedias.
   profesional de /sugao/ con **insurance operations** sumado al arco (primero
   operations, después risk management — la secuencia real; la enumeración del
   arco a guiones; descriptions derivadas ajustadas igual). **El SEGUNDO
-  deploy quedó PUSHEADO (`03f9f79`, de fuente `b8be22e`, con confirmación
-  del autor) pero AL CIERRE DE LA SESIÓN TODAVÍA NO SERVIDO**: el primer
-  intento del build de Pages falló en el paso «Deploy to GitHub Pages» —el
-  build en verde, la falla del lado de GitHub; Pages estuvo lento todo el
-  día—, el re-run quedó ENCOLADO, y el dominio seguía sirviendo el primer
-  deploy (verificado al cierre: titular con puntos). **AL RETOMAR, LO
-  PRIMERO: comprobar que kotodamafinance.com sirva el titular SIN puntos, y
-  ahí verificar los cuatro cambios en el dominio** (titular, About
-  justificado, /sugao/ con operations, las descriptions). El run:
-  `actions/runs/31100279554`. Si sigue fallando, NO fabricar commits en
-  `main` para retriggerear —ensucia la rama-artefacto—: re-run desde la UI
-  de Actions. Antes, el mismo
+  deploy (`03f9f79`, de fuente `b8be22e`) quedó SERVIDO EL 2026-08-07 VÍA
+  RETRIGGER, y los cuatro cambios están VERIFICADOS EN EL DOMINIO**
+  (titular sin puntos, About justificado, /sugao/ con operations, las dos
+  descriptions — todos contra el origen, con cache-buster). Lo que pasó: el
+  primer build falló en «Deploy to GitHub Pages» (build en verde, falla del
+  lado de GitHub) y su re-run quedó ENCOLADO ~24 h sin poder cancelarse
+  («Failed to cancel workflow»), con GitHub Status sin incidente — cola
+  trabada, no algo del repo (los cuatro runs anteriores habían completado
+  bien). Lo destrabó un **commit VACÍO en `main`** (`00c4a00`, decisión del
+  autor): dispara un run nuevo que entra en cola limpia — completó en verde
+  al instante. **La forma que lo hace seguro es regla desde ahora y
+  REEMPLAZA al «NO fabricar commits para retriggerear» que decía acá**: ver
+  el punto nuevo en la decisión de la rama de deploy. Antes, el mismo
   día: **LA PUBLICACIÓN: EL SITIO ESTÁ VIVO EN
   kotodamafinance.com.** El procedimiento de «Publicar» del README se siguió
   completo y alcanzó tal como está escrito: cinco guardas en verde (pendulum
@@ -331,6 +332,23 @@ igual que `maintenance`: un artefacto derivado no se mantiene, se regenera.
   lo compara con el de la punta de `main`. Si no coinciden —hotfix a mano, o
   reglas de exclusión cambiadas desde ese deploy—, FRENA señalando el diff;
   `--pisar` publica igual, a sabiendas.
+- **La excepción única, ejecutada el 2026-08-07: el commit vacío de
+  RETRIGGER.** Si un build de Pages queda encolado del lado de GitHub y no
+  se puede cancelar («Failed to cancel workflow»), un commit vacío en
+  `main` dispara un run nuevo que entra en cola limpia — destrabó el
+  deploy 2 al instante (`00c4a00`). **El mensaje DEBE declarar la misma
+  `Fuente:` del deploy vigente, con el hash COMPLETO**: el commit vacío
+  conserva el árbol solo, y con la marca puesta `verificar_main_intacta`
+  da «intacta» y el próximo deploy sigue de largo; SIN la marca, ese
+  deploy frena creyendo que hubo edición a mano (es el cuarto estado de la
+  detección: punta sin marca con deploys en la historia). Verificado
+  EJECUTANDO `make-deploy.py` contra la punta nueva ANTES del push
+  («intacta» + «ya está en este contenido»), no deducido. Se fabrica con
+  `git commit --allow-empty -F <mensaje>` en un worktree temporal de
+  `main`, sin tocar el árbol de trabajo. El re-run desde la UI de Actions
+  sigue siendo la primera opción; esto es para cuando la cola misma está
+  trabada — y no es vía para NINGÚN otro cambio: contenido va siempre por
+  desarrollo → guardas → make-deploy.
 - **El tag de publicación va en el commit FUENTE de `redesign-trust`** —el
   que pasó por las guardas—, con el hash cruzado en el mensaje del commit de
   `main`: trazabilidad en las dos direcciones. `v1-content-complete` no se
