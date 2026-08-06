@@ -41,7 +41,20 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-06, LA PUBLICACIÓN: EL SITIO ESTÁ VIVO EN
+- Último cierre: **2026-08-06 (después de publicar), la tanda de cuatro
+  ajustes del autor**: el titular del hero SIN puntos (el `<br>` ya separa;
+  corte re-verificado midiendo: línea 1 en 907px contra el tope de 990,
+  margen 83 — la garantía se ensanchó; **la og-image CONSERVA los puntos a
+  propósito**: dibuja el titular en UNA línea y ahí el punto es el separador,
+  anotado en `LINEA` del script); el justificado EXTENDIDO al About de la
+  portada (era omisión del pase original, no decisión — medido su gate en la
+  columna de 36rem: máx 13.1px, cero sobre 16; Method queda afuera: su única
+  prosa es lead y tarjetas, texto de display); y los dos párrafos del perfil
+  profesional de /sugao/ con **insurance operations** sumado al arco (primero
+  operations, después risk management — la secuencia real; la enumeración del
+  arco a guiones; descriptions derivadas ajustadas igual). Publicados con el
+  SEGUNDO deploy, con confirmación del autor antes del push. Antes, el mismo
+  día: **LA PUBLICACIÓN: EL SITIO ESTÁ VIVO EN
   kotodamafinance.com.** El procedimiento de «Publicar» del README se siguió
   completo y alcanzó tal como está escrito: cinco guardas en verde (pendulum
   con su métrica sana, 0.0965), `make-deploy` → `824fada`, `check-modes` en
@@ -934,6 +947,15 @@ rango) y rellenar los costados (el halo).
   **El criterio de aceptación fue el caso SIN partición de palabras** —
   ver el hallazgo de hyphens en los hallazgos de método y el comentario
   junto a la regla. Si la columna se angosta alguna vez, esto se re-mide.
+- **El justificado ALCANZÓ AL ABOUT de la portada el 2026-08-06**
+  (`.about__body p`) — el pase original lo había dejado afuera por OMISIÓN,
+  no por decisión (verificado contra este registro antes de tocar: nada lo
+  eximía), y el autor lo notó como «sobra espacio a la derecha». Mismo
+  criterio: el cuerpo sí; `.about__statement`, los leads y las tarjetas y
+  pasos de Method quedan afuera (display). Como la columna del About es MÁS
+  angosta (36rem, ~61 CPL contra 77), **se re-midió antes de aceptar**, como
+  exige la regla de arriba: mediana 6.1–8.7px, máxima 13.1, cero sobre 16px.
+  Con esto la portada no tiene más prosa de cuerpo sin justificar.
 
 ### El favicon: 言 solo en oro sobre navy — juego completo, cerrado
 
@@ -2050,7 +2072,11 @@ al mirar la página, así que sobreviven al reemplazo del texto que describen.
 - `<title>` y `description`/`og:description` **derivados del hero**, con la
   dependencia anotada en el propio `<head>`.
 - `LINEA` de `make-og-image.py` es ahora **el titular del hero, literal**;
-  imagen regenerada y lock resellado. Verificada a 500 px.
+  imagen regenerada y lock resellado. Verificada a 500 px. **Desde el
+  2026-08-06 la única divergencia permitida es la PUNTUACIÓN**: el hero
+  perdió los puntos (sus frases viven en filas separadas) y la tarjeta los
+  conserva (las dibuja en una línea: el punto es su separador) — anotado en
+  el propio script, para que nadie los «sincronice» de vuelta.
 - **`og:image:alt` describía «El cubo de seis caras», y la tarjeta no lleva el
   cubo desde que pasó a ser sólo tipografía.** Además estaba **en castellano**,
   la única cadena así fuera de los `TODO`, y viaja en cada enlace compartido.

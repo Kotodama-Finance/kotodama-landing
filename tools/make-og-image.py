@@ -161,6 +161,13 @@ def componer():
     # un archivo, no una vista, así que se queda vieja sin que nada se rompa.
     # Ya pasó: sobrevivió al reemplazo del hero diciendo «Japan's financial
     # system, made legible — from the source.», que era el hero anterior.
+    #
+    # LA ÚNICA DIVERGENCIA PERMITIDA ES LA PUNTUACIÓN (2026-08-06): el hero
+    # perdió los puntos porque sus dos frases viven en FILAS separadas — el
+    # <br> hace la separación—, pero acá van EN UNA LÍNEA (regla de abajo) y
+    # sin el punto quedaría «...currents Most of them...» empastado: el punto
+    # ES el separador que en el hero hace el salto de fila. Si alguien
+    # «sincroniza» la puntuación con el hero, reintroduce eso.
     LINEA = "Capital moves in currents. Most of them run unseen."
     h_ja, off_ja = alto("言霊", ja)
     h_marca, off_marca = alto("KOTODAMA FINANCE", marca)
