@@ -541,7 +541,11 @@ button:focus-visible {
      Si alguna vez cambia el titular, esta medida se vuelve a verificar.
      EN REM (55rem = 880px a raíz 16) desde la escala global del 2026-08-05:
      el titular mide en rem, así que la caja tiene que escalar CON él — en px,
-     subir la raíz habría repetido el corte por dos píxeles que motivó el 880. */
+     subir la raíz habría repetido el corte por dos píxeles que motivó el 880.
+     RE-VERIFICADO el 2026-08-06 al sacar los puntos del titular (autor): la
+     primera línea mide 907px contra el tope de 990 (55rem a raíz 18) — margen
+     83px, dos líneas exactas, ninguna partida. Sacar caracteres ENSANCHÓ la
+     garantía; el número que manda sigue siendo el de la línea más larga. */
   max-width: 55rem;
   display: flex;
   flex-direction: column;
@@ -836,6 +840,19 @@ button:focus-visible {
   line-height: 1.8;
   color: var(--c-text-soft);
   max-width: 36rem;
+}
+/* El justificado alcanzó al About el 2026-08-06 (pedido del autor: la portada
+   había quedado afuera del pase que justificó .face-page__body p, y fue
+   OMISIÓN, no decisión — el registro de «El cuerpo» no la eximía). Mismo
+   criterio que en las subpáginas: el cuerpo sí; .about__statement, los leads
+   y las tarjetas de Method quedan afuera (texto de display: menos palabras
+   por línea es donde el justificado se agujerea). Esta columna es MÁS angosta
+   (36rem, ~61 CPL contra 77), así que se RE-MIDIÓ antes de aceptar, como
+   exige la regla de .face-page__body: ver el número junto a esa regla. */
+.about__body p {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
 }
 
 /* -------------------------------------------------------------------------
