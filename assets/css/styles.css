@@ -197,7 +197,13 @@
   --c-text-dim: #93b0cf;
   --c-text-link: #c3d4e6;
   --c-text-muted: #7d9cbb;
-  --c-text-muted-2: #5f7c9b;
+  /* #6786a7 desde 2026-08-06 (era #5f7c9b): sobre --c-navy daba 4.5012 de
+     contraste contra el umbral AA de 4.5 — cumplimiento por 0.0012, que
+     cualquier ajuste de tono tumba sin que nadie lo note. A #6786a7 da 5.15:
+     margen real, y sigue un escalón entero por debajo de --c-text-muted
+     (6.83), así que la jerarquía muted > muted-2 se conserva. Lo usan el
+     disclaimer del footer, el hint del cubo y la flecha de scroll. */
+  --c-text-muted-2: #6786a7;
 
   /* Tripletas RGB para componer alfa (reemplazan todos los rgba() inline) */
   --rgb-gold: 200 168 90;
