@@ -2,7 +2,7 @@
  "_comentario": "Generado por tools/make-og-image.py. Hashes de lo que determina cómo se ve og-image.png; check-structure avisa si alguno cambió. No editar a mano.",
  "entradas": {
   "fuente inter-latin.woff2": "c7da65b0808901c4",
-  "fuente zen-kaku-gothic-new-500-subset.woff2": "2e8de0c575d79f85",
+  "fuente zen-kaku-gothic-new-500-subset.woff2": "d7146ab6072c61aa",
   "make-og-image.py": "7c50e3abbf96f0d0",
   "styles.css :root": "44e559c1635b4cc9"
  }

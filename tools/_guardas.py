@@ -15,8 +15,15 @@ SITIO = "https://kotodamafinance.com"
 EXCLUIDOS = {"_dev", "_ref", ".git", "docs", "tools", "node_modules"}
 # Páginas que existen pero NO se indexan (ver sitemap_incompleto)
 NO_INDEXABLES = {"404.html"}
-# Rango de caracteres japoneses: kana, kanji y espacio ideográfico
-JAPONES = re.compile(r"[぀-ヿ㐀-鿿　]")
+# Rango de caracteres japoneses: puntuación CJK (U+3000-303F: espacio
+# ideográfico, 、y 。), kana, kanji, y formas de ancho completo (U+FF00-FFEF:
+# los paréntesis （） y todo el bloque). ENSANCHADO el 2026-08-06: la versión
+# anterior ([぀-ヿ㐀-鿿　]) no miraba puntuación ni full-width, así que 、
+# (U+3001, en un nombre de fuente de /method/) faltó del subset CON la guarda
+# en verde — se dibujaba con fuente del sistema por el fallback por glifo, y
+# los （） de la vez pasada tampoco estaban vigilados. Mismo criterio que
+# japones() en check-maintenance.py: si se toca acá, tocar allá.
+JAPONES = re.compile(r"[　-〿぀-ヿ㐀-鿿＀-￯]")
 BASELINE = RAIZ / "tools" / "placeholders-baseline.json"
 
 

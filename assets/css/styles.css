@@ -64,6 +64,12 @@
    uno — 近 y los dos paréntesis—, y los paréntesis son los que no se ven
    venir, porque uno da por hecho que un paréntesis es un paréntesis. Van por
    --unicodes y no en la cadena de texto, para que se lean como lo que son.
+   LA COMA IDEOGRÁFICA 、(U+3001) ES LA MISMA TRAMPA y mordió el 2026-08-06:
+   entró con un nombre de fuente de /method/ (住民基本台帳に基づく人口、…),
+   el subset no la tenía y LA GUARDA ESTABA EN VERDE — su regex de japonés no
+   miraba la puntuación CJK (se ensanchó ese día, ver _guardas.JAPONES). Se
+   dibujaba con fuente del sistema por el fallback por glifo, invisible a
+   simple vista. Va por --unicodes, como los paréntesis.
 
    COMPROBAR LA COBERTURA (no confiar en document.fonts.check: informa si la
    fuente está cargada, no si contiene el glifo). Contra la tabla cmap real:
@@ -84,10 +90,10 @@
    aalt, fwid, ordn y sups, que no se usan, y deja de reproducir el commiteado.
      pyftsubset ZenKakuGothicNew-Regular.ttf \
        --output-file=assets/fonts/zen-kaku-gothic-new-400-subset.woff2 \
-       --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000,U+FF08,U+FF09
+       --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000,U+3001,U+FF08,U+FF09
      pyftsubset ZenKakuGothicNew-Medium.ttf  \
        --output-file=assets/fonts/zen-kaku-gothic-new-500-subset.woff2 \
-       --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000,U+FF08,U+FF09
+       --flavor=woff2 --text="$JA" --unicodes=U+0020-007F,U+3000,U+3001,U+FF08,U+FF09
 
    LATÍN (Cormorant/Inter) — CON --layout-features='*'. Sin él los subsets salen
    un 35% MÁS CHICOS: se pierden 374 glifos de Inter y 503 de Cormorant (smcp,

@@ -68,9 +68,12 @@ def git(*args):
 
 
 def japones(txt):
-    """Los caracteres japoneses del texto. Mismo criterio que _guardas.JAPONES."""
-    return {c for c in txt if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"
-            or "＀" <= c <= "ﾟ"}
+    """Los caracteres japoneses del texto. Mismo criterio que _guardas.JAPONES
+    (unificado el 2026-08-06: esta copia decía «mismo criterio» y ya había
+    derivado — miraba full-width pero no puntuación CJK, y su rango de kanji
+    empezaba en U+4E00 en vez de U+3400)."""
+    return {c for c in txt if "　" <= c <= "〿" or "぀" <= c <= "ヿ"
+            or "㐀" <= c <= "鿿" or "＀" <= c <= "￯"}
 
 
 def main():
