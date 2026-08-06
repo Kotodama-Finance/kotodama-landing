@@ -2152,6 +2152,24 @@ que produjeron conclusiones equivocadas:
   lo cazó antes que un lector. Referencia fija sólo la da lo que no cambia (un
   blob histórico, un conteo estructural); si el número describe el presente,
   hay que escribirle al lado cómo regenerarlo, no su valor.
+- **UN GENÉRICO (`serif`, `sans-serif`) EN UN SVG QUE SE RASTERIZA ES UNA FUENTE
+  INDETERMINADA.** El archivo se ve distinto según quién lo abra, sin que nada lo
+  delate: el genérico resuelve contra las fuentes y la configuración de CADA
+  entorno, y todos los renders «se ven bien». Medido el 2026-08-06 en el banner
+  de LinkedIn (`kotodama_finance_banner.svg`, fuera del repo): el PNG viejo venía
+  de un stack estilo Linux (kanji en Noto Sans JP, título en un gemelo métrico de
+  Arial tipo Liberation Sans) y la re-rasterización en Chrome/Windows daba otra
+  cosa — y para los kanji era **Microsoft YaHei, una fuente CHINA**, porque el
+  `serif` genérico sin `lang` ni siquiera garantiza el idioma (la misma trampa del
+  cartel de mantenimiento, en otro medio). El arreglo es doble: **nombrar la
+  fuente** (con su gemelo métrico de Linux como fallback, para que el layout no
+  se mueva entre entornos) **y dejar `lang="ja"` como red**. La métrica que lo
+  decide es `CSS.getPlatformFontsForNode` — la única que dice qué fuente dibujó
+  de verdad—; la identificación del render viejo salió de comparar máscaras de
+  tinta contra candidatas (IoU 0.843 con Noto Sans JP, la siguiente a 0.68).
+  Misma familia que el fallback por glifo y que `hyphens: auto`: se ve correcto,
+  nada protesta, y la divergencia sólo aparece si dos entornos comparan sus
+  salidas.
 - **`hyphens: auto` PUEDE NO HACER NADA, Y NADA LO DELATA.** Los
   diccionarios de partición de Chromium no vienen en el binario: llegan por
   component updater al PERFIL. Un perfil sin el componente —headless con
