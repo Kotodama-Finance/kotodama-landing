@@ -208,6 +208,46 @@ Ninguno bloquea publicar. Cada uno tiene su sección con el detalle.
 
 ## Decisiones cerradas — no rediscutir
 
+### Analytics: GoatCounter en modo PIXEL, en las CATORCE — decidido, sin ejecutar
+
+**Decidido por el autor el 2026-08-06, contra la documentación primaria del
+servicio (leída del repo arp242/goatcounter; goatcounter.com estaba caído ese
+día — dato en sí mismo). NO ESTÁ IMPLEMENTADO: falta que el autor cree la
+cuenta y configure ignorar-su-IP. Avisa él.** Las reglas del día que se haga:
+
+- **Pixel `<img>` puro en las catorce páginas, NO la variante mixta**
+  (count.js en portada + pixel en subpáginas). Elegido por simplicidad: el
+  reparto por canal del lanzamiento sale de los clics que reportan los
+  propios posts de X y LinkedIn — no vale dos mecanismos por recuperar el
+  referrer. Conserva «cero JS en las subpáginas»; rompe «cero terceros», a
+  sabiendas.
+- **Lo que el pixel NO mide, textual de su doc**: referrer y tamaño de
+  pantalla (llenar `r=` requiere JS). **Las visitas únicas SÍ se conservan**:
+  GoatCounter las computa del lado del servidor (sitio+UA+IP, ventana de 8 h,
+  solo en memoria).
+- **LO QUE SE MIDA ES UN PISO, NO UN CENSO**: el propio autor de GoatCounter
+  estima **~⅓ de pageviews perdidas por adblockers** (bloquean
+  goatcounter.com; el dominio custom NO lo evita — solo el self-hosting, que
+  queda como opción para el PaaS). Vale igual para pixel y para JS. No
+  «corregir» números contra otras fuentes creyendo que el pixel está roto.
+- **Ejecución: commit propio, ANTES del merge a `main`** — toca las 14
+  páginas y así las cuatro guardas lo validan antes de producción. El `<img>`
+  va **FUERA de los bloques comparados de nav y footer** (lleva `p=/ruta`
+  distinto por página: adentro rompería `check-ready`), antes de `</body>`,
+  con `width="1" height="1"` y posición absoluta para no sumar layout.
+- **Prerrequisito duro: ignorar-la-IP-propia configurado ANTES del primer
+  push con pixel.** El pixel no tiene la exclusión de localhost que trae
+  count.js: cada corrida de `check-modes` y cada sesión de desarrollo
+  contaría como visita.
+- Al implementarlo: **actualizar la revisión de seguridad** del `.md` de
+  infraestructura del autor (§3 dice «0 cargas de terceros»), y el día del
+  PaaS la CSP necesita `img-src` con el host de GoatCounter (su doc lo pide).
+- **La retención no está declarada en su doc** — sin límite escrito (a
+  diferencia del 30 días que descartó a Cloudflare); el diseño por agregados
+  diarios sugiere indefinida. **Confirmar al crear la cuenta.** El riesgo
+  real para la serie de meses es que es el servicio gratuito de una persona:
+  lo desactivan el export CSV/API y la salida a self-hosted.
+
 ### NINGUNA CREDENCIAL ENTRA AL REPO. Nunca.
 
 Ninguna clave, token ni secreto se commitea. **Ni siquiera en un commit que
