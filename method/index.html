@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Method — Kotodama Finance</title>
+<meta name="description" content="How a figure gets here: what counts as a primary source, how every number is verified against the original document, and the full list of sources we read.">
+<link rel="canonical" href="https://kotodamafinance.com/method/">
+<!-- Open Graph: la tarjeta que se ve al compartir el enlace en un chat o una
+     red. Sin esto el enlace viaja como una línea de texto pelada.
+     og:url y og:image tienen que ser ABSOLUTAS: el que arma la vista previa no
+     es el navegador del lector y no puede resolver una ruta relativa.
+     La imagen la genera tools/make-og-image.py. -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kotodamafinance.com/method/">
+<meta property="og:title" content="Method — Kotodama Finance">
+<meta property="og:description" content="How a figure gets here: what counts as a primary source, how every number is verified against the original document, and the full list of sources we read.">
+<meta property="og:image" content="https://kotodamafinance.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Kotodama Finance: the 言霊 mark in gold above the brand name, on deep navy.">
+<!-- Sin esto X muestra una miniatura cuadrada en vez de la tarjeta ancha. -->
+<meta name="twitter:card" content="summary_large_image">
+<!-- Iconos. El .ico existe porque el navegador pide /favicon.ico haya o no
+     <link>: sin el archivo, cada carga deja un 404 en la consola.
+     Se generan con tools/make-favicon.py, que documenta el porqué de cada formato. -->
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body class="page">
+
+<!-- Página de texto: no carga el shader del mar ni Three.js. -->
+  <header id="nav" class="nav">
+    <a class="nav__brand" href="/">
+      <span class="nav__mark" lang="ja">言霊</span>
+      <span class="nav__word">Kotodama Finance</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="/#cube">The Cube</a>
+      <a href="/musubi/">Musubi</a>
+      <a href="/#about">About</a>
+      <a href="/#method">Method</a>
+      <a href="/#footer">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- /method/ — EL MÉTODO Y LA LISTA TAXATIVA DE FUENTES ------------------
+         La sección #method de la portada NO se reemplaza: queda como RESUMEN
+         (tres pilares y cuatro pasos) y la nav «Method» sigue apuntando ahí.
+         Esta página es el desarrollo, y se llega por el enlace de su pie.
+
+         LA LISTA SE DERIVA DE §Fuentes de Datos Mapeadas del context.md, que
+         es la fuente de verdad; acá no se mantiene una copia paralela. Al
+         actualizarla se parte de ese archivo, NO de esta página.
+
+         Tres cosas que la lista NO trae, y cada una por una razón distinta:
+         · El Tier 3 (catálogos, archivos, bases de prensa) — lo cubre el
+           párrafo «a third category we read and do not list».
+         · EDINET DB y Yahoo Finance Japan — parsean y redistribuyen dato de
+           otro, o sea que son SECUNDARIAS. Publicarlas acá contradiría, en la
+           misma pantalla, el principio que esta página declara. Se siguen
+           usando como herramienta de conveniencia; la cifra se cita del emisor.
+         · japan_insurance_v2.xlsx — archivo interno del proyecto, degradado a
+           Tier 3 por el propio autor. No es una fuente pública.
+
+         TEXTO DEFINITIVO (versión de lanzamiento, en inglés). La versión
+         japonesa es un pase aparte: no traducir de acá. -->
+    <article class="face-page">
+      <header class="face-page__head">
+        <h1 class="face-page__title">
+          <span class="face-page__romaji">Method</span>
+        </h1>
+        <p class="face-page__gloss">How a figure gets here</p>
+      </header>
+
+      <div class="face-page__body">
+        <p>Everything on this platform is free, which means there is no price to signal quality. What is left is the method. If you cannot check how a figure got here, you are being asked to trust us &mdash; and there is no reason you should.</p>
+        <p>So the method is published alongside the findings, not filed behind them. It is the argument, not the appendix.</p>
+      </div>
+
+      <section class="face-page__section" aria-labelledby="method-rigor">
+        <h2 id="method-rigor" class="face-page__subtitle">What counts as a source</h2>
+        <div class="face-page__body">
+          <p>Primary means first-hand. A source is primary when it holds the data itself, not when it is respectable. The Bank of Japan is primary on the money supply. A broker is primary on its own transactions. A newspaper reporting either one is not primary on anything &mdash; it is a pointer to where the number lives.</p>
+          <p>The hierarchy has three levels and the third is a prohibition. An official consolidated source is the ideal: the FSA, the GIAJ, the LIAJ, the BOJ. Where no official consolidation exists, we use an attributed non-official source and say so plainly &mdash; a figure that has no official seal is not the same as a figure with no origin, and flattening the two would mean publishing less than we honestly can. What we do not do is take a number from a source that is citing someone else, or from a figure whose trail runs out. If we cannot follow it back to the body that produced it, it does not go up.</p>
+          <p>Verification means the original document, not the total. A figure is checked against the release it came from, line by line. Reconciling to a published total is not the same thing &mdash; an aggregate can balance with compensating errors inside it, and we have found exactly that in our own working files. Units get checked separately, because Japanese sources move between <span lang="ja">百万円</span>, <span lang="ja">十億円</span> and <span lang="ja">兆円</span> across tables in the same document, and a mislabelled unit is a factor-of-a-thousand error that no total will catch.</p>
+          <p>When sources disagree or revise, we say so. Official figures get revised; two bodies measuring similar things with different methods produce different numbers, and neither is wrong. Where that happens, we publish the discrepancy rather than picking a winner quietly, and we name the methodology that separates them. A revision is dated, not overwritten.</p>
+          <p>What travels with every figure: its origin, its date, and its revision state. Enough to take any number here, go to the body that issued it, and find the same number. That is the standard. Where a figure cannot meet it, it does not appear &mdash; and where a whole measure cannot be built from primary sources, we say that too, instead of estimating our way around the gap.</p>
+          <!-- DECLARACIÓN DE PROCEDENCIA DEL TEXTO. Va acá y en ninguna otra
+               página: /method/ es donde se declara cómo se produce lo que se
+               publica, así que es donde corresponde decir cómo se produjo el
+               texto mismo. Un sitio que le exige trazabilidad al dato y no
+               declara la de su propia prosa tiene un punto ciego — y si alguien
+               lo descubre después sin que esté dicho, el daño al rigor es mayor
+               que el costo de decirlo.
+               Va DENTRO del cuerpo de esta sección, sin título propio: es una
+               línea, y un h3 encima la anunciaría como un tema aparte cuando es
+               el cierre de qué cuenta como fuente.
+               «Credit where credit's due» — con WHERE. «were» es un error de
+               tipeo que se lee como tal. -->
+          <p>Credit where credit&rsquo;s due: This project would not have been possible without my AI assistant.</p>
+        </div>
+      </section>
+
+      <!-- El modificador --wide saca la LISTA (leyenda, grupos y entradas) de
+           la columna de lectura al ancho completo, en pantallas anchas. El h2
+           y la prosa de la sección se quedan EN la columna: el salto marca
+           dónde termina el argumento y empieza la referencia. Decisión y
+           reglas en styles.css (.face-page__section--wide). -->
+      <section class="face-page__section face-page__section--wide" aria-labelledby="method-fuentes">
+        <h2 id="method-fuentes" class="face-page__subtitle">The sources</h2>
+        <div class="face-page__body">
+          <p>What is on this list. Two kinds of source, kept separate on purpose.</p>
+          <p><strong>Official primary</strong> &mdash; the bodies that produce and consolidate the data themselves: the central bank, the ministries, the regulator, the industry associations, the disclosure systems. This is where published figures come from.</p>
+          <p><strong>Attributed primary</strong> &mdash; organisations that are first-hand on their own data but do not carry an official seal: research institutes, survey firms, market bodies. We use them where no official consolidation exists, and we name them in the text every time. A figure from this group always arrives with its origin attached, because the reader needs to know what is in their hand.</p>
+          <p>There is a third category we read and do not list: catalogues, archives, and press databases that tell us a figure exists. We go to the issuing body for the number itself. Listing them here would suggest they are sources of data, and they are not.</p>
+          <p>How it is ordered. By domain, not by importance &mdash; insurance, banking, corporate filings, markets, macro, demographics, and the international series that let Japanese figures be compared against something. Within each, official primary first.</p>
+          <p>The list grows as the platform does. It is a record of what we actually read, not a statement of ambition, and a source appears here once it has been used.</p>
+        </div>
+
+        <!-- La marca de tier va como cuadrado lleno / hueco, el mismo
+             vocabulario que los puntos de estado de las caras: lleno = tiene
+             sello oficial, hueco = primaria atribuida. Con leyenda arriba,
+             porque un marcador sin leyenda es decoración.
+
+             EL NOMBRE JAPONÉS VA DEBAJO DEL INGLÉS, no en columna propia. Acá
+             NO es traducción ni adorno: es el nombre oficial de la entidad
+             (損害保険料率算出機構, 日本損害保険協会), y quien busque la fuente
+             en Japón lo necesita. En columna, su ancho variable corría el
+             arranque del inglés fila por fila y el de GIROJ partía en dos
+             líneas desalineando la marca de tier; como línea secundaria la
+             alineación queda pareja sola, y las entradas sin nombre japonés
+             (EDINET, e-Stat, BIS, Damodaran, WID, EPU) simplemente no la
+             llevan. -->
+
+        <p class="sources__legend">
+          <span class="sources__mark" data-tier="1" aria-hidden="true"></span> Official primary
+          <span class="sources__mark" data-tier="2" aria-hidden="true"></span> Attributed primary
+        </p>
+
+        <h3 class="sources__group">Insurance</h3>
+        <ul class="sources">
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.fsa.go.jp/en/regulated/statistics/" target="_blank" rel="noopener">FSA</a><span class="sources__ja" lang="ja">金融庁</span><span class="sources__note">Supervisory statistics for regulated insurers.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.seiho.or.jp/english/" target="_blank" rel="noopener">LIAJ</a><span class="sources__ja" lang="ja">生命保険協会</span><span class="sources__note">Life insurance industry aggregates.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.sonpo.or.jp/en/" target="_blank" rel="noopener">GIAJ</a><span class="sources__ja" lang="ja">日本損害保険協会</span><span class="sources__note">Non-life aggregates, by line and by company.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.giroj.or.jp/" target="_blank" rel="noopener">GIROJ</a><span class="sources__ja" lang="ja">損害保険料率算出機構</span><span class="sources__note">Statutory rating organisation: reference rates, standard rates, and unified member statistics in CSV.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.nihonjishin.co.jp/" target="_blank" rel="noopener">Japan Earthquake Reinsurance</a><span class="sources__ja" lang="ja">日本地震再保険</span><span class="sources__note">Sole reinsurer of household earthquake cover: scheme structure and claims paid by event since 1966.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.jili.or.jp/" target="_blank" rel="noopener">JILI</a><span class="sources__ja" lang="ja">生命保険文化センター</span><span class="sources__note">Household surveys on life insurance demand.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.actuaries.jp/" target="_blank" rel="noopener">Institute of Actuaries of Japan</a><span class="sources__ja" lang="ja">日本アクチュアリー会</span><span class="sources__note">The standard mortality table the FSA adopts for reserves and premiums.</span></span></li>
+        </ul>
+        <h3 class="sources__group">Banking</h3>
+        <ul class="sources">
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.fsa.go.jp/en/regulated/statistics/" target="_blank" rel="noopener">FSA</a><span class="sources__ja" lang="ja">金融庁</span><span class="sources__note">Results and non-performing loans, major and regional banks.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.boj.or.jp/en/research/brp/fsr/" target="_blank" rel="noopener">Bank of Japan &mdash; Financial System Report</a><span class="sources__ja" lang="ja">日本銀行</span><span class="sources__note">Semi-annual assessment of systemic stability.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.stat-search.boj.or.jp/" target="_blank" rel="noopener">Bank of Japan &mdash; Time-Series Data Search</a><span class="sources__ja" lang="ja">日本銀行</span><span class="sources__note">Long-run monetary and financial series, with a JSON and CSV API.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.zenginkyo.or.jp/en/statistics/" target="_blank" rel="noopener">JBA</a><span class="sources__ja" lang="ja">全国銀行協会</span><span class="sources__note">Income statement and balance sheet per bank, semi-annual.</span></span></li>
+        </ul>
+        <h3 class="sources__group">Corporate filings and capital markets</h3>
+        <ul class="sources">
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://disclosure.edinet-fsa.go.jp/" target="_blank" rel="noopener">EDINET</a><span class="sources__note">Statutory disclosure for listed companies, in XBRL.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://jpx-jquants.com/en" target="_blank" rel="noopener">J-Quants API</a><span class="sources__note">Historical prices and corporate financials from JPX.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.jpx.co.jp/english/markets/data-catalog/" target="_blank" rel="noopener">JPX Data Catalog</a><span class="sources__note">Indices, volumes, and derivatives.</span></span></li>
+        </ul>
+        <h3 class="sources__group">Real estate</h3>
+        <ul class="sources">
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.reinfolib.mlit.go.jp/" target="_blank" rel="noopener">Real Estate Information Library</a><span class="sources__ja" lang="ja">不動産情報ライブラリ</span><span class="sources__note">Actual transaction records for all 47 prefectures since 2005. API access is granted on application.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.mlit.go.jp/totikensangyo/totikensangyo_tk5_000085.html" target="_blank" rel="noopener">Japan Property Price Index</a><span class="sources__ja" lang="ja">不動産価格指数</span><span class="sources__note">Property price index by prefecture, monthly to annual.</span></span></li>
+        </ul>
+        <h3 class="sources__group">Public debt and fixed income</h3>
+        <ul class="sources">
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.mof.go.jp/english/policy/jgbs/debt_management/" target="_blank" rel="noopener">MOF</a><span class="sources__ja" lang="ja">財務省</span><span class="sources__note">Annual debt management report on Japanese government bonds.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.jsda.or.jp/en/statistics/" target="_blank" rel="noopener">JSDA</a><span class="sources__ja" lang="ja">日本証券業協会</span><span class="sources__note">Over-the-counter prices, volumes, and yields for some 5,600 bonds.</span></span></li>
+        </ul>
+        <h3 class="sources__group">Macro</h3>
+        <ul class="sources">
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.cao.go.jp/statistics/index.html" target="_blank" rel="noopener">Cabinet Office</a><span class="sources__ja" lang="ja">内閣府</span><span class="sources__note">GDP, activity index, machinery orders, consumption, business outlook.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.esri.cao.go.jp/" target="_blank" rel="noopener">Cabinet Office ESRI</a><span class="sources__ja" lang="ja">内閣府経済社会総合研究所</span><span class="sources__note">Prefectural GDP.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.nta.go.jp/" target="_blank" rel="noopener">National Tax Agency</a><span class="sources__ja" lang="ja">国税庁</span><span class="sources__note">Tax collection.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.mhlw.go.jp/toukei/itiran/index.html" target="_blank" rel="noopener">MHLW</a><span class="sources__ja" lang="ja">厚生労働省</span><span class="sources__note">Labour market.</span></span></li>
+        </ul>
+        <h3 class="sources__group">Demographics</h3>
+        <ul class="sources">
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.stat.go.jp/data/mesh/index.html" target="_blank" rel="noopener">Population Census grid statistics</a><span class="sources__ja" lang="ja">国勢調査に関する地域メッシュ統計</span><span class="sources__note">Observed population per grid cell, with boundary data. The source of the population number itself.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://nlftp.mlit.go.jp/ksj/" target="_blank" rel="noopener">National Land Numerical Information</a><span class="sources__ja" lang="ja">国土数値情報</span><span class="sources__note">Grid and administrative geometry only &mdash; its own population figures are projections, not observations.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.stat.go.jp/data/idou/index.html" target="_blank" rel="noopener">Residential register migration report</a><span class="sources__ja" lang="ja">住民基本台帳人口移動報告</span><span class="sources__note">In- and out-migration by municipality, monthly and annual.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.soumu.go.jp/main_sosiki/jichi_gyousei/daityo/jinkou_jinkoudoutai-setaisuu.html" target="_blank" rel="noopener">Residential register population and households</a><span class="sources__ja" lang="ja">住民基本台帳に基づく人口、人口動態及び世帯数</span><span class="sources__note">The only municipal layer that carries international movement.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.moj.go.jp/isa/policies/statistics/index.html" target="_blank" rel="noopener">Immigration statistics</a><span class="sources__ja" lang="ja">出入国管理統計</span><span class="sources__note">Border crossings since 1950. Crossing events, not resident migration.</span></span></li>
+        </ul>
+        <h3 class="sources__group">Cross-cutting statistics</h3>
+        <ul class="sources">
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.e-stat.go.jp/" target="_blank" rel="noopener">e-Stat</a><span class="sources__note">The unified government portal: statistics from every ministry, with a download API.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.stat.go.jp/" target="_blank" rel="noopener">Statistics Bureau</a><span class="sources__ja" lang="ja">総務省統計局</span><span class="sources__note">The Statistical Yearbook, running from 1873.</span></span></li>
+        </ul>
+        <h3 class="sources__group">Funds and pensions</h3>
+        <ul class="sources">
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.gpif.go.jp/" target="_blank" rel="noopener">GPIF</a><span class="sources__ja" lang="ja">年金積立金管理運用独立行政法人</span><span class="sources__note">The largest public pension fund in the world.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.toushin.or.jp/" target="_blank" rel="noopener">IMAJ</a><span class="sources__ja" lang="ja">投資信託協会</span><span class="sources__note">Assets under management, flows, and monthly fund statistics.</span></span></li>
+        </ul>
+        <h3 class="sources__group">Other sectors</h3>
+        <ul class="sources">
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.leasing.or.jp/" target="_blank" rel="noopener">Japan Leasing Association</a><span class="sources__ja" lang="ja">リース事業協会</span><span class="sources__note">Leasing volume, vehicles, and instalment sales.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.j-credit.or.jp/" target="_blank" rel="noopener">Japan Consumer Credit Association</a><span class="sources__ja" lang="ja">日本クレジット協会</span><span class="sources__note">Consumer credit statistics.</span></span></li>
+        </ul>
+        <h3 class="sources__group">International</h3>
+        <ul class="sources">
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.bis.org/" target="_blank" rel="noopener">BIS</a><span class="sources__note">Cross-border banking exposure, including the Japanese megabanks.</span></span></li>
+          <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://pages.stern.nyu.edu/~adamodar/" target="_blank" rel="noopener">Damodaran Online</a><span class="sources__note">Valuation datasets by sector and region, Japan included. He computes them.</span></span></li>
+          <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://wid.world/" target="_blank" rel="noopener">World Inequality Database</a><span class="sources__note">Income distribution series, built from fiscal sources.</span></span></li>
+          <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://www.policyuncertainty.com/" target="_blank" rel="noopener">Economic Policy Uncertainty Index</a><span class="sources__note">Uncertainty index for Japan, constructed by Baker, Bloom, and Davis.</span></span></li>
+        </ul>
+        <h3 class="sources__group">Research institutes</h3>
+        <ul class="sources">
+          <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://www.tdb.co.jp/report/" target="_blank" rel="noopener">TDB</a><span class="sources__ja" lang="ja">帝国データバンク</span><span class="sources__note">Free survey series: price revisions, business sentiment, bankruptcies, cost pass-through, and closures without a successor.</span></span></li>
+          <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://www.nli-research.co.jp/" target="_blank" rel="noopener">NLI Research Institute</a><span class="sources__ja" lang="ja">ニッセイ基礎研究所</span><span class="sources__note">The most cross-cutting of the group: insurance, pensions, demographics, macro.</span></span></li>
+          <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://www.dlri.co.jp/" target="_blank" rel="noopener">Dai-ichi Life Research Institute</a><span class="sources__ja" lang="ja">第一ライフ資産運用経済研究所</span><span class="sources__note">Macro, markets, and fiscal policy, with a declared focus on asset management.</span></span></li>
+          <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://www.myri.co.jp/" target="_blank" rel="noopener">Meiji Yasuda Research Institute</a><span class="sources__ja" lang="ja">明治安田総合研究所</span><span class="sources__note">Household financial planning, social security, and health.</span></span></li>
+          <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://www.sompo-ri.co.jp/" target="_blank" rel="noopener">Sompo Institute Plus</a><span class="sources__ja" lang="ja">SOMPOインスティチュート・プラス</span><span class="sources__note">Macro, ageing, social security, and climate.</span></span></li>
+          <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://www.irric.co.jp/" target="_blank" rel="noopener">MS&amp;AD InterRisk Research</a><span class="sources__ja" lang="ja">MS&amp;ADインターリスク総研</span><span class="sources__note">The insurance business environment and climate risk.</span></span></li>
+          <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://www.tokio-dr.jp/" target="_blank" rel="noopener">Tokio Marine dR</a><span class="sources__ja" lang="ja">東京海上ディーアール</span><span class="sources__note">Risk management research, joint projects, and climate reporting.</span></span></li>
+          <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://www.nri.com/jp/knowledge/report/" target="_blank" rel="noopener">Nomura Research Institute</a><span class="sources__ja" lang="ja">野村総合研究所</span><span class="sources__note">Economics, finance, technology, and public management.</span></span></li>
+          <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://www.dir.co.jp/" target="_blank" rel="noopener">Daiwa Institute of Research</a><span class="sources__ja" lang="ja">大和総研</span><span class="sources__note">Economic analysis and forecasts, and capital markets regulation.</span></span></li>
+          <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://www.jri.co.jp/report/" target="_blank" rel="noopener">Japan Research Institute</a><span class="sources__ja" lang="ja">日本総合研究所</span><span class="sources__note">Social security and regional economies.</span></span></li>
+          <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://www.murc.jp/library/economyresearch/" target="_blank" rel="noopener">MURC</a><span class="sources__ja" lang="ja">三菱UFJリサーチ&amp;コンサルティング</span><span class="sources__note">Economic outlooks, energy, and regional economies.</span></span></li>
+          <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://www.mizuhobank.co.jp/corporate/mhri/research/" target="_blank" rel="noopener">Mizuho Research Institute</a><span class="sources__ja" lang="ja">みずほ総合研究所</span><span class="sources__note">Domestic and overseas outlooks, and Tankan and QE forecasts.</span></span></li>
+          <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://www.mri.co.jp/knowledge/insight/" target="_blank" rel="noopener">Mitsubishi Research Institute</a><span class="sources__ja" lang="ja">三菱総合研究所</span><span class="sources__note">Economic outlooks, energy, and public policy.</span></span></li>
+        </ul>
+      </section>
+
+      <p class="face-page__back"><a href="/">&larr; Back to the start</a></p>
+    </article>
+  </main>
+
+  <footer id="footer" class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <p class="footer__mark">
+          <span lang="ja">言霊</span>
+          <span class="footer__word">Kotodama Finance</span>
+        </p>
+        <p class="footer__tag">Where economic currents become visible. Open access.</p>
+      </div>
+      <!-- SIN columna «Platform»: enlazaba a The Cube y Method — dos de cinco
+           secciones, las dos ya presentes en la nav de arriba. Una selección
+           arbitraria que duplica navegación no orienta: ruido. -->
+      <div class="footer__cols">
+        <div class="footer__col">
+          <p class="footer__label">Reach us</p>
+          <a href="mailto:contact@kotodamafinance.com">contact@kotodamafinance.com</a>
+        </div>
+        <div class="footer__col">
+          <p class="footer__label">Follow</p>
+          <a href="https://x.com/KotodamaFinance" target="_blank" rel="noopener">X / @KotodamaFinance</a>
+          <a href="https://www.linkedin.com/company/kotodamafinance/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <!-- 免責事項 CORTO — se repite en TODAS las páginas a propósito, y es la
+         única duplicación deliberada de texto legal del sitio. Una advertencia
+         sólo cumple su función si está donde el lector está leyendo; por eso va
+         en el footer global y no en una página a la que haya que llegar.
+         El texto COMPLETO vive UNA sola vez, en /disclaimer/, y desde acá se
+         enlaza. Duplicar el largo lo haría derivar, y un sitio que se
+         contradice en su propio descargo pierde lo único que el descargo da.
+         SIN el rótulo 免責事項 delante: era la traducción japonesa de
+         «disclaimer», o sea japonés ornamental en la versión inglesa — la
+         misma textura que 立方体 o 一次資料, que ya se sacaron. Los cuatro
+         glifos se conservan en el subset para /ja/ (ver el @font-face). -->
+    <p class="footer__disclaimer">
+      Kotodama Finance is published for information only and is not investment or financial advice.
+      <a href="/disclaimer/">Full disclaimer &rarr;</a>
+    </p>
+    <div class="footer__bottom">
+      <span>&copy; 2026 Kotodama Finance &middot; Open access</span>
+      <span>English &middot; <span class="footer__soon"><span lang="ja">日本語（近日公開）</span></span></span>
+    </div>
+  </footer>
+
+  <!-- Pixel de GoatCounter (medición sin JS — la decisión y sus reglas, en
+       CLAUDE.md). p= es la ruta de ESTA página: por eso vive FUERA de los
+       bloques que las guardas comparan byte a byte (nav, footer, iconos). -->
+  <img src="https://realshinka.goatcounter.com/count?p=/method/" alt="" width="1" height="1" loading="eager" class="gc-pixel">
+</body>
+</html>

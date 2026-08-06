@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tosei 渡世 — Kotodama Finance</title>
+<meta name="description" content="Personal finance in Japan: pensions and social insurance, the tax year, NISA and iDeCo, and what changes with residency, gathered in one place.">
+<link rel="canonical" href="https://kotodamafinance.com/tosei/">
+<!-- Open Graph: la tarjeta que se ve al compartir el enlace en un chat o una
+     red. Sin esto el enlace viaja como una línea de texto pelada.
+     og:url y og:image tienen que ser ABSOLUTAS: el que arma la vista previa no
+     es el navegador del lector y no puede resolver una ruta relativa.
+     La imagen la genera tools/make-og-image.py. -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kotodamafinance.com/tosei/">
+<meta property="og:title" content="Tosei 渡世 — Kotodama Finance">
+<meta property="og:description" content="Personal finance in Japan: pensions and social insurance, the tax year, NISA and iDeCo, and what changes with residency, gathered in one place.">
+<meta property="og:image" content="https://kotodamafinance.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Kotodama Finance: the 言霊 mark in gold above the brand name, on deep navy.">
+<!-- Sin esto X muestra una miniatura cuadrada en vez de la tarjeta ancha. -->
+<meta name="twitter:card" content="summary_large_image">
+<!-- Iconos. El .ico existe porque el navegador pide /favicon.ico haya o no
+     <link>: sin el archivo, cada carga deja un 404 en la consola.
+     Se generan con tools/make-favicon.py, que documenta el porqué de cada formato. -->
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body class="page">
+
+<!-- Página de texto: no carga el shader del mar ni Three.js. Sólo el CSS
+     compartido y el script de la nav. -->
+  <!-- NAV — rutas absolutas para que el bloque sea idéntico en las ocho páginas.
+       tools/check-ready.py verifica que no derive. -->
+  <header id="nav" class="nav">
+    <a class="nav__brand" href="/">
+      <span class="nav__mark" lang="ja">言霊</span>
+      <span class="nav__word">Kotodama Finance</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="/#cube">The Cube</a>
+      <a href="/musubi/">Musubi</a>
+      <a href="/#about">About</a>
+      <a href="/#method">Method</a>
+      <a href="/#footer">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- El kanji de ESTA cara como marca de agua del costado; decisión y
+         perillas en styles.css (.face-page__watermark). -->
+    <div class="face-page__watermark" aria-hidden="true" lang="ja">渡世</div>
+    <article class="face-page">
+      <header class="face-page__head">
+        <h1 class="face-page__title">
+          <span class="face-page__kanji" lang="ja">渡世</span>
+          <span class="face-page__romaji">Tosei</span>
+        </h1>
+        <p class="face-page__gloss">Personal finance in Japan</p>
+        <p class="status" data-state="soon"><span class="dot" data-state="soon" aria-hidden="true"></span>Coming soon</p>
+      </header>
+
+      <p class="face-page__lead">Tosei is making your way through the world &mdash; the ordinary, practical business of getting by. Living in a country means dealing with its financial system whether or not you ever intended to.</p>
+
+      <div class="face-page__body">
+        <p>Japan&rsquo;s is dense and mostly documented in Japanese: pensions and social insurance, the tax year, NISA and iDeCo, what changes when you are a resident and what changes when you are not. Most of it is knowable. Little of it is gathered anywhere in one place.</p>
+        <p>This face is for anyone living here who has run into that &mdash; residents and newcomers alike.</p>
+      </div>
+
+      <p class="face-page__back"><a href="/#cube-view">&larr; Back to the Cube</a></p>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer" class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <p class="footer__mark">
+          <span lang="ja">言霊</span>
+          <span class="footer__word">Kotodama Finance</span>
+        </p>
+        <p class="footer__tag">Where economic currents become visible. Open access.</p>
+      </div>
+      <!-- SIN columna «Platform»: enlazaba a The Cube y Method — dos de cinco
+           secciones, las dos ya presentes en la nav de arriba. Una selección
+           arbitraria que duplica navegación no orienta: ruido. -->
+      <div class="footer__cols">
+        <div class="footer__col">
+          <p class="footer__label">Reach us</p>
+          <a href="mailto:contact@kotodamafinance.com">contact@kotodamafinance.com</a>
+        </div>
+        <div class="footer__col">
+          <p class="footer__label">Follow</p>
+          <a href="https://x.com/KotodamaFinance" target="_blank" rel="noopener">X / @KotodamaFinance</a>
+          <a href="https://www.linkedin.com/company/kotodamafinance/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <!-- 免責事項 CORTO — se repite en TODAS las páginas a propósito, y es la
+         única duplicación deliberada de texto legal del sitio. Una advertencia
+         sólo cumple su función si está donde el lector está leyendo; por eso va
+         en el footer global y no en una página a la que haya que llegar.
+         El texto COMPLETO vive UNA sola vez, en /disclaimer/, y desde acá se
+         enlaza. Duplicar el largo lo haría derivar, y un sitio que se
+         contradice en su propio descargo pierde lo único que el descargo da.
+         SIN el rótulo 免責事項 delante: era la traducción japonesa de
+         «disclaimer», o sea japonés ornamental en la versión inglesa — la
+         misma textura que 立方体 o 一次資料, que ya se sacaron. Los cuatro
+         glifos se conservan en el subset para /ja/ (ver el @font-face). -->
+    <p class="footer__disclaimer">
+      Kotodama Finance is published for information only and is not investment or financial advice.
+      <a href="/disclaimer/">Full disclaimer &rarr;</a>
+    </p>
+    <div class="footer__bottom">
+      <span>&copy; 2026 Kotodama Finance &middot; Open access</span>
+      <span>English &middot; <span class="footer__soon"><span lang="ja">日本語（近日公開）</span></span></span>
+    </div>
+  </footer>
+
+  <!-- Pixel de GoatCounter (medición sin JS — la decisión y sus reglas, en
+       CLAUDE.md). p= es la ruta de ESTA página: por eso vive FUERA de los
+       bloques que las guardas comparan byte a byte (nav, footer, iconos). -->
+  <img src="https://realshinka.goatcounter.com/count?p=/tosei/" alt="" width="1" height="1" loading="eager" class="gc-pixel">
+</body>
+</html>

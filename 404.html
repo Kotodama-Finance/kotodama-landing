@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page not found — Kotodama Finance</title>
+<!-- La description queda aunque la página sea noindex: no la va a usar un
+     buscador, pero sí la muestran algunos clientes al previsualizar un enlace,
+     y un placeholder en castellano ahí sería lo mismo que en cualquier otra
+     página. Open Graph sigue sin ir, por lo de abajo. -->
+<meta name="description" content="This address does not lead anywhere on this site. It may have been mistyped, or it may have pointed to something that has not been built yet.">
+<!-- La única página del sitio que NO se quiere indexada: es un destino de
+     error, no contenido. Por eso tampoco está en sitemap.xml.
+     Y por eso NO lleva canonical ni Open Graph, a diferencia de las otras ocho:
+     un canonical en una página noindex no dice nada, y una tarjeta linda al
+     compartirla haría pasar un enlace roto por contenido. La ausencia es
+     deliberada; check-structure exime a esta página de exigirlos. -->
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body class="page">
+
+<!-- 404 — GitHub Pages sirve este archivo ante cualquier ruta que no exista,
+     así que las rutas absolutas del nav y el footer son obligatorias: la URL
+     fallida puede tener cualquier profundidad (/tosei/algo/inexistente/) y con
+     rutas relativas los enlaces y el CSS apuntarían a la nada.
+     Lleva el mismo chrome que el resto del sitio: quien se pierde tiene que
+     poder salir por donde saldría en cualquier otra página. -->
+<header id="nav" class="nav">
+    <a class="nav__brand" href="/">
+      <span class="nav__mark" lang="ja">言霊</span>
+      <span class="nav__word">Kotodama Finance</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="/#cube">The Cube</a>
+      <a href="/musubi/">Musubi</a>
+      <a href="/#about">About</a>
+      <a href="/#method">Method</a>
+      <a href="/#footer">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <article class="face-page">
+      <header class="face-page__head">
+        <p class="eyebrow">404</p>
+        <!-- ACÁ VA UNA FRASE, NO UN KANJI, Y ES A PROPÓSITO. Las seis caras
+             llevan un nombre en kanji porque nombran algo que existe. Esta
+             página no es una cara del cubo y no tiene contenido que nombrar:
+             tiene una AUSENCIA, y un sustantivo suelto no puede decir «esto no
+             existe». Por eso rompe el patrón.
+             Si alguien la «corrige» a un kanji suelto por coherencia con las
+             otras páginas, está eligiendo la simetría por encima del sentido.
+             Usa .face-page__phrase y no .face-page__kanji: ese otro tamaño está
+             hecho para uno o dos glifos y diez no entran en el ancho. -->
+        <h1 class="face-page__title">
+          <span class="face-page__phrase" lang="ja">この航路はありません</span>
+          <span class="face-page__romaji">This page does not exist.</span>
+        </h1>
+      </header>
+
+      <div class="face-page__body">
+        <p>Sorry &mdash; the address you followed does not lead anywhere on this site. It may have been mistyped, or it may have pointed to something that has not been built yet.</p>
+        <!-- La invitación a escribir va CONDICIONADA a propósito: si alguien
+             tecleó mal la URL no hay nada que arreglar, y pedirle que reporte
+             su propio error de tipeo hace perder el tiempo a los dos. El mail
+             es el mismo del footer, enlazado igual. -->
+        <p>If you got here from a link on this site, something is broken and we would like to know. Write to <a href="mailto:contact@kotodamafinance.com">contact@kotodamafinance.com</a> and we will fix it.</p>
+      </div>
+
+      <p class="face-page__back"><a href="/">&larr; Back to the start</a></p>
+    </article>
+  </main>
+
+<footer id="footer" class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <p class="footer__mark">
+          <span lang="ja">言霊</span>
+          <span class="footer__word">Kotodama Finance</span>
+        </p>
+        <p class="footer__tag">Where economic currents become visible. Open access.</p>
+      </div>
+      <!-- SIN columna «Platform»: enlazaba a The Cube y Method — dos de cinco
+           secciones, las dos ya presentes en la nav de arriba. Una selección
+           arbitraria que duplica navegación no orienta: ruido. -->
+      <div class="footer__cols">
+        <div class="footer__col">
+          <p class="footer__label">Reach us</p>
+          <a href="mailto:contact@kotodamafinance.com">contact@kotodamafinance.com</a>
+        </div>
+        <div class="footer__col">
+          <p class="footer__label">Follow</p>
+          <a href="https://x.com/KotodamaFinance" target="_blank" rel="noopener">X / @KotodamaFinance</a>
+          <a href="https://www.linkedin.com/company/kotodamafinance/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <!-- 免責事項 CORTO — se repite en TODAS las páginas a propósito, y es la
+         única duplicación deliberada de texto legal del sitio. Una advertencia
+         sólo cumple su función si está donde el lector está leyendo; por eso va
+         en el footer global y no en una página a la que haya que llegar.
+         El texto COMPLETO vive UNA sola vez, en /disclaimer/, y desde acá se
+         enlaza. Duplicar el largo lo haría derivar, y un sitio que se
+         contradice en su propio descargo pierde lo único que el descargo da.
+         SIN el rótulo 免責事項 delante: era la traducción japonesa de
+         «disclaimer», o sea japonés ornamental en la versión inglesa — la
+         misma textura que 立方体 o 一次資料, que ya se sacaron. Los cuatro
+         glifos se conservan en el subset para /ja/ (ver el @font-face). -->
+    <p class="footer__disclaimer">
+      Kotodama Finance is published for information only and is not investment or financial advice.
+      <a href="/disclaimer/">Full disclaimer &rarr;</a>
+    </p>
+    <div class="footer__bottom">
+      <span>&copy; 2026 Kotodama Finance &middot; Open access</span>
+      <span>English &middot; <span class="footer__soon"><span lang="ja">日本語（近日公開）</span></span></span>
+    </div>
+  </footer>
+
+  <!-- Pixel de GoatCounter (medición sin JS — la decisión y sus reglas, en
+       CLAUDE.md). p= es la ruta de ESTA página: por eso vive FUERA de los
+       bloques que las guardas comparan byte a byte (nav, footer, iconos). -->
+  <img src="https://realshinka.goatcounter.com/count?p=/404.html" alt="" width="1" height="1" loading="eager" class="gc-pixel">
+</body>
+</html>

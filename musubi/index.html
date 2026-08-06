@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Musubi 産霊 — Kotodama Finance</title>
+<!-- description derivada de los CINCO bloques de la página; la cláusula de
+     la lectura entró con el bloque 5 (2026-08-05). Si un bloque cambia lo
+     que la página cubre, esto se rederiva. -->
+<meta name="description" content="The idea underneath Kotodama Finance: capital moves in traceable courses, naming a flow makes it visible, the reading moves between the whole and its parts, and the judgment stays with the reader.">
+<link rel="canonical" href="https://kotodamafinance.com/musubi/">
+<!-- Open Graph: la tarjeta que se ve al compartir el enlace en un chat o una
+     red. Sin esto el enlace viaja como una línea de texto pelada.
+     og:url y og:image tienen que ser ABSOLUTAS: el que arma la vista previa no
+     es el navegador del lector y no puede resolver una ruta relativa.
+     La imagen la genera tools/make-og-image.py. -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kotodamafinance.com/musubi/">
+<meta property="og:title" content="Musubi 産霊 — Kotodama Finance">
+<meta property="og:description" content="The idea underneath Kotodama Finance: capital moves in traceable courses, naming a flow makes it visible, the reading moves between the whole and its parts, and the judgment stays with the reader.">
+<meta property="og:image" content="https://kotodamafinance.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Kotodama Finance: the 言霊 mark in gold above the brand name, on deep navy.">
+<!-- Sin esto X muestra una miniatura cuadrada en vez de la tarjeta ancha. -->
+<meta name="twitter:card" content="summary_large_image">
+<!-- Iconos. El .ico existe porque el navegador pide /favicon.ico haya o no
+     <link>: sin el archivo, cada carga deja un 404 en la consola.
+     Se generan con tools/make-favicon.py, que documenta el porqué de cada formato. -->
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body class="page">
+
+<!-- Página de texto: no carga el shader del mar ni Three.js. -->
+  <!-- NAV — rutas absolutas para que el bloque sea idéntico en las ocho páginas.
+       tools/check-ready.py verifica que no derive. -->
+  <header id="nav" class="nav">
+    <a class="nav__brand" href="/">
+      <span class="nav__mark" lang="ja">言霊</span>
+      <span class="nav__word">Kotodama Finance</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="/#cube">The Cube</a>
+      <a href="/musubi/">Musubi</a>
+      <a href="/#about">About</a>
+      <a href="/#method">Method</a>
+      <a href="/#footer">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- El kanji de ESTA página como marca de agua del costado; decisión y
+         perillas en styles.css (.face-page__watermark). -->
+    <div class="face-page__watermark" aria-hidden="true" lang="ja">産霊</div>
+    <!-- MUSUBI — LA IDEA QUE SOSTIENE LA PLATAFORMA ---------------------------
+         ESTA PÁGINA YA NO EXPLICA LOS NOMBRES. Tenía siete bloques —por qué hay
+         un sistema de nombres, por qué en japonés, cómo se deriva cada uno— y
+         una tabla con las seis caras. Se reemplazó entero por CUATRO bloques
+         que explican la idea de la que sale todo lo demás — y el 2026-08-05
+         el autor sumó un QUINTO («How the reading divides», entre el del cubo
+         y el del lector): cómo se divide el trabajo dentro de una cara. Hoy
+         son CINCO bloques.
+
+         La tabla de las seis caras NO se perdió: se sacó a propósito. Cada cara
+         dice lo suyo en su propia página, y la tabla obligaba a mantener
+         sincronizadas dos listas de la misma cosa.
+
+         Pasó de <article class="naming"> a <article class="face-page">, que es
+         lo que usan todas las demás subpáginas. Dos motivos: la estructura es
+         ahora la misma —cabecera, secciones con subtítulo, enlace de vuelta— y
+         la versión anterior NO TENÍA <h1>, sólo un <h2> al que apuntaba el
+         aria-labelledby.
+
+         Los nombres del marco (Kasen, Okeanos, Kotodama, Musubi, Odysseus,
+         Aeolus — y desde el bloque 5, Taichi, Yorozu y Yūgen) van en
+         <i class="name">, no en <em>: <i> es el elemento para un término en
+         otra voz, y <em> significa énfasis — un lector de pantalla lo
+         entonaría en cada aparición, que no es lo que se pide. Cada uno
+         aparece una sola vez, donde se lo presenta.
+
+         Y VAN SIN ENLACE, A PROPÓSITO, por dos razones que no hay que
+         mezclar: los seis del marco no tienen página (enlazarlos prometería
+         páginas que no existen), y los tres de Hajime SÍ la tienen pero acá
+         se presentan como parte del sistema conceptual, no como destinos —
+         el detalle de esa excepción, que es la más discutible, está anotado
+         junto al bloque 5 y en el CSS de a.name. En /hajime/ el mismo
+         marcado .name sí enlaza.
+
+         TEXTO DEFINITIVO (versión de lanzamiento, en inglés). La versión
+         japonesa es un pase aparte: no traducir de acá. -->
+    <article class="face-page">
+      <header class="face-page__head">
+        <h1 class="face-page__title">
+          <span class="face-page__kanji" lang="ja">産霊</span>
+          <span class="face-page__romaji">Musubi</span>
+        </h1>
+        <p class="face-page__gloss">The idea underneath</p>
+      </header>
+
+      <section class="face-page__section" aria-labelledby="musubi-water">
+        <h2 id="musubi-water" class="face-page__subtitle">Capital moves like water</h2>
+        <div class="face-page__body">
+          <p>An economy is not a ledger. It is a landscape with water moving through it &mdash; along channels, at different volumes, pooling in some places and draining others. Money behaves that way: it follows paths, and those paths are shaped by rules, incentives, and history.</p>
+          <p>This is what we call <i class="name">Kasen</i> &mdash; watercourses. It is the object of everything on this platform. When we say &ldquo;flows&rdquo;, we are not reaching for a metaphor; we mean that capital has a course, and that a course can be traced.</p>
+          <p>The wider water is <i class="name">Okeanos</i>, the ocean the ancients believed encircled the world and fed every river. Japan is a coast on that ocean, not the whole of it. We start here because it is where we live, and because a system you live inside is the one you have reason to understand first. The water does not stop at the shoreline, and neither does the question.</p>
+        </div>
+      </section>
+
+      <section class="face-page__section" aria-labelledby="musubi-named">
+        <h2 id="musubi-named" class="face-page__subtitle">What is named becomes visible</h2>
+        <div class="face-page__body">
+          <!-- «the one that enlightens it» ES DELIBERADO: juego de palabras del
+               autor (una cifra al lado de otra que la ilumina Y le da
+               entendimiento), discutido y decidido (2026-08-06). No es un calco
+               de «iluminar» a corregir — que ninguna revisión lo vuelva a marcar. -->
+          <p>Most financial opacity is not secrecy. The numbers are usually published &mdash; in tables, in filings, in annual reports that anyone can download. What is often missing is the step after: putting a figure next to the one that enlightens it, keeping the series long enough for a shape to appear, and saying plainly what it means. A number can be public and still unreadable to anyone who does not already know what to look for.</p>
+          <p><i class="name">Kotodama</i> is the old idea that a word carries force: that naming something gives it presence in the world. We take it literally and without mysticism. To name a flow &mdash; to define it, measure it, publish it with its source &mdash; is to make it exist for anyone who wants to look. That is the whole method, and it is why the platform carries this word as its name.</p>
+          <p>It also sets a limit. A name that is wrong, or a figure that cannot be traced back to the document it came from, does the opposite: it makes something invisible while appearing to reveal it. Rigour is not a virtue we add on top. It is the condition for the method to work at all.</p>
+        </div>
+      </section>
+
+      <section class="face-page__section" aria-labelledby="musubi-bound">
+        <!-- Este subtítulo rima A PROPÓSITO con el cierre del párrafo de
+             /hajime/taichi/ («the parts only mean something against the
+             whole»): el mismo principio, acá como idea y allá bajando a una
+             cara. Dos copias deliberadas sin guarda que las compare — si se
+             redacta una, mirar la otra. Anotado también en taichi. -->
+        <h2 id="musubi-bound" class="face-page__subtitle">Nothing means anything alone</h2>
+        <div class="face-page__body">
+          <p><i class="name">Musubi</i> is the force that binds, and in binding, creates. It is where this platform gets its shape.</p>
+          <p>A financial system is not understood from data alone. A figure means something only against the rules that produced it, the people who act on it, and what someone can actually do with it. Separate those and you have four accurate answers to four questions nobody asked.</p>
+          <!-- Las dos últimas frases son las MISMAS que cierran el lead de la
+               sección del cubo en la portada, a propósito. Si allá se redacta
+               de nuevo, acá queda viejo: son dos copias del mismo texto y no
+               hay guarda que las compare. -->
+          <p>That is why the map is a cube. Six faces, no front, none above the others: data, the person behind it, daily life, community, learning, action. Turn it and any face can be the one you are looking at. One is live today; the rest carry an honest status. The map is real even where the ground is not yet built.</p>
+        </div>
+      </section>
+
+      <section class="face-page__section" aria-labelledby="musubi-divides">
+        <!-- BLOQUE 5, agregado el 2026-08-05 (texto del autor, tal cual):
+             cómo se divide el trabajo DENTRO de una cara. Va después del
+             bloque del cubo —lo general: por qué seis caras al mismo nivel—
+             y antes del cierre sobre el lector.
+             TAICHI, YOROZU Y YŪGEN VAN SIN ENLACE, Y ES LA EXCEPCIÓN MÁS
+             DISCUTIBLE DEL MARCADO: estos tres SÍ tienen página propia, y en
+             /hajime/ el mismo marcado .name SÍ enlaza. Acá se los presenta
+             como parte del sistema conceptual, no como destinos — el camino
+             a sus páginas es /hajime/, que es de donde cuelgan — y mezclar
+             nombres enlazados y sin enlazar con el mismo marcado en la misma
+             página sería inconsistente. Anotado también en el CSS de a.name.
+             SIN REFERENTES FILOSÓFICOS, A PROPÓSITO — no es un olvido: el
+             context.md del autor respalda este bloque con Hegel, Jung, el
+             yin-yang, Agustín y Amaterasu, y acá no se nombra ninguno. La
+             página ya maneja seis conceptos de dos tradiciones; cinco
+             referencias más de otras tres la convierten en un ensayo, justo
+             en la página cuya función es desactivar la lectura esotérica.
+             La estructura es lo que el lector necesita; los referentes son
+             el andamiaje con que se pensó. -->
+        <h2 id="musubi-divides" class="face-page__subtitle">How the reading divides</h2>
+        <div class="face-page__body">
+          <p>An economy can be read at two scales, and they are not the same reading. Taken whole, it is one thing under one set of conditions. Taken apart, it is thousands of separate operations, each with its own rules. Neither scale contains the other, and a platform that only does one of them is missing half.</p>
+          <p>So the data face divides in three. <i class="name">Taichi</i> takes the whole before it separates: the aggregates, and the conditions everything else operates under. <i class="name">Yorozu</i> takes the parts as parts &mdash; sector by sector, each with its own regulation and its own shape. The reading moves outward and then back: from the one to the ten thousand, and from the ten thousand to what they say about the one.</p>
+          <p><i class="name">Yūgen</i> is not a third scale but a direction. It looks at what is meant to be visible and often is not: public money, and whether the record matches the claim. Not as an accusation &mdash; as light held on something until its shape becomes apparent.</p>
+        </div>
+      </section>
+
+      <section class="face-page__section" aria-labelledby="musubi-reader">
+        <h2 id="musubi-reader" class="face-page__subtitle">Whose journey this is</h2>
+        <div class="face-page__body">
+          <p>There is a reader in all of this, and it is not us.</p>
+          <p><i class="name">Odysseus</i> is the one who sails &mdash; the reader who leaves the known harbour with a question and wants to see further than the map allows. Everything here is built for that person: not for someone who wants to be told the answer, but for someone who wants to see the water clearly enough to choose a course.</p>
+          <p>Our role is <i class="name">Aeolus</i>, who gave the sailors the wind and kept the storm in the bag. He did not steer. That is a genuine constraint on what this platform will do: we will try to explain how something works, what it means, and who it touches. What we will not do is tell you what to do about it. The judgment is yours, and it should be &mdash; you are the one sailing.</p>
+          <p>In the myth, the crew opens the bag out of greed and loses everything. The gift was right; the handling was not. We can only be responsible for the first part.</p>
+        </div>
+      </section>
+
+      <p class="face-page__back"><a href="/">&larr; Back to the start</a></p>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer" class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <p class="footer__mark">
+          <span lang="ja">言霊</span>
+          <span class="footer__word">Kotodama Finance</span>
+        </p>
+        <p class="footer__tag">Where economic currents become visible. Open access.</p>
+      </div>
+      <!-- SIN columna «Platform»: enlazaba a The Cube y Method — dos de cinco
+           secciones, las dos ya presentes en la nav de arriba. Una selección
+           arbitraria que duplica navegación no orienta: ruido. -->
+      <div class="footer__cols">
+        <div class="footer__col">
+          <p class="footer__label">Reach us</p>
+          <a href="mailto:contact@kotodamafinance.com">contact@kotodamafinance.com</a>
+        </div>
+        <div class="footer__col">
+          <p class="footer__label">Follow</p>
+          <a href="https://x.com/KotodamaFinance" target="_blank" rel="noopener">X / @KotodamaFinance</a>
+          <a href="https://www.linkedin.com/company/kotodamafinance/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <!-- 免責事項 CORTO — se repite en TODAS las páginas a propósito, y es la
+         única duplicación deliberada de texto legal del sitio. Una advertencia
+         sólo cumple su función si está donde el lector está leyendo; por eso va
+         en el footer global y no en una página a la que haya que llegar.
+         El texto COMPLETO vive UNA sola vez, en /disclaimer/, y desde acá se
+         enlaza. Duplicar el largo lo haría derivar, y un sitio que se
+         contradice en su propio descargo pierde lo único que el descargo da.
+         SIN el rótulo 免責事項 delante: era la traducción japonesa de
+         «disclaimer», o sea japonés ornamental en la versión inglesa — la
+         misma textura que 立方体 o 一次資料, que ya se sacaron. Los cuatro
+         glifos se conservan en el subset para /ja/ (ver el @font-face). -->
+    <p class="footer__disclaimer">
+      Kotodama Finance is published for information only and is not investment or financial advice.
+      <a href="/disclaimer/">Full disclaimer &rarr;</a>
+    </p>
+    <div class="footer__bottom">
+      <span>&copy; 2026 Kotodama Finance &middot; Open access</span>
+      <span>English &middot; <span class="footer__soon"><span lang="ja">日本語（近日公開）</span></span></span>
+    </div>
+  </footer>
+
+  <!-- Pixel de GoatCounter (medición sin JS — la decisión y sus reglas, en
+       CLAUDE.md). p= es la ruta de ESTA página: por eso vive FUERA de los
+       bloques que las guardas comparan byte a byte (nav, footer, iconos). -->
+  <img src="https://realshinka.goatcounter.com/count?p=/musubi/" alt="" width="1" height="1" loading="eager" class="gc-pixel">
+</body>
+</html>
