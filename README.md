@@ -1,7 +1,9 @@
 # Kotodama Finance — página de entrada
 
 Plataforma pública y gratuita de datos y análisis del sistema financiero
-japonés. Este repo publica en GitHub Pages (kotodamafinance.com).
+japonés. Este repo publica en GitHub Pages (kotodamafinance.com). La rama que
+publica es `main`, y **se genera** — el sitio solo, sin estas notas—; ver
+«Publicar» más abajo.
 
 Sitio estático: sin backend, sin frameworks, sin build step. Se sirve tal cual.
 
@@ -25,10 +27,11 @@ robots.txt              todo abierto, incluidos los crawlers de IA
 404.html                la sirve GitHub Pages ante cualquier ruta inexistente
 og-image.png            tarjeta al compartir (generada)
 tools/check-structure.py guarda estructural: verde siempre (ver más abajo)
-tools/check-ready.py    guarda previa a publicar (2 esperado: quedan placeholders)
+tools/check-ready.py    guarda previa a publicar (0 esperado: la redacción terminó)
 tools/make-favicon.py   genera los iconos a partir del subset de la marca
 tools/make-sitemap.py   genera el sitemap a partir de los HTML publicables
 tools/make-og-image.py  genera og-image.png (sólo tipografía, sin navegador)
+tools/make-deploy.py    genera el commit de publicación en main: el sitio solo
 docs/v1-dark/           registro visual de versiones etiquetadas
 docs/mediciones/        mediciones con fecha y condiciones (luz, rendimiento)
 ```
@@ -218,7 +221,7 @@ documentos vivos, y `--force` sobre un tag ya publicado rompe los clones ajenos.
 |---|---|
 | `v1-dark` | la versión navy + oro con el cubo en Three.js |
 | `v1-content-complete` | **el sitio terminado de contenido**: cero placeholders, `check-ready` en 0 |
-| *(pendiente)* | **la publicación**, al hacer el merge a `main` |
+| *(pendiente)* | **la publicación** — va en el commit FUENTE de `redesign-trust` (el que pasó las guardas), no en `main`; ver «Publicar» |
 
 `v1-content-complete` **es el punto al que hay que volver si algo se rompe en la
 migración de DNS**, que es lo próximo que pasa. Por eso apunta al último estado
@@ -229,7 +232,8 @@ en el commit siguiente. Un punto de restauración tiene que estar verde.
 
 ## Antes de publicar
 
-Antes de cualquier merge a `main`, correr:
+Antes de publicar a `main` —que **ya no es un merge**: `main` se genera con
+`tools/make-deploy.py`, ver «Publicar» más abajo—, correr:
 
 ```
 python tools/check-ready.py
@@ -274,6 +278,15 @@ dos cosas se rompieron dos veces, las dos por un cambio de layout que pisó una
 regla de CSS, y las dos se detectaron mirando la página en vez de por una
 prueba. `check-ready.py` no puede cubrirlo: son estilos computados y eventos.
 
+**Y el quinto elemento, desde la rama de deploy (2026-08-06): la guarda del
+propio `make-deploy.py`**, que corre sola al generar `main` y es todo-o-nada
+—si algo falla, no se commitea nada—. Verifica que el árbol publicado esté
+**completo** (cada URL del sitemap con su página; cada referencia de los HTML,
+el CSS y los JS resuelta adentro del árbol), que **no lleve notas** (por tipo
+—cero `.md`/`.py`/`.json`— además de por lista), que cada blob sea **idéntico**
+al del commit fuente, y que **nadie haya editado `main` a mano** desde el
+último deploy. El procedimiento completo del día, en «Publicar», acá abajo.
+
 ### Una trampa de CSS que ya mordió dos veces
 
 Varias clases del sitio fijan `display` (`.btn`, `.status`, `.cube__stage`,
@@ -281,6 +294,104 @@ Varias clases del sitio fijan `display` (`.btn`, `.status`, `.cube__stage`,
 del navegador, así que un elemento marcado como oculto seguía viéndose. Hay una
 regla `[hidden] { display: none !important; }` al principio de `styles.css` que
 lo resuelve para toda la clase de bug. No borrarla.
+
+## Publicar: `main` se genera, no se mergea
+
+`main` publica **SOLO el sitio**. Las notas de trabajo —`CLAUDE.md`, este
+README, `tools/`, `docs/`, los JSON de estado y `maelstrom.css`— viven en la
+rama de desarrollo y **no llegan al dominio**: GitHub Pages publica la rama
+entera, y un merge habría servido `kotodamafinance.com/CLAUDE.md`. La decisión
+completa, con sus alternativas descartadas, está en `CLAUDE.md`; la lista
+autoritativa de exclusión, en `NO_PUBLICABLES` de `tools/make-deploy.py`.
+
+**`main` es una rama-artefacto, como `maintenance`: NADIE la edita a mano.**
+Todo cambio va desarrollo → guardas → `make-deploy`. Si alguien commitea en
+`main` directo, el próximo deploy lo detecta —compara el árbol de la punta
+contra lo que regeneraría desde la `Fuente:` que ese commit declara— y frena
+antes de pisar.
+
+### El día de publicar
+
+Desde `redesign-trust`, con el árbol limpio:
+
+1. **Las cuatro guardas en verde** (ver «Flujo de trabajo»; `check-ready`
+   en `0`).
+2. **Generar y verificar.** Corre la guarda del deploy y, si todo pasa, arma
+   el commit en `main` **local** (con `--solo-verificar` sólo lista qué entra
+   y qué queda afuera, sin commitear):
+
+   ```bash
+   python tools/make-deploy.py
+   ```
+
+3. **Verificar el artefacto en navegador, UNA vez** — la única corrida contra
+   el árbol real de `main`. Materializarlo en un worktree:
+
+   ```bash
+   git worktree add _dev/main-check main
+   ```
+
+   Detener el servidor de desarrollo, servir **ese** árbol
+   (`python -m http.server 8000 --directory _dev/main-check`) y correr
+   `python tools/check-modes.py`. Al terminar, parar ese servidor y limpiar:
+
+   ```bash
+   git worktree remove _dev/main-check
+   ```
+
+4. **Push:**
+
+   ```bash
+   git push origin main
+   ```
+
+5. **El tag de publicación, en el commit FUENTE de `redesign-trust`** —el que
+   pasó por las guardas—, no en `main`; el mensaje del commit de `main` ya
+   lleva el hash cruzado (`Fuente:`). El nombre lo elige el autor en el
+   momento (los hitos anteriores fueron `v1-dark` y `v1-content-complete`):
+
+   ```bash
+   git tag -a <nombre-del-tag> -m "Publicación del sitio" <hash-fuente>
+   ```
+
+   ```bash
+   git push origin <nombre-del-tag>
+   ```
+
+6. **Después del push, comprobar EN EL DOMINIO que las notas no estén** — es
+   la propiedad que motivó todo esto: `kotodamafinance.com/CLAUDE.md`,
+   `/README.md` y `/tools/check-ready.py` tienen que dar **404**, y la
+   portada tiene que cargar entera (cubo incluido).
+
+### Rollback: volver a un estado bueno ya publicado
+
+Para el día del apuro: son **dos comandos**, y no hace falta checkout, revert
+ni acordarse de nada más. `make-deploy` puede publicar desde CUALQUIER commit
+sin tocar el árbol de trabajo — lee los blobs directo de la base de objetos:
+
+```bash
+python tools/make-deploy.py --fuente <commit-bueno>
+```
+
+```bash
+git push origin main
+```
+
+- **¿Cuál es el commit bueno?** El fuente del último deploy sano. Cada commit
+  de `main` lo declara en su mensaje —`git log main`, la línea
+  `Fuente: <hash>`— y los tags de publicación apuntan a esos mismos commits
+  en `redesign-trust`. `v1-content-complete` es el punto de restauración de
+  la migración de DNS.
+- **La historia no se reescribe**: el rollback es un commit NUEVO encima de
+  `main`, sin force-push. Pages publica en un par de minutos.
+- **Los avisos del rollback son esperables, no errores**: si el commit bueno
+  es anterior a la creación de algo que hoy existe (un favicon, una entrada
+  de la lista de exclusión), el script lo dice y sigue — el sitio de ese día
+  se publica como era. Lo que sí frena siempre: `CNAME`/`.nojekyll`/
+  `index.html`/`404.html` ausentes, notas de trabajo en el árbol, o
+  referencias rotas. (Probado contra `v1-content-complete`.)
+- Si lo que hace falta es **bajar el sitio**, eso no es un rollback: es la
+  rama `maintenance` (sección siguiente).
 
 ## La rama `maintenance`: bajar el sitio para una obra grande
 

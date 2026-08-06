@@ -36,10 +36,18 @@ fallidos ya corregidos, y las capturas intermedias.
   puntero viejo se lee como trabajo pendiente que no existe. El registro
   completo de sus decisiones (las cinco tandas) está en la sección de la
   vista explotada, más abajo.
-- **`main` no se toca**: publica kotodamafinance.com y todavía sirve la landing
-  vieja. Nada de esto está publicado.
+- **`main` no se toca a mano — y desde la rama de deploy (2026-08-06), NUNCA
+  más a mano: la escribe solo `tools/make-deploy.py`**. Publica
+  kotodamafinance.com y todavía sirve la landing vieja. Nada de esto está
+  publicado.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-06, el favicon: 言 solo en oro sobre navy, juego
+- Último cierre: **2026-08-06, la rama de deploy: `main` pasa a GENERARSE con
+  `tools/make-deploy.py` — el sitio solo, sin las notas—, con la guarda
+  probada EN ROJO (R1-R5 y los cuatro estados de la detección de hotfix) y
+  `main()` corrido de punta a punta sobre un ref descartable, tras una
+  revisión adversarial de 22 agentes con 10 hallazgos corregidos** — ver su
+  decisión, que es la primera de la lista. El
+  mismo día, antes: **el favicon: 言 solo en oro sobre navy, juego
   completo (ico/svg/pngs/apple/android/manifest) con el 16px tratado y
   medido, y el bloque de iconos vigilado por check-structure** — ver su
   decisión. El mismo día, antes: **la tanda del cuerpo — la lista de
@@ -104,7 +112,10 @@ reducidas a una línea.
 - **`v1-content-complete`** — el sitio terminado de contenido, y **el punto de
   restauración de la migración de DNS**. Apunta a `fb38ffb`, que era el último
   estado verificado en verde al crearlo. **No se mueve** aunque el trabajo siga:
-  ver la regla más abajo. Falta el tercero: la publicación, al mergear a `main`.
+  ver la regla más abajo. Falta el tercero: la publicación — y desde la rama
+  de deploy (2026-08-06) ese tag va en el **commit FUENTE de `redesign-trust`**,
+  no en `main`: el commit de `main` es un snapshot generado, el que pasó por
+  las guardas es el fuente.
 
 **Existe una rama `maintenance`, lista y NO activa.** No se ve desde acá y
 ninguna de las cuatro guardas la mira; su decisión cerrada está más abajo.
@@ -117,9 +128,10 @@ sesión.
 
 **LO QUE FALTA ES SOLO INFRAESTRUCTURA.** El pase de redacción que la revisión
 de quince puntos había reintroducido **terminó el 2026-08-05** (los 16, todos
-con texto del autor), y `check-ready` sale `0`. El merge a `main` espera una
-sola cosa: la migración de DNS (trabajo fuera de este repo, pasos 2–4 de
-abajo).
+con texto del autor), y `check-ready` sale `0`. La publicación a `main` —que
+desde el 2026-08-06 **ya NO es un merge: se genera con `tools/make-deploy.py`**,
+ver la decisión de la rama de deploy— espera una sola cosa: la migración de
+DNS (trabajo fuera de este repo, pasos 2–4 de abajo).
 
 **PASO 0 — HECHO. Ya se sabe dónde está el DNS**: **Namecheap BasicDNS**, con
 los seis registros del `.com` documentados (cuatro `A` de GitHub Pages, el
@@ -145,10 +157,14 @@ transferir → correo → merge:
    ahora incluye los registros de iCloud+ (MX/SPF/DKIM), no los seis del
    inventario del paso 0 — el inventario vigente es el de después del paso 1.
 4. **Recién ahí, cambiar los nameservers.**
-5. **Merge a `main`** + tag de publicación. ~~El prerrequisito de redacción
-   que dejó la revisión de quince puntos~~ **se cumplió el 2026-08-05**:
-   `check-ready` ya sale `0`. Antes de mergear, releer «Antes de publicar»
-   del README — son cuatro guardas, no una.
+5. **Generar `main` con `python tools/make-deploy.py` + push + tag en el
+   commit FUENTE.** ~~Era «merge a `main`»~~ — **cambió el 2026-08-06**:
+   `main` publica SOLO el sitio y se genera, no se mergea (ver la decisión
+   «La rama de deploy», la primera de la lista). El prerrequisito de
+   redacción se cumplió el 2026-08-05: `check-ready` sale `0`. Antes de
+   publicar, releer «Publicar» del README — el procedimiento completo del
+   día: las cuatro guardas, la verificación del artefacto en navegador, el
+   push, el tag y los 404 de las notas comprobados en el dominio.
 
 **Por qué el correo fue PRIMERO, que era el cambio de fondo.** El forwarding de
 Namecheap **muere al salir del registrador**, y `contact@kotodamafinance.com`
@@ -166,8 +182,8 @@ verificada, y deja de ser «cambiar y ver qué pasa». Cada paso se comprueba so
 que es lo que hace el fallo diagnosticable.
 
 **No es que el sitio no esté listo.** Está listo, y esa distinción importa: si
-alguien retoma y ve el merge pendiente, la pregunta no es «¿qué falta escribir?»
-sino «¿en qué paso del DNS estamos?».
+alguien retoma y ve la publicación pendiente, la pregunta no es «¿qué falta
+escribir?» sino «¿en qué paso del DNS estamos?».
 
 La revisión legal del `免責事項` **no es un pendiente**: se decidió publicar sin
 ella.
@@ -175,8 +191,9 @@ ella.
 **No queda nada sin decidir** dentro del sitio. El `domain` de las tarjetas, que
 era lo último, se cerró.
 
-**Al llegar al paso 5 —el merge—, releer primero** la sección «Antes de
-publicar» del README: son cuatro guardas, no una, y `check-ready` no mira el
+**Al llegar al paso 5 —la publicación—, releer primero** las secciones «Antes
+de publicar» y «Publicar» del README: son las cuatro guardas MÁS la del deploy
+(que corre sola dentro de `make-deploy.py`), y `check-ready` no mira el
 comportamiento del cubo ni la física.
 
 **Y durante toda la obra, la rama `maintenance` es la red.** Es lo que se
@@ -208,6 +225,92 @@ Ninguno bloquea publicar. Cada uno tiene su sección con el detalle.
 ---
 
 ## Decisiones cerradas — no rediscutir
+
+### La rama de deploy: `main` publica SOLO el sitio — el paso 5 dejó de ser merge
+
+**Decidido por el autor e IMPLEMENTADO el 2026-08-06.** GitHub Pages publica
+la rama entera, así que el merge de `redesign-trust` habría servido
+`CLAUDE.md`, `tools/` y `docs/` desde kotodamafinance.com — las notas de
+trabajo en la misma URL que la credencial profesional del autor. Desde ahora
+**`main` es una rama-artefacto que se GENERA con `tools/make-deploy.py`**,
+igual que `maintenance`: un artefacto derivado no se mantiene, se regenera.
+
+- **Descartadas, y por qué**: repo privado (Pages no publica repos privados
+  en cuenta gratuita; se reevalúa si algún día hay plan de pago) y sacar las
+  notas del repo (Code perdería su memoria entre sesiones — lo que salvó el
+  retomado tras el crash; costo demasiado alto).
+- **Qué tapa y qué NO, explícito a pedido del autor**: tapa las notas como
+  **documentos con URL propia** en el dominio. NO tapa las **menciones**
+  dentro de lo servido —los comentarios de los HTML, en castellano, nombran
+  `CLAUDE.md` y `tools/` en vista-fuente: política ya decidida, se quedan—
+  ni el repo público en GitHub, donde la rama de desarrollo sigue visible
+  (limitación aceptada; efecto lateral bueno: la default branch es `main`,
+  así que quien cae al repo ve solo el sitio).
+- **La lista autoritativa de exclusión es `NO_PUBLICABLES` en el script**
+  (acá se resume, no se duplica): `CLAUDE.md`, `README.md`, `.gitignore`,
+  `docs/`, `tools/`, `assets/img/README.md`, y **`assets/css/maelstrom.css`
+  — el único caso límite, decidido por el autor**: no es CSS del sitio
+  apartado sino material de trabajo en formato `.css` (su encabezado es
+  documentación de calibración con el bug táctil). Como la regla por tipo no
+  caza un `.css`, está en la lista explícita CON el motivo anotado y la
+  guarda además lo verifica **por nombre**. Hoy: 39 publicables, 32
+  excluidos (el 32 cuenta al propio `make-deploy.py` — por eso el script y
+  esta nota entraron en EL MISMO commit: por separado había una ventana en
+  que el doc afirmaba 32 y el script imprimía 31).
+- **La guarda corre DENTRO del script, todo-o-nada, y se probó EN ROJO antes
+  de confiar en su verde** (2026-08-06 — los tres casos pedidos por el autor,
+  más lo que agregó la revisión adversarial del mismo día: 22 agentes, 10
+  hallazgos confirmados por reproducción, todos corregidos): (1) **completo**
+  — sitemap→páginas, referencias de HTML/CSS/JS/import map resueltas dentro
+  del árbol (comillas dobles Y simples, srcset, `url()` en `<style>` inline —
+  las tres formas que la primera versión no veía, cada una con su rojo),
+  infra de Pages; probada quitando `sugao/index.html`: frenan LAS DOS ramas,
+  el sitemap y la extracción. (2) **sin notas** — por TIPO (cero
+  `.md`/`.py`/`.json`) además de por ruta, con un `.woff2` colado en `tools/`
+  como rojo (un `.py` pasaba por el tipo y dejaba la rama de ruta sin
+  ejercitar — hallazgo de la revisión). (3) **identidad** — OID ajeno Y ruta
+  extra inyectada (la única defensa contra un `.css`/`.png` colado, que
+  sin-notas no ve). Más: exclusión sin efecto FRENA desde HEAD, la detección
+  de main se probó en sus CUATRO estados (intacta / hotfix / marca-con-árbol-
+  ajeno / **Fuente fuera de la base de objetos**, que antes moría con el
+  fatal crudo sin dejar usar `--pisar`), un «Fuente: <texto>» casual en un
+  mensaje NO cuenta como deploy (el detector usa EL MISMO regex que la marca,
+  no un substring), y **`main()` corre de punta a punta en la prueba** sobre
+  un ref descartable — árbol sucio, deploy completo con `update-ref`
+  compare-and-swap, idempotencia, freno de hotfix y `--pisar` — porque el
+  cableado que solo se estrena el día del deploy es exactamente «una variante
+  que sólo se LEE».
+- **`main` NADIE la edita a mano — y el script lo detecta antes de pisar**:
+  cada commit de deploy declara su fuente (`Fuente: <hash40>` en el
+  mensaje); antes de publicar, el script regenera el árbol desde ese hash y
+  lo compara con el de la punta de `main`. Si no coinciden —hotfix a mano, o
+  reglas de exclusión cambiadas desde ese deploy—, FRENA señalando el diff;
+  `--pisar` publica igual, a sabiendas.
+- **El tag de publicación va en el commit FUENTE de `redesign-trust`** —el
+  que pasó por las guardas—, con el hash cruzado en el mensaje del commit de
+  `main`: trazabilidad en las dos direcciones. `v1-content-complete` no se
+  mueve.
+- **Rollback**: `python tools/make-deploy.py --fuente <commit-bueno>` + push.
+  El procedimiento concreto, escrito para el día del apuro, está en el
+  README («Publicar»). La red para BAJAR el sitio sigue siendo `maintenance`.
+  **Y el rollback se PROBÓ contra `v1-content-complete`, que dejó una regla
+  medida, no deducida**: ese tag es anterior al juego completo de favicons y
+  a `assets/img/` entero, su sitio era consistente igual (su HTML no los
+  referenciaba), y la primera versión de la guarda —un freno único— bloqueaba
+  ese rollback legítimo dos veces. La partición vigente: bajo `--fuente` lo
+  DURO es lo que rompe Pages o publica notas (CNAME/.nojekyll/index/404,
+  tipos de trabajo, referencias rotas) y el CONTRATO del sitio de hoy
+  (favicons, manifest, og-image, robots, sitemap) solo AVISA — el sitio de
+  ese día se publica como era.
+- **Byte-idéntico por construcción**: el deploy reusa los MISMOS blobs del
+  commit fuente (plumbing, sin checkout, sin riesgo CRLF) — lo probado en
+  desarrollo y lo publicado son el mismo objeto, no una copia en la que
+  confiar. Por eso las guardas siguen corriendo donde siempre, y lo único
+  nuevo que puede fallar —la SELECCIÓN— es exactamente lo que la guarda del
+  deploy verifica. El día de publicar se agrega UNA corrida de `check-modes`
+  contra el árbol de `main` servido en `:8000` (la única de navegador contra
+  el artefacto real) y, tras el push, los 404 de las notas comprobados EN EL
+  DOMINIO — la propiedad que motivó todo esto, verificada donde importa.
 
 ### Analytics: GoatCounter en modo PIXEL, en las CATORCE — IMPLEMENTADO
 
@@ -258,7 +361,7 @@ Las reglas con las que se ejecutó (cumplidas):
   goatcounter.com; el dominio custom NO lo evita — solo el self-hosting, que
   queda como opción para el PaaS). Vale igual para pixel y para JS. No
   «corregir» números contra otras fuentes creyendo que el pixel está roto.
-- **Ejecución: commit propio, ANTES del merge a `main`** — toca las 14
+- **Ejecución: commit propio, ANTES de la publicación a `main`** — toca las 14
   páginas y así las cuatro guardas lo validan antes de producción. El `<img>`
   va **FUERA de los bloques comparados de nav y footer** (lleva `p=/ruta`
   distinto por página: adentro rompería `check-ready`), antes de `</body>`,
@@ -1665,6 +1768,10 @@ commit sea un punto de restauración seguro por construcción, no por suerte.
 
 Las dos que usan navegador necesitan el sitio servido en `:8000`.
 
+**La guarda del deploy no está en la tabla por lo mismo que
+`check-maintenance`**: corre a demanda —dentro de `tools/make-deploy.py`, el
+día de publicar—, no por commit. Las cuatro siguen siendo cuatro.
+
 **Por qué `check-ready` no va en cada commit.** Está en rojo por diseño mientras
 queden placeholders, y **una guarda siempre en rojo deja de ser señal**: uno se
 entrena a ignorarla y el día que se rompa algo de verdad no lo ve. Por eso se
@@ -1682,7 +1789,11 @@ falla, pero hay que fijar el piso nuevo con
 
 **Tags**: sólo en hitos, anotados. `v1-dark` (navy + oro con el cubo) y
 **`v1-content-complete`** (sitio terminado de contenido: cero placeholders,
-`check-ready` en 0). Queda uno pendiente: **la publicación**, al mergear a `main`.
+`check-ready` en 0). Queda uno pendiente: **la publicación** — y va en el
+**commit FUENTE de `redesign-trust`**, no en `main`: el commit de `main` es un
+snapshot generado fuera de la historia de desarrollo, y el que pasó por las
+guardas es el fuente (ver la decisión de la rama de deploy; el mensaje del
+commit de `main` lleva el hash cruzado).
 
 **UN TAG NO SE MUEVE.** Ya pasó la tentación y la respuesta quedó cerrada: el
 mensaje de `v1-content-complete` describe el plan de DNS **anterior** al vigente,
