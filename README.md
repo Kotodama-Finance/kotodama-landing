@@ -112,11 +112,12 @@ GitHub Pages sirve `/musubi/` como `/musubi/index.html`, y redirige `/musubi`
 
 `/musubi/` se llamaba `/naming/`. **No quedó redirección**: GitHub Pages sirve
 archivos estáticos y no tiene reglas de reescritura, así que la ruta vieja
-responde con la 404 del sitio. Es aceptable porque nada de esto está publicado
-todavía; si alguna vez se renombra una ruta **ya publicada**, hay que dejar en
-su lugar un `index.html` con `<link rel="canonical">` a la nueva y un
-`<meta http-equiv="refresh">`, que es lo más parecido a un 301 que permite
-Pages.
+responde con la 404 del sitio. Fue aceptable porque el renombre ocurrió antes
+de la publicación (la landing vieja sólo tenía la portada, así que `/naming/`
+nunca estuvo publicada). **Desde la publicación (2026-08-06) la regla cambia**:
+renombrar una ruta ya publicada exige dejar en su lugar un `index.html` con
+`<link rel="canonical">` a la nueva y un `<meta http-equiv="refresh">`, que es
+lo más parecido a un 301 que permite Pages.
 
 El archivo `.nojekyll` desactiva el procesamiento con Jekyll: el sitio ya es
 estático y no lo necesita. Además evita un problema silencioso — Jekyll ignora
@@ -221,7 +222,7 @@ documentos vivos, y `--force` sobre un tag ya publicado rompe los clones ajenos.
 |---|---|
 | `v1-dark` | la versión navy + oro con el cubo en Three.js |
 | `v1-content-complete` | **el sitio terminado de contenido**: cero placeholders, `check-ready` en 0 |
-| *(pendiente)* | **la publicación** — va en el commit FUENTE de `redesign-trust` (el que pasó las guardas), no en `main`; ver «Publicar» |
+| `v1-published` | **la publicación** (2026-08-06) — en el commit FUENTE `6dc8214` de `redesign-trust` (el que pasó las guardas), no en `main`; el commit de `main` (`824fada`) lleva el hash cruzado |
 
 `v1-content-complete` **es el punto al que hay que volver si algo se rompe en la
 migración de DNS**, que es lo próximo que pasa. Por eso apunta al último estado
@@ -309,6 +310,12 @@ Todo cambio va desarrollo → guardas → `make-deploy`. Si alguien commitea en
 `main` directo, el próximo deploy lo detecta —compara el árbol de la punta
 contra lo que regeneraría desde la `Fuente:` que ese commit declara— y frena
 antes de pisar.
+
+**La primera publicación salió el 2026-08-06** con este procedimiento, tal
+como está escrito abajo: deploy `824fada` desde el fuente `6dc8214` (tag
+`v1-published`), verificado en el dominio — rutas nuevas en 200, notas en
+404, CNAME y HTTPS intactos, pixel disparando. Los seis pasos alcanzaron sin
+improvisar nada.
 
 ### El día de publicar
 
@@ -523,10 +530,11 @@ genera deuda» no aplicaba.
 
 La página lleva `noindex` porque no se quiere el estado de mantenimiento en el
 índice de nadie. El costo: un `noindex` sostenido hace que un buscador deje caer
-las URLs, y volver a indexarlas lleva tiempo. Se acepta porque el sitio nuevo
-todavía no se publicó y no hay ranking que perder. **Si esta rama llegara a estar
-meses arriba sobre un sitio ya indexado, hay que reabrirlo** — lo canónico ahí es
-un 503, y GitHub Pages no puede servirlo.
+las URLs, y volver a indexarlas lleva tiempo. Se aceptó mientras el sitio no
+estaba publicado; **desde la publicación (2026-08-06) el sitio está
+indexándose, así que el costo es real**: si esta rama tiene que quedar arriba,
+que sea lo menos posible — lo canónico ahí es un 503, y GitHub Pages no puede
+servirlo.
 
 ## Tipografías: el subset es un paso obligatorio
 
@@ -629,10 +637,11 @@ Quitarlas —regenerando **sin** `--layout-features='*'`— baja las tres fuente
 | `cormorant-garamond-latin.woff2` | 60,5 KB | 28,7 KB |
 | `cormorant-garamond-latin-italic.woff2` | 45,1 KB | 30,0 KB |
 
-**No se hizo, y la razón importa más que el número**: el sitio no está publicado
-y esas features son exactamente lo que alguien usa después sin acordarse de que
-se sacaron. `liga`, `kern` y `calt` no están en juego — sobreviven al subset por
-defecto y son las que el navegador aplica solo.
+**No se hizo, y la razón importa más que el número**: esas features son
+exactamente lo que alguien usa después sin acordarse de que se sacaron, y con
+el sitio ya publicado (2026-08-06) el fallo silencioso sería en producción.
+`liga`, `kern` y `calt` no están en juego — sobreviven al subset por defecto y
+son las que el navegador aplica solo.
 
 **La condición para revisarlo**: si algún día el CSS usa `font-feature-settings`,
 `font-variant` o `small-caps`, esta optimización deja de estar disponible **y**

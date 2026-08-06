@@ -36,12 +36,24 @@ fallidos ya corregidos, y las capturas intermedias.
   puntero viejo se lee como trabajo pendiente que no existe. El registro
   completo de sus decisiones (las cinco tandas) está en la sección de la
   vista explotada, más abajo.
-- **`main` no se toca a mano — y desde la rama de deploy (2026-08-06), NUNCA
-  más a mano: la escribe solo `tools/make-deploy.py`**. Publica
-  kotodamafinance.com y todavía sirve la landing vieja. Nada de esto está
-  publicado.
+- **`main` no se toca a mano — la escribe solo `tools/make-deploy.py`**.
+  Publica kotodamafinance.com, y **desde el 2026-08-06 sirve EL SITIO NUEVO:
+  LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
+  `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-06, la rama de deploy: `main` pasa a GENERARSE con
+- Último cierre: **2026-08-06, LA PUBLICACIÓN: EL SITIO ESTÁ VIVO EN
+  kotodamafinance.com.** El procedimiento de «Publicar» del README se siguió
+  completo y alcanzó tal como está escrito: cinco guardas en verde (pendulum
+  con su métrica sana, 0.0965), `make-deploy` → `824fada`, `check-modes` en
+  verde contra el árbol real de `main`, push con confirmación explícita del
+  autor, build de Pages en verde (~10 min, más lento que lo usual), y
+  verificado EN EL DOMINIO: portada y rutas nuevas en 200, las notas en 404
+  (/CLAUDE.md, /README.md, /tools/, /docs/, maelstrom), CNAME+HTTPS
+  intactos, www→apex en 301, y el pixel disparando desde el dominio con la
+  exclusión de IP re-confirmada por header. Tag **`v1-published`** en el
+  commit fuente `6dc8214`. Se publicó ANTES de los pasos 2-4 del DNS a
+  propósito — ver AL RETOMAR. El mismo día, antes: **la rama de deploy:
+  `main` pasa a GENERARSE con
   `tools/make-deploy.py` — el sitio solo, sin las notas—, con la guarda
   probada EN ROJO (R1-R5 y los cuatro estados de la detección de hotfix) y
   `main()` corrido de punta a punta sobre un ref descartable, tras una
@@ -105,17 +117,22 @@ guarda; la regla de credenciales, escrita antes de que exista la primera; Zen
 Kaku embebido en el cartel; y las dos declaraciones de procedencia de `/method/`
 reducidas a una línea.
 
-**Dos tags, y el segundo es el que importa ahora:**
+**Tres tags — la serie está completa:**
 
 - `v1-dark` — la versión navy+oro con el cubo Three.js, con registro visual en
   `docs/v1-dark/`.
 - **`v1-content-complete`** — el sitio terminado de contenido, y **el punto de
   restauración de la migración de DNS**. Apunta a `fb38ffb`, que era el último
   estado verificado en verde al crearlo. **No se mueve** aunque el trabajo siga:
-  ver la regla más abajo. Falta el tercero: la publicación — y desde la rama
-  de deploy (2026-08-06) ese tag va en el **commit FUENTE de `redesign-trust`**,
-  no en `main`: el commit de `main` es un snapshot generado, el que pasó por
-  las guardas es el fuente.
+  ver la regla más abajo.
+- **`v1-published`** — la publicación (2026-08-06). Apunta a `6dc8214`, el
+  **commit FUENTE del primer deploy** — no a `main`: el commit de `main`
+  (`824fada`) es un snapshot generado y lleva el hash cruzado en su mensaje;
+  el que pasó por las guardas es el fuente. El nombre lo fijó el autor:
+  v1 y no v2, porque es la primera publicación del MISMO sitio que
+  `v1-content-complete` ya marcaba terminado — la numeración de versiones y
+  el hito de publicación son ejes distintos, y la v2 queda libre para un
+  cambio mayor real (el dashboard, o la migración a PaaS).
 
 **Existe una rama `maintenance`, lista y NO activa.** No se ve desde acá y
 ninguna de las cuatro guardas la mira; su decisión cerrada está más abajo.
@@ -126,12 +143,15 @@ ninguna de las cuatro guardas la mira; su decisión cerrada está más abajo.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**LO QUE FALTA ES SOLO INFRAESTRUCTURA.** El pase de redacción que la revisión
-de quince puntos había reintroducido **terminó el 2026-08-05** (los 16, todos
-con texto del autor), y `check-ready` sale `0`. La publicación a `main` —que
-desde el 2026-08-06 **ya NO es un merge: se genera con `tools/make-deploy.py`**,
-ver la decisión de la rama de deploy— espera una sola cosa: la migración de
-DNS (trabajo fuera de este repo, pasos 2–4 de abajo).
+**EL SITIO ESTÁ PUBLICADO (2026-08-06) — LO QUE FALTA ES SOLO EL DNS.** La
+publicación (el paso 5) se ejecutó **ANTES de los pasos 2-4, por decisión del
+autor, y el orden es correcto**: una transferencia de registrador NO cambia
+los nameservers — Namecheap sigue sirviendo la zona durante los ~5 días de la
+transferencia a Xserver, ya en curso—, y publicar antes deja días de sitio
+nuevo funcionando sobre el DNS actual como **línea de base** para cuando se
+cambie la delegación: si algo se rompe en el paso 4, se sabe que el sitio
+servía bien sobre la zona vieja. Quedan los pasos 2-4, todos fuera de este
+repo.
 
 **PASO 0 — HECHO. Ya se sabe dónde está el DNS**: **Namecheap BasicDNS**, con
 los seis registros del `.com` documentados (cuatro `A` de GitHub Pages, el
@@ -151,20 +171,20 @@ transferir → correo → merge:
 1. ~~Configurar iCloud+ en el DNS de Namecheap, y verificar que recibe y
    responde.~~ **HECHO.**
 2. **Transferir el registro a Xserver.** Los nameservers **no** cambian con la
-   transferencia. ← **EL FRENTE ACTIVO**
+   transferencia. **EN CURSO desde el 2026-08-06 (~5 días).** ← **EL FRENTE
+   ACTIVO**
 3. **Cargar la zona completa en Xserver y verificarla** consultando sus NS
    **directamente**, sin tocar todavía la delegación. Ojo: la zona a cargar
    ahora incluye los registros de iCloud+ (MX/SPF/DKIM), no los seis del
    inventario del paso 0 — el inventario vigente es el de después del paso 1.
 4. **Recién ahí, cambiar los nameservers.**
-5. **Generar `main` con `python tools/make-deploy.py` + push + tag en el
-   commit FUENTE.** ~~Era «merge a `main`»~~ — **cambió el 2026-08-06**:
-   `main` publica SOLO el sitio y se genera, no se mergea (ver la decisión
-   «La rama de deploy», la primera de la lista). El prerrequisito de
-   redacción se cumplió el 2026-08-05: `check-ready` sale `0`. Antes de
-   publicar, releer «Publicar» del README — el procedimiento completo del
-   día: las cuatro guardas, la verificación del artefacto en navegador, el
-   push, el tag y los 404 de las notas comprobados en el dominio.
+5. ~~Generar `main` + push + tag en el commit FUENTE.~~ **HECHO 2026-08-06 —
+   ejecutado ANTES que 2-4, a propósito** (ver el párrafo de arriba: la
+   transferencia no mueve los nameservers y el sitio publicado es la línea
+   de base del cambio de delegación). El procedimiento de «Publicar» del
+   README se siguió completo y alcanzó sin improvisar; el registro está en
+   «Último cierre» del Estado. Para deploys FUTUROS, ese procedimiento
+   sigue siendo el vigente.
 
 **Por qué el correo fue PRIMERO, que era el cambio de fondo.** El forwarding de
 Namecheap **muere al salir del registrador**, y `contact@kotodamafinance.com`
@@ -181,9 +201,9 @@ real**. Así el único paso que mueve tráfico —el 4— se hace contra una zon
 verificada, y deja de ser «cambiar y ver qué pasa». Cada paso se comprueba solo,
 que es lo que hace el fallo diagnosticable.
 
-**No es que el sitio no esté listo.** Está listo, y esa distinción importa: si
-alguien retoma y ve la publicación pendiente, la pregunta no es «¿qué falta
-escribir?» sino «¿en qué paso del DNS estamos?».
+**El sitio está listo Y publicado.** Si alguien retoma, la única pregunta
+vigente es «¿en qué paso del DNS estamos?» — dentro del repo no queda nada
+pendiente.
 
 La revisión legal del `免責事項` **no es un pendiente**: se decidió publicar sin
 ella.
@@ -191,10 +211,11 @@ ella.
 **No queda nada sin decidir** dentro del sitio. El `domain` de las tarjetas, que
 era lo último, se cerró.
 
-**Al llegar al paso 5 —la publicación—, releer primero** las secciones «Antes
-de publicar» y «Publicar» del README: son las cuatro guardas MÁS la del deploy
+**Para cualquier deploy futuro, releer primero** las secciones «Antes de
+publicar» y «Publicar» del README: son las cuatro guardas MÁS la del deploy
 (que corre sola dentro de `make-deploy.py`), y `check-ready` no mira el
-comportamiento del cubo ni la física.
+comportamiento del cubo ni la física. El primer deploy las siguió tal cual y
+el procedimiento alcanzó.
 
 **Y durante toda la obra, la rama `maintenance` es la red.** Es lo que se
 publica si hay que dejar el sitio abajo mientras se mueve el DNS; está lista y
@@ -1787,13 +1808,13 @@ Cuando se redacta un placeholder el conteo baja: la guarda lo informa y **no**
 falla, pero hay que fijar el piso nuevo con
 `python tools/check-structure.py --actualizar-baseline`.
 
-**Tags**: sólo en hitos, anotados. `v1-dark` (navy + oro con el cubo) y
+**Tags**: sólo en hitos, anotados. `v1-dark` (navy + oro con el cubo),
 **`v1-content-complete`** (sitio terminado de contenido: cero placeholders,
-`check-ready` en 0). Queda uno pendiente: **la publicación** — y va en el
-**commit FUENTE de `redesign-trust`**, no en `main`: el commit de `main` es un
-snapshot generado fuera de la historia de desarrollo, y el que pasó por las
-guardas es el fuente (ver la decisión de la rama de deploy; el mensaje del
-commit de `main` lleva el hash cruzado).
+`check-ready` en 0) y **`v1-published`** (la publicación, 2026-08-06 — en el
+**commit FUENTE `6dc8214`**, no en `main`: el commit de `main` es un snapshot
+generado fuera de la historia de desarrollo, y el que pasó por las guardas es
+el fuente; el mensaje del commit de `main` lleva el hash cruzado). La serie
+quedó completa; el próximo tag lo justifica un hito nuevo, no la rutina.
 
 **UN TAG NO SE MUEVE.** Ya pasó la tentación y la respuesta quedó cerrada: el
 mensaje de `v1-content-complete` describe el plan de DNS **anterior** al vigente,
@@ -2100,9 +2121,10 @@ Verificado: cero `font-feature-settings`, cero `font-variant`, cero `small-caps`
 en todo el CSS y el HTML. Quitarlas baja las tres fuentes de **198 KB a 119 KB**.
 
 **Decidido por el autor: no se hace ahora, y el motivo pesa más que el número.**
-El sitio no está publicado, y esas features son exactamente el tipo de cosa que
-alguien usa después sin acordarse de que se sacaron. Un ahorro que se paga con
-un fallo silencioso más adelante no es un ahorro.
+Esas features son exactamente el tipo de cosa que alguien usa después sin
+acordarse de que se sacaron, y un ahorro que se paga con un fallo silencioso
+más adelante no es un ahorro. (Decidido antes de publicar; publicado el sitio,
+el argumento pesa aún más: el fallo sería en producción.)
 
 **La condición para revisarlo**: si algún día el CSS usa `font-feature-settings`,
 `font-variant` o `small-caps`, la optimización deja de estar disponible **y** hay
