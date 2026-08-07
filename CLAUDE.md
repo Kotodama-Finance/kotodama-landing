@@ -759,6 +759,16 @@ descriptores parten distinto (hallazgo de la revisión adversarial, medido en
 la ventana 641-730px: dispersión 19px → 0). Las reglas `a.name` se borraron
 del CSS CON los elementos.
 
+**El efecto secundario vale más que el cambio, señalado por el autor**: al
+sacar los enlaces del párrafo, la excepción de marcado de /musubi/ dejó de
+ser excepción. La convención queda uniforme — `.name` en prosa no enlaza en
+ninguna página — y desaparece la nota que había que mantener explicando por
+qué en un lado sí y en otro no. **Es una simplificación real, no cosmética:
+una regla sin excepciones no necesita documentación defensiva.** (Sus
+palabras, 2026-08-07 — el criterio vale para futuras decisiones de marcado:
+si una regla necesita una nota que explique la excepción, la alternativa
+que elimina la excepción compra además la eliminación de la nota.)
+
 Dos compromisos del texto que NO son redacción libre, anotados en los HTML:
 
 - **«This is not a watchdog» (Yūgen) es un COMPROMISO del autor**, no una
