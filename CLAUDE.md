@@ -1573,9 +1573,15 @@ dorada (transmission REAL: el vendor es **r160**, no el r128 que circulaba en
 papeles — leído de REVISION en three.module.js). Clic en el núcleo →
 /musubi/, único clicable explotado.
 El control es el pie del cubo: «Explode the Cube» ↔ «Reassemble the Cube»
-reemplaza al enlace «The idea behind the cube →» en modo 3D (decisión del
-autor; el `<a>` queda en el HTML como capa sin JS y vuelve en modo grilla y en
-el fallback). Explotar limpia la selección y cierra el folio; las caras dejan
+reemplaza al enlace «The idea underneath the cube →» en modo 3D (decisión del
+autor). **Los dos accesos CONVIVEN, y no es un resto**: el `<a>` queda en el
+HTML y es lo que se ve en modo grilla, en el fallback si la hidratación falla
+y sin JS — o sea, el único camino a /musubi/ DESDE LA SECCIÓN DEL CUBO cuando
+no hay WebGL (la nav y el clic en el núcleo son los otros dos, cada uno en su
+capa). main.js sólo alterna cuál de los dos se ve (`setMore`). *(Corregido
+2026-08-07: este registro decía «behind» — el texto real del sitio es
+«underneath» — y describía el reemplazo sin decir que el enlace sigue siendo
+la capa sin cubo.)* Explotar limpia la selección y cierra el folio; las caras dejan
 de ser clicables; pasar a grilla rearma al instante; reduced-motion salta al
 estado final sin transición y sin pulso (verificado midiendo, no leyendo).
 
@@ -2101,6 +2107,16 @@ DENTRO de una cara. Dos decisiones del bloque, anotadas junto al HTML:
   portada**, a propósito del autor. Son dos copias del mismo texto y **no hay
   guarda que las compare**: si se redacta una, hay que mirar la otra. Está
   anotado en el HTML de los dos lados.
+- **La lista de cadenas duplicadas sin guarda, completa (2026-08-07)** —
+  cuando se toque una, mirar las otras: (1) las dos frases del cubo de arriba
+  (portada ↔ /musubi/); (2) el cierre de Taichi ↔ el subtítulo de /musubi/
+  (registrado en la decisión de las subpáginas de Hajime); (3) **«First
+  analysis on the way», que es TRIPLE, no doble**: el badge del hero
+  (`index.html`), el estado de `/hajime/` y `FACES.hajime.status` en
+  `assets/js/main.js` — el JS repinta el folio de la portada con ese texto,
+  así que cambiar el HTML sin el JS deja la portada contradiciéndose sola.
+  El día que salga la primera nota, esa cadena caduca en los TRES lugares a
+  la vez.
 
 ### `/method/` es el desarrollo; la sección de la portada es el resumen
 La sección `#method` de la portada **queda** —los tres pilares y los cuatro

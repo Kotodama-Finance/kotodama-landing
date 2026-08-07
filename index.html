@@ -243,7 +243,15 @@
                 <p class="status" id="cube-status" data-state="active">
                   <span class="dot" data-state="active" aria-hidden="true"></span><span id="cube-status-text"></span>
                 </p>
-                <a class="btn btn--solid btn--sm cube__open" id="cube-open" href="/hajime/"></a>
+                <!-- CON texto por defecto, sincronizado con el href por defecto
+                     (2026-08-07): un <a> vacío no tiene nombre accesible
+                     (WCAG 2.4.4/4.1.2). El folio `inert` lo tapa en los
+                     navegadores que soportan inert, pero un nombre por defecto
+                     cubre a los que no, y a cualquier lector del DOM. El JS lo
+                     REESCRIBE al seleccionar (setActiveFace pone href y texto
+                     ANTES de abrir el folio), así que este texto sólo se lee en
+                     el estado sin JS — donde /hajime/ es el destino real. -->
+                <a class="btn btn--solid btn--sm cube__open" id="cube-open" href="/hajime/">Open Hajime &rarr;</a>
               </div>
             </div>
           </div>

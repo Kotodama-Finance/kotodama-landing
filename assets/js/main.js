@@ -191,7 +191,7 @@ const stage = document.getElementById('cube-stage');
 const grid = document.querySelector('.face-grid');
 
 /* ---- Control de la vista explotada ---------------------------------------
-   El enlace «The idea behind the cube →» de .cube__more se REEMPLAZA en modo
+   El enlace «The idea underneath the cube →» de .cube__more se REEMPLAZA en modo
    3D por el botón Explode/Reassemble — decisión del autor: explotar el cubo
    es una invitación más fuerte que un enlace a leer, y /musubi/ sigue
    accesible por la nav y por el núcleo. El <a> QUEDA en el HTML como capa
