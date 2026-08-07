@@ -46,7 +46,9 @@ fallidos ya corregidos, y las capturas intermedias.
   apertura + nueve secciones con subtítulo y prosa, todo placeholder (25,
   baseline actualizado; `check-ready` en `2` esperado). Sin kanji ni marca
   de agua (no hay kanji cerrado; no se inventa), vuelta a /hajime/yorozu/,
-  sitemap regenerado (14 URLs, cuatro niveles por primera vez). NO
+  y **con `noindex` mientras sea placeholder** — la exclusión del sitemap
+  derivada de la meta (13 URLs hoy) y el olvido inverso con guarda probada
+  en rojo; el árbol de URLs llega a cuatro niveles por primera vez. NO
   deployado a propósito: se publica cuando el autor pase el texto. El
   enlace desde /hajime/yorozu/ quedó pendiente de su aprobación. Ver la
   decisión nueva, la primera de la lista. Antes, el mismo día: **las
@@ -133,9 +135,11 @@ fallidos ya corregidos, y las capturas intermedias.
   la que se publicó — y `2` significó regresión desde entonces hasta este
   andamiaje.)*
 - **Ahora son QUINCE páginas** (2026-08-07: se sumó el andamiaje de
-  seguros; antes, las tres subpáginas de Hajime). El sitemap tiene 14 URLs
-  (todas menos la 404) y **el árbol de URLs llega a CUATRO niveles por
-  primera vez** — verificado que nada asume profundidad máxima: guardas y
+  seguros; antes, las tres subpáginas de Hajime). El sitemap tiene **13
+  URLs mientras el andamiaje lleve su noindex de placeholder** (fuera
+  quedan la 404 y esa página; vuelve a 14 con el texto — ver la decisión
+  del noindex) y **el árbol de URLs llega a CUATRO niveles por primera
+  vez** — verificado que nada asume profundidad máxima: guardas y
   generadores descubren por `rglob` y derivan de directorios.
 - **Decisiones del autor pendientes: UNA (2026-08-07)** — cómo enlaza
   /hajime/yorozu/ a la sección nueva de seguros (propuesta hecha: tarjeta
@@ -290,7 +294,7 @@ sección con el detalle.
 
 | Cabo | Estado |
 |---|---|
-| **Capa 1 de seguros: el TEXTO** | **el frente activo (2026-08-07)**: andamiaje listo en `/hajime/yorozu/japan/seguros/` con 25 placeholders esperando el texto del autor. NO se deploya hasta ese pase. Y **el enlace desde /hajime/yorozu/ pendiente de su aprobación** (propuesta: tarjeta única). Ver la decisión, primera de la lista. |
+| **Capa 1 de seguros: el TEXTO** | **el frente activo (2026-08-07)**: andamiaje listo en `/hajime/yorozu/japan/seguros/` con 25 placeholders esperando el texto del autor, **con `noindex` mientras tanto** (exclusión del sitemap derivada; al redactar: sacar la meta + regenerar sitemap + baseline — el olvido tiene guarda). NO se deploya hasta ese pase. Y **el enlace desde /hajime/yorozu/ pendiente de su aprobación** (propuesta: tarjeta única). Ver la decisión, primera de la lista. |
 | ~~Redacción de Hajime~~ | **CERRADA 2026-08-05**: los 15, con texto del autor. Baseline en cero, `check-ready` en `0`. Cualquier placeholder nuevo es regresión. |
 | ~~Logo de LibraryThing~~ | **CERRADO 2026-08-05**: va el archivo oficial en su paleta original, sin alterar — criterio nuevo que disuelve el pendiente de permiso (ver la decisión de tarjetas y `assets/img/README.md`). |
 | ~~Kanji de Taichi/Yorozu/Yūgen~~ | **CERRADO 2026-08-05**: 太一 · 万 · 幽玄, del `context.md` del autor. Aplicados en h1 y `<title>` con el patrón de las caras; subset regenerado (太/幽/玄 eran nuevos). |
@@ -346,8 +350,29 @@ sale antes que cualquier dashboard.
   en los TODO son DE TRABAJO — los definitivos van con el texto.
 - **El enlace desde /hajime/yorozu/ QUEDA PENDIENTE DEL AUTOR**: es una
   página con texto aprobado y no se toca sin su visto bueno. Hasta
-  entonces la página nueva queda huérfana a sabiendas (está en el
-  sitemap; ninguna guarda exige enlaces entrantes).
+  entonces la página nueva queda huérfana a sabiendas (ninguna guarda
+  exige enlaces entrantes).
+- **NOINDEX MIENTRAS SEA PLACEHOLDER (2026-08-07, decidido con el autor)**:
+  hoy el riesgo de indexación es cero porque el andamiaje NO está deployado,
+  pero un deploy intermedio (un ajuste a otra página antes del texto) lo
+  publicaría, y el sitemap es exactamente cómo Google descubre URLs sin
+  enlaces entrantes — una página de TODOs en los resultados, en la primera
+  sección de contenido real, es el peor lugar. La página lleva
+  `noindex, follow` (el patrón de la 404) y **la exclusión del sitemap se
+  DERIVA de esa meta** — `make-sitemap` la lee de la propia página, sin
+  lista a mano (hoy: 13 URLs). **Las tres direcciones tienen guarda y las
+  tres se probaron EN ROJO**: noindex listado en el sitemap frena
+  `check-structure` (la contradicción de siempre); sacar el noindex sin
+  regenerar el sitemap frena `check-structure` («falta en el sitemap»); y
+  **el olvido silencioso — redactar la página y dejar el noindex, que la
+  publicaría invisible para siempre con todo en verde — frena `check-ready`
+  con código 1** (`noindex_olvidado()` en `_guardas`: una página sin
+  placeholders no puede llevar noindex, salvo la 404). AL REDACTAR: sacar
+  la meta con su comentario, regenerar el sitemap, actualizar el baseline.
+  El aviso de método que dejó la prueba: la primera simulación del rojo
+  quitó el texto «TODO» pero dejó los `class="todo"` — la página seguía
+  contando placeholders y el rojo no salía; redacción real = texto Y clases
+  fuera. Provocar de verdad el momento en que pasaría.
 - Un hallazgo del armado, anotado también en el HTML: **el atributo
   literal de la clase de placeholder entre comillas cuenta para
   `placeholders()` AUNQUE esté dentro de un comentario** — esa guarda no
@@ -1741,7 +1766,11 @@ real de la imagen.
 - **La 404 lleva `noindex` y queda fuera del sitemap**, y la guarda falla si una
   página con `noindex` aparece listada: son dos declaraciones que se contradicen.
   Usa rutas absolutas porque GitHub Pages la sirve ante URLs de cualquier
-  profundidad.
+  profundidad. **Desde el 2026-08-07 el criterio es GENERAL y derivado**:
+  `make-sitemap` excluye a cualquier página que declare `noindex` leyendo la
+  meta de la propia página — el segundo caso es el andamiaje de seguros
+  mientras sea placeholder (ver su decisión, que agrega la guarda del olvido
+  inverso en `check-ready`).
 - **`canonical`, `og:url` y `og:image` son ABSOLUTAS y autorreferentes**, con
   guarda. Quien arma la vista previa (LinkedIn, Slack, X) no es el navegador del
   lector y no resuelve rutas relativas: la tarjeta sale sin imagen. **El fallo no

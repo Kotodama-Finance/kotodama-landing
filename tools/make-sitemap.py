@@ -22,6 +22,7 @@ directamente los ignora Google desde hace años.
 La 404 queda afuera: pedirle a un buscador que indexe la página de error es
 exactamente lo contrario de lo que hace falta.
 """
+import re
 import sys
 from pathlib import Path
 
@@ -30,6 +31,13 @@ SITIO = "https://kotodamafinance.com"
 SALIDA = RAIZ / "sitemap.xml"
 EXCLUIDOS = {"_dev", "_ref", ".git", "docs", "tools", "node_modules"}
 NO_INDEXABLES = {"404.html"}
+# Una página que declara noindex queda FUERA del sitemap, y se deriva de la
+# propia página en vez de mantener una lista acá: listar una página noindex
+# es una contradicción que check-structure ya caza, y la lista a mano sería
+# una segunda fuente de verdad. Caso que motivó la regla (2026-08-07): el
+# andamiaje de seguros lleva noindex mientras sea placeholder — al redactar
+# se saca la meta y ESTE script vuelve a listarla solo.
+RE_NOINDEX = re.compile(r'<meta name="robots"[^>]*noindex')
 
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -46,6 +54,8 @@ def urls():
         if any(parte in EXCLUIDOS for parte in rel.parts):
             continue
         if rel.as_posix() in NO_INDEXABLES:
+            continue
+        if RE_NOINDEX.search(p.read_text(encoding="utf-8")):
             continue
         if p.name == "index.html":
             carpeta = rel.parent.as_posix()

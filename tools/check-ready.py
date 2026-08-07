@@ -82,6 +82,15 @@ def main():
     else:
         print("  OK     todos los glifos cubiertos")
 
+    print("\nNoindex olvidado en páginas ya redactadas")
+    olvidados = G.noindex_olvidado()
+    if olvidados:
+        for x in olvidados:
+            print(f"  FALLA  {x}")
+        roto += olvidados
+    else:
+        print("  OK     ningún noindex sobrevive a su redacción")
+
     print("\nPlaceholders de redacción")
     actual = G.placeholders()
     total = sum(actual.values())

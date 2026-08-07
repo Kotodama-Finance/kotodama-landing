@@ -29,7 +29,7 @@ og-image.png            tarjeta al compartir (generada)
 tools/check-structure.py guarda estructural: verde siempre (ver más abajo)
 tools/check-ready.py    guarda previa a publicar (hoy 2 esperado: capa 1 de seguros en placeholders — historia en su docstring)
 tools/make-favicon.py   genera los iconos a partir del subset de la marca
-tools/make-sitemap.py   genera el sitemap a partir de los HTML publicables
+tools/make-sitemap.py   genera el sitemap de los HTML publicables (excluye los que declaran noindex, leído de la propia meta)
 tools/make-og-image.py  genera og-image.png (sólo tipografía, sin navegador)
 tools/make-deploy.py    genera el commit de publicación en main: el sitio solo
 docs/v1-dark/           registro visual de versiones etiquetadas

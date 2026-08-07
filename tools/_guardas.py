@@ -120,8 +120,12 @@ def sitemap_incompleto():
     """Páginas publicables que faltan en sitemap.xml (y URLs de más).
 
     La 404 queda afuera a propósito: lleva `noindex` y pedir que se indexe la
-    página de error es lo contrario de lo que hace falta.
-    """
+    página de error es lo contrario de lo que hace falta. Y desde el
+    2026-08-07 CUALQUIER página con `noindex` queda afuera de las esperadas
+    — el mismo criterio derivado que usa make-sitemap: la meta en la página
+    es la única fuente de verdad. Las dos direcciones quedan vigiladas:
+    noindex listada en el sitemap es la contradicción de abajo, y sacar el
+    noindex sin regenerar el sitemap cae en «falta en el sitemap»."""
     sm = RAIZ / "sitemap.xml"
     if not sm.exists():
         return ["no existe sitemap.xml -> python tools/make-sitemap.py"]
@@ -132,6 +136,9 @@ def sitemap_incompleto():
     for p in htmls():
         rel = p.relative_to(RAIZ)
         if rel.as_posix() in NO_INDEXABLES:
+            continue
+        if re.search(r'<meta name="robots"[^>]*noindex',
+                     p.read_text(encoding="utf-8")):
             continue
         if p.name == "index.html":
             carpeta = rel.parent.as_posix()
@@ -382,6 +389,30 @@ def glifos_faltantes():
 # en el README: la marca tiene que ser un TOKEN SIN ESPACIOS, porque una frase se
 # parte en el salto de línea de un comentario HTML y deja de encontrarse. La
 # primera versión decía «revisado» con el borrador intacto.
+
+
+def noindex_olvidado():
+    """Páginas SIN placeholders que siguen llevando noindex (la 404 no cuenta).
+
+    La mitad silenciosa del noindex-mientras-placeholder (2026-08-07): mientras
+    una página es andamiaje, su noindex es deliberado — que un deploy
+    intermedio no publique TODOs en los resultados de búsqueda—; redactada, un
+    noindex olvidado la publica invisible PARA SIEMPRE y ninguna otra guarda lo
+    ve: placeholders en cero, sitemap consistente (la noindex queda afuera de
+    las esperadas), todo verde. Igual que hrefs_muertos, esto falla exactamente
+    cuando empieza a importar y no antes.
+    """
+    con_todo = placeholders()
+    problemas = []
+    for p in htmls():
+        rel = nombre(p)
+        if rel in NO_INDEXABLES or rel in con_todo:
+            continue
+        if re.search(r'<meta name="robots"[^>]*noindex',
+                     p.read_text(encoding="utf-8")):
+            problemas.append(f"{rel}: lleva noindex y ya no tiene placeholders — "
+                             f"sacar la meta (con su comentario) y regenerar el sitemap")
+    return problemas
 
 
 def hrefs_muertos():
