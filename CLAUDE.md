@@ -41,7 +41,18 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-06 (después de publicar), la tanda de cuatro
+- Último cierre: **2026-08-07, las tarjetas de las subcaras en /hajime/**:
+  tres tarjetas `.face-page__cards` debajo del párrafo (que no se tocó) —
+  太一 Taichi · 万 Yorozu · 幽玄 Yūgen, cada una con la línea de función de su
+  destino, reusando `.face-card` sin punto de estado — y los nombres en prosa
+  DE VUELTA a `i.name` sin enlace: la regla `.name`-no-enlaza quedó UNIFORME
+  en todo el sitio. El detalle y los porqués, en la decisión de las
+  subpáginas de Hajime; verificado midiendo a 1440/1920/800/700/600 (una
+  fila de tres, apiladas bajo 640, pies parejos, sin desborde, cero JS) y
+  capturas enviadas al autor. La description de /hajime/ sigue válida (nombra
+  las tres líneas que ahora son tarjetas). Antes, el mismo día: el retrigger
+  que destrabó el deploy 2 — ver más abajo en este mismo bloque. Antes,
+  el **2026-08-06 (después de publicar), la tanda de cuatro
   ajustes del autor**: el titular del hero SIN puntos (el `<br>` ya separa;
   corte re-verificado midiendo: línea 1 en 907px contra el tope de 990,
   margen 83 — la garantía se ensanchó; **la og-image CONSERVA los puntos a
@@ -729,9 +740,24 @@ About, /sugao/ p3 y /kizuna/ p2).
 (transparencia). Estructura de cara —línea de función + lead + un párrafo—,
 **ya redactadas (2026-08-05) con texto del autor, tal cual lo dictó**: «The
 macro picture» / «Sector by sector» / «Public money», descriptions derivadas
-del texto. Los tres nombres de `/hajime/` pasaron de `<i class="name">` a
-**enlaces** (`a.name`, oro y subrayado suave): eran lo único del sitio que se
-destacaba sin llevar a ninguna parte.
+del texto. **Los tres nombres en la prosa de `/hajime/` van en `<i
+class="name">` SIN enlace, y LA PUERTA a las subpáginas son las TARJETAS
+`.face-page__cards` debajo del párrafo (2026-08-07, decisión del autor)** —
+esto REVIERTE los enlaces `a.name` del 2026-08-05: como enlaces dorados
+dentro de la prosa se leían como énfasis, no como puertas, y el lector no
+descubría las subpáginas. (El motivo de aquellos enlaces —«se destacaban sin
+llevar a ninguna parte»— quedó disuelto: como `i.name` ya no se destacan, y
+el destino está en las tarjetas de al lado.) Las tarjetas reusan `.face-card`
+TAL CUAL —el vocabulario de las seis de la portada: las subcaras son caras un
+nivel abajo—, SIN punto de estado (ese vocabulario es el «qué hay» de las
+seis, y acá las tres están igual) y SIN descripción propia: el párrafo
+explica, y el descriptor es la línea de función del DESTINO literal (su
+`.face-page__gloss`) — la tarjeta y la página dicen lo mismo. Tres columnas
+(219px por tarjeta, medido a 1440 y 1920), a una bajo 640px; `height: 100%`
+en la tarjeta para que los pies de la fila queden parejos cuando los
+descriptores parten distinto (hallazgo de la revisión adversarial, medido en
+la ventana 641-730px: dispersión 19px → 0). Las reglas `a.name` se borraron
+del CSS CON los elementos.
 
 Dos compromisos del texto que NO son redacción libre, anotados en los HTML:
 
@@ -754,12 +780,14 @@ Dos compromisos del texto que NO son redacción libre, anotados en los HTML:
   sin gloss traducido. Entraron con regeneración de subset: **太/幽/玄 eran
   nuevos; 一 y 万 ya estaban** (一次資料, 百万円). Verificado contra cmap con
   猫 de control de ausencia; features y conservados intactos.
-- **Los enlaces de /hajime/ quedaron en ROMAJI SOLO, y es decisión, no
-  falta**: dentro de la oración inglesa, el kanji junto al romaji sólo
-  duplicaría el nombre de al lado — la prueba exacta del japonés ornamental.
-  El kanji vive donde el nombre se presenta como título (h1 y `<title>` de la
-  subpágina), igual que las seis caras: ninguna mención en prosa del sitio
-  lleva kanji. Anotado junto a los enlaces en /hajime/.
+- **Los nombres en la prosa de /hajime/ quedaron en ROMAJI SOLO, y es
+  decisión, no falta** (regía para los enlaces de entonces y sigue rigiendo
+  para los `i.name` de hoy): dentro de la oración inglesa, el kanji junto al
+  romaji sólo duplicaría el nombre de al lado — la prueba exacta del japonés
+  ornamental. El kanji vive donde el nombre se presenta como título — el h1 y
+  `<title>` de la subpágina y, desde el 2026-08-07, su tarjeta en /hajime/ —,
+  igual que las seis caras: ninguna mención en prosa del sitio lleva kanji.
+  Anotado junto a los nombres en /hajime/.
 - **La guarda de castellano exime el texto que EMPIEZA con «TODO»** — se agregó
   en esta tanda, porque los placeholders son castellano deliberado (regla de
   este archivo) y la guarda los habría marcado: era una regla del proyecto
@@ -769,8 +797,11 @@ Dos compromisos del texto que NO son redacción libre, anotados en los HTML:
   — ahora son nueve, con dos razones que no hay que mezclar: los seis del
   marco no tienen página (enlazarlos prometería páginas que no existen), y
   los tres de Hajime del bloque 5 SÍ la tienen pero ahí se presentan como
-  sistema conceptual, no como destinos. Está anotado en el HTML de /musubi/,
-  en el de /hajime/ y en el CSS de `a.name`.
+  sistema conceptual, no como destinos. **Desde el 2026-08-07 esto dejó de
+  ser excepción y es LA REGLA UNIFORME del sitio: `.name` en prosa no enlaza
+  en NINGUNA página** — en /hajime/ la puerta son las tarjetas. Está anotado
+  en el HTML de /musubi/, en el de /hajime/ y en el CSS (el bloque «LOS
+  ENLACES a.name SE FUERON», junto a `.face-page__body .name`).
 
 ### La tanda tipográfica y de logos del 2026-08-05 — seis pedidos del autor
 
@@ -827,12 +858,15 @@ Dos compromisos del texto que NO son redacción libre, anotados en los HTML:
 - **«Read the full method →» al pie de la COLUMNA IZQUIERDA** — REVIERTE el
   centrado bajo las dos columnas; como hijo de `.method__how` no se estira
   al fondo de la columna de fuentes.
-- **El aire tras los enlaces de /hajime/**: el espacio SIEMPRE estuvo
+- **El aire tras los nombres `.name`** (entonces los enlaces de /hajime/,
+  que el 2026-08-07 volvieron a `i.name` — la corrección sigue vigente
+  porque vive en la clase): el espacio SIEMPRE estuvo
   (4,5px de avance, medido) — la cursiva de `.name` es OBLICUA SINTÉTICA
   (Inter no carga itálica) y la última letra pintaba sobre el espacio.
-  Margen de 0.14em, no padding (el padding estira el subrayado). 7,6px
+  Margen de 0.14em, no padding (el padding estiraba el subrayado del enlace
+  de entonces). 7,6px
   después, medido. **La corrección del mismo día lo llevó a LA CLASE
-  ENTERA** (`.face-page__body .name`, no sólo `a.name`): el culpable es la
+  ENTERA** (`.face-page__body .name`, no sólo los enlaces): el culpable es la
   oblicua, que afecta igual a los nueve `i.name` de /musubi/ — medido
   antes: 5,02px ante palabra y **0,00px ante coma** («Okeanos,» y
   «Aeolus,», la letra inclinada apoyaba sobre la coma); después: 7,58 y
@@ -1705,11 +1739,13 @@ sumó «How the reading divides» (la división de la lectura: `Taichi`, `Yorozu
 mapa es un cubo de caras al mismo nivel; el 5, cómo se divide el trabajo
 DENTRO de una cara. Dos decisiones del bloque, anotadas junto al HTML:
 
-- **Los tres nombres van en `.name` SIN enlace aunque SÍ tienen página** — la
-  excepción más discutible del marcado: acá se presentan como parte del
-  sistema conceptual, no como destinos (el camino es /hajime/, de donde
-  cuelgan), y mezclar nombres enlazados y sin enlazar con el mismo marcado en
-  la misma página sería inconsistente. También en el CSS de `a.name`.
+- **Los tres nombres van en `.name` SIN enlace aunque SÍ tienen página** —
+  acá se presentan como parte del sistema conceptual, no como destinos (el
+  camino es /hajime/, de donde cuelgan). Era «la excepción más discutible del
+  marcado» mientras en /hajime/ el mismo marcado sí enlazaba; **desde el
+  2026-08-07 ya no es excepción sino la regla uniforme: `.name` en prosa no
+  enlaza en ninguna página** — en /hajime/ la puerta son las tarjetas de las
+  subcaras. Anotado también en el CSS, donde estaban las reglas de `a.name`.
 - **Sin referentes filosóficos, a propósito**: el `context.md` respalda el
   bloque con Hegel, Jung, el yin-yang, Agustín y Amaterasu, y no se nombra
   ninguno — la página ya maneja seis conceptos de dos tradiciones, y cinco
@@ -2441,7 +2477,8 @@ que produjeron conclusiones equivocadas:
   AVISA.** «El dominio viejo aún responde», «el sitio publica X», «la API no
   requiere key»: afirmaciones sobre un tercero que eran ciertas al escribirse
   y que el tercero invalida sin tocar ningún archivo nuestro. Ya son tres
-  casos: el comentario del CSS de `a.name`, la nota de webland del catálogo
+  casos: el comentario del CSS de `.name` (cuando sus reglas eran `a.name`;
+  hoy vive junto a `.face-page__body .name`), la nota de webland del catálogo
   («aún responde» — murió del todo, corregida ago 2026 con aprobación del
   autor) y la de tokiorisk (mismo texto, misma muerte — corregida el mismo
   día, también con aprobación). **El número es parte del diagnóstico: TRES
