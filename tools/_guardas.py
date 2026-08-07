@@ -15,6 +15,11 @@ SITIO = "https://kotodamafinance.com"
 EXCLUIDOS = {"_dev", "_ref", ".git", "docs", "tools", "node_modules"}
 # Páginas que existen pero NO se indexan (ver sitemap_incompleto)
 NO_INDEXABLES = {"404.html"}
+# Una página que declara noindex no existe para buscadores NI para el mapa del
+# footer: la meta en la PROPIA página es la única fuente de verdad — criterio
+# generalizado de la 404 el 2026-08-07; el caso vivo es el andamiaje de
+# seguros mientras sea placeholder. make-sitemap deriva de acá.
+RE_NOINDEX = re.compile(r'<meta name="robots"[^>]*noindex')
 # Rango de caracteres japoneses: puntuación CJK (U+3000-303F: espacio
 # ideográfico, 、y 。), kana, kanji, y formas de ancho completo (U+FF00-FFEF:
 # los paréntesis （） y todo el bloque). ENSANCHADO el 2026-08-06: la versión
@@ -47,6 +52,21 @@ def texto_visible(html: str) -> str:
     html = re.sub(r"<!--.*?-->", " ", html, flags=re.S)
     html = re.sub(r"<(script|style)\b.*?</\1>", " ", html, flags=re.S | re.I)
     return re.sub(r"<[^>]+>", " ", html)
+
+
+def sin_comentarios(html: str) -> str:
+    """HTML sin comentarios, para las regex que miran MARCADO VIVO.
+
+    Las búsquedas del mapa y del noindex tienen que ignorar comentarios: una
+    tarjeta comentada no presenta nada, y un comentario que meramente CITA
+    `<meta name="kotodama-type" content="note">` no convierte la página en
+    nota — lo probó la revisión adversarial del mapa (2026-08-07): sin esto,
+    comentar una tarjeta evadía el abort y una cita en comentario sacaba a
+    /musubi/ del mapa en silencio. `placeholders()` NO usa esto A PROPÓSITO:
+    su conteo-dentro-de-comentarios es el quirk documentado del andamiaje de
+    seguros, y cambiarlo movería el baseline.
+    """
+    return re.sub(r"<!--.*?-->", " ", html, flags=re.S)
 
 
 def placeholders() -> dict:
@@ -137,8 +157,7 @@ def sitemap_incompleto():
         rel = p.relative_to(RAIZ)
         if rel.as_posix() in NO_INDEXABLES:
             continue
-        if re.search(r'<meta name="robots"[^>]*noindex',
-                     p.read_text(encoding="utf-8")):
+        if RE_NOINDEX.search(sin_comentarios(p.read_text(encoding="utf-8"))):
             continue
         if p.name == "index.html":
             carpeta = rel.parent.as_posix()
@@ -155,13 +174,247 @@ def sitemap_incompleto():
     # una página con noindex listada en el sitemap se contradice a sí misma
     for p in htmls():
         rel = p.relative_to(RAIZ).as_posix()
-        h = p.read_text(encoding="utf-8")
-        if re.search(r'<meta name="robots"[^>]*noindex', h):
+        h = sin_comentarios(p.read_text(encoding="utf-8"))
+        if RE_NOINDEX.search(h):
             carpeta = p.relative_to(RAIZ).parent.as_posix()
             ruta = ("/" if carpeta == "." else f"/{carpeta}/") \
                 if p.name == "index.html" else "/" + rel
             if SITIO + ruta in listadas:
                 problemas.append(f"{rel} tiene noindex pero está en el sitemap")
+    return problemas
+
+
+# --- Mapa del sitio en el footer ---------------------------------------------
+# Fila propia dentro del <footer> de TODAS las páginas, GENERADA por
+# tools/make-sitemap.py en la misma corrida que escribe sitemap.xml. Nada del
+# bloque se escribe a mano: las URLs son el MISMO conjunto que el sitemap (sin
+# la 404 ni las noindex — paginas_publicas es la fuente común), los nombres
+# salen del face-page__romaji con que cada página se presenta en su h1
+# («Home» para la portada, cuyo h1 es el titular del hero, no un nombre), y el
+# orden de los hijos es el orden en que el PADRE los presenta como tarjetas
+# .face-card (la grilla del cubo para las seis caras; .face-page__cards para
+# las subcaras). Lo único que no se puede derivar es el orden de las páginas
+# de nivel superior que no son caras —un orden es una decisión de
+# presentación—, y por eso ORDEN_SITIO existe COMO LISTA CON GUARDA: una
+# página que no esté ni en tarjetas ni acá ni declarada nota ABORTA la
+# generación nombrándola, en vez de caer a un orden inventado. Kanji NO lleva:
+# en una lista densa el kanji junto al romaji sólo duplicaría el nombre de al
+# lado — la misma prueba del japonés ornamental que rige la prosa de /hajime/,
+# y la nav ya escribe «Musubi» pelado.
+#
+# LAS NOTAS FUTURAS NO ENTRAN AL MAPA (decisión del autor, 2026-08-07): con
+# veinte notas el footer sería una lista larga en todas las páginas. En su
+# lugar entrará LA PÁGINA DE ARCHIVO cuando exista — sin mecanismo especial:
+# es una página normal, el descubrimiento la encuentra y el abort obliga a
+# ubicarla conscientemente en ORDEN_SITIO. Una nota se declara con
+# <meta name="kotodama-type" content="note"> EN SU PROPIO HTML, desde la
+# primera: la ruta sola no distingue una nota de una subcara (viven al mismo
+# nivel bajo /hajime/), así que la distinción es una declaración explícita — y
+# el abort hace imposible crear una sin declararla: ni tarjeta ni marca es
+# rojo con nombre. Las notas SÍ van a sitemap.xml (son contenido indexable);
+# sólo el mapa del footer las resume en la entrada del archivo.
+
+RE_NOTA = re.compile(r'<meta name="kotodama-type" content="note"')
+RE_ROMAJI_H1 = re.compile(r'<span class="face-page__romaji[^"]*">([^<]*)</span>')
+ORDEN_SITIO = ("musubi", "method", "disclaimer")
+
+
+def tarjetas_de(html: str) -> list:
+    """hrefs de los <a> con clase face-card, en orden de aparición.
+
+    Tolera el orden de los atributos y las clases compuestas (el precedente
+    es RE_ROMAJI_H1, que tolera «face-page__romaji todo»): un href-antes-de-
+    class o un «face-card face-card--x» son marcado válido que renderiza
+    idéntico, y la primera versión —regex de orden exacto— abortaba con un
+    diagnóstico FALSO («no la presenta como tarjeta» con la tarjeta a la
+    vista). Lo cazó la revisión adversarial del mapa (2026-08-07).
+    """
+    hrefs = []
+    for m in re.finditer(r"<a\b[^>]*>", html):
+        tag = m.group(0)
+        if re.search(r'class="[^"]*\bface-card\b[^"]*"', tag):
+            h = re.search(r'href="([^"]+)"', tag)
+            if h:
+                hrefs.append(h.group(1))
+    return hrefs
+MAPA_INI = "<!-- MAPA DEL SITIO"
+MAPA_FIN = "<!-- FIN DEL MAPA DEL SITIO -->"
+
+
+class MapaInconstruible(Exception):
+    """El mapa no se puede derivar completo; el mensaje nombra qué falta."""
+
+
+def paginas_publicas():
+    """[(Path, ruta)] de las páginas que existen para un lector.
+
+    El MISMO conjunto que lista sitemap.xml — make-sitemap deriva de acá, así
+    que el sitemap y el mapa del footer no pueden divergir: la 404 y las
+    páginas noindex quedan afuera por el mismo criterio en el mismo lugar.
+    """
+    filas = []
+    for p in htmls():
+        rel = p.relative_to(RAIZ)
+        if rel.as_posix() in NO_INDEXABLES:
+            continue
+        if RE_NOINDEX.search(sin_comentarios(p.read_text(encoding="utf-8"))):
+            continue
+        if p.name == "index.html":
+            carpeta = rel.parent.as_posix()
+            ruta = "/" if carpeta == "." else f"/{carpeta}/"
+        else:
+            ruta = "/" + rel.as_posix()
+        filas.append((p, ruta))
+    return filas
+
+
+def mapa_bloque() -> str:
+    """El bloque canónico del mapa, marcadores incluidos, con sangría de footer.
+
+    Deriva TODO y aborta (MapaInconstruible) ante lo que no puede derivar:
+    página sin nombre, página que su padre no presenta como tarjeta, página de
+    nivel superior fuera de ORDEN_SITIO. Un mapa que adivina es peor que uno
+    que frena: el hueco se publicaría idéntico en todas las páginas.
+    """
+    html_de, paginas = {}, {}
+    for p, ruta in paginas_publicas():
+        # Sin comentarios: las regex de acá abajo miran marcado VIVO — una
+        # tarjeta comentada no presenta nada, y citar la meta de nota en un
+        # comentario no convierte la página en nota (ver sin_comentarios).
+        h = sin_comentarios(p.read_text(encoding="utf-8"))
+        if RE_NOTA.search(h):
+            continue  # las notas no entran; las listará la página de archivo
+        paginas[ruta] = p
+        html_de[ruta] = h
+
+    def etiqueta(ruta):
+        if ruta == "/":
+            return "Home"
+        m = RE_ROMAJI_H1.search(html_de[ruta])
+        if not m or not m.group(1).strip() or "TODO" in m.group(1):
+            raise MapaInconstruible(
+                f"{ruta}: sin face-page__romaji del que derivar su nombre para el mapa")
+        return m.group(1).strip()
+
+    def padre(ruta):
+        # El ancestro más cercano CON página: /hajime/yorozu/japan/seguros/
+        # cuelga de /hajime/yorozu/, porque /japan/ no lleva página (decisión).
+        partes = ruta.strip("/").split("/")
+        for corte in range(len(partes) - 1, 0, -1):
+            r = "/" + "/".join(partes[:corte]) + "/"
+            if r in paginas:
+                return r
+        return "/"
+
+    hijos = {}
+    for ruta in paginas:
+        if ruta != "/":
+            hijos.setdefault(padre(ruta), []).append(ruta)
+
+    def orden_tarjetas(ruta_padre, lista):
+        """(en el orden de las tarjetas del padre, lo que el padre no presenta).
+
+        Un mismo destino tarjeteado DOS veces aborta: el duplicado se
+        publicaría como entrada repetida en el mapa de todas las páginas, con
+        todas las guardas en verde (mapa_desactualizado compara contra esta
+        misma derivación). Reproducido por la revisión adversarial.
+        """
+        tarjetas = tarjetas_de(html_de[ruta_padre])
+        repetidas = sorted({u for u in tarjetas
+                            if u in lista and tarjetas.count(u) > 1})
+        if repetidas:
+            raise MapaInconstruible(
+                f"{ruta_padre}: presenta {', '.join(repetidas)} como tarjeta "
+                f"MÁS DE UNA VEZ — el mapa duplicaría la entrada en todas las "
+                f"páginas; dejar una sola tarjeta por destino")
+        return ([u for u in tarjetas if u in lista],
+                [u for u in lista if u not in tarjetas])
+
+    def arbol(ruta, sangria):
+        s = " " * sangria
+        propios = hijos.get(ruta, [])
+        if not propios:
+            return [f'{s}<li><a href="{ruta}">{etiqueta(ruta)}</a></li>']
+        en_tarjetas, sueltos = orden_tarjetas(ruta, propios)
+        if sueltos:
+            raise MapaInconstruible(
+                f"{', '.join(sorted(sueltos))}: bajo {ruta} pero {ruta} no la "
+                f"presenta como tarjeta — agregarle su .face-card, o declararla "
+                f'nota con <meta name="kotodama-type" content="note">')
+        lineas = [f'{s}<li><a href="{ruta}">{etiqueta(ruta)}</a>',
+                  f'{s}  <ul class="footer__map-list footer__map-list--sub">']
+        for h in en_tarjetas:
+            lineas += arbol(h, sangria + 4)
+        lineas += [f"{s}  </ul>", f"{s}</li>"]
+        return lineas
+
+    caras, sueltos_raiz = orden_tarjetas("/", hijos.get("/", []))
+    sitio = [f"/{slug}/" for slug in ORDEN_SITIO if f"/{slug}/" in sueltos_raiz]
+    sin_lugar = sorted(set(sueltos_raiz) - set(sitio))
+    if sin_lugar:
+        raise MapaInconstruible(
+            f"{', '.join(sin_lugar)}: página(s) de nivel superior sin lugar en el "
+            f"mapa — para un directorio, sumar su slug a ORDEN_SITIO en "
+            f"tools/_guardas.py (o, si es una cara, darle su tarjeta en la "
+            f"grilla de la portada); un .html suelto en la raíz NO tiene lugar "
+            f"posible —el sitio es URLs por directorios—: moverlo a su "
+            f"directorio, declararlo nota, o sacarlo")
+
+    lineas = [
+        "    " + MAPA_INI + " — lo GENERA tools/make-sitemap.py en todas las",
+        "         páginas; no editar a mano: la próxima regeneración lo pisa.",
+        "         Mismo conjunto de URLs que sitemap.xml, nombres del",
+        "         face-page__romaji de cada página, orden de las tarjetas del",
+        "         padre. check-structure avisa si quedó viejo; la identidad",
+        "         byte a byte la vigila la comprobación del footer. -->",
+        '    <nav class="footer__map" aria-label="Site map">',
+        '      <div class="footer__col">',
+        '        <p class="footer__label">The Cube</p>',
+        '        <ul class="footer__map-list">',
+    ]
+    for cara in caras:
+        lineas += arbol(cara, 10)
+    lineas += [
+        "        </ul>",
+        "      </div>",
+        '      <div class="footer__col">',
+        '        <p class="footer__label">The Site</p>',
+        '        <ul class="footer__map-list">',
+        '          <li><a href="/">Home</a></li>',
+    ]
+    for ruta in sitio:
+        lineas += arbol(ruta, 10)
+    lineas += [
+        "        </ul>",
+        "      </div>",
+        "    </nav>",
+        "    " + MAPA_FIN,
+    ]
+    return "\n".join(lineas)
+
+
+def mapa_desactualizado():
+    """El bloque del mapa contra el canónico que el generador escribiría hoy.
+
+    chrome_divergente ya ve la divergencia ENTRE páginas (el mapa vive dentro
+    del footer comparado byte a byte); lo que esta comprobación ve es el caso
+    idéntico-pero-viejo: se agregó o redactó una página y nadie regeneró — las
+    copias coinciden entre sí y todas mienten igual.
+    """
+    try:
+        esperado = mapa_bloque()
+    except MapaInconstruible as e:
+        return [str(e)]
+    problemas = []
+    for p in htmls():
+        h = p.read_text(encoding="utf-8")
+        a, b = h.find(MAPA_INI), h.find(MAPA_FIN)
+        if a < 4 or b < 0:
+            problemas.append(f"{nombre(p)}: el footer no tiene el mapa del sitio")
+            continue
+        # a-4: el bloque canónico arranca con la sangría del marcador
+        if h[a - 4:b + len(MAPA_FIN)] != esperado:
+            problemas.append(f"{nombre(p)}: el mapa del footer quedó viejo")
     return problemas
 
 
@@ -408,8 +661,7 @@ def noindex_olvidado():
         rel = nombre(p)
         if rel in NO_INDEXABLES or rel in con_todo:
             continue
-        if re.search(r'<meta name="robots"[^>]*noindex',
-                     p.read_text(encoding="utf-8")):
+        if RE_NOINDEX.search(sin_comentarios(p.read_text(encoding="utf-8"))):
             problemas.append(f"{rel}: lleva noindex y ya no tiene placeholders — "
                              f"sacar la meta (con su comentario) y regenerar el sitemap")
     return problemas

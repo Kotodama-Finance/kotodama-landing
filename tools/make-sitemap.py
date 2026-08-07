@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Genera sitemap.xml a partir de los HTML publicables.
+"""Genera sitemap.xml Y el mapa del sitio del footer, de la misma lista.
 
-    python tools/make-sitemap.py            # reescribe sitemap.xml
-    python tools/make-sitemap.py --check    # sólo informa si quedó viejo
+    python tools/make-sitemap.py            # reescribe sitemap.xml y el bloque
+                                            # del mapa en todas las páginas
+    python tools/make-sitemap.py --check    # sólo informa si algo quedó viejo
 
 POR QUÉ UN SCRIPT Y NO A MANO. El sitemap es una lista duplicada: las mismas
 URLs que ya están en el sistema de archivos, escritas otra vez. Igual que el nav
@@ -10,34 +11,46 @@ y el footer, la duplicación se banca sólo si está vigilada — pero acá hay 
 mejor que vigilarla, que es no escribirla: las páginas ya existen como
 directorios con su index.html, así que la lista se deriva. Agregar una página
 nueva es correr esto; y si alguien se olvida, `check-structure.py` lo caza,
-porque verifica que toda página publicable esté en el sitemap.
+porque verifica que toda página publicable esté en el sitemap Y que el mapa del
+footer coincida con el que se generaría hoy.
+
+EL MAPA DEL FOOTER ES LA MISMA LISTA, PARA HUMANOS (2026-08-07, decisión del
+autor): sitemap.xml se la da a las máquinas; el bloque `footer__map` se la da
+al lector, con jerarquía visual, en el footer de TODAS las páginas. Por eso lo
+escribe este mismo script y no otro: dos generadores de la misma lista es la
+divergencia que este archivo existe para evitar. La lógica del bloque vive en
+`_guardas.mapa_bloque()` — la guarda compara contra EXACTAMENTE lo que este
+script escribiría, sin segunda implementación. La corrida es todo-o-nada: si
+el mapa no se puede derivar completo (página sin nombre, sin tarjeta en su
+padre, o de nivel superior sin lugar en ORDEN_SITIO), no se escribe NADA.
+
+QUÉ LISTA Y QUÉ NO — el criterio es de _guardas.paginas_publicas(): la 404 y
+cualquier página con `noindex` quedan afuera de los dos artefactos, leyendo la
+meta de la propia página (sin lista a mano — el caso que motivó la regla es el
+andamiaje de seguros mientras sea placeholder: al redactar se saca la meta y
+esto vuelve a listarla solo). Las NOTAS futuras (<meta name="kotodama-type"
+content="note">) van al sitemap pero NO al mapa, que las resumirá en la página
+de archivo cuando exista — el detalle, en el comentario del mapa en _guardas.
 
 SIN <lastmod> A PROPÓSITO. Es opcional, y sólo sirve si es exacto: un lastmod
 que miente es peor que ninguno, porque los buscadores dejan de creerle al
 archivo entero. Para que fuera exacto habría que sacarlo de git en cada
 regeneración, y entonces el sitemap cambiaría en cada commit ensuciando el
-historial. Con ocho páginas estáticas no compensa. <changefreq> y <priority>
-directamente los ignora Google desde hace años.
-
-La 404 queda afuera: pedirle a un buscador que indexe la página de error es
-exactamente lo contrario de lo que hace falta.
+historial. <changefreq> y <priority> directamente los ignora Google desde hace
+años.
 """
-import re
 import sys
 from pathlib import Path
+
+import _guardas as G
 
 RAIZ = Path(__file__).resolve().parent.parent
 SITIO = "https://kotodamafinance.com"
 SALIDA = RAIZ / "sitemap.xml"
-EXCLUIDOS = {"_dev", "_ref", ".git", "docs", "tools", "node_modules"}
-NO_INDEXABLES = {"404.html"}
-# Una página que declara noindex queda FUERA del sitemap, y se deriva de la
-# propia página en vez de mantener una lista acá: listar una página noindex
-# es una contradicción que check-structure ya caza, y la lista a mano sería
-# una segunda fuente de verdad. Caso que motivó la regla (2026-08-07): el
-# andamiaje de seguros lleva noindex mientras sea placeholder — al redactar
-# se saca la meta y ESTE script vuelve a listarla solo.
-RE_NOINDEX = re.compile(r'<meta name="robots"[^>]*noindex')
+# La apertura del footer es idéntica en todas las páginas (chrome_divergente
+# la vigila): es el punto de inserción del mapa cuando una página aún no lo
+# tiene. Con los marcadores ya puestos, se reemplaza entre ellos.
+APERTURA_FOOTER = '<footer id="footer" class="footer">\n'
 
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -46,24 +59,10 @@ except Exception:
 
 
 def urls():
-    """URLs canónicas, en el mismo esquema por directorios que usa el sitio:
-    /musubi/ y no /musubi/index.html."""
-    encontradas = []
-    for p in sorted(RAIZ.rglob("*.html")):
-        rel = p.relative_to(RAIZ)
-        if any(parte in EXCLUIDOS for parte in rel.parts):
-            continue
-        if rel.as_posix() in NO_INDEXABLES:
-            continue
-        if RE_NOINDEX.search(p.read_text(encoding="utf-8")):
-            continue
-        if p.name == "index.html":
-            carpeta = rel.parent.as_posix()
-            encontradas.append("/" if carpeta == "." else f"/{carpeta}/")
-        else:
-            encontradas.append("/" + rel.as_posix())
-    # la portada primero, el resto alfabético
-    return sorted(set(encontradas), key=lambda u: (u != "/", u))
+    """URLs canónicas, derivadas del mismo conjunto que usa el mapa del footer.
+    La portada primero, el resto alfabético."""
+    rutas = {ruta for _, ruta in G.paginas_publicas()}
+    return sorted(rutas, key=lambda u: (u != "/", u))
 
 
 def documento():
@@ -80,19 +79,64 @@ def documento():
             "</urlset>\n")
 
 
+def inyectar_mapa(html: str, bloque: str, pagina: str) -> str:
+    a, b = html.find(G.MAPA_INI), html.find(G.MAPA_FIN)
+    if a >= 4 and b >= 0:
+        return html[:a - 4] + bloque + html[b + len(G.MAPA_FIN):]
+    i = html.find(APERTURA_FOOTER)
+    if i < 0:
+        # Sin marcadores Y sin la apertura esperada no hay dónde inyectar, y
+        # el fatal crudo de html.index no nombraba la página — lo cazó la
+        # revisión adversarial: el error tiene que abortar la corrida ENTERA
+        # con nombre, antes de que se escriba nada (ver main).
+        raise G.MapaInconstruible(
+            f"{pagina}: sin marcadores del mapa y sin la apertura de footer "
+            f"esperada («<footer id=\"footer\" class=\"footer\">») — no hay "
+            f"dónde inyectar; emparejar su footer con el de las demás páginas")
+    i += len(APERTURA_FOOTER)
+    return html[:i] + bloque + "\n" + html[i:]
+
+
 def main():
+    # TODO EN MEMORIA PRIMERO, después el disco. La garantía todo-o-nada tiene
+    # que cubrir las DOS fases: la derivación (mapa_bloque aborta) y la
+    # inyección (una página sin punto de inserción aborta nombrándola). La
+    # primera versión escribía sitemap.xml antes del loop de páginas y un
+    # fallo a mitad dejaba el artefacto a medias — footers divergentes y el
+    # XML ya actualizado—, exactamente lo que este comentario prometía que no
+    # podía pasar. Reproducido y corregido en la revisión adversarial.
+    try:
+        bloque = G.mapa_bloque()
+        inyecciones = []
+        for p in G.htmls():
+            html = p.read_text(encoding="utf-8")
+            con_mapa = inyectar_mapa(html, bloque, G.nombre(p))
+            if con_mapa != html:
+                inyecciones.append((p, con_mapa))
+    except G.MapaInconstruible as e:
+        print(f"  ABORTA sin escribir nada: {e}")
+        return 1
     nuevo = documento()
+
     if "--check" in sys.argv:
         viejo = SALIDA.read_text(encoding="utf-8") if SALIDA.exists() else ""
-        if viejo == nuevo:
-            print(f"  sitemap.xml al día ({len(urls())} URLs)")
+        problemas = [] if viejo == nuevo else ["sitemap.xml quedó viejo"]
+        problemas += G.mapa_desactualizado()
+        if not problemas:
+            print(f"  sitemap.xml y mapa del footer al día ({len(urls())} URLs)")
             return 0
-        print("  sitemap.xml quedó viejo -> correr: python tools/make-sitemap.py")
+        for x in problemas:
+            print(f"  {x}")
+        print("  -> correr: python tools/make-sitemap.py")
         return 1
+
     SALIDA.write_text(nuevo, encoding="utf-8")
+    for p, con_mapa in inyecciones:
+        p.write_text(con_mapa, encoding="utf-8")
     for u in urls():
         print(f"  {SITIO}{u}")
-    print(f"{len(urls())} URLs en sitemap.xml")
+    print(f"{len(urls())} URLs en sitemap.xml; mapa del footer en "
+          f"{len(list(G.htmls()))} páginas ({len(inyecciones)} reescritas)")
     return 0
 
 

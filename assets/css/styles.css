@@ -1584,6 +1584,38 @@ button:focus-visible {
 }
 .footer__col a { font-size: 0.92rem; color: var(--c-text-link); }
 .footer__col a:hover { color: var(--c-gold); }
+/* MAPA DEL SITIO — fila propia entre el borde superior del footer y el bloque
+   de marca. El HTML lo GENERA tools/make-sitemap.py en todas las páginas
+   (mismo conjunto de URLs que sitemap.xml, nombres del face-page__romaji de
+   cada página, orden de las tarjetas del padre); acá vive sólo su
+   presentación. Los grupos REUSAN .footer__col y .footer__label — el mapa es
+   una fila de columnas más del footer, no un vocabulario nuevo—; lo propio
+   es la lista y su anidado: la jerarquía se dibuja con sangría y un filete
+   oro a la izquierda, el mismo trazo de los separadores del footer. Los
+   nombres van en ROMAJI SOLO — en una lista densa el kanji al lado del
+   romaji duplicaría el nombre, la prueba del japonés ornamental — y por eso
+   este bloque no obliga a regenerar ningún subset. */
+.footer__map {
+  max-width: 70rem;
+  margin: 0 auto 56px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid rgb(var(--rgb-gold) / 0.1);
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(40px, 6vw, 90px);
+}
+.footer__map-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.footer__map-list--sub {
+  margin-top: 10px;
+  padding-left: 16px;
+  border-left: 1px solid rgb(var(--rgb-gold) / 0.14);
+}
+
 /* 免責事項 corto. Va sobre la línea de copyright y con el mismo peso visual que
    ella: es una advertencia legal permanente, no un aviso que reclame atención.
    Destacarlo lo convertiría en ruido en cada página; esconderlo lo haría

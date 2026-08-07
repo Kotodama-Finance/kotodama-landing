@@ -107,6 +107,16 @@ def main():
     else:
         print("  OK     todas las páginas indexables están listadas")
 
+    print("\nMapa del sitio en el footer")
+    mapa = G.mapa_desactualizado()
+    if mapa:
+        for x in mapa:
+            print(f"  FALLA  {x}")
+        problemas += mapa
+        print("  -> regenerar: python tools/make-sitemap.py")
+    else:
+        print("  OK     al día en todas las páginas, idéntico al que se generaría hoy")
+
     print("\nCobertura del subset japonés")
     faltan = G.glifos_faltantes()
     if faltan is None:
