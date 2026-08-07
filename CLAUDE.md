@@ -57,8 +57,19 @@ fallidos ya corregidos, y las capturas intermedias.
   agentes. **Los DIECISIETE rojos se re-probaron sobre la arquitectura
   nueva**, y **el hallazgo del ancla Contact quedó RESUELTO por la propia
   reversión, medido**: a 1280×720 el correo vuelve a aterrizar visible
-  (y≈436–462) — la nav no se tocó. NO deployado: capturas enviadas, deploy
-  esperando al autor. Ver la decisión, la primera de la lista.
+  (y≈436–462) — la nav no se tocó. El orden de los grupos lo fijó el autor
+  el mismo día sobre las capturas: **The Site primero**. **PUBLICADO ESE
+  MISMO DÍA con su confirmación: deploy `1c25d62` de fuente `8ed6e58` —el
+  CUARTO—, procedimiento del README completo** (cuatro guardas en verde con
+  `2` esperado de ready, la guarda del deploy, y check-modes contra el
+  árbol REAL de main servido en :8000) **y VERIFICADO EN EL DOMINIO**:
+  /sitemap/ sirviendo con The Site primero, el enlace del footer en la
+  portada, las notas en 404, www→apex en 301. **Y el deploy intermedio
+  previsto OCURRIÓ: el andamiaje de seguros quedó SERVIDO por primera vez,
+  invisible como se diseñó** — 200 en el dominio CON su meta noindex y
+  CERO menciones en el sitemap.xml servido, verificado exactamente contra
+  el escenario que motivó el noindex. Ver la decisión, la primera de la
+  lista.
   Antes, el mismo día: **el andamiaje de la capa 1 de
   seguros**: `/hajime/yorozu/japan/seguros/` con el molde de /method/ —
   apertura + nueve secciones con subtítulo y prosa, todo placeholder (25,
@@ -146,9 +157,11 @@ fallidos ya corregidos, y las capturas intermedias.
   página sectorial, `/hajime/yorozu/japan/seguros/`, cuyo texto escribe el
   autor aparte. **`check-ready` sale `2` y ES LO ESPERADO** (era 5 del
   código 2; la historia completa sigue en el docstring de `check-ready.py`).
-  El sitio PUBLICADO no cambia: el andamiaje NO se deploya hasta tener el
-  texto. Más placeholders que los 25 del baseline sí es regresión — el
-  baseline dice el techo acordado. *(Antes: el sitio había vuelto a cero
+  **El andamiaje quedó SERVIDO desde el deploy 4 (2026-08-07), invisible
+  a propósito**: noindex, sin enlaces entrantes, fuera del mapa y del
+  sitemap — verificado en el dominio. El TEXTO sigue pendiente. Más
+  placeholders que los 25 del baseline sí es regresión — el baseline dice
+  el techo acordado. *(Antes: el sitio había vuelto a cero
   placeholders el 2026-08-05 — la redacción terminada por segunda vez, con
   la que se publicó — y `2` significó regresión desde entonces hasta este
   andamiaje.)*
@@ -228,9 +241,10 @@ ninguna de las cuatro guardas la mira; su decisión cerrada está más abajo.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**EL SITIO ESTÁ PUBLICADO (2026-08-06) — FALTAN EL DNS (fuera del repo) Y,
-DESDE EL 2026-08-07, EL TEXTO DE LA CAPA 1 DE SEGUROS (dentro del repo, sin
-deployar).** La
+**EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 4, con /sitemap/,
+2026-08-07) — FALTAN EL DNS (fuera del repo) Y EL TEXTO DE LA CAPA 1 DE
+SEGUROS (dentro del repo; su andamiaje ya está servido con noindex,
+invisible).** La
 publicación (el paso 5) se ejecutó **ANTES de los pasos 2-4, por decisión del
 autor, y el orden es correcto**: una transferencia de registrador NO cambia
 los nameservers — Namecheap sigue sirviendo la zona durante los ~5 días de la
@@ -291,7 +305,8 @@ que es lo que hace el fallo diagnosticable.
 **El sitio está listo Y publicado.** Si alguien retoma, las preguntas
 vigentes son dos: «¿en qué paso del DNS estamos?» (fuera del repo) y «¿llegó
 el texto de la capa 1 de seguros?» — dentro del repo el único frente es esa
-redacción (andamiaje listo, 25 placeholders, NO deployado; ver el cabo).
+redacción (andamiaje listo, 25 placeholders, servido con noindex desde el
+deploy 4; ver el cabo).
 
 La revisión legal del `免責事項` **no es un pendiente**: se decidió publicar sin
 ella.
@@ -320,7 +335,7 @@ sección con el detalle.
 
 | Cabo | Estado |
 |---|---|
-| **Capa 1 de seguros: el TEXTO** | **el frente activo (2026-08-07)**: andamiaje listo en `/hajime/yorozu/japan/seguros/` con 25 placeholders esperando el texto del autor, **con `noindex` mientras tanto** (exclusión del sitemap derivada; al redactar: sacar la meta + regenerar sitemap.xml y /sitemap/ —mismo comando— + baseline — el olvido tiene guarda). NO se deploya hasta ese pase. Y **el enlace desde /hajime/yorozu/ pendiente de su aprobación** (propuesta: tarjeta única) — **desde el mapa del sitio, la tarjeta es además requisito**: sin ella, `make-sitemap` aborta al sacar el noindex. Ver su decisión. |
+| **Capa 1 de seguros: el TEXTO** | **el frente activo (2026-08-07)**: andamiaje listo en `/hajime/yorozu/japan/seguros/` con 25 placeholders esperando el texto del autor, **con `noindex` mientras tanto** (exclusión del sitemap derivada; al redactar: sacar la meta + regenerar sitemap.xml y /sitemap/ —mismo comando— + baseline — el olvido tiene guarda). **Servido con su noindex desde el deploy 4 (2026-08-07): 200 en el dominio, fuera del sitemap servido — invisible, verificado.** Y **el enlace desde /hajime/yorozu/ pendiente de su aprobación** (propuesta: tarjeta única) — **desde el mapa del sitio, la tarjeta es además requisito**: sin ella, `make-sitemap` aborta al sacar el noindex. Ver su decisión. |
 | ~~Redacción de Hajime~~ | **CERRADA 2026-08-05**: los 15, con texto del autor. Baseline en cero, `check-ready` en `0`. Cualquier placeholder nuevo es regresión. |
 | ~~Logo de LibraryThing~~ | **CERRADO 2026-08-05**: va el archivo oficial en su paleta original, sin alterar — criterio nuevo que disuelve el pendiente de permiso (ver la decisión de tarjetas y `assets/img/README.md`). |
 | ~~Kanji de Taichi/Yorozu/Yūgen~~ | **CERRADO 2026-08-05**: 太一 · 万 · 幽玄, del `context.md` del autor. Aplicados en h1 y `<title>` con el patrón de las caras; subset regenerado (太/幽/玄 eran nuevos). |
@@ -547,11 +562,14 @@ sale antes que cualquier dashboard.
   entonces la página nueva queda huérfana a sabiendas (ninguna guarda
   exige enlaces entrantes).
 - **NOINDEX MIENTRAS SEA PLACEHOLDER (2026-08-07, decidido con el autor)**:
-  hoy el riesgo de indexación es cero porque el andamiaje NO está deployado,
-  pero un deploy intermedio (un ajuste a otra página antes del texto) lo
-  publicaría, y el sitemap es exactamente cómo Google descubre URLs sin
-  enlaces entrantes — una página de TODOs en los resultados, en la primera
-  sección de contenido real, es el peor lugar. La página lleva
+  el riesgo de indexación era cero mientras el andamiaje no estuviera
+  deployado, pero un deploy intermedio (un ajuste a otra página antes del
+  texto) lo publicaría, y el sitemap es exactamente cómo Google descubre
+  URLs sin enlaces entrantes — una página de TODOs en los resultados, en la
+  primera sección de contenido real, es el peor lugar. **EL DEPLOY
+  INTERMEDIO OCURRIÓ el mismo día (el del mapa del sitio, deploy 4) y la
+  meta hizo su trabajo, verificado en el dominio**: la ruta responde 200
+  con el noindex puesto y no aparece en el sitemap.xml servido. La página lleva
   `noindex, follow` (el patrón de la 404) y **la exclusión del sitemap se
   DERIVA de esa meta** — `make-sitemap` la lee de la propia página, sin
   lista a mano (hoy: 13 URLs). **Las tres direcciones tienen guarda y las
