@@ -117,6 +117,16 @@ def main():
     else:
         print("  OK     el árbol al día, idéntico al que se generaría hoy")
 
+    print("\nNotas (feed de la portada, listado de /notes/, índice del buscador)")
+    notas = G.notas_desactualizadas()
+    if notas:
+        for x in notas:
+            print(f"  FALLA  {x}")
+        problemas += notas
+        print("  -> regenerar: python tools/make-notes.py")
+    else:
+        print("  OK     los tres artefactos idénticos a lo que se generaría hoy")
+
     print("\nCobertura del subset japonés")
     faltan = G.glifos_faltantes()
     if faltan is None:

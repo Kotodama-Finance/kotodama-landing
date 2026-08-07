@@ -16,6 +16,7 @@ assets/css/maelstrom.css la transición entre páginas, RESERVADA: no la carga n
 assets/js/background.js océano WebGL de fondo
 assets/js/cube.js       cubo de navegación (Three.js)
 assets/js/main.js       orquestador: toggle, nav, visibilidad
+assets/js/notes.js      buscador del archivo /notes/ (la segunda página con JS)
 assets/fonts/           tipografías auto-hospedadas y subseteadas
 assets/vendor/          Three.js vendoreado (sin CDN en runtime)
 favicon.ico/.svg/-*.png iconos del sitio (generados, ver más abajo)
@@ -23,13 +24,15 @@ apple-touch-icon.png    icono para «añadir a inicio» en iOS
 android-chrome-*.png    192/512 para Android/PWA — los enlaza el manifest
 site.webmanifest        manifest mínimo (generado junto con los iconos)
 sitemap.xml             generado por tools/make-sitemap.py
+notes/search-index.json índice del buscador de /notes/ (generado por tools/make-notes.py)
 robots.txt              todo abierto, incluidos los crawlers de IA
 404.html                la sirve GitHub Pages ante cualquier ruta inexistente
 og-image.png            tarjeta al compartir (generada)
 tools/check-structure.py guarda estructural: verde siempre (ver más abajo)
-tools/check-ready.py    guarda previa a publicar (hoy 2 esperado: capa 1 de seguros en placeholders — historia en su docstring)
+tools/check-ready.py    guarda previa a publicar (hoy 2 esperado: capa 1 de seguros + andamiaje de notas en placeholders — historia en su docstring)
 tools/make-favicon.py   genera los iconos a partir del subset de la marca
 tools/make-sitemap.py   genera sitemap.xml Y el árbol de /sitemap/, de la misma lista (excluye los que declaran noindex, leído de la propia meta)
+tools/make-notes.py     genera el feed de la portada, el listado de /notes/ y su índice — una pasada, tres salidas (mismo criterio noindex)
 tools/make-og-image.py  genera og-image.png (sólo tipografía, sin navegador)
 tools/make-deploy.py    genera el commit de publicación en main: el sitio solo
 docs/v1-dark/           registro visual de versiones etiquetadas
@@ -71,10 +74,12 @@ Tres cosas que no se ven mirando el HTML:
   que agregarla.
 
 **Al agregar una página, el mapa sólo hace falta si esa página monta el cubo.**
-Hoy vive únicamente en `index.html`, que es la única página publicable con
-JavaScript: **todas las demás** —las seis caras, las tres subpáginas de
-Hajime, la sección de seguros, `/musubi/`, `/method/`, `/sitemap/`,
-`/disclaimer/` y la 404— no cargan ningún script. Un import map **no se hereda
+Hoy vive únicamente en `index.html`. Las páginas con JavaScript son DOS: la
+portada (el cubo, con módulos y este mapa) y `/notes/` (su buscador,
+`assets/js/notes.js` — script clásico, sin módulos, así que NO necesita
+import map); **todas las demás** —las seis caras, las tres subpáginas de
+Hajime, la sección de seguros, la nota de ejemplo, `/musubi/`, `/method/`,
+`/sitemap/`, `/disclaimer/` y la 404— no cargan ningún script. Un import map **no se hereda
 entre documentos**, así que una página nueva que quiera el cubo necesita **su
 propia copia**, con la ruta corregida a su profundidad. El caso previsto es
 `/ja/index.html`: un nivel abajo, o sea `../assets/vendor/three.module.js`.
@@ -99,6 +104,10 @@ con su `index.html` adentro:
                                              la primera ruta de CUATRO niveles;
                                              /hajime/yorozu/japan/ NO lleva página
                                              a propósito — da 404 y está bien)
+/notes/           notes/index.html           el archivo de notas con buscador
+                                             (noindex hasta la primera nota real)
+/hajime/nota-ejemplo/                        nota-FIXTURE del generador: se borra
+                                             con la primera nota real (noindex)
 /ja/              (previsto)                 subárbol paralelo en japonés
 ```
 
@@ -975,6 +984,7 @@ extra: es la misma razón por la que todo el contenido va en el HTML.
 | `robots.txt` | abre todo y apunta al sitemap | a mano (casi nunca cambia) |
 | `og-image.png` | la tarjeta al compartir un enlace | `python tools/make-og-image.py` |
 | `404.html` | GitHub Pages la sirve ante cualquier ruta inexistente | a mano |
+| feed de notas (portada) + listado de `/notes/` + `notes/search-index.json` | las tres salidas del sistema de notas, de la misma lista | `python tools/make-notes.py` (una pasada; hoy vacíos: cero notas publicables) |
 
 **El sitemap se genera, no se escribe.** Es una lista duplicada —las mismas URLs
 que ya están en el sistema de archivos— y la duplicación acá no hace falta ni
@@ -996,12 +1006,16 @@ afuera), los nombres salen del `face-page__romaji` con que cada página se
 presenta en su h1, y lo único no derivable —el orden de las páginas de nivel
 superior que no son caras— vive en `ORDEN_SITIO` (`tools/_guardas.py`) con
 guarda: una página sin lugar ABORTA la generación nombrándola, sin escribir
-nada. Las **notas** futuras no entrarán al mapa (las resumirá la página de
-archivo cuando exista): cada nota se declarará con
+nada. Las **notas** no entran al mapa — las resume la página de archivo `/notes/`,
+que se sumará a `ORDEN_SITIO` al estrenarse—: cada nota se declara con
 `<meta name="kotodama-type" content="note">` en su propio HTML, desde la
-primera. Que el árbol no quede **viejo** lo vigila la sección «Mapa del sitio
+primera. **El sistema de notas ya existe completo y sin deployar**
+(2026-08-07: contrato de metadatos, `make-notes.py` con sus tres salidas, y
+el buscador de `/notes/`) — el detalle y el pase de estreno, en CLAUDE.md.
+Que el árbol no quede **viejo** lo vigila la sección «Mapa del sitio
 en el footer» de `check-structure.py`, comparando contra lo que el generador
-escribiría hoy.
+escribiría hoy; los tres artefactos de notas tienen su sección gemela
+(«Notas»), comparada contra `make-notes.py` por la misma vía.
 
 No lleva `<lastmod>`: sólo sirve si es exacto, para que fuera exacto habría que
 sacarlo de git en cada regeneración, y entonces el sitemap cambiaría en cada

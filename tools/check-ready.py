@@ -21,9 +21,13 @@ veces, así que la historia completa antes de interpretar una corrida:
    primera página sectorial, molde de /method/, el texto lo escribe el
    autor. `2` vuelve a ser lo esperado hasta ese pase; el sitio PUBLICADO
    no cambia porque el andamiaje no se deploya.
+6. El sistema de notas + la tarjeta de sector (2026-08-07, más tarde el
+   mismo día): /notes/, la nota-fixture /hajime/nota-ejemplo/ y la tarjeta
+   de seguros en /hajime/yorozu/ suman 13 placeholders deliberados
+   (baseline 38). `2` sigue siendo lo esperado; nada de esto se deploya.
 
-O sea: hoy `2` es el estado normal (los 25 del baseline, en una sola página),
-`0` significará que la capa 1 quedó redactada, y `1` sigue siendo estructura
+O sea: hoy `2` es el estado normal (los 38 del baseline, en cuatro páginas),
+`0` significará que todo eso quedó redactado, y `1` sigue siendo estructura
 rota. La lección de las eras 2→3→5 queda escrita: un `2` alterna entre
 esperado y regresión según si el autor reintrodujo andamiaje a propósito —
 antes de tratarlo como regresión, preguntarse si hubo una decisión así, y el

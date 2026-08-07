@@ -790,6 +790,31 @@ button:focus-visible {
 }
 
 /* -------------------------------------------------------------------------
+   FEED DE NOTAS (portada, entre el cubo y el About)
+   Lo genera make-notes.py entre centinelas; HOY el bloque está vacío (cero
+   notas publicables) y estas reglas no pintan nada — existen para el día del
+   estreno, y ese día se re-miran contra la página real. El fondo es EL MISMO
+   --c-surface-cube de la sección del cubo A PROPÓSITO: el degradado de
+   apertura del About parte de ese color (ver .about), así que intercalar
+   esta sección no rompe la costura medida cubo→About — la extiende.
+   ------------------------------------------------------------------------- */
+.notes-feed {
+  position: relative;
+  z-index: 3;
+  background: var(--c-surface-cube);
+  padding: 0 clamp(20px, 5vw, 64px) clamp(64px, 8vw, 110px);
+}
+.notes-feed__wrap { max-width: 70rem; margin: 0 auto; }
+.notes-feed .eyebrow { display: block; margin-bottom: 22px; }
+.notes-feed__list { list-style: none; display: flex; flex-direction: column; gap: 28px; }
+.notes-feed__title { font-family: var(--font-display); font-weight: 500; font-size: 1.35rem; }
+.notes-feed__title a { color: var(--c-text-link); }
+.notes-feed__title a:hover { color: var(--c-gold); }
+.notes-feed__lead { margin-top: 6px; max-width: 45rem; font-size: 0.98rem; line-height: 1.7; color: var(--c-text-soft); }
+.notes-feed__more { margin-top: 6px; font-size: 0.9rem; }
+.notes-feed__all { margin-top: 32px; font-size: 0.9rem; }
+
+/* -------------------------------------------------------------------------
    ABOUT
    ------------------------------------------------------------------------- */
 .about {
@@ -1037,6 +1062,67 @@ button:focus-visible {
   .face-page__section--wide .sources li { break-inside: avoid; }
 }
 
+/* --- El archivo de notas (/notes/): buscador y listado -----------------------
+   (2026-08-07, sistema de notas — la decisión completa en CLAUDE.md.)
+   Las filas hablan el idioma de .sources (filetes finos en oro tenue, nombre
+   arriba y secundarias abajo) SIN reusar la clase: una fila de fuente y una
+   de nota son cosas distintas, y acoplarlas haría que un ajuste de /method/
+   moviera el archivo sin que nadie lo pida. El rotulado por ítem usa el
+   vocabulario de /method/ trasladado: el rótulo de CARA en el registro de
+   .sources__ja (oro, chico) y la FECHA en el de .sources__note (muted) — el
+   romaji de la cara como rótulo legible, porque un cuadrado lleno/hueco
+   codifica dos estados y acá hay seis caras: no hay marca muda que las
+   distinga, así que el rótulo ES texto y no necesita leyenda. */
+.notes-search { margin-bottom: clamp(24px, 3vw, 32px); }
+.notes-search__label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--c-text-muted);
+}
+.notes-search__input {
+  width: 100%;
+  max-width: 26rem;
+  padding: 10px 14px;
+  font: inherit;
+  color: var(--c-text);
+  background: rgb(var(--rgb-card) / 0.86);
+  border: 1px solid rgb(var(--rgb-mist) / 0.2);
+  border-radius: var(--radius);
+}
+.notes-search__input:focus { outline: none; border-color: var(--c-gold); }
+.notes-list { list-style: none; border-top: 1px solid var(--line-gold-faint); }
+.note-item { border-bottom: 1px solid var(--line-gold-faint); }
+.note-item__link {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 15px 0;
+  color: var(--c-text);
+}
+.note-item__title { font-family: var(--font-display); font-size: 1.15rem; }
+.note-item__link:hover .note-item__title { color: var(--c-gold); }
+.note-item__tags { font-size: 0.82rem; color: var(--c-text-muted); }
+.note-item__face { color: var(--c-gold); }
+.note-item__lead { font-size: 0.9rem; line-height: 1.6; color: var(--c-text-soft); }
+
+/* El listado sale al ANCHO COMPLETO con el mismo tratamiento que la lista de
+   50 fuentes de /method/ (el bloque de arriba): es una tabla de referencia —
+   se escanea, no se lee renglón a renglón. Criterio ya establecido, no una
+   decisión nueva; mismas constantes (26rem, 56px, el truco del centro
+   compartido) para que las dos páginas anchas se comporten igual. */
+@media (min-width: 1200px) {
+  .face-page__section--wide .notes-list {
+    width: calc(100vw - 128px);
+    margin-left: calc(50% - 50vw + 64px);
+    column-width: 26rem;
+    column-gap: 56px;
+  }
+  .face-page__section--wide .note-item { break-inside: avoid; }
+}
+
 /* Enlace al método completo, al pie de la sección. Mismo tratamiento discreto
    que .cube__more: es una salida, no una llamada a la acción.
    AL PIE DE LA COLUMNA IZQUIERDA, debajo de los cuatro pasos — esto REVIERTE
@@ -1197,6 +1283,32 @@ button:focus-visible {
   color: var(--c-text-dim);
   margin-bottom: 20px;
 }
+/* --- La cabecera de NOTA (2026-08-07, sistema de notas) ----------------------
+   Una nota no tiene kanji ni romaji: su h1 es un TÍTULO de oración, y no
+   puede usar la escala de cabecera de cara — 9vw está dimensionado para uno
+   o dos glifos, el mismo argumento que la frase de la 404. Acá el techo lo
+   pone el ancho de la columna. Display, centrado como toda cabecera, balance
+   para que dos líneas no dejen una palabra colgada. La FECHA es el primer
+   elemento temporal del sitio (ninguna otra página muestra fecha): visible
+   para el lector Y <time datetime> para la máquina — feed y archivo ordenan
+   por él (el contrato vive en _guardas.notas_publicables). */
+.face-page__title--note {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.2rem, 3.4vw, 3.1rem);
+  line-height: 1.2;
+  color: var(--c-text);
+  text-wrap: balance;
+}
+.face-page__date {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--c-text-dim);
+  margin-bottom: 20px;
+}
+
 .face-page__lead {
   font-family: var(--font-display);
   font-size: clamp(1.3rem, 2.4vw, 1.7rem);
@@ -1293,6 +1405,26 @@ button:focus-visible {
 }
 .face-page__cards .face-card { height: 100%; }
 @media (max-width: 640px) { .face-page__cards { grid-template-columns: 1fr; } }
+/* --- La tarjeta de SECTOR: la variante sin kanji (2026-08-07) ----------------
+   La primera de una familia que va a crecer: seguros hoy; banca, mercados y
+   todo sector futuro tienen el mismo problema — la tarjeta de subcara es
+   kanji + romaji + línea de función y el kanji es el elemento visual que la
+   sostiene, pero una sección de sector NO tiene kanji (decisión cerrada: la
+   escritura japonesa la cierra el autor, no se inventa). Los dos caminos
+   descartados, para que no vuelvan: inventarle un kanji (contradice esa
+   decisión) y dejar el hueco del kanji vacío (se lee como algo roto).
+   La forma: el TÍTULO ocupa el lugar visual del kanji — display, cuerpo
+   grande, color de texto pleno, que es el rol del kanji (el oro es del
+   romaji, y acá no hay pareja que distinguir) — y debajo la línea de función
+   en el registro de siempre (__domain). Borde, fondo y hover son los de
+   .face-card: la misma familia, un miembro sin kanji. */
+.face-card--sector .face-card__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.4rem;
+  line-height: 1.25;
+  color: var(--c-text);
+}
 /* .face-page__ref se fue con el enlace de /sugao/ al registro del operador,
    que dejó de existir junto con esa sección. */
 /* Antes era .face-page__deferred, para «lo que la cara promete y todavía no

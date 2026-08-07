@@ -3,20 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Yorozu 万 — Kotodama Finance</title>
-<!-- description derivada del texto de la página (lead + párrafo), como en
-     las demás caras: si el texto cambia, esto se rederiva. -->
-<meta name="description" content="Sector by sector: how each one is regulated, who operates in it, and what its numbers say. Insurance, banking, capital markets, real estate, and whatever follows.">
-<link rel="canonical" href="https://kotodamafinance.com/hajime/yorozu/">
+<title>TODO: título de la nota de ejemplo — Kotodama Finance</title>
+<meta name="description" content="TODO: descripción de la nota de ejemplo. Esta página es el fixture del productor de notas y se borra cuando exista la primera nota real.">
+<!-- NOINDEX PERMANENTE PARA ESTE FIXTURE (2026-08-07): esta nota existe para
+     que el productor (make-notes.py) tenga qué producir ANTES de que exista
+     la primera nota real — y se BORRA ese día, no se redacta. Mientras
+     tanto, con noindex queda fuera del sitemap, del mapa, del feed y del
+     listado (todos derivan de paginas_publicas): invisible, como el
+     andamiaje de seguros. El slug en castellano es deliberado, la misma
+     regla que los TODO: que no pueda confundirse con contenido real. -->
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://kotodamafinance.com/hajime/nota-ejemplo/">
+<!-- EL CONTRATO DE METADATOS DE UNA NOTA — todo sale de ESTE HTML, cero
+     archivos laterales (el criterio de make-sitemap, que ya lee el noindex
+     de la propia página):
+       tipo    -> la meta kotodama-type=note (la marca diseñada con el mapa)
+       cara    -> la meta kotodama-face (una de las seis)
+       título  -> el <h1>
+       slug    -> el nombre del directorio
+       fecha   -> el <time datetime="YYYY-MM-DD">, visible Y de máquina
+       resumen -> el párrafo lead, clase note-lead — SIN campo summary
+                  aparte y SIN override: un solo texto no puede
+                  contradecirse con el del feed. Si el lead no funciona
+                  suelto como gancho, se reescribe el lead.
+     El contrato completo y sus guardas: _guardas.notas_publicables(). -->
+<meta name="kotodama-type" content="note">
+<meta name="kotodama-face" content="hajime">
 <!-- Open Graph: la tarjeta que se ve al compartir el enlace en un chat o una
      red. Sin esto el enlace viaja como una línea de texto pelada.
      og:url y og:image tienen que ser ABSOLUTAS: el que arma la vista previa no
      es el navegador del lector y no puede resolver una ruta relativa.
      La imagen la genera tools/make-og-image.py. -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://kotodamafinance.com/hajime/yorozu/">
-<meta property="og:title" content="Yorozu 万 — Kotodama Finance">
-<meta property="og:description" content="Sector by sector: how each one is regulated, who operates in it, and what its numbers say. Insurance, banking, capital markets, real estate, and whatever follows.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://kotodamafinance.com/hajime/nota-ejemplo/">
+<meta property="og:title" content="TODO: título de la nota de ejemplo — Kotodama Finance">
+<meta property="og:description" content="TODO: descripción de la nota de ejemplo. Esta página es el fixture del productor de notas y se borra cuando exista la primera nota real.">
 <meta property="og:image" content="https://kotodamafinance.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -34,8 +55,7 @@
 </head>
 <body class="page">
 
-<!-- Página de texto: no carga el shader del mar ni Three.js. Sólo el CSS
-     compartido. -->
+<!-- Página de texto: no carga el shader del mar ni Three.js. -->
   <header id="nav" class="nav">
     <a class="nav__brand" href="/">
       <span class="nav__mark" lang="ja">言霊</span>
@@ -51,59 +71,48 @@
   </header>
 
   <main>
-    <!-- El kanji de ESTA subcara como marca de agua del costado; decisión y
-         perillas en styles.css (.face-page__watermark). -->
-    <div class="face-page__watermark" aria-hidden="true" lang="ja">万</div>
-    <!-- /hajime/yorozu/ — la línea SECTORIAL de Hajime: las partes, sector por sector.
-         TEXTO DEL AUTOR (2026-08-05), tal cual lo dictó — parte del pase que
-         cerró la redacción del sitio.
-         El kanji 万 lo cerró el autor —tabla del cubo de su context.md—, no
-         se inventó acá: la escritura japonesa la cierra él, siempre (regla de
-         CLAUDE.md). No pidió subset: 万 ya estaba (por 百万円 de /method/).
-         La vuelta va a /hajime/ y no al cubo: a esta página se llega desde
-         /hajime/, que es el criterio de los rótulos de vuelta. -->
+    <!-- /hajime/nota-ejemplo/ — EL MOLDE DE NOTA -------------------------
+         Las notas viven en /hajime/<slug>/ (decisión del autor), NO bajo el
+         árbol sectorial. Molde derivado de reglas ya escritas, sin
+         decisiones nuevas: no es cara del cubo -> patrón de /method/, SIN
+         kanji en la cabecera y SIN marca de agua (la marca es el kanji de
+         la PROPIA página; sin kanji no hay marca, y no se sustituye con el
+         logo). El primer elemento nuevo es la FECHA en la cabecera: ninguna
+         otra página del sitio muestra fecha — la nota introduce el primer
+         elemento temporal, y feed y archivo ordenan por él.
+
+         La vuelta va a /hajime/ por el criterio del ORIGEN (las notas
+         cuelgan de Hajime). PUNTO ABIERTO, anotado para el autor: el lector
+         que llega por el feed viene de la PORTADA, no de Hajime — dos
+         entradas reales que ninguna página anterior tuvo que resolver. La
+         propuesta está en CLAUDE.md (decisión del sistema de notas); hasta
+         que el autor decida, rige el criterio escrito.
+
+         El 免責事項 corto va al pie COMO EN TODAS: viene con el footer
+         global — no se duplica uno por nota. El completo vive en
+         /disclaimer/ y el footer ya lo enlaza. -->
     <article class="face-page">
       <header class="face-page__head">
-        <h1 class="face-page__title">
-          <span class="face-page__kanji" lang="ja">万</span>
-          <span class="face-page__romaji">Yorozu</span>
-        </h1>
-        <p class="face-page__gloss">Sector by sector</p>
+        <h1 class="face-page__title face-page__title--note todo">TODO: título de la nota de ejemplo</h1>
+        <p class="face-page__date"><time datetime="2026-08-07">7 August 2026</time></p>
       </header>
 
-      <p class="face-page__lead">Yorozu is the ten thousand things &mdash; the whole seen as its parts. This face is the index of sectors, not a sector: insurance, banking, capital markets, real estate, and whatever follows.</p>
+      <!-- El lead lleva DOS clases y no es redundancia: face-page__lead es
+           la puesta (el registro de display que ya usan las caras);
+           note-lead es el CONTRATO — la marca con la que el generador
+           encuentra el resumen. Separadas a propósito: si algún día la
+           puesta cambia, el contrato no se toca. -->
+      <p class="face-page__lead note-lead todo">TODO: párrafo lead de la nota — este texto ES el resumen: el feed de la portada y el listado de /notes/ muestran exactamente esto, sin campo aparte.</p>
 
       <div class="face-page__body">
-        <p>Each one gets the same treatment: how it is regulated, who operates in it, and what its numbers say. A sector becomes legible once you know the rules it runs under and the shape of who is inside it. The figures come after that, and mean less without it.</p>
-        <!-- LA TARJETA DE SECTOR (2026-08-07, instrucción del autor) — la
-             puerta a /hajime/yorozu/japan/seguros/, debajo del párrafo, el
-             mismo lugar que las tarjetas de subcara en /hajime/. Es la
-             PRIMERA de la variante sin kanji (.face-card--sector): el título
-             ocupa el lugar visual del kanji, porque la sección de seguros no
-             tiene kanji por decisión cerrada — el patrón completo y los dos
-             caminos descartados están en el CSS y en CLAUDE.md. El TÍTULO y
-             la LÍNEA DE FUNCIÓN los define el autor: los TODO no son
-             borrador para pulir, son huecos que espera él. La tarjeta es
-             además REQUISITO del mapa: al sacarle el noindex a seguros,
-             make-sitemap deriva el orden de las tarjetas del padre — sin
-             tarjeta, aborta. -->
-        <ul class="face-page__cards">
-          <li>
-            <a class="face-card face-card--sector" href="/hajime/yorozu/japan/seguros/">
-              <span class="face-card__title todo">TODO: título de la tarjeta de seguros</span>
-              <span class="face-card__meta">
-                <span class="face-card__domain todo">TODO: línea de función de la tarjeta</span>
-              </span>
-            </a>
-          </li>
-        </ul>
+        <p class="todo">TODO: primer párrafo del cuerpo de la nota de ejemplo.</p>
+        <p class="todo">TODO: segundo párrafo del cuerpo — relleno evidente; esta página se borra cuando exista la primera nota real.</p>
       </div>
 
       <p class="face-page__back"><a href="/hajime/">&larr; Back to Hajime</a></p>
     </article>
   </main>
 
-  <!-- FOOTER -->
   <footer id="footer" class="footer">
     <div class="footer__top">
       <div class="footer__brand">
@@ -152,6 +161,6 @@
   <!-- Pixel de GoatCounter (medición sin JS — la decisión y sus reglas, en
        CLAUDE.md). p= es la ruta de ESTA página: por eso vive FUERA de los
        bloques que las guardas comparan byte a byte (nav, footer, iconos). -->
-  <img src="https://realshinka.goatcounter.com/count?p=/hajime/yorozu/" alt="" width="1" height="1" loading="eager" class="gc-pixel">
+  <img src="https://realshinka.goatcounter.com/count?p=/hajime/nota-ejemplo/" alt="" width="1" height="1" loading="eager" class="gc-pixel">
 </body>
 </html>

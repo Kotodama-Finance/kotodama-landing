@@ -94,6 +94,18 @@ NO_PUBLICABLES = (
     "assets/css/maelstrom.css",
 )
 
+# LA EXCEPCIÓN INVERSA DE MAELSTROM (2026-08-07, sistema de notas): allá, un
+# archivo de trabajo en formato de sitio (.css) que la regla por tipo no caza
+# y se excluye por nombre; acá, un ARTEFACTO DEL SITIO en formato de trabajo
+# (.json) que la regla por tipo mataría y se admite por nombre.
+# notes/search-index.json es el índice del buscador del archivo de notas — el
+# navegador lo pide por fetch desde assets/js/notes.js, o sea que es parte de
+# lo servido. Va por RUTA EXACTA y nada más: la regla por tipo NO se abre —
+# su valor es cazar cualquier nota futura (.md de borrador, .py suelto, otro
+# .json) sin que nadie mantenga una lista, y una excepción nombrada no la
+# debilita: cualquier otro .json sigue cayendo por el tipo.
+PUBLICABLES_PESE_AL_TIPO = ("notes/search-index.json",)
+
 # Los que tienen que estar en el árbol publicado, en DOS niveles — y la
 # partición salió de medir, no de deducir: el freno único bloqueaba el
 # rollback a v1-content-complete, que es anterior al juego completo de
@@ -112,6 +124,10 @@ CONTRATO = (
     "favicon.ico", "favicon.svg", "favicon-16x16.png", "favicon-32x32.png",
     "apple-touch-icon.png", "android-chrome-192x192.png",
     "android-chrome-512x512.png",
+    # El índice del buscador de /notes/ (2026-08-07): lo pide notes.js por
+    # fetch — una referencia que verificar_completo no ve (busca href/src/
+    # import, no strings de fetch), así que su presencia se exige acá.
+    "notes/search-index.json",
 )
 
 # La marca que enlaza cada commit de main con su commit fuente. Si cambia el
@@ -267,7 +283,7 @@ def verificar_sin_notas(arbol):
     """Nada de trabajo entró: por tipo (lo robusto) y maelstrom por nombre."""
     problemas = []
     for ruta in sorted(arbol):
-        if ruta.endswith((".md", ".py", ".json")):
+        if ruta.endswith((".md", ".py", ".json")) and ruta not in PUBLICABLES_PESE_AL_TIPO:
             problemas.append(f"{ruta}: tipo de archivo de trabajo (.md/.py/.json) en el árbol publicado")
         if ruta.startswith(("tools/", "docs/")) or ruta == ".gitignore":
             problemas.append(f"{ruta}: ruta de trabajo en el árbol publicado")

@@ -431,6 +431,246 @@ def mapa_desactualizado():
     return []
 
 
+# --- El sistema de notas: feed en la portada, archivo /notes/, índice -------
+# (2026-08-07, decidido por el autor.) Las notas viven en /hajime/<slug>/ y se
+# declaran con la meta kotodama-type=note (RE_NOTA, arriba — la marca ya
+# existía por el mapa). TODO el metadato sale del HTML de la propia nota, cero
+# archivos laterales — el mismo criterio que el noindex del sitemap:
+#   tipo    -> la meta kotodama-type
+#   cara    -> la meta kotodama-face (una de las seis)
+#   título  -> el <h1> de la nota
+#   slug    -> el nombre del directorio
+#   fecha   -> el primer <time datetime="YYYY-MM-DD"> (visible al lector Y
+#              legible por máquina: es el primer elemento temporal del sitio)
+#   resumen -> el párrafo lead, marcado con la clase note-lead. NO hay campo
+#              summary aparte ni override: un solo texto no puede
+#              contradecirse con el del feed. Si el lead no funciona suelto,
+#              se reescribe el lead.
+#
+# UN generador (make-notes.py), UNA pasada, TRES salidas: el feed de la
+# portada (entre centinelas — index.html sigue siendo de mano salvo ese
+# bloque), el listado de /notes/ (ídem) y notes/search-index.json. La lógica
+# vive acá para que la guarda compare contra EXACTAMENTE lo que el generador
+# escribiría — el patrón del mapa, sin segunda implementación.
+#
+# QUÉ ENTRA: el criterio es paginas_publicas(), el mismo del sitemap y el
+# mapa — una nota con noindex (andamiaje) no existe para ningún consumidor.
+# Con CERO notas publicables los bloques quedan en solo-marcadores (ninguna
+# caja vacía en la portada) y el índice queda sin entradas.
+# REGLA DURA: el feed REFERENCIA la nota (título + lead + read more), nunca
+# copia el cuerpo. El índice del buscador SÍ lleva el texto completo — es la
+# herramienta de búsqueda por contenido, no un segundo lugar donde leerla.
+
+RE_NOTA_FACE = re.compile(r'<meta name="kotodama-face" content="([^"]*)"')
+RE_NOTA_FECHA = re.compile(r'<time datetime="(\d{4}-\d{2}-\d{2})"[^>]*>([^<]*)</time>')
+RE_NOTA_LEAD = re.compile(r'<p class="[^"]*\bnote-lead\b[^"]*"[^>]*>(.*?)</p>', re.S)
+RE_NOTA_H1 = re.compile(r"<h1[^>]*>(.*?)</h1>", re.S)
+RE_NOTA_MAIN = re.compile(r"<main>(.*?)</main>", re.S)
+FEED_INI = "<!-- FEED DE NOTAS"
+FEED_FIN = "<!-- FIN DEL FEED DE NOTAS -->"
+LISTA_INI = "<!-- LISTADO DE NOTAS"
+LISTA_FIN = "<!-- FIN DEL LISTADO DE NOTAS -->"
+RUTA_PORTADA = "index.html"
+RUTA_NOTAS = "notes/index.html"
+RUTA_INDICE = "notes/search-index.json"
+# Las últimas N en la portada; el archivo lista todas. Es una perilla, no un
+# dogma: 3 mantiene el feed como escaparate y no como segundo archivo — el
+# antecedente es el mapa en los quince footers, que murió por crecer sin tope.
+FEED_MAX = 3
+CARAS_ROMAJI = {"hajime": "Hajime", "sugao": "Sugao", "tosei": "Tosei",
+                "kamon": "Kamon", "torii": "Torii", "kizuna": "Kizuna"}
+
+
+class NotaInvalida(Exception):
+    """El contrato de una nota no se cumple; el mensaje nombra página y campo."""
+
+
+def notas_publicables():
+    """[dict] de las notas publicables (declaradas Y sin noindex), nuevas primero.
+
+    Valida el contrato completo y aborta (NotaInvalida) nombrando la página y
+    el campo: un hueco o un «TODO» inyectado en la portada es peor que frenar
+    — el mismo todo-o-nada del mapa. Las notas noindex (andamiaje) no llegan
+    acá: quedan afuera por paginas_publicas, igual que en sitemap y mapa.
+    """
+    import html as _html
+    notas = []
+    for p, ruta in paginas_publicas():
+        h = sin_comentarios(p.read_text(encoding="utf-8"))
+        if not RE_NOTA.search(h):
+            continue
+        if not re.fullmatch(r"/hajime/[^/]+/", ruta):
+            raise NotaInvalida(
+                f"{ruta}: declara kotodama-type=note pero no vive en "
+                f"/hajime/<slug>/ — las notas cuelgan de Hajime, no del árbol "
+                f"sectorial (decisión del autor); mover la página o quitarle "
+                f"la marca")
+        m = RE_NOTA_H1.search(h)
+        titulo = ""
+        if m:
+            titulo = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", m.group(1))).strip()
+        if not titulo or "TODO" in titulo:
+            raise NotaInvalida(f"{ruta}: sin <h1> del que derivar el título "
+                               f"(o todavía es TODO) — el título ES el h1")
+        m = RE_NOTA_FACE.search(h)
+        if not m or m.group(1) not in CARAS_ROMAJI:
+            raise NotaInvalida(
+                f"{ruta}: sin <meta name=\"kotodama-face\"> válida — declarar "
+                f"una de: {', '.join(CARAS_ROMAJI)}")
+        cara = m.group(1)
+        m = RE_NOTA_FECHA.search(h)
+        if not m or not m.group(2).strip():
+            raise NotaInvalida(
+                f"{ruta}: sin <time datetime=\"YYYY-MM-DD\"> con texto visible "
+                f"— la fecha es del lector Y de la máquina, no una sola")
+        fecha, fecha_visible = m.group(1), " ".join(m.group(2).split())
+        m = RE_NOTA_LEAD.search(h)
+        lead = re.sub(r"\s+", " ", m.group(1)).strip() if m else ""
+        if not lead or "TODO" in lead:
+            raise NotaInvalida(
+                f"{ruta}: sin párrafo lead con la clase note-lead (o todavía "
+                f"es TODO) — el lead ES el resumen del feed y del archivo")
+        mm = RE_NOTA_MAIN.search(h)
+        texto = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ",
+                                           mm.group(1) if mm else h)).strip()
+        notas.append({"ruta": ruta, "titulo": titulo, "cara": cara,
+                      "fecha": fecha, "fecha_visible": fecha_visible,
+                      "lead_html": lead,
+                      "titulo_plano": _html.unescape(titulo),
+                      "lead_plano": _html.unescape(
+                          re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", lead)).strip()),
+                      "texto": _html.unescape(texto)})
+    notas.sort(key=lambda n: (n["fecha"], n["ruta"]), reverse=True)
+    return notas
+
+
+def feed_bloque(notas) -> str:
+    """El bloque canónico del feed de la portada, centinelas incluidos.
+
+    Con cero notas publicables: SOLO los centinelas — ninguna caja vacía en la
+    portada. El feed referencia (título + lead + read more), nunca copia el
+    cuerpo; muestra las últimas FEED_MAX y manda el resto a /notes/.
+    """
+    cab = [
+        "    " + FEED_INI + " — lo GENERA tools/make-notes.py; no editar a",
+        "         mano: la próxima regeneración lo pisa. Título + lead (el",
+        "         resumen ES el lead de la nota, sin campo aparte) + read",
+        f"         more; las últimas {FEED_MAX}, el resto en /notes/. Con cero",
+        "         notas publicables queda VACÍO a propósito: ninguna caja",
+        "         vacía. check-structure avisa si quedó viejo. -->",
+    ]
+    if not notas:
+        return "\n".join(cab + ["    " + FEED_FIN])
+    lineas = cab + [
+        '    <section id="notes" class="notes-feed">',
+        '      <div class="notes-feed__wrap">',
+        '        <p class="eyebrow">Notes</p>',
+        '        <ul class="notes-feed__list">',
+    ]
+    for n in notas[:FEED_MAX]:
+        lineas += [
+            "          <li>",
+            f'            <h3 class="notes-feed__title"><a href="{n["ruta"]}">{n["titulo"]}</a></h3>',
+            f'            <p class="notes-feed__lead">{n["lead_html"]}</p>',
+            f'            <p class="notes-feed__more"><a href="{n["ruta"]}">Read more &rarr;</a></p>',
+            "          </li>",
+        ]
+    lineas += [
+        "        </ul>",
+        '        <p class="notes-feed__all"><a href="/notes/">All notes &rarr;</a></p>',
+        "      </div>",
+        "    </section>",
+        "    " + FEED_FIN,
+    ]
+    return "\n".join(lineas)
+
+
+def listado_bloque(notas) -> str:
+    """El bloque canónico del listado de /notes/, centinelas incluidos.
+
+    Cara y fecha por ítem (el vocabulario de rotulado por ítem de /method/,
+    con el romaji de la cara como rótulo legible — un cuadrado para seis caras
+    no distingue nada); data-url es la clave con la que el buscador
+    (assets/js/notes.js) empareja cada fila con su entrada del índice.
+    """
+    cab = [
+        "        " + LISTA_INI + " — lo GENERA tools/make-notes.py; no editar",
+        "             a mano: la próxima regeneración lo pisa. data-url es la",
+        "             clave que el buscador usa para emparejar cada fila con",
+        "             el índice JSON. check-structure avisa si quedó viejo. -->",
+    ]
+    if not notas:
+        return "\n".join(cab + ["        " + LISTA_FIN])
+    lineas = cab + ['        <ul class="notes-list">']
+    for n in notas:
+        lineas += [
+            f'          <li class="note-item" data-url="{n["ruta"]}">',
+            f'            <a class="note-item__link" href="{n["ruta"]}">',
+            f'              <span class="note-item__title">{n["titulo"]}</span>',
+            f'              <span class="note-item__tags">'
+            f'<span class="note-item__face">{CARAS_ROMAJI[n["cara"]]}</span>'
+            f' &middot; <time datetime="{n["fecha"]}">{n["fecha_visible"]}</time></span>',
+            f'              <span class="note-item__lead">{n["lead_html"]}</span>',
+            "            </a>",
+            "          </li>",
+        ]
+    lineas += ["        </ul>", "        " + LISTA_FIN]
+    return "\n".join(lineas)
+
+
+def indice_notas(notas) -> str:
+    """El texto EXACTO de notes/search-index.json (para escribir Y comparar).
+
+    En inglés: el JSON se sirve tal cual — superficie publicada, como el
+    comentario del sitemap.xml. Lleva el texto completo de cada nota porque
+    ES el índice de búsqueda por contenido; no es una copia del feed.
+    """
+    datos = {
+        "_generated": "tools/make-notes.py - do not edit by hand; "
+                      "check-structure.py verifies it is current.",
+        "notes": [{"url": n["ruta"], "title": n["titulo_plano"],
+                   "face": n["cara"], "date": n["fecha"],
+                   "lead": n["lead_plano"], "text": n["texto"]}
+                  for n in notas],
+    }
+    return json.dumps(datos, ensure_ascii=False, indent=1) + "\n"
+
+
+def notas_desactualizadas():
+    """Los tres artefactos de notas contra lo que el generador escribiría hoy.
+
+    El mismo patrón que mapa_desactualizado: misma derivación, sin segunda
+    implementación. Ve el caso viejo-en-silencio (nota agregada o redactada
+    sin regenerar) y el peor: centinelas perdidos o artefacto ausente.
+    """
+    try:
+        notas = notas_publicables()
+    except NotaInvalida as e:
+        return [str(e)]
+    problemas = []
+    for ruta_arch, ini, fin, canon in (
+            (RUTA_PORTADA, FEED_INI, FEED_FIN, feed_bloque(notas)),
+            (RUTA_NOTAS, LISTA_INI, LISTA_FIN, listado_bloque(notas))):
+        p = RAIZ / ruta_arch
+        if not p.exists():
+            problemas.append(f"no existe {ruta_arch}")
+            continue
+        h = p.read_text(encoding="utf-8")
+        a, b = h.find(ini), h.find(fin)
+        if a < 0 or b < 0:
+            problemas.append(f"{ruta_arch}: perdió los centinelas del bloque de notas")
+            continue
+        i = h.rfind("\n", 0, a) + 1
+        if h[i:b + len(fin)] != canon:
+            problemas.append(f"{ruta_arch}: el bloque de notas quedó viejo")
+    p = RAIZ / RUTA_INDICE
+    if not p.exists():
+        problemas.append(f"no existe {RUTA_INDICE}")
+    elif p.read_text(encoding="utf-8") != indice_notas(notas):
+        problemas.append(f"{RUTA_INDICE}: el índice del buscador quedó viejo")
+    return problemas
+
+
 def leer_baseline():
     """None = NO HAY archivo. {} = hay archivo y dice CERO placeholders.
 
@@ -760,7 +1000,10 @@ def superficie_publicada():
             if val.strip():
                 filas.append((n, "@" + attr.lower(), val.strip()))
 
-    for rel in ("assets/js/main.js", "assets/js/cube.js"):
+    # notes.js entró con el buscador del archivo (2026-08-07): sus strings son
+    # superficie igual que las de main.js — la consola y los rótulos que él
+    # mismo destapa. Al agregar OTRO .js publicado, sumarlo acá.
+    for rel in ("assets/js/main.js", "assets/js/cube.js", "assets/js/notes.js"):
         f = RAIZ / rel
         if not f.exists():
             continue

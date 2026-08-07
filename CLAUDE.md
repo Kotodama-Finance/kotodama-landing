@@ -41,7 +41,26 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-07 (aún más tarde), el mapa del sitio: la
+- Último cierre: **2026-08-07 (todavía más tarde), la tanda de auditoría +
+  el SISTEMA DE NOTAS + la tarjeta de sector — construido y commiteado
+  LOCAL, SIN deployar y SIN push (instrucción de la sesión).** La
+  auditoría, verificada contra el fuente antes de tocar: JILI a Tier 2 y al
+  final de Insurance (la propia página declara «official primary first»);
+  el CTA `#cube-open` con nombre accesible por defecto («Open Hajime →»,
+  que el JS reescribe); el registro del enlace a /musubi/ corregido (dice
+  «underneath», no «behind», y los DOS accesos conviven — el `<a>` es la
+  capa sin cubo); la lista de cadenas duplicadas completa («First analysis
+  on the way» es TRIPLE: hero + /hajime/ + FACES de main.js); y la tabla
+  de las 49 URLs de /method/ verificada — dos correcciones PROPUESTAS sin
+  aplicar (EDINET→disclosure2; toushin.or.jp→imaj.or.jp con la entidad
+  RENOMBRADA: hoy es 資産運用業協会), Mizuho en 403 a clientes
+  automatizados + nombre a decidir (unidad dentro del banco desde el
+  1/4/2026), BIS y Daiwa rechazan automatización (no es rot). El sistema
+  de notas completo y el patrón de tarjeta de sector: ver las DOS
+  decisiones nuevas, primeras de la lista. **Son DIECIOCHO páginas**
+  (/notes/ y la nota-fixture, ambas noindex), el sitemap sigue en 14 URLs,
+  **baseline en 38** (13 nuevos deliberados) y `check-ready` en `2`
+  esperado. Antes, el mismo día: **el mapa del sitio: la
   SUBPÁGINA /sitemap/ — y esto REVIERTE el bloque en los quince footers
   del mismo día, por decisión del autor** («aprobé el diseño y me equivoqué
   al aprobarlo»: un árbol de quince entradas repetido en las quince
@@ -152,37 +171,42 @@ fallidos ya corregidos, y las capturas intermedias.
   *(Este bloque no puede nombrar su propio commit, así que siempre queda uno
   atrás: `git log -1 redesign-trust` es la respuesta exacta. El ancla fija que no
   deriva es el tag.)*
-- **EL BASELINE VOLVIÓ A SALIR DE CERO A PROPÓSITO (2026-08-07): 25
-  placeholders, todos en el andamiaje de la capa 1 de seguros** — la primera
+- **EL BASELINE VOLVIÓ A SALIR DE CERO A PROPÓSITO (2026-08-07), y el mismo
+  día subió a 38**: 25 del andamiaje de la capa 1 de seguros — la primera
   página sectorial, `/hajime/yorozu/japan/seguros/`, cuyo texto escribe el
-  autor aparte. **`check-ready` sale `2` y ES LO ESPERADO** (era 5 del
+  autor aparte — **más 13 del sistema de notas y la tarjeta de sector** (8
+  de la nota-fixture, 3 de /notes/, 2 de la tarjeta en /hajime/yorozu/).
+  **`check-ready` sale `2` y ES LO ESPERADO** (era 6 del
   código 2; la historia completa sigue en el docstring de `check-ready.py`).
   **El andamiaje quedó SERVIDO desde el deploy 4 (2026-08-07), invisible
   a propósito**: noindex, sin enlaces entrantes, fuera del mapa y del
   sitemap — verificado en el dominio. El TEXTO sigue pendiente. Más
-  placeholders que los 25 del baseline sí es regresión — el baseline dice
+  placeholders que los 38 del baseline sí es regresión — el baseline dice
   el techo acordado. *(Antes: el sitio había vuelto a cero
   placeholders el 2026-08-05 — la redacción terminada por segunda vez, con
   la que se publicó — y `2` significó regresión desde entonces hasta este
   andamiaje.)*
-- **Ahora son DIECISÉIS páginas** (2026-08-07: se sumó /sitemap/; el mismo
-  día, el andamiaje de seguros; antes, las tres subpáginas de Hajime). El
-  sitemap tiene **14 URLs mientras el andamiaje lleve su noindex de
-  placeholder** (fuera quedan la 404 y esa página; vuelve a 15 con el
-  texto — ver la decisión del noindex) y **el árbol de URLs llega a CUATRO
-  niveles** — verificado que nada asume profundidad máxima: guardas y
-  generadores descubren por `rglob` y derivan de directorios.
-- **Decisiones del autor pendientes: UNA (2026-08-07)** — cómo enlaza
-  /hajime/yorozu/ a la sección nueva de seguros (propuesta hecha: tarjeta
-  única con el vocabulario de `.face-page__cards`; es página con texto
-  aprobado y no se toca sin su visto bueno). **Desde el mapa del sitio la
-  tarjeta además es REQUISITO del generador**: al sacar el noindex,
-  `make-sitemap` aborta hasta que /hajime/yorozu/ la presente como tarjeta
-  — ver la decisión del mapa. *(La segunda pendiente que hubo unas horas —
-  el ancla Contact tras el mapa del footer — quedó DISUELTA por la
-  reversión a /sitemap/: medido a 1280×720, el correo vuelve a aterrizar
-  visible.)* Además espera su TEXTO de la
-  capa 1, que no es una decisión sino el pase de redacción. Las dos
+- **Ahora son DIECIOCHO páginas** (2026-08-07, más tarde: /notes/ y la
+  nota-fixture /hajime/nota-ejemplo/, las dos con noindex; antes ese día,
+  /sitemap/ y el andamiaje de seguros). El sitemap tiene **14 URLs
+  mientras las noindex sigan siéndolo** (fuera quedan la 404, seguros,
+  /notes/ y la nota-fixture; el conteo sube al sacar cada meta — todo
+  derivado) y **el árbol de URLs llega a CUATRO niveles** — verificado que
+  nada asume profundidad máxima: guardas y generadores descubren por
+  `rglob` y derivan de directorios.
+- **Decisiones del autor pendientes: DOS (2026-08-07, tarde)** — (1) **el
+  TÍTULO y la LÍNEA DE FUNCIÓN de la tarjeta de sector** en
+  /hajime/yorozu/: la tarjeta YA ESTÁ CONSTRUIDA por su instrucción (la
+  variante sin kanji — ver la decisión del patrón de sector) con los dos
+  campos en TODO; lo que falta es su texto, no la forma. *(Esto reemplaza
+  al «cómo enlaza /hajime/yorozu/ a seguros», que era la pendiente
+  anterior: la respuesta fue esta tarjeta, y con ella el requisito del
+  generador del mapa quedó satisfecho.)* (2) **la VUELTA de una nota**
+  («Back to Hajime» del criterio del origen contra los dos orígenes reales
+  — feed y archivo; propuesta hecha: «← All notes» — ver el punto abierto
+  en la decisión del sistema de notas). Además esperan TEXTO suyo: la capa
+  1 de seguros, y la description y el gloss de /notes/ — pases de
+  redacción, no decisiones. Las dos
   anteriores se cerraron el 2026-08-05: los kanji de las subcaras (**太一 Taichi · 万
   Yorozu · 幽玄 Yūgen**, dictados por el autor desde la tabla del cubo de su
   `context.md` — entonces se creyó no localizable y se copiaron literales de
@@ -303,18 +327,23 @@ verificada, y deja de ser «cambiar y ver qué pasa». Cada paso se comprueba so
 que es lo que hace el fallo diagnosticable.
 
 **El sitio está listo Y publicado.** Si alguien retoma, las preguntas
-vigentes son dos: «¿en qué paso del DNS estamos?» (fuera del repo) y «¿llegó
-el texto de la capa 1 de seguros?» — dentro del repo el único frente es esa
-redacción (andamiaje listo, 25 placeholders, servido con noindex desde el
-deploy 4; ver el cabo).
+vigentes son tres: «¿en qué paso del DNS estamos?» (fuera del repo), «¿llegó
+el texto de la capa 1 de seguros?» (andamiaje listo, servido con noindex
+desde el deploy 4) y «¿llegó la primera nota?» — el sistema de notas está
+CONSTRUIDO entero y sin deployar (2026-08-07, ver su decisión): dentro del
+repo los frentes son esas redacciones, no construcción. Ojo: lo commiteado
+de la tanda de notas está LOCAL, sin push — pedirle confirmación al autor
+antes de pushear.
 
 La revisión legal del `免責事項` **no es un pendiente**: se decidió publicar sin
 ella.
 
-**Sin decidir dentro del sitio queda UNA cosa (2026-08-07)**: cómo enlaza
-/hajime/yorozu/ a la sección de seguros — es del autor, con propuesta hecha
-(ver el bullet de decisiones pendientes en Estado). Lo anterior, el `domain`
-de las tarjetas, se cerró.
+**Sin decidir dentro del sitio quedan DOS cosas (2026-08-07, tarde)**: el
+título y la línea de función de la tarjeta de sector en /hajime/yorozu/ (la
+tarjeta ya está construida; falta su texto), y la vuelta de una nota
+(propuesta: «← All notes»). Ver el bullet de decisiones pendientes en
+Estado. Lo anterior — cómo enlaza /hajime/yorozu/ a seguros — se cerró con
+la tarjeta; el `domain` de las tarjetas de la portada, antes.
 
 **Para cualquier deploy futuro, releer primero** las secciones «Antes de
 publicar» y «Publicar» del README: son las cuatro guardas MÁS la del deploy
@@ -335,7 +364,8 @@ sección con el detalle.
 
 | Cabo | Estado |
 |---|---|
-| **Capa 1 de seguros: el TEXTO** | **el frente activo (2026-08-07)**: andamiaje listo en `/hajime/yorozu/japan/seguros/` con 25 placeholders esperando el texto del autor, **con `noindex` mientras tanto** (exclusión del sitemap derivada; al redactar: sacar la meta + regenerar sitemap.xml y /sitemap/ —mismo comando— + baseline — el olvido tiene guarda). **Servido con su noindex desde el deploy 4 (2026-08-07): 200 en el dominio, fuera del sitemap servido — invisible, verificado.** Y **el enlace desde /hajime/yorozu/ pendiente de su aprobación** (propuesta: tarjeta única) — **desde el mapa del sitio, la tarjeta es además requisito**: sin ella, `make-sitemap` aborta al sacar el noindex. Ver su decisión. |
+| **Capa 1 de seguros: el TEXTO** | **el frente activo (2026-08-07)**: andamiaje listo en `/hajime/yorozu/japan/seguros/` con 25 placeholders esperando el texto del autor, **con `noindex` mientras tanto** (exclusión del sitemap derivada; al redactar: sacar la meta + regenerar sitemap.xml y /sitemap/ —mismo comando— + baseline — el olvido tiene guarda). **Servido con su noindex desde el deploy 4 (2026-08-07): 200 en el dominio, fuera del sitemap servido — invisible, verificado.** Y **la tarjeta desde /hajime/yorozu/ YA EXISTE** (2026-08-07, más tarde: la variante de sector sin kanji, por instrucción del autor) **con título y línea de función en TODO que espera él** — con ella puesta, el requisito del mapa quedó satisfecho. Ver su decisión y la del patrón de sector. |
+| **Sistema de notas** | **construido completo, SIN deployar (2026-08-07)**: contrato de metadatos, molde con nota-fixture, `make-notes.py` (feed entre centinelas + listado + índice), /notes/ con buscador (segunda página con JS), guarda en check-structure probada en NUEVE rojos, excepción de deploy por ruta exacta. Todo noindex, feed vacío, cero enlaces entrantes. **Se estrena con la primera nota real** — el pase completo está en su decisión (primera de la lista). |
 | ~~Redacción de Hajime~~ | **CERRADA 2026-08-05**: los 15, con texto del autor. Baseline en cero, `check-ready` en `0`. Cualquier placeholder nuevo es regresión. |
 | ~~Logo de LibraryThing~~ | **CERRADO 2026-08-05**: va el archivo oficial en su paleta original, sin alterar — criterio nuevo que disuelve el pendiente de permiso (ver la decisión de tarjetas y `assets/img/README.md`). |
 | ~~Kanji de Taichi/Yorozu/Yūgen~~ | **CERRADO 2026-08-05**: 太一 · 万 · 幽玄, del `context.md` del autor. Aplicados en h1 y `<title>` con el patrón de las caras; subset regenerado (太/幽/玄 eran nuevos). |
@@ -353,6 +383,142 @@ sección con el detalle.
 ---
 
 ## Decisiones cerradas — no rediscutir
+
+### El sistema de notas: contrato, molde, generador y archivo — construido, SIN deployar
+
+**2026-08-07, decidido por el autor; construido completo en esta sesión.**
+Lo que él trajo cerrado y NO se reabre: la ruta del archivo es **/notes/**
+(hoy TODO nombre japonés en una URL es un elemento del cubo — seis caras,
+tres subcaras, Musubi como núcleo—: el mapeo no tiene excepciones y un
+nombre japonés que no sea cara ni núcleo lo rompería; además la marca ya
+diseñada es `kotodama-type=note` — si el tipo es note, la colección es
+/notes/; se descartó /archive/, que nombra «lo viejo» a una página que
+también tiene lo más nuevo); las notas viven en **/hajime/`<slug>`/**, NO
+bajo el árbol sectorial; y **el resumen ES el párrafo lead** — sin campo
+summary aparte y sin override: un solo texto no puede contradecirse con el
+del feed, y si un lead no funciona suelto como gancho, se reescribe el lead.
+
+- **El contrato de metadatos: TODO sale del HTML de la nota, cero archivos
+  laterales** (el criterio de make-sitemap, que ya lee el noindex de la
+  propia página): tipo → la meta `kotodama-type=note`; cara → `<meta
+  name="kotodama-face">` (una de las seis); título → el `<h1>`; slug → el
+  directorio; fecha → `<time datetime="YYYY-MM-DD">` **visible al lector Y
+  legible por máquina — el primer elemento temporal del sitio: ninguna otra
+  página muestra fecha, y feed y archivo ordenan por él**; resumen → el
+  lead con la clase **`note-lead`** (la clase del CONTRATO; la puesta es
+  `face-page__lead`, separadas a propósito: si la puesta cambia, el
+  contrato no se toca). El contrato vive y se valida en
+  `_guardas.notas_publicables()`, que ABORTA nombrando página y campo.
+- **UN generador — `tools/make-notes.py` —, UNA pasada, TRES salidas**: el
+  feed de la portada, el listado de /notes/ y `notes/search-index.json`.
+  **La portada va con CENTINELAS** (`FEED DE NOTAS` / `FIN DEL FEED DE
+  NOTAS`): el generador reemplaza SOLO ese bloque — si escribiera
+  index.html entero, la portada pasaría a ser artefacto derivado y editarla
+  a mano sería el mismo modo de falla que `main` ya mitiga con el detector
+  de hotfix. El feed va DESPUÉS del cubo y ANTES del About, y su fondo es
+  EL MISMO `--c-surface-cube` a propósito: el degradado de apertura del
+  About parte de ese color, así que la costura medida cubo→About no se
+  rompe — se extiende. Formato del ítem: título + el lead como resumen +
+  «Read more →»; muestra **las últimas 3** (`FEED_MAX`, perilla anotada:
+  el feed es escaparate, no segundo archivo — el antecedente es el mapa en
+  los quince footers, que murió por crecer sin tope) y «All notes →» al
+  archivo. **REGLA DURA, cumplida: el feed REFERENCIA la nota, nunca copia
+  el cuerpo.** **Caso cero notas: el bloque queda en SOLO centinelas** —
+  ninguna caja vacía en la portada. Es el estado actual del repo.
+- **Qué entra a las tres salidas: el criterio es `paginas_publicas()`** —
+  el MISMO del sitemap y del mapa. Una nota con noindex (andamiaje) no
+  existe para ningún consumidor. Un criterio, cero casos especiales.
+- **La guarda es `notas_desactualizadas()`, en check-structure** (sección
+  «Notas»), y compara los TRES artefactos contra la MISMA derivación que
+  usa el generador — el patrón del mapa, sin segunda implementación.
+  **Probada EN ROJO con nueve casos**: feed tocado a mano, centinelas
+  perdidos (portada y /notes/), nota publicable con título TODO, nota sin
+  `kotodama-face`, nota declarada fuera de /hajime/`<slug>`/, citar la meta
+  en un comentario NO reclasifica (sin_comentarios), índice tocado a mano,
+  y la excepción del deploy (abajo). **El abort de make-notes quedó
+  verificado todo-o-nada por hashes**: nada se escribe si algo falla.
+- **/notes/ es LA SEGUNDA PÁGINA CON JavaScript del sitio, a sabiendas**
+  (decisión del autor): «cero JS» es propiedad de las páginas de LECTURA,
+  no de una herramienta, y el archivo con buscador es una herramienta — el
+  precedente es la portada, que carga JS por el cubo. El buscador
+  (`assets/js/notes.js`) filtra por título Y CONTENIDO **el listado que ya
+  está en el HTML** (lo escribe el generador: crawlers sin JS lo leen
+  igual — la regla del contenido en el HTML no se rompe); el contenido
+  viene del índice JSON, emparejado por `data-url`. El campo de búsqueda
+  nace `hidden` y el script lo destapa sólo con el índice cargado Y filas
+  que buscar; si el fetch falla, la página es el listado completo. Sus
+  strings entraron a la guarda de castellano (`superficie_publicada`).
+  **El listado sale al ANCHO COMPLETO con el tratamiento de la lista de 50
+  fuentes de /method/** (column-width 26rem, mismas constantes — criterio
+  ya establecido: se escanea, no se lee renglón a renglón) y el rotulado
+  por ítem usa el vocabulario de /method/ trasladado: la CARA en el
+  registro de `sources__ja` (oro, chico) y la FECHA en el de
+  `sources__note` (muted) — **el romaji de la cara como rótulo legible,
+  porque lleno/hueco codifica DOS estados y acá hay seis caras**; un
+  rótulo de texto no es un marcador mudo, así que no necesita leyenda.
+- **El índice, MEDIDO**: 121 bytes vacío; con una nota simulada de ~1.500
+  palabras, 9,8 KB (~9,6 KB por nota) → **20 notas ≈ 190 KB sin comprimir
+  (~40 KB por el gzip de Pages)**. Crece lineal con el largo del texto:
+  notas de ~700 palabras darían la mitad. Se re-mira si el archivo pasa de
+  ~50 notas; la salida entonces es paginar el índice, no comprimir a mano.
+- **La excepción del deploy: `PUBLICABLES_PESE_AL_TIPO =
+  ("notes/search-index.json",)`** en make-deploy.py, documentada al lado
+  de la de maelstrom.css porque es SU INVERSA: allá, material de trabajo
+  en formato de sitio (.css), excluido por nombre; acá, un artefacto del
+  sitio en formato de trabajo (.json), admitido por nombre. **La regla por
+  tipo NO se abre** — probado: otros .json y .md siguen cayendo por el
+  tipo. El índice entró además a CONTRATO: notes.js lo pide por `fetch`,
+  que verificar_completo no ve (busca href/src/import, no strings).
+- **NADA deployado y NADA enlazado desde lo publicado** (el precedente de
+  seguros): /notes/ y la nota de ejemplo llevan noindex → fuera del
+  sitemap, del mapa, del feed y del listado, sin enlaces entrantes — el
+  feed real está VACÍO. **La nota de ejemplo (/hajime/nota-ejemplo/) es un
+  FIXTURE del productor: se BORRA cuando exista la primera nota real, no
+  se redacta** — su slug en castellano es deliberado, la misma regla que
+  los TODO. `check-ready` sale `2` y es lo esperado; **`noindex_olvidado`
+  NO se dispara** porque las dos páginas nuevas tienen placeholders
+  legítimos — se disparará, correctamente, si alguien las redacta y deja
+  la meta, que es exactamente su función.
+- **AL ESTRENAR /notes/ (con la primera nota real)**: borrar la nota de
+  ejemplo, sacar el noindex de /notes/ (con su comentario), redactar su
+  description y su gloss, **sumar `"notes"` a ORDEN_SITIO en _guardas.py**
+  — sin ese lugar consciente, make-sitemap ABORTA nombrando la página: es
+  el flujo diseñado del mapa, no un olvido—, regenerar sitemap y notas, y
+  actualizar el baseline. **Y la cadena «First analysis on the way» caduca
+  en sus TRES lugares a la vez** (ver la lista de duplicadas en /musubi/).
+- **PUNTO ABIERTO DEL AUTOR — la vuelta de una nota.** El molde dice «Back
+  to Hajime» (criterio del ORIGEN: las notas cuelgan de Hajime), pero los
+  DOS orígenes reales de una nota son el feed de la portada y /notes/ —
+  ninguna página anterior tuvo dos entradas reales. Propuesta: «← All
+  notes» (/notes/), que sirve a los dos orígenes y sigue el precedente de
+  /disclaimer/ y /sitemap/ (rótulo por convención cuando el origen no es
+  único). Lo decide él; hasta entonces rige el criterio escrito.
+
+### La tarjeta de SECTOR: la variante sin kanji — el patrón de la familia
+
+**2026-08-07, instrucción del autor; el TÍTULO y la LÍNEA DE FUNCIÓN los
+define él y hoy son TODO — no se inventan ni se rellenan con algo que
+parezca definitivo.** El problema real: las tarjetas de subcara son kanji +
+romaji + línea de función, y el kanji es el elemento visual que las
+sostiene — y una sección de sector NO tiene kanji, por decisión cerrada (la
+escritura japonesa la cierra el autor; no se inventa). La forma existente
+no servía, y la variante es nueva A PROPÓSITO: **`.face-card--sector`,
+donde el TÍTULO ocupa el lugar visual del kanji** — display, cuerpo grande
+(1.4rem), color de texto pleno: el ROL del kanji (el oro es del romaji, y
+acá no hay pareja que distinguir) — con la línea de función debajo en el
+registro de siempre (`__domain`). Borde, fondo y hover de `.face-card`: la
+misma familia, un miembro sin kanji. **Es la primera de una familia que va
+a crecer**: banca, mercados y todo sector futuro tienen el mismo problema y
+usan esta variante — se definió una vez, acá. **Dos caminos descartados,
+para que no vuelvan**: inventarle un kanji (contradice la decisión cerrada)
+y dejar el hueco del kanji vacío (se lee como algo roto). La primera
+instancia está en /hajime/yorozu/, debajo del párrafo (la prosa aprobada NO
+se tocó), apuntando a la sección de seguros — y cierra de paso el requisito
+del mapa: con la tarjeta puesta, sacar el noindex de seguros ya no aborta
+por falta de tarjeta. **Ojo para el próximo deploy**: mientras el título
+sea TODO, un deploy intermedio publicaría la tarjeta con castellano visible
+en una página viva — el pase de la tarjeta va junto con el texto de
+seguros, o antes si el autor pasa el título suelto.
 
 ### El mapa del sitio: la SUBPÁGINA /sitemap/ + enlace en el footer
 
@@ -2219,7 +2385,7 @@ commit sea un punto de restauración seguro por construcción, no por suerte.
 | `python tools/check-structure.py` | siempre | instantánea | **verde** |
 | `python tools/check-modes.py` | siempre | ~40 s | **verde** |
 | `python tools/check-pendulum.py` | antes de push, o al tocar la física | ~2–4 min | **verde** |
-| `python tools/check-ready.py` | antes de publicar a `main` | instantánea | **`2` esperado** desde el 2026-08-07 (los 25 del andamiaje de seguros; `0` cuando la capa 1 quede redactada — era 5 del docstring) |
+| `python tools/check-ready.py` | antes de publicar a `main` | instantánea | **`2` esperado** desde el 2026-08-07 (38: 25 de seguros + 13 de notas/tarjeta de sector; `0` cuando todo eso quede redactado — era 6 del docstring) |
 
 Las dos que usan navegador necesitan el sitio servido en `:8000`.
 
