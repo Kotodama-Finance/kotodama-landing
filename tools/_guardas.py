@@ -184,39 +184,47 @@ def sitemap_incompleto():
     return problemas
 
 
-# --- Mapa del sitio en el footer ---------------------------------------------
-# Fila propia dentro del <footer> de TODAS las páginas, GENERADA por
-# tools/make-sitemap.py en la misma corrida que escribe sitemap.xml. Nada del
-# bloque se escribe a mano: las URLs son el MISMO conjunto que el sitemap (sin
-# la 404 ni las noindex — paginas_publicas es la fuente común), los nombres
-# salen del face-page__romaji con que cada página se presenta en su h1
-# («Home» para la portada, cuyo h1 es el titular del hero, no un nombre), y el
-# orden de los hijos es el orden en que el PADRE los presenta como tarjetas
-# .face-card (la grilla del cubo para las seis caras; .face-page__cards para
-# las subcaras). Lo único que no se puede derivar es el orden de las páginas
-# de nivel superior que no son caras —un orden es una decisión de
-# presentación—, y por eso ORDEN_SITIO existe COMO LISTA CON GUARDA: una
-# página que no esté ni en tarjetas ni acá ni declarada nota ABORTA la
-# generación nombrándola, en vez de caer a un orden inventado. Kanji NO lleva:
-# en una lista densa el kanji junto al romaji sólo duplicaría el nombre de al
-# lado — la misma prueba del japonés ornamental que rige la prosa de /hajime/,
-# y la nav ya escribe «Musubi» pelado.
+# --- El mapa del sitio: la subpágina /sitemap/ -------------------------------
+# El árbol completo vive en UNA página, /sitemap/, y el footer lleva sólo un
+# enlace («Site map», en la línea de abajo, vigilado por la identidad del
+# footer). ESTO REVIERTE el bloque-en-los-quince-footers del mismo día, por
+# decisión del autor: un árbol de tantas entradas repetido en todas las
+# páginas es demasiado footer, y crece con cada sección nueva.
+#
+# El bloque de la página lo GENERA tools/make-sitemap.py en la misma corrida
+# que escribe sitemap.xml. Nada se escribe a mano: las URLs son el MISMO
+# conjunto que el sitemap (sin la 404 ni las noindex — paginas_publicas es la
+# fuente común), los nombres salen del face-page__romaji con que cada página
+# se presenta en su h1 («Home» para la portada, cuyo h1 es el titular del
+# hero, no un nombre), y el orden de los hijos es el orden en que el PADRE los
+# presenta como tarjetas .face-card (la grilla del cubo para las seis caras;
+# .face-page__cards para las subcaras). Lo único que no se puede derivar es
+# el orden de las páginas de nivel superior que no son caras —un orden es una
+# decisión de presentación—, y por eso ORDEN_SITIO existe COMO LISTA CON
+# GUARDA: una página que no esté ni en tarjetas ni acá ni declarada nota
+# ABORTA la generación nombrándola, en vez de caer a un orden inventado.
+# /sitemap/ se lista A SÍ MISMA (vía ORDEN_SITIO) y va al sitemap.xml: es una
+# página indexable más, y una excepción rompería el conjunto único. Kanji NO
+# lleva: en una lista densa el kanji junto al romaji sólo duplicaría el
+# nombre de al lado — la prueba del japonés ornamental de la prosa de
+# /hajime/, y la nav ya escribe «Musubi» pelado.
 #
 # LAS NOTAS FUTURAS NO ENTRAN AL MAPA (decisión del autor, 2026-08-07): con
-# veinte notas el footer sería una lista larga en todas las páginas. En su
-# lugar entrará LA PÁGINA DE ARCHIVO cuando exista — sin mecanismo especial:
-# es una página normal, el descubrimiento la encuentra y el abort obliga a
-# ubicarla conscientemente en ORDEN_SITIO. Una nota se declara con
-# <meta name="kotodama-type" content="note"> EN SU PROPIO HTML, desde la
-# primera: la ruta sola no distingue una nota de una subcara (viven al mismo
-# nivel bajo /hajime/), así que la distinción es una declaración explícita — y
-# el abort hace imposible crear una sin declararla: ni tarjeta ni marca es
-# rojo con nombre. Las notas SÍ van a sitemap.xml (son contenido indexable);
-# sólo el mapa del footer las resume en la entrada del archivo.
+# veinte notas sería una lista interminable. En su lugar entrará LA PÁGINA DE
+# ARCHIVO cuando exista — sin mecanismo especial: es una página normal, el
+# descubrimiento la encuentra y el abort obliga a ubicarla conscientemente en
+# ORDEN_SITIO. Una nota se declara con <meta name="kotodama-type"
+# content="note"> EN SU PROPIO HTML, desde la primera: la ruta sola no
+# distingue una nota de una subcara (viven al mismo nivel bajo /hajime/), así
+# que la distinción es una declaración explícita — y el abort hace imposible
+# crear una sin declararla: ni tarjeta ni marca es rojo con nombre. Las notas
+# SÍ van a sitemap.xml (son contenido indexable); sólo el mapa las resume en
+# la entrada del archivo.
 
 RE_NOTA = re.compile(r'<meta name="kotodama-type" content="note"')
 RE_ROMAJI_H1 = re.compile(r'<span class="face-page__romaji[^"]*">([^<]*)</span>')
-ORDEN_SITIO = ("musubi", "method", "disclaimer")
+ORDEN_SITIO = ("musubi", "method", "sitemap", "disclaimer")
+RUTA_MAPA = "sitemap/index.html"
 
 
 def tarjetas_de(html: str) -> list:
@@ -342,7 +350,7 @@ def mapa_bloque() -> str:
                 f"presenta como tarjeta — agregarle su .face-card, o declararla "
                 f'nota con <meta name="kotodama-type" content="note">')
         lineas = [f'{s}<li><a href="{ruta}">{etiqueta(ruta)}</a>',
-                  f'{s}  <ul class="footer__map-list footer__map-list--sub">']
+                  f'{s}  <ul class="map-list map-list--sub">']
         for h in en_tarjetas:
             lineas += arbol(h, sangria + 4)
         lineas += [f"{s}  </ul>", f"{s}</li>"]
@@ -361,61 +369,59 @@ def mapa_bloque() -> str:
             f"directorio, declararlo nota, o sacarlo")
 
     lineas = [
-        "    " + MAPA_INI + " — lo GENERA tools/make-sitemap.py en todas las",
-        "         páginas; no editar a mano: la próxima regeneración lo pisa.",
-        "         Mismo conjunto de URLs que sitemap.xml, nombres del",
-        "         face-page__romaji de cada página, orden de las tarjetas del",
-        "         padre. check-structure avisa si quedó viejo; la identidad",
-        "         byte a byte la vigila la comprobación del footer. -->",
-        '    <nav class="footer__map" aria-label="Site map">',
-        '      <div class="footer__col">',
-        '        <p class="footer__label">The Cube</p>',
-        '        <ul class="footer__map-list">',
+        "      " + MAPA_INI + " — lo GENERA tools/make-sitemap.py; no editar a",
+        "           mano: la próxima regeneración lo pisa. Mismo conjunto de",
+        "           URLs que sitemap.xml, nombres del face-page__romaji de",
+        "           cada página, orden de las tarjetas del padre.",
+        "           check-structure avisa si quedó viejo. -->",
+        '      <section class="face-page__section" aria-labelledby="map-cube">',
+        '        <h2 id="map-cube" class="face-page__subtitle">The Cube</h2>',
+        '        <ul class="map-list">',
     ]
     for cara in caras:
         lineas += arbol(cara, 10)
     lineas += [
         "        </ul>",
-        "      </div>",
-        '      <div class="footer__col">',
-        '        <p class="footer__label">The Site</p>',
-        '        <ul class="footer__map-list">',
+        "      </section>",
+        '      <section class="face-page__section" aria-labelledby="map-site">',
+        '        <h2 id="map-site" class="face-page__subtitle">The Site</h2>',
+        '        <ul class="map-list">',
         '          <li><a href="/">Home</a></li>',
     ]
     for ruta in sitio:
         lineas += arbol(ruta, 10)
     lineas += [
         "        </ul>",
-        "      </div>",
-        "    </nav>",
-        "    " + MAPA_FIN,
+        "      </section>",
+        "      " + MAPA_FIN,
     ]
     return "\n".join(lineas)
 
 
 def mapa_desactualizado():
-    """El bloque del mapa contra el canónico que el generador escribiría hoy.
+    """El bloque de /sitemap/ contra el canónico que el generador escribiría hoy.
 
-    chrome_divergente ya ve la divergencia ENTRE páginas (el mapa vive dentro
-    del footer comparado byte a byte); lo que esta comprobación ve es el caso
-    idéntico-pero-viejo: se agregó o redactó una página y nadie regeneró — las
-    copias coinciden entre sí y todas mienten igual.
+    La página es UNA, así que acá no hay divergencia entre copias que vigilar
+    (el enlace del footer sí está en todas, y ése lo cubre chrome_divergente):
+    lo que esta comprobación ve es el caso viejo-en-silencio — se agregó o
+    redactó una página y nadie regeneró — y el caso peor, que la página del
+    mapa no exista o haya perdido sus marcadores.
     """
     try:
         esperado = mapa_bloque()
     except MapaInconstruible as e:
         return [str(e)]
-    problemas = []
-    for p in htmls():
-        h = p.read_text(encoding="utf-8")
-        a, b = h.find(MAPA_INI), h.find(MAPA_FIN)
-        if a < 4 or b < 0:
-            problemas.append(f"{nombre(p)}: el footer no tiene el mapa del sitio")
-            continue
-        # a-4: el bloque canónico arranca con la sangría del marcador
-        if h[a - 4:b + len(MAPA_FIN)] != esperado:
-            problemas.append(f"{nombre(p)}: el mapa del footer quedó viejo")
-    return problemas
+    p = RAIZ / RUTA_MAPA
+    if not p.exists():
+        return [f"no existe {RUTA_MAPA} — la página del mapa del sitio"]
+    h = p.read_text(encoding="utf-8")
+    a, b = h.find(MAPA_INI), h.find(MAPA_FIN)
+    if a < 0 or b < 0:
+        return [f"{RUTA_MAPA}: perdió los marcadores del bloque generado"]
+    ini = h.rfind("\n", 0, a) + 1  # el canónico arranca con la sangría
+    if h[ini:b + len(MAPA_FIN)] != esperado:
+        return [f"{RUTA_MAPA}: el mapa quedó viejo"]
+    return []
 
 
 def leer_baseline():

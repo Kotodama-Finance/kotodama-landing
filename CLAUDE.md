@@ -41,22 +41,24 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-07 (aún más tarde), el mapa del sitio en el
-  footer**: fila propia arriba de la marca, GENERADA por `make-sitemap.py`
-  en las quince páginas en la misma corrida que el sitemap — dos grupos con
-  jerarquía (The Cube: las seis caras en el orden de la grilla, con las
-  subcaras anidadas en el orden de las tarjetas del padre; The Site: Home,
-  Musubi, Method, Disclaimer), nombres del `face-page__romaji` de cada
-  página, romaji solo, y el MISMO conjunto de URLs que sitemap.xml — el
-  andamiaje de seguros queda AFUERA mientras lleve su noindex, a propósito.
-  La identidad byte a byte la cubre la comprobación del footer que ya
-  existía; lo idéntico-pero-viejo lo ve `mapa_desactualizado()` en
-  check-structure — **probado EN ROJO con DIECISIETE casos**, tras una
-  revisión adversarial de 12 agentes con 7 hallazgos confirmados: cinco
-  corregidos, uno repetido entre lentes, y uno que es DECISIÓN DEL AUTOR
-  (el ancla Contact aterriza mostrando el mapa y a 1280×720 el correo queda
-  bajo el fold — ver pendientes). Deploy PENDIENTE de la confirmación del
-  autor. Ver la decisión, la primera de la lista.
+- Último cierre: **2026-08-07 (aún más tarde), el mapa del sitio: la
+  SUBPÁGINA /sitemap/ — y esto REVIERTE el bloque en los quince footers
+  del mismo día, por decisión del autor** («aprobé el diseño y me equivoqué
+  al aprobarlo»: un árbol de quince entradas repetido en las quince
+  páginas es demasiado footer, y crece con cada sección). El árbol completo
+  vive en /sitemap/ (molde de /method/, generado por `make-sitemap.py` en
+  la misma corrida que el XML) y el footer volvió a lo que era MÁS el
+  enlace «Site map» en su línea de abajo, junto al ©. Se conservó todo lo
+  que seguía siendo correcto: la fuente única de URLs (mismo conjunto que
+  sitemap.xml — seguros AFUERA mientras lleve su noindex), los nombres del
+  `face-page__romaji`, romaji solo, ORDEN_SITIO con abort, la marca de
+  notas, `mapa_desactualizado()` en check-structure (ahora contra la
+  página), y las cinco correcciones de la revisión adversarial de 12
+  agentes. **Los DIECISIETE rojos se re-probaron sobre la arquitectura
+  nueva**, y **el hallazgo del ancla Contact quedó RESUELTO por la propia
+  reversión, medido**: a 1280×720 el correo vuelve a aterrizar visible
+  (y≈436–462) — la nav no se tocó. NO deployado: capturas enviadas, deploy
+  esperando al autor. Ver la decisión, la primera de la lista.
   Antes, el mismo día: **el andamiaje de la capa 1 de
   seguros**: `/hajime/yorozu/japan/seguros/` con el molde de /method/ —
   apertura + nueve secciones con subtítulo y prosa, todo placeholder (25,
@@ -150,28 +152,23 @@ fallidos ya corregidos, y las capturas intermedias.
   placeholders el 2026-08-05 — la redacción terminada por segunda vez, con
   la que se publicó — y `2` significó regresión desde entonces hasta este
   andamiaje.)*
-- **Ahora son QUINCE páginas** (2026-08-07: se sumó el andamiaje de
-  seguros; antes, las tres subpáginas de Hajime). El sitemap tiene **13
-  URLs mientras el andamiaje lleve su noindex de placeholder** (fuera
-  quedan la 404 y esa página; vuelve a 14 con el texto — ver la decisión
-  del noindex) y **el árbol de URLs llega a CUATRO niveles por primera
-  vez** — verificado que nada asume profundidad máxima: guardas y
+- **Ahora son DIECISÉIS páginas** (2026-08-07: se sumó /sitemap/; el mismo
+  día, el andamiaje de seguros; antes, las tres subpáginas de Hajime). El
+  sitemap tiene **14 URLs mientras el andamiaje lleve su noindex de
+  placeholder** (fuera quedan la 404 y esa página; vuelve a 15 con el
+  texto — ver la decisión del noindex) y **el árbol de URLs llega a CUATRO
+  niveles** — verificado que nada asume profundidad máxima: guardas y
   generadores descubren por `rglob` y derivan de directorios.
-- **Decisiones del autor pendientes: DOS (2026-08-07)** — (1) cómo enlaza
+- **Decisiones del autor pendientes: UNA (2026-08-07)** — cómo enlaza
   /hajime/yorozu/ a la sección nueva de seguros (propuesta hecha: tarjeta
   única con el vocabulario de `.face-page__cards`; es página con texto
-  aprobado y no se toca sin su visto bueno). **Desde el mapa del footer la
+  aprobado y no se toca sin su visto bueno). **Desde el mapa del sitio la
   tarjeta además es REQUISITO del generador**: al sacar el noindex,
   `make-sitemap` aborta hasta que /hajime/yorozu/ la presente como tarjeta
-  — ver la decisión del mapa. (2) **El ancla Contact tras el mapa** —
-  hallazgo medido de la revisión adversarial: con el mapa como primer hijo
-  del footer, el clic en Contact (/#footer) aterriza mostrando el mapa y a
-  1280×720 el correo queda ENTERO bajo el fold (mailto en y≈725–751; antes
-  aterrizaba visible en y≈437–463; a 1440×900 sigue visible, al borde).
-  Los dos remedios tocan decisiones suyas: mover el mapa debajo del bloque
-  de marca (revierte su «arriba de eso») o apuntar Contact a un ancla
-  nueva en `.footer__top` (toca la nav de las quince). No se tocó nada sin
-  su palabra. Además espera su TEXTO de la
+  — ver la decisión del mapa. *(La segunda pendiente que hubo unas horas —
+  el ancla Contact tras el mapa del footer — quedó DISUELTA por la
+  reversión a /sitemap/: medido a 1280×720, el correo vuelve a aterrizar
+  visible.)* Además espera su TEXTO de la
   capa 1, que no es una decisión sino el pase de redacción. Las dos
   anteriores se cerraron el 2026-08-05: los kanji de las subcaras (**太一 Taichi · 万
   Yorozu · 幽玄 Yūgen**, dictados por el autor desde la tabla del cubo de su
@@ -323,7 +320,7 @@ sección con el detalle.
 
 | Cabo | Estado |
 |---|---|
-| **Capa 1 de seguros: el TEXTO** | **el frente activo (2026-08-07)**: andamiaje listo en `/hajime/yorozu/japan/seguros/` con 25 placeholders esperando el texto del autor, **con `noindex` mientras tanto** (exclusión del sitemap derivada; al redactar: sacar la meta + regenerar sitemap y mapa del footer —mismo comando— + baseline — el olvido tiene guarda). NO se deploya hasta ese pase. Y **el enlace desde /hajime/yorozu/ pendiente de su aprobación** (propuesta: tarjeta única) — **desde el mapa del footer, la tarjeta es además requisito**: sin ella, `make-sitemap` aborta al sacar el noindex. Ver su decisión. |
+| **Capa 1 de seguros: el TEXTO** | **el frente activo (2026-08-07)**: andamiaje listo en `/hajime/yorozu/japan/seguros/` con 25 placeholders esperando el texto del autor, **con `noindex` mientras tanto** (exclusión del sitemap derivada; al redactar: sacar la meta + regenerar sitemap.xml y /sitemap/ —mismo comando— + baseline — el olvido tiene guarda). NO se deploya hasta ese pase. Y **el enlace desde /hajime/yorozu/ pendiente de su aprobación** (propuesta: tarjeta única) — **desde el mapa del sitio, la tarjeta es además requisito**: sin ella, `make-sitemap` aborta al sacar el noindex. Ver su decisión. |
 | ~~Redacción de Hajime~~ | **CERRADA 2026-08-05**: los 15, con texto del autor. Baseline en cero, `check-ready` en `0`. Cualquier placeholder nuevo es regresión. |
 | ~~Logo de LibraryThing~~ | **CERRADO 2026-08-05**: va el archivo oficial en su paleta original, sin alterar — criterio nuevo que disuelve el pendiente de permiso (ver la decisión de tarjetas y `assets/img/README.md`). |
 | ~~Kanji de Taichi/Yorozu/Yūgen~~ | **CERRADO 2026-08-05**: 太一 · 万 · 幽玄, del `context.md` del autor. Aplicados en h1 y `<title>` con el patrón de las caras; subset regenerado (太/幽/玄 eran nuevos). |
@@ -342,16 +339,46 @@ sección con el detalle.
 
 ## Decisiones cerradas — no rediscutir
 
-### El mapa del sitio en el footer — completo, fila propia, GENERADO
+### El mapa del sitio: la SUBPÁGINA /sitemap/ + enlace en el footer
 
-**2026-08-07, las tres decisiones de fondo las trajo el autor cerradas**:
-mapa COMPLETO con jerarquía visual (con cuatro niveles de URLs la navegación
-por descubrimiento dejó de alcanzar; el antecedente es la columna «Platform»,
+**2026-08-07. La forma vigente REEMPLAZA al bloque en los quince footers,
+que vivió unas horas: el autor lo aprobó, lo vio en capturas y lo revirtió
+— «aprobé el diseño y me equivoqué al aprobarlo»: un árbol de quince
+entradas repetido en las quince páginas es demasiado footer, y crece con
+cada sección nueva.** Las decisiones de fondo NO cambiaron: mapa COMPLETO
+con jerarquía visual (con cuatro niveles de URLs la navegación por
+descubrimiento dejó de alcanzar; el antecedente es la columna «Platform»,
 que se fue por listar dos de cinco — un mapa exhaustivo no tiene ese
-defecto); FILA PROPIA arriba del bloque de marca, dentro del `<footer>`; y
-SE GENERA — lo escribe `tools/make-sitemap.py` en la misma corrida que
-sitemap.xml, en todas las páginas. Lo resuelto en la implementación, con su
-porqué:
+defecto) y GENERADO — lo escribe `tools/make-sitemap.py` en la misma
+corrida que sitemap.xml. Lo que cambió es el DESTINO: el árbol vive en
+UNA página y el footer lleva sólo la puerta.
+
+- **La ruta es `/sitemap/` a propósito**: comparte nombre con
+  `/sitemap.xml` porque son DOS RENDERIZACIONES DE LA MISMA LISTA — el XML
+  para las máquinas, la página para el lector. No hay colisión técnica
+  (directorio contra archivo) y la rima de nombres es información real.
+- **La página usa el molde de /method/**: cabecera sin kanji (no hay uno
+  cerrado para «mapa del sitio» y no se inventa) y sin marca de agua (la
+  marca es el kanji de la PROPIA página; sin kanji no hay marca). Título
+  «Site map», línea de función «Every page, in one place». El árbol va en
+  dos secciones con `face-page__subtitle` — «The Cube» y «The Site» — y
+  la jerarquía se dibuja con sangría y filete oro (`.map-list--sub`).
+- **El enlace del footer va en la línea de abajo, junto al ©**: «© 2026
+  Kotodama Finance · Open access · Site map». La barra inferior es la
+  meta-navegación, donde un mapa del sitio se busca por convención, y no
+  agrega ni un píxel arriba del bloque de marca. Es lo ÚNICO del mapa en
+  el footer, está en las dieciséis páginas y lo vigila la identidad del
+  footer (probado en rojo: sacarlo de una página da footer divergente).
+- **La vuelta es «Back to the start» (`/`), y el criterio del origen SÍ la
+  cubre**: a /sitemap/ se llega desde el footer de cualquier página, o sea
+  que no hay origen único — exactamente el caso de /disclaimer/, que
+  también se alcanza desde el footer global y ya tenía ese rótulo. No es
+  una categoría nueva: es el precedente aplicado.
+- **/sitemap/ se lista A SÍ MISMA y va a sitemap.xml**: es una página
+  indexable más. Una excepción en cualquiera de las dos rompería el
+  conjunto único (un mapa exhaustivo que se omite a sí mismo tiene un
+  hueco), y mecánicamente no necesita caso especial: entra por
+  ORDEN_SITIO como cualquier página de nivel superior.
 
 - **Los nombres salen del `face-page__romaji` de cada página** — el nombre
   con que la página se presenta en su h1: corto, sin kanji, sin
@@ -363,11 +390,9 @@ porqué:
   sólo duplicaría el nombre de al lado — la prueba exacta del japonés
   ornamental que rige la prosa de /hajime/ — y la nav ya escribe «Musubi»
   pelado. Consecuencia buena: el bloque no obliga a regenerar ningún subset.
-- **Dos grupos, con el vocabulario del footer**: las columnas REUSAN
-  `.footer__col` y `.footer__label`. «The Cube»: las seis caras en el orden
-  de la grilla de la portada, con las subcaras anidadas (sangría + filete
-  oro, `.footer__map-list--sub`). «The Site»: Home, Musubi, Method,
-  Disclaimer. La 404 no entra.
+- **Dos grupos**: «The Cube» — las seis caras en el orden de la grilla de
+  la portada, con las subcaras anidadas—; «The Site» — Home, Musubi,
+  Method, Site map, Disclaimer. La 404 no entra.
 - **TODO el orden se deriva, salvo uno**: las caras van en el orden de las
   tarjetas de la grilla; los hijos de una página, en el orden en que el
   PADRE los presenta como tarjetas `.face-card`. Lo único no derivable es el
@@ -382,8 +407,8 @@ porqué:
   `paginas_publicas()` en `_guardas` es la fuente común de los dos
   artefactos — no pueden divergir. Por eso **HOY el mapa NO lista el
   andamiaje de seguros, y es a propósito**: su noindex de placeholder lo
-  saca de los dos; listarlo habría enlazado una página de TODOs desde todas
-  las páginas, deshaciendo la huérfana-a-sabiendas por la puerta del footer.
+  saca de los dos; listarlo habría enlazado una página de TODOs,
+  deshaciendo la huérfana-a-sabiendas por la puerta del mapa.
   Entra solo, junto con el sitemap, cuando el texto llegue y la meta se
   vaya. («Incluye la sección sectorial» se cumple en cuanto exista como
   contenido, no como andamiaje.)
@@ -413,20 +438,20 @@ porqué:
   mal clasificada. Y la marca tendrá un segundo consumidor —el índice JSON
   del buscador del archivo—, así que olvidarla también dejaría la nota
   fuera de la búsqueda: fallo visible, no silencioso.
-- **La identidad byte a byte no necesitó guarda nueva**: el bloque vive
-  DENTRO del `<footer>`, que `chrome_divergente` ya compara carácter por
-  carácter (por lo mismo, el pixel de GoatCounter sigue AFUERA del footer).
-  Lo nuevo es el caso idéntico-pero-viejo: `mapa_desactualizado()` compara
-  contra EXACTAMENTE lo que el generador escribiría hoy — misma función,
-  sin segunda implementación. **Probado EN ROJO con DIECISIETE casos**
-  antes de confiar en el verde: mapa viejo idéntico en todas con chrome en
-  verde; divergencia en una sola; abort por página sin tarjeta, por nivel
-  superior sin lugar, por tarjeta duplicada, por tarjeta comentada y por
-  página sin punto de inserción (el mensaje nombra la página en todos);
-  nota excluida sin abortar y DENTRO del sitemap; citar la meta de nota en
-  un comentario NO reclasifica; href-antes-de-class tolerado; todo-o-nada
-  verificado por hashes (XML y las quince intactos tras un abort); página
-  sin el bloque.
+- **Las guardas: el enlace lo cubre la identidad del footer que ya
+  existía** (`chrome_divergente`; por lo mismo, el pixel de GoatCounter
+  sigue AFUERA del footer), y el árbol lo cubre `mapa_desactualizado()`,
+  que compara /sitemap/ contra EXACTAMENTE lo que el generador escribiría
+  hoy — misma función, sin segunda implementación. **Probado EN ROJO con
+  DIECISIETE casos, re-corridos ENTEROS sobre la arquitectura de
+  subpágina**: árbol viejo; footer sin el enlace en una página
+  (divergente); abort por página sin tarjeta, por nivel superior sin
+  lugar, por tarjeta duplicada y por tarjeta comentada (el mensaje nombra
+  la página en todos); nota excluida sin abortar y DENTRO del sitemap;
+  citar la meta de nota en un comentario NO reclasifica;
+  href-antes-de-class tolerado; /sitemap/ sin marcadores y /sitemap/
+  ausente, nombradas; todo-o-nada verificado por hashes (XML y páginas
+  intactos tras un abort).
 - **La revisión adversarial (12 agentes, mismo día) dejó CINCO
   correcciones**, todas reproducidas antes de corregirse: (1) la escritura
   pasó a todo-o-nada DE VERDAD — todas las inyecciones se derivan en
@@ -449,8 +474,10 @@ porqué:
   RE_ROMAJI_H1. (5) El mensaje del abort de nivel superior ya no manda a
   un callejón: un `.html` suelto en la raíz no puede ubicarse vía
   ORDEN_SITIO (que sólo genera candidatos de directorio) y ahora el
-  mensaje da las salidas reales. El sexto hallazgo —el ancla Contact— es
-  del autor: ver las decisiones pendientes en Estado.
+  mensaje da las salidas reales. El sexto hallazgo —el ancla Contact
+  aterrizando con el correo bajo el fold a 1280×720— quedó DISUELTO por la
+  reversión a /sitemap/: re-medido con el footer compacto, el correo
+  vuelve a aterrizar visible (y≈436–462 contra 720) y la nav no se tocó.
 - De paso, `RE_NOINDEX` quedó unificado en `_guardas` (tres copias inline
   del mismo regex → una constante).
 

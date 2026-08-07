@@ -1549,6 +1549,29 @@ button:focus-visible {
    diferida. Ver /sugao/index.html. */
 
 /* -------------------------------------------------------------------------
+   /sitemap/ — EL MAPA DEL SITIO (el árbol lo genera tools/make-sitemap.py)
+   La página usa el molde de /method/ (cabecera sin kanji, secciones con
+   subtítulo); acá vive sólo la presentación del árbol. La jerarquía se
+   dibuja con sangría y un filete oro a la izquierda — el mismo trazo de los
+   separadores del footer. Nombres en ROMAJI SOLO: en una lista densa el
+   kanji al lado del romaji duplicaría el nombre (la prueba del japonés
+   ornamental), y por eso el árbol no obliga a regenerar ningún subset.
+   ------------------------------------------------------------------------- */
+.map-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.map-list a { color: var(--c-text-link); }
+.map-list a:hover { color: var(--c-gold); }
+.map-list--sub {
+  margin-top: 12px;
+  padding-left: 18px;
+  border-left: 1px solid rgb(var(--rgb-gold) / 0.14);
+}
+
+/* -------------------------------------------------------------------------
    FOOTER
    ------------------------------------------------------------------------- */
 .footer {
@@ -1584,38 +1607,6 @@ button:focus-visible {
 }
 .footer__col a { font-size: 0.92rem; color: var(--c-text-link); }
 .footer__col a:hover { color: var(--c-gold); }
-/* MAPA DEL SITIO — fila propia entre el borde superior del footer y el bloque
-   de marca. El HTML lo GENERA tools/make-sitemap.py en todas las páginas
-   (mismo conjunto de URLs que sitemap.xml, nombres del face-page__romaji de
-   cada página, orden de las tarjetas del padre); acá vive sólo su
-   presentación. Los grupos REUSAN .footer__col y .footer__label — el mapa es
-   una fila de columnas más del footer, no un vocabulario nuevo—; lo propio
-   es la lista y su anidado: la jerarquía se dibuja con sangría y un filete
-   oro a la izquierda, el mismo trazo de los separadores del footer. Los
-   nombres van en ROMAJI SOLO — en una lista densa el kanji al lado del
-   romaji duplicaría el nombre, la prueba del japonés ornamental — y por eso
-   este bloque no obliga a regenerar ningún subset. */
-.footer__map {
-  max-width: 70rem;
-  margin: 0 auto 56px;
-  padding-bottom: 48px;
-  border-bottom: 1px solid rgb(var(--rgb-gold) / 0.1);
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(40px, 6vw, 90px);
-}
-.footer__map-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.footer__map-list--sub {
-  margin-top: 10px;
-  padding-left: 16px;
-  border-left: 1px solid rgb(var(--rgb-gold) / 0.14);
-}
-
 /* 免責事項 corto. Va sobre la línea de copyright y con el mismo peso visual que
    ella: es una advertencia legal permanente, no un aviso que reclame atención.
    Destacarlo lo convertiría en ruido en cada página; esconderlo lo haría
@@ -1646,6 +1637,14 @@ button:focus-visible {
 }
 .footer__soon :lang(ja) { color: var(--c-text-muted-2); }
 .footer__soon { opacity: 0.8; }
+/* El enlace «Site map» vive en la línea de abajo, junto al © — la barra de
+   meta-navegación, donde un mapa del sitio se busca por convención. Es lo
+   ÚNICO del mapa que queda en el footer: el árbol completo vive en /sitemap/
+   (el bloque-en-los-quince-footers se probó y el autor lo revirtió: demasiado
+   footer, y crecía con cada sección). Mismo trato de color que los enlaces
+   del disclaimer. */
+.footer__bottom a { color: var(--c-text-link); }
+.footer__bottom a:hover { color: var(--c-gold); }
 
 /* Acá vivía el MAELSTROM: la transición entre documentos que se atraviesa al
    entrar a una cara. Está RESERVADA, no borrada — el bloque entero, calibrado,

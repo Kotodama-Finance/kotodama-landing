@@ -29,7 +29,7 @@ og-image.png            tarjeta al compartir (generada)
 tools/check-structure.py guarda estructural: verde siempre (ver más abajo)
 tools/check-ready.py    guarda previa a publicar (hoy 2 esperado: capa 1 de seguros en placeholders — historia en su docstring)
 tools/make-favicon.py   genera los iconos a partir del subset de la marca
-tools/make-sitemap.py   genera sitemap.xml Y el mapa del sitio del footer, de la misma lista (excluye los que declaran noindex, leído de la propia meta)
+tools/make-sitemap.py   genera sitemap.xml Y el árbol de /sitemap/, de la misma lista (excluye los que declaran noindex, leído de la propia meta)
 tools/make-og-image.py  genera og-image.png (sólo tipografía, sin navegador)
 tools/make-deploy.py    genera el commit de publicación en main: el sitio solo
 docs/v1-dark/           registro visual de versiones etiquetadas
@@ -73,8 +73,8 @@ Tres cosas que no se ven mirando el HTML:
 **Al agregar una página, el mapa sólo hace falta si esa página monta el cubo.**
 Hoy vive únicamente en `index.html`, que es la única página publicable con
 JavaScript: **todas las demás** —las seis caras, las tres subpáginas de
-Hajime, la sección de seguros, `/musubi/`, `/method/`, `/disclaimer/` y la
-404— no cargan ningún script. Un import map **no se hereda
+Hajime, la sección de seguros, `/musubi/`, `/method/`, `/sitemap/`,
+`/disclaimer/` y la 404— no cargan ningún script. Un import map **no se hereda
 entre documentos**, así que una página nueva que quiera el cubo necesita **su
 propia copia**, con la ruta corregida a su profundidad. El caso previsto es
 `/ja/index.html`: un nivel abajo, o sea `../assets/vendor/three.module.js`.
@@ -90,6 +90,8 @@ con su `index.html` adentro:
 /sugao/           sugao/index.html           la persona detrás del proyecto
 /method/          method/index.html          el método completo + las fuentes, una por una
 /disclaimer/      disclaimer/index.html      el disclaimer completo (el único lugar)
+/sitemap/         sitemap/index.html         el mapa del sitio (árbol generado; misma
+                                             lista que sitemap.xml, para humanos)
 /hajime/taichi/   hajime/taichi/index.html   línea macro de Hajime
 /hajime/yorozu/   hajime/yorozu/index.html   línea sectorial de Hajime
 /hajime/yugen/    hajime/yugen/index.html    línea de transparencia de Hajime
@@ -107,7 +109,10 @@ sección—; las tres subpáginas de Hajime vuelven a `/hajime/` («Back to
 Hajime»); las secciones de un sector vuelven a su subcara — la capa 1 de
 seguros lleva «Back to Yorozu», destino `/hajime/yorozu/` (el criterio
 extendido un nivel, 2026-08-07)—; y las demás (`/musubi/`, `/method/`,
-`/disclaimer/`, la 404) vuelven al inicio — «Back to the start», destino `/`.
+`/sitemap/`, `/disclaimer/`, la 404) vuelven al inicio — «Back to the start»,
+destino `/`. `/sitemap/` es el caso sin origen único —se llega desde el footer
+de cualquier página— y usa el mismo rótulo que `/disclaimer/`, que ya era ese
+caso.
 
 `/method/` es el **desarrollo**; la sección `#method` de la portada queda como
 **resumen** y la nav sigue apuntando ahí. **No hay `/sources/`**: la lista
@@ -181,8 +186,8 @@ verificación estructural vive aparte, en `check-structure.py`, que **sí** tien
 que estar en verde siempre:
 
 - **`check-structure.py`** — nav y footer idénticos en todas las páginas,
-  metadatos únicos, URLs absolutas, cobertura del subset japonés, **el mapa del
-  sitio del footer al día** (idéntico al que `make-sitemap.py` generaría hoy),
+  metadatos únicos, URLs absolutas, cobertura del subset japonés, **el árbol de
+  /sitemap/ al día** (idéntico al que `make-sitemap.py` generaría hoy),
   **ningún `href="#"` que haya perdido su placeholder**, **ningún placeholder
   nuevo** respecto de `tools/placeholders-baseline.json`, y **nada de
   castellano en lo que se publica**. Sale `0` si está bien, `1` si algo se
@@ -966,7 +971,7 @@ extra: es la misma razón por la que todo el contenido va en el HTML.
 | Archivo | Qué hace | Se mantiene |
 |---|---|---|
 | `sitemap.xml` | lista todas las páginas indexables | `python tools/make-sitemap.py` |
-| mapa del sitio (footer) | la misma lista, para humanos, en el footer de todas las páginas | el mismo comando |
+| `/sitemap/` | la misma lista, para humanos — la página del mapa del sitio | el mismo comando (regenera su árbol) |
 | `robots.txt` | abre todo y apunta al sitemap | a mano (casi nunca cambia) |
 | `og-image.png` | la tarjeta al compartir un enlace | `python tools/make-og-image.py` |
 | `404.html` | GitHub Pages la sirve ante cualquier ruta inexistente | a mano |
@@ -977,23 +982,25 @@ vigilarla: se deriva. Al agregar una página, correr el script. Si alguien se
 olvida, `check-structure.py` lo caza, porque verifica que toda página publicable
 esté listada.
 
-**El mapa del sitio del footer es la misma lista, para humanos** (2026-08-07).
-La misma corrida de `make-sitemap.py` escribe el bloque `footer__map` —fila
-propia dentro del `<footer>`— en todas las páginas: dos grupos con jerarquía
-visual (The Cube: las seis caras en el orden de la grilla, con las subpáginas
-anidadas en el orden de las tarjetas de su padre; The Site: Home, Musubi,
-Method, Disclaimer). Todo se deriva: las URLs son el mismo conjunto que el
-sitemap (la 404 y las `noindex` quedan afuera), los nombres salen del
-`face-page__romaji` con que cada página se presenta en su h1, y lo único no
-derivable —el orden de las páginas de nivel superior que no son caras— vive en
-`ORDEN_SITIO` (`tools/_guardas.py`) con guarda: una página sin lugar ABORTA la
-generación nombrándola, sin escribir nada. Las **notas** futuras no entrarán al
-mapa (las resumirá la página de archivo cuando exista): cada nota se declarará
-con `<meta name="kotodama-type" content="note">` en su propio HTML, desde la
-primera. Como el bloque vive dentro del `<footer>`, la identidad byte a byte
-entre páginas la vigila la misma comprobación del footer; que no quede
-**viejo** lo vigila la sección «Mapa del sitio en el footer» de
-`check-structure.py`.
+**La página `/sitemap/` es la misma lista, para humanos** (2026-08-07 — nació
+como bloque en el footer de todas las páginas y el autor lo revirtió el mismo
+día: demasiado footer; el footer conserva sólo el enlace «Site map» en su
+línea de abajo, vigilado por la identidad del footer). La misma corrida de
+`make-sitemap.py` escribe el árbol entre los marcadores de esa página: dos
+secciones con jerarquía visual (The Cube: las seis caras en el orden de la
+grilla, con las subpáginas anidadas en el orden de las tarjetas de su padre;
+The Site: Home, Musubi, Method, Site map, Disclaimer). Todo se deriva: las
+URLs son el mismo conjunto que el sitemap (la 404 y las `noindex` quedan
+afuera), los nombres salen del `face-page__romaji` con que cada página se
+presenta en su h1, y lo único no derivable —el orden de las páginas de nivel
+superior que no son caras— vive en `ORDEN_SITIO` (`tools/_guardas.py`) con
+guarda: una página sin lugar ABORTA la generación nombrándola, sin escribir
+nada. Las **notas** futuras no entrarán al mapa (las resumirá la página de
+archivo cuando exista): cada nota se declarará con
+`<meta name="kotodama-type" content="note">` en su propio HTML, desde la
+primera. Que el árbol no quede **viejo** lo vigila la sección «Mapa del sitio
+en el footer» de `check-structure.py`, comparando contra lo que el generador
+escribiría hoy.
 
 No lleva `<lastmod>`: sólo sirve si es exacto, para que fuera exacto habría que
 sacarlo de git en cada regeneración, y entonces el sitemap cambiaría en cada
