@@ -1248,9 +1248,11 @@ button:focus-visible {
    enlaces, y seis palabras doradas en el cuerpo competirían con ambos.
    Va sobre <i> y no <em> a propósito — <em> es énfasis y un lector de pantalla
    lo entonaría; <i> es «término en otra voz», que es exactamente esto.
-   EL MARGEN VA EN LA CLASE ENTERA, no sólo en los enlaces (corrección del
-   autor, 2026-08-05): el culpable es la OBLICUA SINTÉTICA —ver el comentario
-   del aire, abajo—, que afecta a todo .name por igual. Medido en /musubi/
+   EL MARGEN VA EN LA CLASE ENTERA, no sólo en los enlaces que entonces
+   existían (corrección del autor, 2026-08-05): el culpable es la OBLICUA
+   SINTÉTICA —el @font-face de Inter no carga itálica, y la última letra
+   pinta inclinada ENCIMA del espacio siguiente—, que afecta a todo .name
+   por igual. Medido en /musubi/
    antes del cambio: 5,02px de avance ante palabra (la tinta inclinada comía
    ~2,5) y 0,00px ante coma — en «Okeanos,» y «Aeolus,» la última letra
    apoyaba directo sobre la coma. El 0.14em ahí es la corrección itálica
@@ -1258,29 +1260,39 @@ button:focus-visible {
    decisión del romaji solo): no hay nada que corregir en ellas, y si algún
    día llevan el marcado, esta regla ya las cubre. */
 .face-page__body .name { font-style: italic; color: var(--c-text); margin-right: 0.14em; }
-/* En /hajime/, los tres nombres (Taichi, Yorozu, Yūgen) ADEMÁS enlazan a su
-   subpágina, y un enlace se viste de enlace: oro y subrayado suave. La regla
-   pisa el color de .name a propósito.
-   EN /musubi/ EL MISMO MARCADO .name QUEDA SIN ENLACE, Y ES DECISIÓN, por dos
-   razones que no hay que mezclar: Kasen, Okeanos, Kotodama, Musubi, Odysseus
-   y Aeolus son conceptos sin página — enlazarlos prometería páginas que no
-   existen—; y Taichi, Yorozu y Yūgen (bloque 5, desde 2026-08-05) SÍ tienen
-   página y aun así no enlazan: ahí se los presenta como parte del sistema
-   conceptual, no como destinos —el camino es /hajime/, de donde cuelgan—, y
-   mezclar nombres enlazados y sin enlazar con el mismo marcado en la misma
-   página sería inconsistente. Es la excepción más discutible del marcado y
-   está anotada también junto al bloque 5 de /musubi/. */
-/* El aire tras el enlace: el espacio SIEMPRE estuvo en el HTML (medido: 4,5px
-   de avance), pero la cursiva de .name es OBLICUA SINTÉTICA —el @font-face de
-   Inter no carga itálica— y la última letra pinta inclinada ENCIMA del
-   espacio, con el subrayado marcando el borde: visualmente quedaban ~2px y el
-   enlace se leía pegado a la palabra siguiente. El margen compensa la tinta
-   inclinada. MARGEN y no padding: el padding estiraría el subrayado DENTRO
-   del espacio, que es justo el efecto que se quería sacar.
-   El margin-right vive ahora en .face-page__body .name (arriba): el problema
-   es de la oblicua, no del enlace. */
-.face-page__body a.name { color: var(--c-gold); border-bottom: 1px solid var(--line-gold-soft); padding-bottom: 1px; }
-.face-page__body a.name:hover { color: var(--c-gold-soft); border-bottom-color: var(--c-gold); }
+/* LOS ENLACES a.name SE FUERON (2026-08-07, decisión del autor). En /hajime/
+   los tres nombres enlazaban a su subpágina, y dentro de la prosa un enlace
+   dorado se lee como ÉNFASIS, no como puerta: el lector no descubría las
+   subpáginas. La puerta son ahora las TARJETAS (.face-page__cards, abajo);
+   los nombres volvieron a <i class="name"> y la convención quedó UNIFORME:
+   .name en prosa NO enlaza en NINGUNA página — presenta el nombre; llevan
+   los títulos y las tarjetas. (Esto disuelve la que era «la excepción más
+   discutible del marcado», anotada en /musubi/: allá y acá rige lo mismo.)
+   Las reglas de a.name se borraron CON los elementos — una regla sin usar es
+   legal y silenciosa, y este proyecto ya pagó ese costo dos veces. */
+
+/* Las tarjetas de las tres subcaras en /hajime/ — la puerta; el párrafo de
+   arriba explica (por eso van sin descripción propia; el porqué completo, en
+   el comentario del HTML). Reusan .face-card TAL CUAL, sin punto de estado:
+   mismo borde, fondo, hover y tipografía que las seis de la portada — un
+   cuarto formato de tarjeta sería exactamente lo que la regla de reusar
+   vocabulario existe para evitar. Tres columnas como la face-grid (a 45rem
+   de columna: 219px por tarjeta, medido a 1440 y 1920); a UNA bajo 640px, el
+   breakpoint chico del sitio — entre medio, tres angostas siguen entrando.
+   Como hija de .face-page__body hereda su gap (22px) como separación: el
+   bloque respira igual que un párrafo.
+   El height 100%: el grid estira los <li> pero no el <a> de adentro, y en la
+   ventana 641-730px los descriptores parten distinto («The macro picture» a
+   dos líneas, «Public money» a una) y los pies quedaban desparejos ~19px
+   dentro de la misma fila — hallazgo de la revisión adversarial del diff. */
+.face-page__cards {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.face-page__cards .face-card { height: 100%; }
+@media (max-width: 640px) { .face-page__cards { grid-template-columns: 1fr; } }
 /* .face-page__ref se fue con el enlace de /sugao/ al registro del operador,
    que dejó de existir junto con esa sección. */
 /* Antes era .face-page__deferred, para «lo que la cara promete y todavía no

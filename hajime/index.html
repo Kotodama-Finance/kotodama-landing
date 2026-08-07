@@ -69,21 +69,62 @@
       <p class="face-page__lead">Hajime is the first stroke &mdash; the beginning of a thing. It is where the platform starts, because reading a financial system has to start with the record: what was published, by whom, and when.</p>
 
       <div class="face-page__body">
-        <!-- Los tres nombres ENLAZAN a su subpágina (/hajime/taichi/, etc.):
-             eran lo único del sitio que se destacaba sin llevar a ninguna
-             parte. Mismo marcado .name que /musubi/, pero allá los nombres NO
-             enlazan a propósito — son conceptos explicados en esa misma
-             página, no destinos. La diferencia está anotada en el CSS de
-             a.name y en /musubi/.
-             SOLO ROMAJI en estos enlaces, con los kanji ya cerrados
-             (太一/万/幽玄) — decisión, no falta: dentro de una oración inglesa
-             el kanji junto al romaji sólo duplica el nombre que tiene al lado,
-             que es la prueba exacta del japonés ornamental. El kanji vive
-             donde el nombre se PRESENTA como título —el h1 y el <title> de la
-             subpágina—, igual que las seis caras: ninguna mención en prosa
-             del sitio lleva kanji (ni «Hajime» en el lead de arriba, ni
-             Kasen/Kotodama en /musubi/). -->
-        <p>This face holds three lines of work. <a class="name" href="/hajime/taichi/">Taichi</a> takes the whole: the macro picture, the aggregates, the movements that set the conditions everything else operates under. <a class="name" href="/hajime/yorozu/">Yorozu</a> takes the parts: sector by sector, how each one is regulated, who operates in it, and what the numbers say. <a class="name" href="/hajime/yugen/">Yūgen</a> takes what is meant to be visible and often is not: public money, and whether the record matches the claim.</p>
+        <!-- LOS TRES NOMBRES YA NO ENLAZAN (2026-08-07) — volvieron a
+             <i class="name">, y esto REVIERTE los enlaces del 2026-08-05:
+             como enlaces dorados dentro de la prosa se leían como énfasis,
+             no como puertas (hallazgo del autor — el lector no descubría las
+             subpáginas), y desde que las TARJETAS de abajo son la puerta,
+             dos caminos al mismo destino en la misma pantalla son ruido.
+             Con esto la convención queda UNIFORME en todo el sitio: .name en
+             prosa NO enlaza en ninguna página — el párrafo presenta el
+             nombre; llevan los títulos y las tarjetas. (Disuelve «la
+             excepción más discutible del marcado» que estaba anotada en
+             /musubi/ y en el CSS.)
+             SOLO ROMAJI en la prosa, como siempre: dentro de una oración
+             inglesa el kanji junto al romaji sólo duplica el nombre que
+             tiene al lado, que es la prueba exacta del japonés ornamental.
+             El kanji vive donde el nombre se PRESENTA como título — el h1 de
+             la subpágina y, desde hoy, su tarjeta. -->
+        <p>This face holds three lines of work. <i class="name">Taichi</i> takes the whole: the macro picture, the aggregates, the movements that set the conditions everything else operates under. <i class="name">Yorozu</i> takes the parts: sector by sector, how each one is regulated, who operates in it, and what the numbers say. <i class="name">Yūgen</i> takes what is meant to be visible and often is not: public money, and whether the record matches the claim.</p>
+        <!-- LAS TARJETAS SON LA PUERTA; el párrafo de arriba explica. Por eso
+             van SIN descripción propia — repetir la explicación crearía dos
+             copias que derivan — y el descriptor es la línea de función del
+             DESTINO (su .face-page__gloss, literal): la tarjeta y la página
+             dicen lo mismo. Reusan .face-card TAL CUAL, el vocabulario de
+             las seis de la portada: las subcaras son caras un nivel abajo.
+             SIN punto de estado a propósito: ese vocabulario es el «qué hay»
+             de las seis caras, y acá las tres están igual — un punto exigiría
+             un estado que no existe. El kanji SÍ va: en la tarjeta el nombre
+             se presenta como título, no dentro de una oración. -->
+        <ul class="face-page__cards">
+          <li>
+            <a class="face-card" href="/hajime/taichi/">
+              <span class="face-card__kanji" lang="ja">太一</span>
+              <span class="face-card__meta">
+                <span class="face-card__romaji">Taichi</span>
+                <span class="face-card__domain">The macro picture</span>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a class="face-card" href="/hajime/yorozu/">
+              <span class="face-card__kanji" lang="ja">万</span>
+              <span class="face-card__meta">
+                <span class="face-card__romaji">Yorozu</span>
+                <span class="face-card__domain">Sector by sector</span>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a class="face-card" href="/hajime/yugen/">
+              <span class="face-card__kanji" lang="ja">幽玄</span>
+              <span class="face-card__meta">
+                <span class="face-card__romaji">Yūgen</span>
+                <span class="face-card__domain">Public money</span>
+              </span>
+            </a>
+          </li>
+        </ul>
         <p>Whatever is published here will carry its sources with it &mdash; every figure traceable to the document it came from.</p>
       </div>
 
