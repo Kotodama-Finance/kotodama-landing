@@ -3,20 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Taichi 太一 — Kotodama Finance</title>
-<!-- description derivada del texto de la página (lead + párrafo), como en
-     las demás caras: si el texto cambia, esto se rederiva. -->
-<meta name="description" content="The macro picture: aggregates, the flows between sectors, and the policy decisions that set the conditions everything else operates under.">
-<link rel="canonical" href="https://kotodamafinance.com/hajime/taichi/">
+<title>Site map &mdash; Kotodama Finance</title>
+<meta name="description" content="Every page of Kotodama Finance, in one place: the six faces of the Cube, their subpages, and the pages of the site itself.">
+<link rel="canonical" href="https://kotodamafinance.com/sitemap/">
 <!-- Open Graph: la tarjeta que se ve al compartir el enlace en un chat o una
      red. Sin esto el enlace viaja como una línea de texto pelada.
      og:url y og:image tienen que ser ABSOLUTAS: el que arma la vista previa no
      es el navegador del lector y no puede resolver una ruta relativa.
      La imagen la genera tools/make-og-image.py. -->
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://kotodamafinance.com/hajime/taichi/">
-<meta property="og:title" content="Taichi 太一 — Kotodama Finance">
-<meta property="og:description" content="The macro picture: aggregates, the flows between sectors, and the policy decisions that set the conditions everything else operates under.">
+<meta property="og:url" content="https://kotodamafinance.com/sitemap/">
+<meta property="og:title" content="Site map &mdash; Kotodama Finance">
+<meta property="og:description" content="Every page of Kotodama Finance, in one place: the six faces of the Cube, their subpages, and the pages of the site itself.">
 <meta property="og:image" content="https://kotodamafinance.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -34,8 +32,7 @@
 </head>
 <body class="page">
 
-<!-- Página de texto: no carga el shader del mar ni Three.js. Sólo el CSS
-     compartido. -->
+<!-- Página de texto: no carga el shader del mar ni Three.js. -->
   <header id="nav" class="nav">
     <a class="nav__brand" href="/">
       <span class="nav__mark" lang="ja">言霊</span>
@@ -51,43 +48,69 @@
   </header>
 
   <main>
-    <!-- El kanji de ESTA subcara como marca de agua del costado; decisión y
-         perillas en styles.css (.face-page__watermark). -->
-    <div class="face-page__watermark" aria-hidden="true" lang="ja">太一</div>
-    <!-- /hajime/taichi/ — la línea MACRO de Hajime: el todo — agregados, condiciones.
-         TEXTO DEL AUTOR (2026-08-05), tal cual lo dictó — parte del pase que
-         cerró la redacción del sitio.
-         El kanji 太一 lo cerró el autor —tabla del cubo de su context.md—, no
-         se inventó acá: la escritura japonesa la cierra él, siempre (regla de
-         CLAUDE.md). Entró con su regeneración de subset (太 era nuevo).
-         La vuelta va a /hajime/ y no al cubo: a esta página se llega desde
-         /hajime/, que es el criterio de los rótulos de vuelta. -->
+    <!-- /sitemap/ — EL MAPA DEL SITIO ------------------------------------
+         La misma lista que sitemap.xml, para humanos: el XML se lo damos a
+         las máquinas, esta página al lector. Por eso comparte nombre con el
+         archivo — son dos renderizaciones de la misma lista — y por eso el
+         árbol lo GENERA tools/make-sitemap.py en la misma corrida (entre los
+         marcadores de abajo; no editarlo a mano: la regeneración lo pisa).
+
+         Nació como bloque en el footer de todas las páginas y el autor lo
+         REVIRTIÓ el mismo día: demasiado footer, y crecía con cada sección.
+         El footer conserva sólo el enlace «Site map» en su línea de abajo.
+
+         Molde de /method/: cabecera sin kanji (no hay uno cerrado para esta
+         página y no se inventa) y sin marca de agua (la marca es el kanji de
+         la PROPIA página; sin kanji no hay marca — criterio de /method/).
+         La vuelta va a la portada: a esta página se llega desde el footer de
+         CUALQUIER página, o sea que no hay un origen único — el mismo caso
+         que /disclaimer/, y su mismo rótulo («Back to the start»). -->
     <article class="face-page">
       <header class="face-page__head">
         <h1 class="face-page__title">
-          <span class="face-page__kanji" lang="ja">太一</span>
-          <span class="face-page__romaji">Taichi</span>
+          <span class="face-page__romaji">Site map</span>
         </h1>
-        <p class="face-page__gloss">The macro picture</p>
+        <p class="face-page__gloss">Every page, in one place</p>
       </header>
 
-      <p class="face-page__lead">Taichi is the great one &mdash; the whole before it divides into parts. This face takes an economy at that level: the aggregates, the flows between sectors, and the policy decisions that set the conditions everything else operates under.</p>
+      <!-- MAPA DEL SITIO — lo GENERA tools/make-sitemap.py; no editar a
+           mano: la próxima regeneración lo pisa. Mismo conjunto de
+           URLs que sitemap.xml, nombres del face-page__romaji de
+           cada página, orden de las tarjetas del padre.
+           check-structure avisa si quedó viejo. -->
+      <section class="face-page__section" aria-labelledby="map-site">
+        <h2 id="map-site" class="face-page__subtitle">The Site</h2>
+        <ul class="map-list">
+          <li><a href="/">Home</a></li>
+          <li><a href="/musubi/">Musubi</a></li>
+          <li><a href="/method/">Method</a></li>
+          <li><a href="/sitemap/">Site map</a></li>
+          <li><a href="/disclaimer/">Disclaimer</a></li>
+        </ul>
+      </section>
+      <section class="face-page__section" aria-labelledby="map-cube">
+        <h2 id="map-cube" class="face-page__subtitle">The Cube</h2>
+        <ul class="map-list">
+          <li><a href="/hajime/">Hajime</a>
+            <ul class="map-list map-list--sub">
+              <li><a href="/hajime/taichi/">Taichi</a></li>
+              <li><a href="/hajime/yorozu/">Yorozu</a></li>
+              <li><a href="/hajime/yugen/">Yūgen</a></li>
+            </ul>
+          </li>
+          <li><a href="/sugao/">Sugao</a></li>
+          <li><a href="/tosei/">Tosei</a></li>
+          <li><a href="/kamon/">Kamon</a></li>
+          <li><a href="/torii/">Torii</a></li>
+          <li><a href="/kizuna/">Kizuna</a></li>
+        </ul>
+      </section>
+      <!-- FIN DEL MAPA DEL SITIO -->
 
-      <div class="face-page__body">
-        <!-- El cierre —«the parts only mean something against the whole»—
-             rima A PROPÓSITO con el subtítulo de /musubi/ «Nothing means
-             anything alone»: es el mismo principio bajando a una cara. Son
-             dos copias deliberadas de una idea, sin guarda que las compare
-             (como las frases del cubo): si se redacta una, mirar la otra.
-             Anotado también en /musubi/. -->
-        <p>Money supply, public debt, national accounts, the movements of a central bank. None of it explains a single company, and all of it explains the room a company has to move in. The parts only mean something against the whole.</p>
-      </div>
-
-      <p class="face-page__back"><a href="/hajime/">&larr; Back to Hajime</a></p>
+      <p class="face-page__back"><a href="/">&larr; Back to the start</a></p>
     </article>
   </main>
 
-  <!-- FOOTER -->
   <footer id="footer" class="footer">
     <div class="footer__top">
       <div class="footer__brand">
@@ -136,6 +159,6 @@
   <!-- Pixel de GoatCounter (medición sin JS — la decisión y sus reglas, en
        CLAUDE.md). p= es la ruta de ESTA página: por eso vive FUERA de los
        bloques que las guardas comparan byte a byte (nav, footer, iconos). -->
-  <img src="https://realshinka.goatcounter.com/count?p=/hajime/taichi/" alt="" width="1" height="1" loading="eager" class="gc-pixel">
+  <img src="https://realshinka.goatcounter.com/count?p=/sitemap/" alt="" width="1" height="1" loading="eager" class="gc-pixel">
 </body>
 </html>

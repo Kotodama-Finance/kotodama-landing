@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TODO: título de la capa 1 de seguros — Kotodama Finance</title>
+<meta name="description" content="TODO: descripción de la sección de seguros japoneses (capa 1): marco regulatorio y estructura del mercado.">
+<!-- NOINDEX TEMPORAL, MIENTRAS LA PÁGINA SEA PLACEHOLDER (2026-08-07,
+     decisión con el autor): si un deploy intermedio la publica antes del
+     texto, que no aparezca una página de TODOs en los resultados — sería
+     la primera sección de contenido real del sitio. La exclusión del
+     sitemap se DERIVA de esta meta (make-sitemap la lee, no hay lista a
+     mano), y el olvido inverso tiene guarda: check-ready frena si una
+     página SIN placeholders sigue llevando noindex. AL REDACTAR: sacar
+     esta meta (con su comentario) y regenerar el sitemap. -->
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://kotodamafinance.com/hajime/yorozu/japan/seguros/">
+<!-- Open Graph: la tarjeta que se ve al compartir el enlace en un chat o una
+     red. Sin esto el enlace viaja como una línea de texto pelada.
+     og:url y og:image tienen que ser ABSOLUTAS: el que arma la vista previa no
+     es el navegador del lector y no puede resolver una ruta relativa.
+     La imagen la genera tools/make-og-image.py. -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kotodamafinance.com/hajime/yorozu/japan/seguros/">
+<meta property="og:title" content="TODO: título de la capa 1 de seguros — Kotodama Finance">
+<meta property="og:description" content="TODO: descripción de la sección de seguros japoneses (capa 1): marco regulatorio y estructura del mercado.">
+<meta property="og:image" content="https://kotodamafinance.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Kotodama Finance: the 言霊 mark in gold above the brand name, on deep navy.">
+<!-- Sin esto X muestra una miniatura cuadrada en vez de la tarjeta ancha. -->
+<meta name="twitter:card" content="summary_large_image">
+<!-- Iconos. El .ico existe porque el navegador pide /favicon.ico haya o no
+     <link>: sin el archivo, cada carga deja un 404 en la consola.
+     Se generan con tools/make-favicon.py, que documenta el porqué de cada formato. -->
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body class="page">
+
+<!-- Página de texto: no carga el shader del mar ni Three.js. Sólo el CSS
+     compartido y el script de la nav. -->
+  <!-- NAV — rutas absolutas para que el bloque sea idéntico en las ocho páginas.
+       tools/check-ready.py verifica que no derive. -->
+  <header id="nav" class="nav">
+    <a class="nav__brand" href="/">
+      <span class="nav__mark" lang="ja">言霊</span>
+      <span class="nav__word">Kotodama Finance</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="/#cube">The Cube</a>
+      <a href="/musubi/">Musubi</a>
+      <a href="/#about">About</a>
+      <a href="/#method">Method</a>
+      <a href="/#footer">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- /hajime/yorozu/japan/seguros/ — LA CAPA 1 DE SEGUROS JAPONESES:
+         marco regulatorio y estructura del mercado. Se escribe con fuentes
+         primarias y NO depende de la base de datos — por eso sale antes que
+         cualquier dashboard.
+
+         LA RUTA está decidida en el context.md del autor (§Yorozu): país
+         ARRIBA del sector, y todo anidado bajo /hajime/. No se reinventa.
+         /hajime/yorozu/japan/ NO lleva página A PROPÓSITO — da 404 y está
+         bien (decisión del autor, 2026-08-07): nadie tipea ese segmento a
+         mano, se llega desde /hajime/yorozu/, y un índice de un solo
+         elemento es estructura por si acaso. Cuando existan bancos y
+         mercados, ahí se crea. NO crear esa página ni un redirect.
+
+         EL MOLDE ES EL DE /method/, no el de las caras: apertura +
+         secciones con subtítulo (h2.face-page__subtitle) + prosa adentro.
+         Nueve secciones — el contenido no entra en el molde corto de una
+         cara (lead + dos párrafos).
+
+         SIN KANJI EN LA CABECERA, y no es una falta: no hay un kanji
+         cerrado para esta sección y la escritura japonesa la cierra el
+         autor, siempre (regla de CLAUDE.md — no se inventa). La cabecera
+         usa el patrón de /method/ (título sin kanji + línea de función),
+         que existe exactamente para las páginas que no son caras del cubo.
+         SIN marca de agua lateral por la misma regla: la marca es el kanji
+         de LA PROPIA página, sólo en las que lo tienen; /method/,
+         /disclaimer/ y la 404 no llevan nada y ésta tampoco. NO se
+         sustituye con el logo 言霊 (criterio del autor, ya decidido).
+
+         LA VUELTA VA A /hajime/yorozu/, no al cubo ni al inicio: el
+         criterio de los rótulos es el ORIGEN, y a esta página se llega
+         desde Yorozu — el mismo razonamiento que lleva las subcaras de
+         Hajime a /hajime/.
+
+         TODO EL TEXTO ES PLACEHOLDER (la clase «todo» de siempre, en
+         castellano a propósito — regla de CLAUDE.md: así no se confunde
+         con copy real. OJO al escribir de la clase en comentarios: el
+         atributo literal entre comillas cuenta para placeholders() aunque
+         esté comentado — la guarda no filtra comentarios ahí).
+         El texto lo escribe el autor y los títulos de trabajo de cada
+         sección van dentro de su TODO. UN slot de prosa por sección: al
+         redactar puede volverse los <p> que hagan falta.
+         La sección 9 (fuentes) va SIN el modificador --wide de /method/
+         por ahora: si el texto trae una lista comparable a la de /method/,
+         el breakout ya existe y se decide ese día con el autor. -->
+    <article class="face-page">
+      <header class="face-page__head">
+        <h1 class="face-page__title">
+          <span class="face-page__romaji todo">TODO: título</span>
+        </h1>
+        <p class="face-page__gloss todo">TODO: línea de función de la sección</p>
+      </header>
+
+      <div class="face-page__body">
+        <p class="todo">TODO: apertura de la página — qué es esta sección y para quién.</p>
+      </div>
+
+      <section class="face-page__section" aria-labelledby="seguros-sistema">
+        <h2 id="seguros-sistema" class="face-page__subtitle todo">TODO: subtítulo (trabajo: el sistema financiero japonés y dónde se ubica el seguro)</h2>
+        <div class="face-page__body">
+          <p class="todo">TODO: prosa de la sección 1.</p>
+        </div>
+      </section>
+
+      <section class="face-page__section" aria-labelledby="seguros-reguladores">
+        <h2 id="seguros-reguladores" class="face-page__subtitle todo">TODO: subtítulo (trabajo: reguladores y marco legal)</h2>
+        <div class="face-page__body">
+          <p class="todo">TODO: prosa de la sección 2.</p>
+        </div>
+      </section>
+
+      <section class="face-page__section" aria-labelledby="seguros-solvencia">
+        <h2 id="seguros-solvencia" class="face-page__subtitle todo">TODO: subtítulo (trabajo: solvencia — del SMR al régimen económico, ESR / J-ICS)</h2>
+        <div class="face-page__body">
+          <p class="todo">TODO: prosa de la sección 3.</p>
+        </div>
+      </section>
+
+      <section class="face-page__section" aria-labelledby="seguros-mercado">
+        <h2 id="seguros-mercado" class="face-page__subtitle todo">TODO: subtítulo (trabajo: estructura y tamaño del mercado — no-vida, vida, kyosai, mini-seguros)</h2>
+        <div class="face-page__body">
+          <p class="todo">TODO: prosa de la sección 4.</p>
+        </div>
+      </section>
+
+      <section class="face-page__section" aria-labelledby="seguros-grupos">
+        <h2 id="seguros-grupos" class="face-page__subtitle todo">TODO: subtítulo (trabajo: empresas y estructura de grupo)</h2>
+        <div class="face-page__body">
+          <p class="todo">TODO: prosa de la sección 5.</p>
+        </div>
+      </section>
+
+      <section class="face-page__section" aria-labelledby="seguros-ramos">
+        <h2 id="seguros-ramos" class="face-page__subtitle todo">TODO: subtítulo (trabajo: líneas de negocio y productos)</h2>
+        <div class="face-page__body">
+          <p class="todo">TODO: prosa de la sección 6.</p>
+        </div>
+      </section>
+
+      <section class="face-page__section" aria-labelledby="seguros-distribucion">
+        <h2 id="seguros-distribucion" class="face-page__subtitle todo">TODO: subtítulo (trabajo: distribución)</h2>
+        <div class="face-page__body">
+          <p class="todo">TODO: prosa de la sección 7.</p>
+        </div>
+      </section>
+
+      <section class="face-page__section" aria-labelledby="seguros-contexto">
+        <h2 id="seguros-contexto" class="face-page__subtitle todo">TODO: subtítulo (trabajo: contexto regulatorio reciente)</h2>
+        <div class="face-page__body">
+          <p class="todo">TODO: prosa de la sección 8.</p>
+        </div>
+      </section>
+
+      <section class="face-page__section" aria-labelledby="seguros-fuentes">
+        <h2 id="seguros-fuentes" class="face-page__subtitle todo">TODO: subtítulo (trabajo: fuentes primarias)</h2>
+        <div class="face-page__body">
+          <p class="todo">TODO: prosa de la sección 9 — las fuentes primarias de esta capa.</p>
+        </div>
+      </section>
+
+      <p class="face-page__back"><a href="/hajime/yorozu/">&larr; Back to Yorozu</a></p>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer" class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <p class="footer__mark">
+          <span lang="ja">言霊</span>
+          <span class="footer__word">Kotodama Finance</span>
+        </p>
+        <p class="footer__tag">Where economic currents become visible. Open access.</p>
+      </div>
+      <!-- SIN columna «Platform»: enlazaba a The Cube y Method — dos de cinco
+           secciones, las dos ya presentes en la nav de arriba. Una selección
+           arbitraria que duplica navegación no orienta: ruido. -->
+      <div class="footer__cols">
+        <div class="footer__col">
+          <p class="footer__label">Reach us</p>
+          <a href="mailto:contact@kotodamafinance.com">contact@kotodamafinance.com</a>
+        </div>
+        <div class="footer__col">
+          <p class="footer__label">Follow</p>
+          <a href="https://x.com/KotodamaFinance" target="_blank" rel="noopener">X / @KotodamaFinance</a>
+          <a href="https://www.linkedin.com/company/kotodamafinance/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <!-- 免責事項 CORTO — se repite en TODAS las páginas a propósito, y es la
+         única duplicación deliberada de texto legal del sitio. Una advertencia
+         sólo cumple su función si está donde el lector está leyendo; por eso va
+         en el footer global y no en una página a la que haya que llegar.
+         El texto COMPLETO vive UNA sola vez, en /disclaimer/, y desde acá se
+         enlaza. Duplicar el largo lo haría derivar, y un sitio que se
+         contradice en su propio descargo pierde lo único que el descargo da.
+         SIN el rótulo 免責事項 delante: era la traducción japonesa de
+         «disclaimer», o sea japonés ornamental en la versión inglesa — la
+         misma textura que 立方体 o 一次資料, que ya se sacaron. Los cuatro
+         glifos se conservan en el subset para /ja/ (ver el @font-face). -->
+    <p class="footer__disclaimer">
+      Kotodama Finance is published for information only and is not investment or financial advice.
+      <a href="/disclaimer/">Full disclaimer &rarr;</a>
+    </p>
+    <div class="footer__bottom">
+      <span>&copy; 2026 Kotodama Finance &middot; Open access &middot; <a href="/sitemap/">Site map</a></span>
+      <span>English &middot; <span class="footer__soon"><span lang="ja">日本語（近日公開）</span></span></span>
+    </div>
+  </footer>
+
+  <!-- Pixel de GoatCounter (medición sin JS — la decisión y sus reglas, en
+       CLAUDE.md). p= es la ruta de ESTA página: por eso vive FUERA de los
+       bloques que las guardas comparan byte a byte (nav, footer, iconos). -->
+  <img src="https://realshinka.goatcounter.com/count?p=/hajime/yorozu/japan/seguros/" alt="" width="1" height="1" loading="eager" class="gc-pixel">
+</body>
+</html>
