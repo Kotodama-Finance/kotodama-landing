@@ -987,9 +987,10 @@ como bloque en el footer de todas las páginas y el autor lo revirtió el mismo
 día: demasiado footer; el footer conserva sólo el enlace «Site map» en su
 línea de abajo, vigilado por la identidad del footer). La misma corrida de
 `make-sitemap.py` escribe el árbol entre los marcadores de esa página: dos
-secciones con jerarquía visual (The Cube: las seis caras en el orden de la
-grilla, con las subpáginas anidadas en el orden de las tarjetas de su padre;
-The Site: Home, Musubi, Method, Site map, Disclaimer). Todo se deriva: las
+secciones con jerarquía visual (The Site primero: Home, Musubi, Method, Site
+map, Disclaimer; The Cube después: las seis caras en el orden de la grilla,
+con las subpáginas anidadas en el orden de las tarjetas de su padre, sin tope
+de profundidad). Todo se deriva: las
 URLs son el mismo conjunto que el sitemap (la 404 y las `noindex` quedan
 afuera), los nombres salen del `face-page__romaji` con que cada página se
 presenta en su h1, y lo único no derivable —el orden de las páginas de nivel

@@ -361,8 +361,9 @@ UNA página y el footer lleva sólo la puerta.
   cerrado para «mapa del sitio» y no se inventa) y sin marca de agua (la
   marca es el kanji de la PROPIA página; sin kanji no hay marca). Título
   «Site map», línea de función «Every page, in one place». El árbol va en
-  dos secciones con `face-page__subtitle` — «The Cube» y «The Site» — y
-  la jerarquía se dibuja con sangría y filete oro (`.map-list--sub`).
+  dos secciones con `face-page__subtitle` — **«The Site» PRIMERO y «The
+  Cube» después, orden del autor (2026-08-07)** — y la jerarquía se dibuja
+  con sangría y filete oro (`.map-list--sub`), sin tope de profundidad.
 - **El enlace del footer va en la línea de abajo, junto al ©**: «© 2026
   Kotodama Finance · Open access · Site map». La barra inferior es la
   meta-navegación, donde un mapa del sitio se busca por convención, y no
@@ -390,9 +391,19 @@ UNA página y el footer lleva sólo la puerta.
   sólo duplicaría el nombre de al lado — la prueba exacta del japonés
   ornamental que rige la prosa de /hajime/ — y la nav ya escribe «Musubi»
   pelado. Consecuencia buena: el bloque no obliga a regenerar ningún subset.
-- **Dos grupos**: «The Cube» — las seis caras en el orden de la grilla de
-  la portada, con las subcaras anidadas—; «The Site» — Home, Musubi,
-  Method, Site map, Disclaimer. La 404 no entra.
+- **Dos grupos, The Site primero**: «The Site» — Home, Musubi, Method,
+  Site map, Disclaimer—; «The Cube» — las seis caras en el orden de la
+  grilla de la portada, con las subcaras anidadas. La 404 no entra.
+  **El futuro de Yorozu quedó SIMULADO Y MEDIDO (2026-08-07)**: seguros
+  redactada más una página de QUINTO nivel aparecen anidadas donde
+  corresponde (Insurance bajo Yorozu salteando /japan/ sin página;
+  Solvency bajo Insurance) y la sangría se lee bien a 1440 y a 375 — no
+  hay que cambiar la forma con la profundidad. Y **una página nueva bajo
+  una cara NO aparece sola**: el abort de la tarjeta rige a TODA
+  profundidad (probado en los dos niveles) — el flujo por sección nueva
+  es página → tarjeta en el padre → `make-sitemap`, y es fricción
+  correcta: la tarjeta es la puerta de navegación que igual habría que
+  crear, y el orden del mapa se deriva de ella.
 - **TODO el orden se deriva, salvo uno**: las caras van en el orden de las
   tarjetas de la grilla; los hijos de una página, en el orden en que el
   PADRE los presenta como tarjetas `.face-card`. Lo único no derivable es el

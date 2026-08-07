@@ -368,21 +368,13 @@ def mapa_bloque() -> str:
             f"posible —el sitio es URLs por directorios—: moverlo a su "
             f"directorio, declararlo nota, o sacarlo")
 
+    # «The Site» ANTES que «The Cube» (orden del autor, 2026-08-07).
     lineas = [
         "      " + MAPA_INI + " — lo GENERA tools/make-sitemap.py; no editar a",
         "           mano: la próxima regeneración lo pisa. Mismo conjunto de",
         "           URLs que sitemap.xml, nombres del face-page__romaji de",
         "           cada página, orden de las tarjetas del padre.",
         "           check-structure avisa si quedó viejo. -->",
-        '      <section class="face-page__section" aria-labelledby="map-cube">',
-        '        <h2 id="map-cube" class="face-page__subtitle">The Cube</h2>',
-        '        <ul class="map-list">',
-    ]
-    for cara in caras:
-        lineas += arbol(cara, 10)
-    lineas += [
-        "        </ul>",
-        "      </section>",
         '      <section class="face-page__section" aria-labelledby="map-site">',
         '        <h2 id="map-site" class="face-page__subtitle">The Site</h2>',
         '        <ul class="map-list">',
@@ -390,6 +382,15 @@ def mapa_bloque() -> str:
     ]
     for ruta in sitio:
         lineas += arbol(ruta, 10)
+    lineas += [
+        "        </ul>",
+        "      </section>",
+        '      <section class="face-page__section" aria-labelledby="map-cube">',
+        '        <h2 id="map-cube" class="face-page__subtitle">The Cube</h2>',
+        '        <ul class="map-list">',
+    ]
+    for cara in caras:
+        lineas += arbol(cara, 10)
     lineas += [
         "        </ul>",
         "      </section>",
