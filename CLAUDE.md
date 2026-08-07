@@ -402,8 +402,13 @@ UNA página y el footer lleva sólo la puerta.
   una cara NO aparece sola**: el abort de la tarjeta rige a TODA
   profundidad (probado en los dos niveles) — el flujo por sección nueva
   es página → tarjeta en el padre → `make-sitemap`, y es fricción
-  correcta: la tarjeta es la puerta de navegación que igual habría que
-  crear, y el orden del mapa se deriva de ella.
+  correcta — **con el argumento que la justifica de verdad, en palabras
+  del autor (2026-08-07): el orden del mapa se DERIVA del orden de las
+  tarjetas — sin tarjeta no hay orden derivable, y caer a alfabético
+  sería una decisión de presentación que no tomó nadie. La fricción es
+  consecuencia del diseño, no un chequeo agregado encima.** (La tarjeta
+  además es la puerta de navegación que igual habría que crear.) Anotado
+  también en el comentario del mapa en `_guardas.py`.
 - **TODO el orden se deriva, salvo uno**: las caras van en el orden de las
   tarjetas de la grilla; los hijos de una página, en el orden en que el
   PADRE los presenta como tarjetas `.face-card`. Lo único no derivable es el

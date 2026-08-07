@@ -203,6 +203,12 @@ def sitemap_incompleto():
 # decisión de presentación—, y por eso ORDEN_SITIO existe COMO LISTA CON
 # GUARDA: una página que no esté ni en tarjetas ni acá ni declarada nota
 # ABORTA la generación nombrándola, en vez de caer a un orden inventado.
+# Y EL ABORT NO ES UN CHEQUEO AGREGADO ENCIMA — es consecuencia del diseño
+# (el autor, 2026-08-07): el orden del mapa se DERIVA del orden de las
+# tarjetas, así que sin tarjeta NO HAY orden derivable, y caer a alfabético
+# sería una decisión de presentación que no tomó nadie. La fricción de
+# «agregá la tarjeta primero» es el diseño diciendo que la puerta de
+# navegación va antes que el listado.
 # /sitemap/ se lista A SÍ MISMA (vía ORDEN_SITIO) y va al sitemap.xml: es una
 # página indexable más, y una excepción rompería el conjunto único. Kanji NO
 # lleva: en una lista densa el kanji junto al romaji sólo duplicaría el
