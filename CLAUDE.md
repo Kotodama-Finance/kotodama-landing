@@ -148,8 +148,10 @@ fallidos ya corregidos, y las capturas intermedias.
   capa 1, que no es una decisión sino el pase de redacción. Las dos
   anteriores se cerraron el 2026-08-05: los kanji de las subcaras (**太一 Taichi · 万
   Yorozu · 幽玄 Yūgen**, dictados por el autor desde la tabla del cubo de su
-  `context.md` — no localizable desde este repo: se copiaron literales de su
-  mensaje, la misma regla de no inventar), y **el logo de LibraryThing, que
+  `context.md` — entonces se creyó no localizable y se copiaron literales de
+  su mensaje, la misma regla de no inventar; **hoy el archivo SÍ está
+  localizado**: ver el puntero en la decisión del andamiaje de seguros), y
+  **el logo de LibraryThing, que
   ya está puesto**: va el archivo oficial EN SU PALETA ORIGINAL, sin alterar
   — criterio nuevo del autor que REVIERTE el monocromo en oro y DISUELVE el
   pendiente de permiso de marca (usar la marca tal cual se distribuye es lo
@@ -321,6 +323,16 @@ sección de seguros japoneses: marco regulatorio y estructura del mercado,
 escrita con fuentes primarias y SIN depender de la base de datos — por eso
 sale antes que cualquier dashboard.
 
+- **El `context.md` del autor SÍ está en esta máquina (localizado
+  2026-08-07, corrige el «no está» que decía el registro de los kanji)**:
+  `C:\Users\vivom\OneDrive\Documents\Claude\Projects\Home Server\Kotodama
+  Finance\kotodama_finance_context.md` — fuera del alcance del MCP de
+  documentos (su allowlist es solo el repo; probablemente por eso no se
+  encontró antes), editable con las herramientas locales. La decisión del
+  noindex quedó anotada allá ese día, a pedido del autor, en §Sitio web F1
+  (buscar «noindex MIENTRAS HAYA PLACEHOLDERS» — es la marca de
+  idempotencia acordada). Mismo trato que siempre: sus decisiones se copian
+  literales, no se reinterpretan.
 - **La ruta viene del context.md del autor (§Yorozu) y no se rediscute**:
   país ARRIBA del sector, todo anidado bajo /hajime/. Y
   **/hajime/yorozu/japan/ NO lleva página, decisión aceptada**: da 404 y
@@ -886,9 +898,10 @@ Dos compromisos del texto que NO son redacción libre, anotados en los HTML:
 
 - **Los kanji se cerraron el 2026-08-05** — esto reemplaza el «sin kanji a
   propósito» que decía acá: **太一 Taichi · 万 Yorozu · 幽玄 Yūgen**, dictados
-  por el autor desde la tabla del cubo de su `context.md` (el archivo no está
-  en esta máquina; se copiaron literales de su mensaje — la misma regla de no
-  inventar, con otra fuente). En h1 y `<title>`/`og:title` con el patrón de
+  por el autor desde la tabla del cubo de su `context.md` (entonces se creyó
+  que el archivo no estaba en esta máquina y se copiaron literales de su
+  mensaje — la misma regla de no inventar, con otra fuente; hoy el archivo
+  está localizado — ver la decisión del andamiaje de seguros). En h1 y `<title>`/`og:title` con el patrón de
   las seis caras: kanji grande + romaji al lado, la línea de función debajo,
   sin gloss traducido. Entraron con regeneración de subset: **太/幽/玄 eran
   nuevos; 一 y 万 ya estaban** (一次資料, 百万円). Verificado contra cmap con
