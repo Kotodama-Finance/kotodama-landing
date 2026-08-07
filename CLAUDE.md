@@ -41,7 +41,16 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-07, las tarjetas de las subcaras en /hajime/**:
+- Último cierre: **2026-08-07 (más tarde), el andamiaje de la capa 1 de
+  seguros**: `/hajime/yorozu/japan/seguros/` con el molde de /method/ —
+  apertura + nueve secciones con subtítulo y prosa, todo placeholder (25,
+  baseline actualizado; `check-ready` en `2` esperado). Sin kanji ni marca
+  de agua (no hay kanji cerrado; no se inventa), vuelta a /hajime/yorozu/,
+  sitemap regenerado (14 URLs, cuatro niveles por primera vez). NO
+  deployado a propósito: se publica cuando el autor pase el texto. El
+  enlace desde /hajime/yorozu/ quedó pendiente de su aprobación. Ver la
+  decisión nueva, la primera de la lista. Antes, el mismo día: **las
+  tarjetas de las subcaras en /hajime/**:
   tres tarjetas `.face-page__cards` debajo del párrafo (que no se tocó) —
   太一 Taichi · 万 Yorozu · 幽玄 Yūgen, cada una con la línea de función de su
   destino, reusando `.face-card` sin punto de estado — y los nombres en prosa
@@ -112,18 +121,28 @@ fallidos ya corregidos, y las capturas intermedias.
   *(Este bloque no puede nombrar su propio commit, así que siempre queda uno
   atrás: `git log -1 redesign-trust` es la respuesta exacta. El ancla fija que no
   deriva es el tag.)*
-- **EL SITIO VOLVIÓ A CERO PLACEHOLDERS (2026-08-05) — la redacción terminó
-  por segunda vez.** Los 16 que la revisión de quince puntos reintrodujo a
-  propósito se redactaron todos con texto del autor: la línea de LibraryThing
-  y las tres subpáginas de Hajime (5+5+5). **`check-ready` sale `0` — LISTO
-  PARA PUBLICAR — y `2` vuelve a ser regresión**; el significado del código 2
-  ya cambió TRES veces y la historia completa está en el docstring de
-  `check-ready.py`. El baseline está en cero: cualquier placeholder que
-  informe `check-structure` es un bug, no trabajo pendiente.
-- **Ahora son CATORCE páginas**, no once: se sumaron las tres subpáginas de
-  Hajime. El sitemap tiene 13 URLs (todas menos la 404).
-- **NO queda ninguna decisión del autor pendiente.** Las dos últimas se
-  cerraron el 2026-08-05: los kanji de las subcaras (**太一 Taichi · 万
+- **EL BASELINE VOLVIÓ A SALIR DE CERO A PROPÓSITO (2026-08-07): 25
+  placeholders, todos en el andamiaje de la capa 1 de seguros** — la primera
+  página sectorial, `/hajime/yorozu/japan/seguros/`, cuyo texto escribe el
+  autor aparte. **`check-ready` sale `2` y ES LO ESPERADO** (era 5 del
+  código 2; la historia completa sigue en el docstring de `check-ready.py`).
+  El sitio PUBLICADO no cambia: el andamiaje NO se deploya hasta tener el
+  texto. Más placeholders que los 25 del baseline sí es regresión — el
+  baseline dice el techo acordado. *(Antes: el sitio había vuelto a cero
+  placeholders el 2026-08-05 — la redacción terminada por segunda vez, con
+  la que se publicó — y `2` significó regresión desde entonces hasta este
+  andamiaje.)*
+- **Ahora son QUINCE páginas** (2026-08-07: se sumó el andamiaje de
+  seguros; antes, las tres subpáginas de Hajime). El sitemap tiene 14 URLs
+  (todas menos la 404) y **el árbol de URLs llega a CUATRO niveles por
+  primera vez** — verificado que nada asume profundidad máxima: guardas y
+  generadores descubren por `rglob` y derivan de directorios.
+- **Decisiones del autor pendientes: UNA (2026-08-07)** — cómo enlaza
+  /hajime/yorozu/ a la sección nueva de seguros (propuesta hecha: tarjeta
+  única con el vocabulario de `.face-page__cards`; es página con texto
+  aprobado y no se toca sin su visto bueno). Además espera su TEXTO de la
+  capa 1, que no es una decisión sino el pase de redacción. Las dos
+  anteriores se cerraron el 2026-08-05: los kanji de las subcaras (**太一 Taichi · 万
   Yorozu · 幽玄 Yūgen**, dictados por el autor desde la tabla del cubo de su
   `context.md` — no localizable desde este repo: se copiaron literales de su
   mensaje, la misma regla de no inventar), y **el logo de LibraryThing, que
@@ -179,7 +198,9 @@ ninguna de las cuatro guardas la mira; su decisión cerrada está más abajo.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**EL SITIO ESTÁ PUBLICADO (2026-08-06) — LO QUE FALTA ES SOLO EL DNS.** La
+**EL SITIO ESTÁ PUBLICADO (2026-08-06) — FALTAN EL DNS (fuera del repo) Y,
+DESDE EL 2026-08-07, EL TEXTO DE LA CAPA 1 DE SEGUROS (dentro del repo, sin
+deployar).** La
 publicación (el paso 5) se ejecutó **ANTES de los pasos 2-4, por decisión del
 autor, y el orden es correcto**: una transferencia de registrador NO cambia
 los nameservers — Namecheap sigue sirviendo la zona durante los ~5 días de la
@@ -237,15 +258,18 @@ real**. Así el único paso que mueve tráfico —el 4— se hace contra una zon
 verificada, y deja de ser «cambiar y ver qué pasa». Cada paso se comprueba solo,
 que es lo que hace el fallo diagnosticable.
 
-**El sitio está listo Y publicado.** Si alguien retoma, la única pregunta
-vigente es «¿en qué paso del DNS estamos?» — dentro del repo no queda nada
-pendiente.
+**El sitio está listo Y publicado.** Si alguien retoma, las preguntas
+vigentes son dos: «¿en qué paso del DNS estamos?» (fuera del repo) y «¿llegó
+el texto de la capa 1 de seguros?» — dentro del repo el único frente es esa
+redacción (andamiaje listo, 25 placeholders, NO deployado; ver el cabo).
 
 La revisión legal del `免責事項` **no es un pendiente**: se decidió publicar sin
 ella.
 
-**No queda nada sin decidir** dentro del sitio. El `domain` de las tarjetas, que
-era lo último, se cerró.
+**Sin decidir dentro del sitio queda UNA cosa (2026-08-07)**: cómo enlaza
+/hajime/yorozu/ a la sección de seguros — es del autor, con propuesta hecha
+(ver el bullet de decisiones pendientes en Estado). Lo anterior, el `domain`
+de las tarjetas, se cerró.
 
 **Para cualquier deploy futuro, releer primero** las secciones «Antes de
 publicar» y «Publicar» del README: son las cuatro guardas MÁS la del deploy
@@ -261,10 +285,12 @@ ya tiene el contacto asegurado.
 
 ### Cabos abiertos vigentes — el resumen corto
 
-Ninguno bloquea publicar. Cada uno tiene su sección con el detalle.
+Ninguno bloquea publicar (lo publicado no cambia). Cada uno tiene su
+sección con el detalle.
 
 | Cabo | Estado |
 |---|---|
+| **Capa 1 de seguros: el TEXTO** | **el frente activo (2026-08-07)**: andamiaje listo en `/hajime/yorozu/japan/seguros/` con 25 placeholders esperando el texto del autor. NO se deploya hasta ese pase. Y **el enlace desde /hajime/yorozu/ pendiente de su aprobación** (propuesta: tarjeta única). Ver la decisión, primera de la lista. |
 | ~~Redacción de Hajime~~ | **CERRADA 2026-08-05**: los 15, con texto del autor. Baseline en cero, `check-ready` en `0`. Cualquier placeholder nuevo es regresión. |
 | ~~Logo de LibraryThing~~ | **CERRADO 2026-08-05**: va el archivo oficial en su paleta original, sin alterar — criterio nuevo que disuelve el pendiente de permiso (ver la decisión de tarjetas y `assets/img/README.md`). |
 | ~~Kanji de Taichi/Yorozu/Yūgen~~ | **CERRADO 2026-08-05**: 太一 · 万 · 幽玄, del `context.md` del autor. Aplicados en h1 y `<title>` con el patrón de las caras; subset regenerado (太/幽/玄 eran nuevos). |
@@ -282,6 +308,52 @@ Ninguno bloquea publicar. Cada uno tiene su sección con el detalle.
 ---
 
 ## Decisiones cerradas — no rediscutir
+
+### El andamiaje de la capa 1 de seguros — /hajime/yorozu/japan/seguros/
+
+**2026-08-07, por instrucción del autor: SOLO estructura con placeholders —
+el texto lo escribe él aparte y se publica cuando esté.** La capa 1 de la
+sección de seguros japoneses: marco regulatorio y estructura del mercado,
+escrita con fuentes primarias y SIN depender de la base de datos — por eso
+sale antes que cualquier dashboard.
+
+- **La ruta viene del context.md del autor (§Yorozu) y no se rediscute**:
+  país ARRIBA del sector, todo anidado bajo /hajime/. Y
+  **/hajime/yorozu/japan/ NO lleva página, decisión aceptada**: da 404 y
+  está bien — nadie tipea ese segmento a mano, se llega desde
+  /hajime/yorozu/, y un índice de un solo elemento es estructura por si
+  acaso. Se crea cuando existan bancos y mercados. NO crear esa página ni
+  un redirect.
+- **El molde es el de /method/, no el de las caras**: apertura + NUEVE
+  secciones (`face-page__section` + `face-page__subtitle` + prosa
+  adentro). Nueve secciones no entran en el molde corto de una cara. El
+  breakout `--wide` de la lista de fuentes de /method/ NO se aplicó al
+  andamiaje a propósito: se decide con el texto, si la sección 9 trae una
+  lista comparable — está anotado en el HTML.
+- **Sin kanji en la cabecera y sin marca de agua lateral, y no son
+  faltas**: no hay un kanji cerrado para esta sección y la escritura
+  japonesa la cierra el autor, siempre — no se inventa. La cabecera usa el
+  patrón de /method/ (título sin kanji + línea de función), que existe
+  para las páginas que no son caras del cubo; y la marca de agua es el
+  kanji de la PROPIA página, así que sin kanji no hay marca — tampoco se
+  sustituye con el logo 言霊 (criterio ya decidido con /method/). Si el
+  autor cierra un kanji algún día, entran los dos juntos.
+- **La vuelta va a /hajime/yorozu/** («Back to Yorozu»): el criterio de
+  los rótulos por ORIGEN, extendido un nivel — las caras vuelven al cubo,
+  las subcaras a /hajime/, las secciones de un sector a su subcara.
+- **25 placeholders, baseline actualizado, `check-ready` en `2`
+  ESPERADO** (era 5 de su docstring). Los títulos de las nueve secciones
+  en los TODO son DE TRABAJO — los definitivos van con el texto.
+- **El enlace desde /hajime/yorozu/ QUEDA PENDIENTE DEL AUTOR**: es una
+  página con texto aprobado y no se toca sin su visto bueno. Hasta
+  entonces la página nueva queda huérfana a sabiendas (está en el
+  sitemap; ninguna guarda exige enlaces entrantes).
+- Un hallazgo del armado, anotado también en el HTML: **el atributo
+  literal de la clase de placeholder entre comillas cuenta para
+  `placeholders()` AUNQUE esté dentro de un comentario** — esa guarda no
+  filtra comentarios. El primer conteo dio 26 por eso; reformulado el
+  comentario, 25 — sin la reformulación, `check-ready` nunca habría
+  vuelto a 0 al terminar la redacción.
 
 ### La rama de deploy: `main` publica SOLO el sitio — el paso 5 dejó de ser merge
 
@@ -310,10 +382,12 @@ igual que `maintenance`: un artefacto derivado no se mantiene, se regenera.
   apartado sino material de trabajo en formato `.css` (su encabezado es
   documentación de calibración con el bug táctil). Como la regla por tipo no
   caza un `.css`, está en la lista explícita CON el motivo anotado y la
-  guarda además lo verifica **por nombre**. Hoy: 39 publicables, 32
-  excluidos (el 32 cuenta al propio `make-deploy.py` — por eso el script y
-  esta nota entraron en EL MISMO commit: por separado había una ventana en
-  que el doc afirmaba 32 y el script imprimía 31).
+  guarda además lo verifica **por nombre**. Hoy (2026-08-07, con el
+  andamiaje de seguros): 40 publicables, 32 excluidos (el 32 cuenta al
+  propio `make-deploy.py` — por eso el script y esta nota entraron en EL
+  MISMO commit: por separado había una ventana en que el doc afirmaba 32 y
+  el script imprimía 31. El conteo de referencia es siempre el que imprime
+  el script).
 - **La guarda corre DENTRO del script, todo-o-nada, y se probó EN ROJO antes
   de confiar en su verde** (2026-08-06 — los tres casos pedidos por el autor,
   más lo que agregó la revisión adversarial del mismo día: 22 agentes, 10
@@ -387,6 +461,10 @@ igual que `maintenance`: un artefacto derivado no se mantiene, se regenera.
   DOMINIO — la propiedad que motivó todo esto, verificada donde importa.
 
 ### Analytics: GoatCounter en modo PIXEL, en las CATORCE — IMPLEMENTADO
+
+*(Desde el 2026-08-07 son QUINCE: toda página nueva entra con su pixel, y
+el andamiaje de seguros lo lleva con `p=/hajime/yorozu/japan/seguros/`. El
+registro de abajo describe la implementación original sobre 14.)*
 
 **Decidido por el autor el 2026-08-06, contra la documentación primaria del
 servicio (leída del repo arp242/goatcounter; goatcounter.com estaba caído ese
@@ -602,7 +680,7 @@ la pregunta es siempre de cuándo son.**
 import map de `index.html`. **No se comparte entre documentos**: una página nueva
 que monte el cubo necesita su propia copia, con la ruta relativa corregida a su
 profundidad (`/ja/index.html` necesitaría `../assets/vendor/three.module.js`).
-Hoy es la única página publicable con JavaScript — las otras diez no cargan
+Hoy es la única página publicable con JavaScript — todas las demás no cargan
 ningún script—, así que agregar una página **no** obliga a tocarlo salvo que esa
 página quiera el cubo. Detalle completo en el README, sección «El import map».
 
@@ -954,7 +1032,7 @@ romper:
   sirva.** La regla y su token se borraron; si alguien propone «un
   degradado sutil en los costados», es esto y ya se vio.
 - **La perilla que queda es TOKEN (`--wm-alpha`), no parámetro de URL, a
-  propósito**: leer `?wm=` necesita JavaScript y las trece subpáginas no
+  propósito**: leer `?wm=` necesita JavaScript y las subpáginas no
   cargan ninguno (verificado: `document.scripts.length` = 0) — el mismo
   argumento que descartó el interruptor runtime de la transición.
   Calibración en vivo por consola:
@@ -1055,7 +1133,7 @@ completo y la verificación medida. Las reglas:
   amarillo pálido (255,255,146), la misma regla que la tinta de la esfera.
   Verificado sobre los archivos ESCRITOS, incluido el 16 de adentro del ico.
 - **El bloque de iconos entró a `check-structure`**: cuatro `<link>` (ico,
-  svg, apple-touch, manifest) idénticos carácter por carácter en las catorce
+  svg, apple-touch, manifest) idénticos carácter por carácter en todas las
   páginas, dentro de la misma comprobación del nav y el footer. **Probada en
   rojo antes de confiar en su verde** (manifest faltante y orden alterado:
   las dos detectadas).
@@ -1192,8 +1270,8 @@ se reescribe desde cero el día que hace falta, que es el peor día para hacerlo
   sitio ya caído. El `.nojekyll` es por lo mismo: que Pages suba archivos en vez
   de correr un build que no hace falta y puede fallar.
 - **Los dos HTML son el MISMO blob.** La raíz sirve el cartel y cualquier otra
-  ruta cae en el 404, que dice lo mismo; no hay que replicar las once carpetas.
-  Si se separan, la portada dice una cosa y el resto otra.
+  ruta cae en el 404, que dice lo mismo; no hay que replicar las carpetas del
+  sitio. Si se separan, la portada dice una cosa y el resto otra.
 - **La rama se GENERA con `tools/make-maintenance.py`, no se edita.** El script
   escribe la rama con plumbing —sin checkout, sin mover `HEAD`—, así que corre
   con el árbol en cualquier estado. Ésa es la respuesta a «copiar el woff2 queda
@@ -1594,7 +1672,8 @@ contra lo que el servidor entrega. Si la guarda y un navegador se contradicen,
 
 **Por qué en un archivo y no detrás de un flag.** Es una transición **entre
 documentos**: `@view-transition` tiene que estar en la página que se va **y** en
-la que llega. **Diez de las once páginas no cargan ningún JavaScript** —
+la que llega. **Todas las páginas menos la portada no cargan ningún
+JavaScript** —
 verificado: `document.scripts.length` es 0 en una subpágina—, así que un
 interruptor en runtime obligaría a meter JS en todas. No es una preferencia de
 estilo: es que la otra opción choca con una regla del proyecto.
@@ -1882,7 +1961,7 @@ commit sea un punto de restauración seguro por construcción, no por suerte.
 | `python tools/check-structure.py` | siempre | instantánea | **verde** |
 | `python tools/check-modes.py` | siempre | ~40 s | **verde** |
 | `python tools/check-pendulum.py` | antes de push, o al tocar la física | ~2–4 min | **verde** |
-| `python tools/check-ready.py` | antes de publicar a `main` | instantánea | **verde** (`0`) desde el 2026-08-05 |
+| `python tools/check-ready.py` | antes de publicar a `main` | instantánea | **`2` esperado** desde el 2026-08-07 (los 25 del andamiaje de seguros; `0` cuando la capa 1 quede redactada — era 5 del docstring) |
 
 Las dos que usan navegador necesitan el sitio servido en `:8000`.
 
@@ -1982,9 +2061,16 @@ traduciendo de acá**.
   `/ja/`, con una advertencia en el `@font-face` para que nadie los borre al
   regenerarlo.
 
-### El único frente activo: la redacción
+### El único frente activo: la redacción — REABIERTO el 2026-08-07
 
-**Cero placeholders. La redacción terminó**, y con ella el único frente que
+**La redacción volvió a ser el frente activo, y es a propósito**: el
+andamiaje de la capa 1 de seguros entró con 25 placeholders que esperan el
+texto del autor (ver la decisión, primera de la lista). El baseline dice 25
+y ése es el techo — más que eso es regresión. El sitio PUBLICADO no cambia
+hasta ese pase.
+
+*(Lo de abajo es el registro del estado anterior, 2026-08-05, con el que se
+publicó:)* **Cero placeholders. La redacción terminó**, y con ella el único frente que
 bloqueaba publicar. El baseline quedó en `0` — de ahora en más, cualquier
 número distinto de cero que informe `check-structure` es una regresión, no
 trabajo pendiente. Es un cambio de significado de esa guarda: hasta acá bajar
@@ -2009,7 +2095,7 @@ propia prosa tiene un punto ciego; y si alguien lo descubre después sin que est
 dicho, el daño al rigor es mayor que el costo de decirlo.
 
 **No va al footer global**, aunque sea la clase de línea que suele ir ahí. El
-footer se repite en las once páginas y esto pertenece a la que habla del método.
+footer se repite en todas las páginas y esto pertenece a la que habla del método.
 Es la regla opuesta a la del `免責事項` corto, y por el mismo criterio: una
 advertencia legal sirve donde el lector esté leyendo; una declaración de
 procedencia sirve donde se explica el procedimiento.

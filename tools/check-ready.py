@@ -3,7 +3,7 @@
 
     python tools/check-ready.py
 
-HOY SALE 0, Y ES LO ESPERADO — el significado del código 2 ya cambió TRES
+HOY SALE 2, Y ES LO ESPERADO — el significado del código 2 ya cambió CUATRO
 veces, así que la historia completa antes de interpretar una corrida:
 
 1. Nació esperada en rojo: ~70 placeholders de andamiaje. `2` era lo normal.
@@ -14,14 +14,20 @@ veces, así que la historia completa antes de interpretar una corrida:
    todas con placeholders del autor pendientes. `2` volvió a ser lo esperado.
 4. La redacción terminó POR SEGUNDA VEZ (2026-08-05): la línea de
    LibraryThing y las tres subpáginas, todo texto del autor. Baseline en
-   cero de nuevo, y `2` vuelve a ser regresión.
+   cero de nuevo, y `2` volvió a ser regresión. Así se publicó el sitio
+   (2026-08-06, `v1-published`).
+5. El andamiaje de la capa 1 de seguros (2026-08-07, decisión del autor):
+   /hajime/yorozu/japan/seguros/ entra con 25 placeholders A PROPÓSITO — la
+   primera página sectorial, molde de /method/, el texto lo escribe el
+   autor. `2` vuelve a ser lo esperado hasta ese pase; el sitio PUBLICADO
+   no cambia porque el andamiaje no se deploya.
 
-O sea: hoy `0` es el estado normal, `2` significa que apareció un placeholder
-donde no debe haber ninguno, y `1` sigue siendo estructura rota. La lección de
-las eras 2→3 queda escrita: un `2` puede volver a ser legítimo si el autor
-reintroduce andamiaje a propósito — antes de tratarlo como regresión,
-preguntarse si hubo una decisión así, y el baseline de check-structure dice
-cuál era el techo acordado.
+O sea: hoy `2` es el estado normal (los 25 del baseline, en una sola página),
+`0` significará que la capa 1 quedó redactada, y `1` sigue siendo estructura
+rota. La lección de las eras 2→3→5 queda escrita: un `2` alterna entre
+esperado y regresión según si el autor reintrodujo andamiaje a propósito —
+antes de tratarlo como regresión, preguntarse si hubo una decisión así, y el
+baseline de check-structure dice cuál era el techo acordado.
 
 Sigue SIN entrar en el flujo de cada commit, y el motivo no caducó con el rojo:
 esta guarda contesta «¿puede ir a `main`?», que es una pregunta que sólo se hace
@@ -30,8 +36,9 @@ al publicar. La de cada commit es `check-structure.py`. El razonamiento original
 dos guardas y no una, y por eso el reparto se queda como está.
 
 Salida, con códigos distintos a propósito para poder distinguirlas:
-    0  listo para publicar  — lo esperado hoy
-    2  hay placeholders sin redactar — con baseline en cero, regresión
+    0  listo para publicar  — se recupera cuando la capa 1 quede redactada
+    2  hay placeholders sin redactar — hoy: los 25 del andamiaje de seguros,
+       esperado (más que eso, regresión: comparar contra el baseline)
     1  hay algo estructural roto — regresión
 
 El 2 cubre UNA sola cosa: los placeholders. Hubo una segunda —la revisión legal

@@ -27,7 +27,7 @@ robots.txt              todo abierto, incluidos los crawlers de IA
 404.html                la sirve GitHub Pages ante cualquier ruta inexistente
 og-image.png            tarjeta al compartir (generada)
 tools/check-structure.py guarda estructural: verde siempre (ver más abajo)
-tools/check-ready.py    guarda previa a publicar (0 esperado: la redacción terminó)
+tools/check-ready.py    guarda previa a publicar (hoy 2 esperado: capa 1 de seguros en placeholders — historia en su docstring)
 tools/make-favicon.py   genera los iconos a partir del subset de la marca
 tools/make-sitemap.py   genera el sitemap a partir de los HTML publicables
 tools/make-og-image.py  genera og-image.png (sólo tipografía, sin navegador)
@@ -72,8 +72,9 @@ Tres cosas que no se ven mirando el HTML:
 
 **Al agregar una página, el mapa sólo hace falta si esa página monta el cubo.**
 Hoy vive únicamente en `index.html`, que es la única página publicable con
-JavaScript: las otras trece —las seis caras, las tres subpáginas de Hajime,
-`/musubi/`, `/method/`, `/disclaimer/` y la 404— no cargan ningún script. Un import map **no se hereda
+JavaScript: **todas las demás** —las seis caras, las tres subpáginas de
+Hajime, la sección de seguros, `/musubi/`, `/method/`, `/disclaimer/` y la
+404— no cargan ningún script. Un import map **no se hereda
 entre documentos**, así que una página nueva que quiera el cubo necesita **su
 propia copia**, con la ruta corregida a su profundidad. El caso previsto es
 `/ja/index.html`: un nivel abajo, o sea `../assets/vendor/three.module.js`.
@@ -89,9 +90,13 @@ con su `index.html` adentro:
 /sugao/           sugao/index.html           la persona detrás del proyecto
 /method/          method/index.html          el método completo + las fuentes, una por una
 /disclaimer/      disclaimer/index.html      el disclaimer completo (el único lugar)
-/hajime/taichi/   hajime/taichi/index.html   línea macro de Hajime (andamiaje)
-/hajime/yorozu/   hajime/yorozu/index.html   línea sectorial de Hajime (andamiaje)
-/hajime/yugen/    hajime/yugen/index.html    línea de transparencia de Hajime (andamiaje)
+/hajime/taichi/   hajime/taichi/index.html   línea macro de Hajime
+/hajime/yorozu/   hajime/yorozu/index.html   línea sectorial de Hajime
+/hajime/yugen/    hajime/yugen/index.html    línea de transparencia de Hajime
+/hajime/yorozu/japan/seguros/                capa 1 de seguros japoneses (andamiaje,
+                                             la primera ruta de CUATRO niveles;
+                                             /hajime/yorozu/japan/ NO lleva página
+                                             a propósito — da 404 y está bien)
 /ja/              (previsto)                 subárbol paralelo en japonés
 ```
 
@@ -99,8 +104,10 @@ con su `index.html` adentro:
 se abren desde el cubo (las seis caras) vuelven al cubo — «Back to the Cube»,
 con destino `/#cube-view`, el ancla del cubo mismo y no del título de la
 sección—; las tres subpáginas de Hajime vuelven a `/hajime/` («Back to
-Hajime»); y las demás (`/musubi/`, `/method/`, `/disclaimer/`, la 404) vuelven
-al inicio — «Back to the start», destino `/`.
+Hajime»); las secciones de un sector vuelven a su subcara — la capa 1 de
+seguros lleva «Back to Yorozu», destino `/hajime/yorozu/` (el criterio
+extendido un nivel, 2026-08-07)—; y las demás (`/musubi/`, `/method/`,
+`/disclaimer/`, la 404) vuelven al inicio — «Back to the start», destino `/`.
 
 `/method/` es el **desarrollo**; la sección `#method` de la portada queda como
 **resumen** y la nav sigue apuntando ahí. **No hay `/sources/`**: la lista
@@ -158,7 +165,7 @@ historial sea un punto de restauración seguro por construcción, no por suerte.
 | `tools/check-structure.py` | siempre | instantánea, sin navegador | **verde** |
 | `tools/check-modes.py` | siempre | ~40 s | **verde** |
 | `tools/check-pendulum.py` | antes de push, o al tocar la física del cubo | ~2–4 min | **verde** |
-| `tools/check-ready.py` | antes de publicar a `main` | instantánea | `0` — la redacción terminó |
+| `tools/check-ready.py` | antes de publicar a `main` | instantánea | hoy `2` esperado — capa 1 de seguros en placeholders (2026-08-07); `0` cuando llegue su texto |
 
 `check-pendulum.py` es la única demasiado lenta para cada commit: mide dos
 períodos de una oscilación real en un navegador, y encima el loop corre a un
@@ -257,13 +264,16 @@ Tiene que terminar con `LISTO PARA PUBLICAR` y código de salida 0. Comprueba:
 2. **Que el subset japonés cubra todos los glifos del sitio** (ver abajo).
 3. **Que el nav y el footer no hayan derivado** entre todas las páginas.
 
-Hoy sale **0** —«LISTO PARA PUBLICAR»—, y eso **le cambió el significado a los
-otros dos códigos**. Mientras quedaban placeholders, `2` era el estado normal y
-esperado. Desde que la redacción terminó y el baseline quedó en cero, **`2`
-quiere decir que aparecieron placeholders NUEVOS**: un bug, no trabajo
-pendiente. O sea que hoy **cualquier salida distinta de `0` es una regresión** —
-`1` algo estructural roto, `2` castellano dirigido al autor que se coló en una
-página.
+Hoy sale **2** y **es lo esperado** — desde el 2026-08-07 el andamiaje de la
+capa 1 de seguros (`/hajime/yorozu/japan/seguros/`) tiene 25 placeholders a
+propósito, esperando el texto del autor. El significado del código 2 alterna
+entre esperado y regresión según si hay andamiaje deliberado en pie — ya
+cambió CUATRO veces, y la historia completa vive en el docstring de
+`check-ready.py`, que es el que hay que leer antes de interpretar una
+corrida. La referencia estable: **el baseline de `check-structure` dice el
+techo acordado** (hoy 25, todos en esa página); placeholders POR ENCIMA del
+baseline son regresión — castellano dirigido al autor que se coló—, y `1`
+sigue siendo estructura rota, siempre.
 
 Y con el sitio servido, la guarda de comportamiento del cubo:
 
@@ -723,7 +733,7 @@ El `favicon.ico` existe aunque haya `<link>`: el navegador pide `/favicon.ico`
 igual, y sin el archivo cada carga deja un 404 en la consola.
 
 Las cuatro etiquetas `<link>` (ico, svg, apple-touch, manifest) están
-duplicadas en las catorce páginas, y `check-structure` verifica que el bloque
+duplicadas en todas las páginas, y `check-structure` verifica que el bloque
 sea idéntico carácter por carácter — el mismo trato que el nav y el footer.
 
 ## El cubo: parámetros vigentes
@@ -1168,7 +1178,7 @@ ahí ya no alcanza con listar los kanji a mano.
   apartó antes del lanzamiento por decisión del autor.
 
   No puede ir detrás de un flag: es una transición **entre documentos**, así que
-  la regla tiene que estar en las dos páginas, y **trece de las catorce no
+  la regla tiene que estar en las dos páginas, y **todas menos la portada no
   cargan ningún JavaScript**. Por eso se apartó en un archivo. El encabezado de ese
   archivo explica cómo reactivarla, qué valores ya están calibrados y un bug
   conocido de la variante táctil.
