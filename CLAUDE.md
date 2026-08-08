@@ -41,7 +41,42 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-08, la tanda del DEPLOY SIN CONTENIDO —
+- Último cierre: **2026-08-08 (más tarde), la tanda de SEARCH CONSOLE +
+  FUENTES — EL SEXTO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN EL DOMINIO:
+  deploy `e20289e` de fuente `0398d9f`**, procedimiento del README completo
+  (cinco guardas en verde con `2` esperado de ready y pendulum sano en
+  0.0964; guarda del deploy con main intacta; check-modes contra el árbol
+  REAL de main servido en :8000), push de main Y de redesign-trust. Lo
+  publicado: **(1) la meta `google-site-verification` con el token REAL en
+  la portada** — entre `twitter:card` y el bloque de iconos, FUERA de los
+  tres bloques comparados (re-confirmado contra el bloque de iconos nuevo
+  del deploy 5: la comparación empieza en el `<link>` del .ico), token
+  verificado carácter por carácter en el fuente Y en el HTML SERVIDO —
+  esto EJECUTA el 4B que estaba preparado; **falta solo que Manuel toque
+  «Verificar» en Search Console**; **(2) IMAJ renombrado y re-dominado**:
+  資産運用業協会 / www.imaj.or.jp (la fusión del 1/4/2026; la sigla IMAJ
+  sigue siendo correcta), cero restos de toushin.or.jp ni del nombre viejo
+  en el servido; **(3) Mizuho renombrado con el patrón de «Bank of Japan —
+  Financial System Report»**: «Mizuho Bank — みずほ経済インサイト» (la
+  publicación tras la raya, en japonés con `lang="ja"` porque es su único
+  nombre) y みずほ銀行 en la línea secundaria — decisión del autor
+  verificando el sitio en navegador real: «Mizuho Research Institute» no
+  se nombra ahí y los informes se firman por AUTOR; el 403 era muro
+  anti-bot, mismo caso que BIS y 大和総研 — URL y tier intactos, cero
+  restos del nombre viejo en el servido. EDINET ya estaba en disclosure2
+  desde el deploy 5: re-verificado, cero restos. **Cero regeneración de
+  subset**: todos los glifos de los nombres nuevos ya estaban cubiertos
+  (la lista de 50 entidades los trajo) — lo dijo la guarda de cobertura,
+  no se asumió. **Los cuatro archivos del sistema de notas siguen AFUERA
+  del artefacto y en 404 en el dominio** (verificado en el worktree Y en
+  vivo), /CLAUDE.md y /tools/ en 404. La observación del comentario ancla
+  de /hajime/yorozu/ (la palabra «TODOs» en ver-código) SIGUE tal cual: el
+  autor no la incluyó en esta tanda. Y el dato pedido antes de empezar:
+  **el barrido de seguridad del estático NO se corrió en esta rama** desde
+  el de 2026-08-06 (§3 del doc de infraestructura del autor) — nada que
+  este deploy invalide; el re-barrido, cuando se haga, va sobre lo servido
+  desde hoy.
+- Último cierre anterior: **2026-08-08, la tanda del DEPLOY SIN CONTENIDO —
   EJECUTADA ENTERA Y PUBLICADA: deploy `b78cf0b` de fuente `41c9d32` (el
   QUINTO), procedimiento del README completo (cinco guardas en verde con
   `2` esperado de ready, guarda del deploy, check-modes contra el árbol
@@ -74,10 +109,12 @@ fallidos ya corregidos, y las capturas intermedias.
   la nav («La nav con fondo propio»); **(3)** el autoenlace de /sitemap/
   fuera del renderizado (la exclusión vive en `mapa_bloque()`, la guarda
   la siguió sola — sitemap.xml byte-idéntico); **(4)** EDINET APLICADO a
-  disclosure2 en /method/ (era propuesta; IMAJ sigue pendiente de Manuel);
+  disclosure2 en /method/ (era propuesta; IMAJ quedó pendiente entonces —
+  **CERRADO en el deploy 6**, ver el cierre de arriba);
   **(5)** 4B preparado sin ejecutar: la meta de Search Console va en
   index.html entre `twitter:card` y el comentario de iconos — FUERA de los
-  tres bloques comparados — cuando Manuel pase el token. **LA TARJETA DE SECTOR — el freno que apareció y cómo lo resolvió el
+  tres bloques comparados — cuando Manuel pase el token (**EJECUTADO en el
+  deploy 6** con el token real, ver arriba). **LA TARJETA DE SECTOR — el freno que apareció y cómo lo resolvió el
   autor**: vive DENTRO de /hajime/yorozu/index.html — página publicada—,
   así que la selección por archivos no podía excluirla: el deploy la
   habría publicado con sus DOS TODOs en castellano visibles sin que
@@ -102,7 +139,7 @@ fallidos ya corregidos, y las capturas intermedias.
   (baseline 36; el patrón y el pase de reposición quedan — ver su
   decisión). NADA de esta tanda está pusheado; el deploy 5 real y el push
   los confirma él tras el reporte de guardas + --solo-verificar.
-- Último cierre anterior: **2026-08-07 (todavía más tarde), la tanda de auditoría +
+- Antes: **2026-08-07 (todavía más tarde), la tanda de auditoría +
   el SISTEMA DE NOTAS + la tarjeta de sector — construido y commiteado
   LOCAL, SIN deployar y SIN push (instrucción de la sesión).** La
   auditoría, verificada contra el fuente antes de tocar: JILI a Tier 2 y al
@@ -114,9 +151,11 @@ fallidos ya corregidos, y las capturas intermedias.
   on the way» es TRIPLE: hero + /hajime/ + FACES de main.js); y la tabla
   de las 49 URLs de /method/ verificada — dos correcciones PROPUESTAS sin
   aplicar (EDINET→disclosure2; toushin.or.jp→imaj.or.jp con la entidad
-  RENOMBRADA: hoy es 資産運用業協会), Mizuho en 403 a clientes
-  automatizados + nombre a decidir (unidad dentro del banco desde el
-  1/4/2026), BIS y Daiwa rechazan automatización (no es rot). El sistema
+  RENOMBRADA: hoy es 資産運用業協会) *(EDINET se aplicó en el deploy 5;
+  IMAJ y Mizuho, en el 6 — ver el Último cierre)*, Mizuho en 403 a
+  clientes automatizados + nombre a decidir (unidad dentro del banco desde
+  el 1/4/2026) *(decidido por el autor para el deploy 6: Mizuho Bank —
+  みずほ経済インサイト)*, BIS y Daiwa rechazan automatización (no es rot). El sistema
   de notas completo y el patrón de tarjeta de sector: ver las DOS
   decisiones nuevas, primeras de la lista. **Son DIECIOCHO páginas**
   (/notes/ y la nota-fixture, ambas noindex), el sitemap sigue en 14 URLs,
@@ -330,9 +369,10 @@ ninguna de las cuatro guardas la mira; su decisión cerrada está más abajo.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 5, la tanda sin
-contenido — nav con fondo, móvil, /sitemap/ sin autoenlace, favicon maciza,
-EDINET — 2026-08-08) — FALTAN EL DNS (fuera del repo) Y EL TEXTO DE LA CAPA
+**EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 6, Search Console
+con el token real + IMAJ y Mizuho en /method/ — 2026-08-08, verificado en
+el dominio) — FALTAN EL DNS (fuera del repo), QUE MANUEL TOQUE «VERIFICAR»
+EN SEARCH CONSOLE (la meta ya está servida) Y EL TEXTO DE LA CAPA
 1 DE SEGUROS (dentro del repo; su andamiaje ya está servido con noindex,
 invisible).** La
 publicación (el paso 5) se ejecutó **ANTES de los pasos 2-4, por decisión del
