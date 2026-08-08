@@ -58,18 +58,23 @@ fallidos ya corregidos, y las capturas intermedias.
   disclosure2 en /method/ (era propuesta; IMAJ sigue pendiente de Manuel);
   **(5)** 4B preparado sin ejecutar: la meta de Search Console va en
   index.html entre `twitter:card` y el comentario de iconos — FUERA de los
-  tres bloques comparados — cuando Manuel pase el token. **LO QUE FRENA EL
-  DEPLOY, además del favicon: la tarjeta de sector.** Vive DENTRO de
-  /hajime/yorozu/index.html — página publicada—, así que la selección por
-  archivos NO puede excluirla: hoy el deploy la publicaría con sus DOS
-  TODOs en castellano VISIBLES y ninguna guarda lo frena (la de castellano
-  exime «TODO», make-deploy no cuenta placeholders, check-ready no está
-  acoplado — solo informa). Diagnóstico reportado a Manuel en la parada
-  con la propuesta de comentarla HTML hasta que él pase el título
-  (placeholders() la sigue contando por el quirk de comentarios → baseline
-  estable; el mapa no la necesita mientras seguros siga noindex —
-  verificado en `mapa_bloque()`: una tarjeta a página no listada se ignora
-  y seguros no está en `paginas_publicas()`). El favicon: diagnóstico
+  tres bloques comparados — cuando Manuel pase el token. **LA TARJETA DE SECTOR — el freno que apareció y cómo lo resolvió el
+  autor**: vive DENTRO de /hajime/yorozu/index.html — página publicada—,
+  así que la selección por archivos no podía excluirla: el deploy la
+  habría publicado con sus DOS TODOs en castellano visibles sin que
+  ninguna guarda frene (la de castellano exime «TODO», make-deploy no
+  cuenta placeholders, check-ready no está acoplado). **Su decisión
+  (2026-08-08): el MARCADO salió del archivo — comentarla se descartó
+  porque el TODO seguía visible en ver-código**. Baseline 38 → 36; el
+  patrón y el pase de reposición, en la decisión de la tarjeta. El mapa no
+  la necesita mientras seguros siga noindex — verificado en
+  `mapa_bloque()`: una tarjeta a página no listada se ignora y seguros no
+  está en `paginas_publicas()`. **Y la respuesta a su pregunta del
+  artefacto: /hajime/yorozu/japan/seguros/ SÍ viaja en el deploy** — está
+  en los 41 publicables y responde 200 en el dominio DESDE EL DEPLOY 4
+  (2026-08-07), a propósito y verificado entonces: publicado e invisible
+  (noindex, sin enlaces, fuera de sitemap y mapa) no es lo mismo que no
+  publicado, y quedó confirmado de nuevo hoy contra el dominio. El favicon: diagnóstico
   hecho (el head declara ico 16/32/48 + svg + apple-touch 180, todo 200 en
   el dominio, robots abierto — la causa probable del globo es RETRASO de
   rastreo, no un archivo chico), candidato 192 con 言霊 apilados en el
@@ -206,11 +211,13 @@ fallidos ya corregidos, y las capturas intermedias.
   *(Este bloque no puede nombrar su propio commit, así que siempre queda uno
   atrás: `git log -1 redesign-trust` es la respuesta exacta. El ancla fija que no
   deriva es el tag.)*
-- **EL BASELINE VOLVIÓ A SALIR DE CERO A PROPÓSITO (2026-08-07), y el mismo
-  día subió a 38**: 25 del andamiaje de la capa 1 de seguros — la primera
-  página sectorial, `/hajime/yorozu/japan/seguros/`, cuyo texto escribe el
-  autor aparte — **más 13 del sistema de notas y la tarjeta de sector** (8
-  de la nota-fixture, 3 de /notes/, 2 de la tarjeta en /hajime/yorozu/).
+- **EL BASELINE VOLVIÓ A SALIR DE CERO A PROPÓSITO (2026-08-07), y desde
+  el 2026-08-08 está en 36**: 25 del andamiaje de la capa 1 de seguros —
+  la primera página sectorial, `/hajime/yorozu/japan/seguros/`, cuyo texto
+  escribe el autor aparte — **más 11 del sistema de notas** (8 de la
+  nota-fixture, 3 de /notes/). *(El 2026-08-07 llegó a 38 con los 2 de la
+  tarjeta de sector; el 2026-08-08 la tarjeta salió del marcado — ver su
+  decisión — y quedó 36 en tres páginas.)*
   **`check-ready` sale `2` y ES LO ESPERADO** (era 6 del
   código 2; la historia completa sigue en el docstring de `check-ready.py`).
   **El andamiaje quedó SERVIDO desde el deploy 4 (2026-08-07), invisible
@@ -231,12 +238,13 @@ fallidos ya corregidos, y las capturas intermedias.
   `rglob` y derivan de directorios.
 - **Decisiones del autor pendientes: DOS (2026-08-07, tarde)** — (1) **el
   TÍTULO y la LÍNEA DE FUNCIÓN de la tarjeta de sector** en
-  /hajime/yorozu/: la tarjeta YA ESTÁ CONSTRUIDA por su instrucción (la
-  variante sin kanji — ver la decisión del patrón de sector) con los dos
-  campos en TODO; lo que falta es su texto, no la forma. *(Esto reemplaza
-  al «cómo enlaza /hajime/yorozu/ a seguros», que era la pendiente
-  anterior: la respuesta fue esta tarjeta, y con ella el requisito del
-  generador del mapa quedó satisfecho.)* (2) **la VUELTA de una nota**
+  /hajime/yorozu/: el PATRÓN está construido (la variante sin kanji — ver
+  la decisión del patrón de sector), pero **desde el 2026-08-08 el MARCADO
+  está FUERA del archivo** (decisión del autor: TODOs visibles en
+  ver-código de una página publicada no van); al pasar él el título, la
+  tarjeta se reescribe — el pase de reposición está en esa decisión.
+  *(Esto reemplaza al «cómo enlaza /hajime/yorozu/ a seguros», que era la
+  pendiente anterior: la respuesta fue esta tarjeta.)* (2) **la VUELTA de una nota**
   («Back to Hajime» del criterio del origen contra los dos orígenes reales
   — feed y archivo; propuesta hecha: «← All notes» — ver el punto abierto
   en la decisión del sistema de notas). Además esperan TEXTO suyo: la capa
@@ -399,7 +407,7 @@ sección con el detalle.
 
 | Cabo | Estado |
 |---|---|
-| **Capa 1 de seguros: el TEXTO** | **el frente activo (2026-08-07)**: andamiaje listo en `/hajime/yorozu/japan/seguros/` con 25 placeholders esperando el texto del autor, **con `noindex` mientras tanto** (exclusión del sitemap derivada; al redactar: sacar la meta + regenerar sitemap.xml y /sitemap/ —mismo comando— + baseline — el olvido tiene guarda). **Servido con su noindex desde el deploy 4 (2026-08-07): 200 en el dominio, fuera del sitemap servido — invisible, verificado.** Y **la tarjeta desde /hajime/yorozu/ YA EXISTE** (2026-08-07, más tarde: la variante de sector sin kanji, por instrucción del autor) **con título y línea de función en TODO que espera él** — con ella puesta, el requisito del mapa quedó satisfecho. Ver su decisión y la del patrón de sector. |
+| **Capa 1 de seguros: el TEXTO** | **el frente activo (2026-08-07)**: andamiaje listo en `/hajime/yorozu/japan/seguros/` con 25 placeholders esperando el texto del autor, **con `noindex` mientras tanto** (exclusión del sitemap derivada; al redactar: sacar la meta + regenerar sitemap.xml y /sitemap/ —mismo comando— + baseline — el olvido tiene guarda). **Servido con su noindex desde el deploy 4 (2026-08-07): 200 en el dominio, fuera del sitemap servido — invisible, verificado.** La tarjeta desde /hajime/yorozu/: el PATRÓN existe (2026-08-07) pero **su marcado salió del archivo el 2026-08-08** (los TODOs quedaban visibles en ver-código de una página publicada) — **se repone junto con el título del autor**, y al sacar el noindex vuelve a ser requisito del mapa. Ver la decisión del patrón de sector. |
 | **Sistema de notas** | **construido completo, SIN deployar (2026-08-07)**: contrato de metadatos, molde con nota-fixture, `make-notes.py` (feed entre centinelas + listado + índice), /notes/ con buscador (segunda página con JS), guarda en check-structure probada en NUEVE rojos, excepción de deploy por ruta exacta. Todo noindex, feed vacío, cero enlaces entrantes. **Se estrena con la primera nota real** — el pase completo está en su decisión (primera de la lista). |
 | ~~Redacción de Hajime~~ | **CERRADA 2026-08-05**: los 15, con texto del autor. Baseline en cero, `check-ready` en `0`. Cualquier placeholder nuevo es regresión. |
 | ~~Logo de LibraryThing~~ | **CERRADO 2026-08-05**: va el archivo oficial en su paleta original, sin alterar — criterio nuevo que disuelve el pendiente de permiso (ver la decisión de tarjetas y `assets/img/README.md`). |
@@ -575,6 +583,24 @@ del feed, y si un lead no funciona suelto como gancho, se reescribe el lead.
   único). Lo decide él; hasta entonces rige el criterio escrito.
 
 ### La tarjeta de SECTOR: la variante sin kanji — el patrón de la familia
+
+**ACTUALIZACIÓN 2026-08-08 — EL MARCADO SALIÓ DEL ARCHIVO, por decisión
+del autor: /hajime/yorozu/ viaja en el deploy y sus dos TODOs quedaban
+visibles en ver-código de una página publicada — «un TODO en el HTML
+servido no va en el sitio cuyo argumento entero es el rigor». Se descartó
+comentarla: el quirk de `placeholders()`-cuenta-comentarios es un
+mecanismo trabajando por accidente, no una garantía. LO QUE QUEDA VIVO es
+el PATRÓN: `.face-card--sector` en el CSS y esta decisión — eso no se
+tocó. EL PASE DE REPOSICIÓN, cuando el autor pase el título y la línea de
+función: reescribir en `hajime/yorozu/index.html`, dentro de
+`face-page__body` DESPUÉS del párrafo (el comentario ancla marca el
+lugar), el `<ul class="face-page__cards">` con
+`<a class="face-card face-card--sector" href="/hajime/yorozu/japan/seguros/">`
++ `face-card__title` + `face-card__meta > face-card__domain` — el marcado
+exacto está en el commit `30dc0d9` —, actualizar el baseline (hoy 36) y
+recordar que la tarjeta vuelve a ser REQUISITO del mapa al sacarle el
+noindex a seguros. El registro de abajo describe la construcción original
+del 2026-08-07.**
 
 **2026-08-07, instrucción del autor; el TÍTULO y la LÍNEA DE FUNCIÓN los
 define él y hoy son TODO — no se inventan ni se rellenan con algo que
@@ -2472,7 +2498,7 @@ commit sea un punto de restauración seguro por construcción, no por suerte.
 | `python tools/check-structure.py` | siempre | instantánea | **verde** |
 | `python tools/check-modes.py` | siempre | ~40 s | **verde** |
 | `python tools/check-pendulum.py` | antes de push, o al tocar la física | ~2–4 min | **verde** |
-| `python tools/check-ready.py` | antes de publicar a `main` | instantánea | **`2` esperado** desde el 2026-08-07 (38: 25 de seguros + 13 de notas/tarjeta de sector; `0` cuando todo eso quede redactado — era 6 del docstring) |
+| `python tools/check-ready.py` | antes de publicar a `main` | instantánea | **`2` esperado** desde el 2026-08-07 (hoy 36: 25 de seguros + 11 de notas — la tarjeta de sector salió del marcado el 2026-08-08; `0` cuando todo eso quede redactado — era 7 del docstring) |
 
 Las dos que usan navegador necesitan el sitio servido en `:8000`.
 

@@ -25,8 +25,13 @@ veces, así que la historia completa antes de interpretar una corrida:
    mismo día): /notes/, la nota-fixture /hajime/nota-ejemplo/ y la tarjeta
    de seguros en /hajime/yorozu/ suman 13 placeholders deliberados
    (baseline 38). `2` sigue siendo lo esperado; nada de esto se deploya.
+7. La tarjeta de sector SALIÓ del marcado (2026-08-08, decisión del autor:
+   sus dos TODOs quedaban visibles en ver-código de una página publicada,
+   y /hajime/yorozu/ SÍ viaja en el deploy). El patrón .face-card--sector
+   queda en CSS y CLAUDE.md; el marcado vuelve cuando el autor pase el
+   título. Baseline 36, en tres páginas.
 
-O sea: hoy `2` es el estado normal (los 38 del baseline, en cuatro páginas),
+O sea: hoy `2` es el estado normal (los 36 del baseline, en tres páginas),
 `0` significará que todo eso quedó redactado, y `1` sigue siendo estructura
 rota. La lección de las eras 2→3→5 queda escrita: un `2` alterna entre
 esperado y regresión según si el autor reintrodujo andamiaje a propósito —
