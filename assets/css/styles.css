@@ -306,16 +306,64 @@ body {
 a { color: var(--c-gold); text-decoration: none; }
 a:hover { color: var(--c-gold-soft); }
 
-/* Aterrizaje de anclas. La nav es fija y MEDIDA: 63px de alto real a 1440x900
-   y a 1280x720 (el token --nav-h=84 ya la cubre). El extra es el respiro para
-   que el destino no quede pegado al borde de la nav.
+/* Aterrizaje de anclas. La nav es fija y MEDIDA: 65.7px de alto real a 1440 y
+   62.2 a 390 (2026-08-08, después del fondo opaco del deploy 5 — el «63px»
+   que decía acá era de antes; el token --nav-h=84 la sigue cubriendo). El
+   extra es el respiro para que el destino no quede pegado al borde de la nav.
    `footer` va listado APARTE porque no es <section>: la nav enlaza a /#footer
    (Contact) y sin esto el footer aterrizaba con la marca tapada por la nav —
    era el único destino sin scroll-margin y el fallo no se veía en los demás.
+   (Hoy además aterriza CLAMPEADO por el fin del documento — el margen no
+   influye; queda como red por si el footer crece.)
    `.cube__layout` es el destino de «Back to the Cube» (/#cube-view): las caras
-   vuelven al CUBO, no al título de la sección — aterrizar en #cube dejaba el
-   cubo más de media pantalla abajo (57% visible, medido). */
+   vuelven al CUBO, no al título de la sección. */
 section, footer, .cube__layout { scroll-margin-top: calc(var(--nav-h) + 12px); }
+
+/* --- Las anclas de la PORTADA, calibradas POR SECCIÓN (2026-08-08) ----------
+   Decisión del autor sobre capturas: las anclas de la nav aterrizaban con
+   demasiado aire arriba — #method con ~191px de franja vacía bajo la nav, y
+   #cube mostrando encabezado+párrafo con el cubo cortado 305px por abajo
+   (medido a 1440x900). Lo que quiere cada destino:
+     #cube   -> el conmutador 3D/Grid arriba y el CUBO ENTERO debajo; el
+                encabezado «Six faces...» y su párrafo FUERA de pantalla,
+                arriba. DELIBERADO Y DECIDIDO: por eso el margen es NEGATIVO
+                (scroll-margin-top admite negativos: el aterrizaje PASA el
+                tope de la sección). La nav y la flecha del hero SIGUEN
+                apuntando a #cube — no separarlas ni crear otra ancla.
+     #method -> el rótulo METHOD pegado a la nav, las tres tarjetas enteras y
+                «How we work» asomando al pie (a 1440x900).
+     #about  -> mismo criterio: su rótulo pegado a la nav.
+     #footer -> NO se toca: aterriza clampeado por el fin del documento y el
+                correo queda visible (requisito ya medido).
+   LA FORMA: el margen se DERIVA del padding real de cada sección — la MISMA
+   var(--pad-top) que usa el padding, una sola fuente, cero copias que puedan
+   derivar — así queda exacto en TODO ancho sin tabla de breakpoints.
+   Las constantes:
+     78px = 66 de nav real + 12 de respiro. El 66 es constante a propósito:
+            la nav mide 65.7/62.2 según el ancho y esos ~4px van al AIRE,
+            nunca al solape.
+     El término extra de #cube (148px + min(6vw, 87px) arriba; 482px - 40.4vw
+     abajo) es la ALTURA DE LA CABECERA DE TEXTO, que CSS no puede medir:
+     ajuste lineal sobre la altura MEDIDA de .cube__head (194px@768 ->
+     234@1440 arriba; 325@390 -> 224@640 abajo — abajo domina el reflow del
+     texto, por eso la pendiente invertida y el corte en 768). El min() capea
+     el vw en 1440: más ancho, los clamps de fuente ya toparon y la cabecera
+     real deja de crecer — sin el cap, a 1920 el toggle caía 10px ABAJO de la
+     nav (medido). La base de #cube lleva respiro extra sobre los 66 de nav —
+     84px (66+18) arriba, 100px (66+34) abajo de 768 — porque absorbe el
+     error del ajuste SIEMPRE hacia el aire: arriba el error medido es
+     <=10px; abajo el reflow es un serrucho de +-31px (peor diente medido a
+     560px), y por eso la base móvil es más gorda. El conmutador NUNCA queda
+     abajo de la nav — verificado EJECUTANDO con cargas reales en 24 anchos
+     (320-1920). Si se toca la cabecera del cubo (texto, cuerpo de fuente,
+     márgenes), re-medir este término.
+   #method lleva -1px por su border-top (entra en la distancia medida). */
+#about  { scroll-margin-top: calc(78px - var(--pad-top)); }
+#method { scroll-margin-top: calc(78px - var(--pad-top) - 1px); }
+#cube   { scroll-margin-top: calc(84px - var(--pad-top) - var(--head-gap) - 148px - min(6vw, 87px)); }
+@media (max-width: 767px) {
+  #cube { scroll-margin-top: calc(100px - var(--pad-top) - var(--head-gap) - 482px + 40.4vw); }
+}
 
 /* Foco visible y consistente en todo el sitio */
 a:focus-visible,
@@ -653,7 +701,12 @@ button:focus-visible {
      (161px visuales, medida como referencia de ritmo). Al tocar uno de los
      dos, mirar el otro — por separado cada número parece razonable y es la
      suma la que se ve. */
-  padding: clamp(70px, 10vw, 130px) clamp(20px, 5vw, 64px) clamp(32px, 4vw, 56px);
+  /* --pad-top y --head-gap son variables A PROPÓSITO: el scroll-margin-top de
+     #cube (ver «Aterrizaje de anclas») se DERIVA de ellas — una sola fuente,
+     el margen sigue solo a cualquier cambio del padding o del gap. */
+  --pad-top: clamp(70px, 10vw, 130px);
+  --head-gap: clamp(40px, 5vw, 64px);
+  padding: var(--pad-top) clamp(20px, 5vw, 64px) clamp(32px, 4vw, 56px);
 }
 .cube__wrap { max-width: var(--maxw); margin: 0 auto; }
 .cube__head {
@@ -662,7 +715,7 @@ button:focus-visible {
   justify-content: space-between;
   gap: 30px;
   flex-wrap: wrap;
-  margin-bottom: clamp(40px, 5vw, 64px);
+  margin-bottom: var(--head-gap);   /* la fuente es --head-gap de .cube */
 }
 .cube__head > div { max-width: 40rem; }  /* 640px a raíz 16; en rem, acompaña a la letra */
 .cube__head .eyebrow { margin-bottom: 18px; }
@@ -874,7 +927,10 @@ button:focus-visible {
      El top y el bottom van SEPARADOS a propósito: el top es la costura con el
      cubo (bajó a 84); el bottom es la costura con .method y no se tocó — esa
      lleva además el border-top de .method, que la marca como corte. */
-  padding: clamp(48px, 6vw, 84px) clamp(20px, 5vw, 64px) clamp(64px, 9vw, 120px);
+  /* --pad-top es variable a propósito: el scroll-margin-top de #about deriva
+     de ella (ver «Aterrizaje de anclas»). */
+  --pad-top: clamp(48px, 6vw, 84px);
+  padding: var(--pad-top) clamp(20px, 5vw, 64px) clamp(64px, 9vw, 120px);
   overflow: hidden;
 }
 .about__watermark {
@@ -935,7 +991,10 @@ button:focus-visible {
   background: linear-gradient(to bottom,
     var(--c-surface-about) 0%, var(--c-surface-method) 16%, var(--c-surface-method) 100%);
   border-top: 1px solid var(--line-gold-faint);
-  padding: clamp(90px, 12vw, 160px) clamp(20px, 5vw, 64px);
+  /* --pad-top es variable a propósito: el scroll-margin-top de #method deriva
+     de ella (ver «Aterrizaje de anclas»). */
+  --pad-top: clamp(90px, 12vw, 160px);
+  padding: var(--pad-top) clamp(20px, 5vw, 64px);
 }
 .method__wrap { max-width: 70rem; margin: 0 auto; }   /* era 1120px */
 .method__head { max-width: 45rem; margin-bottom: clamp(52px, 6vw, 80px); }  /* era 720px */
