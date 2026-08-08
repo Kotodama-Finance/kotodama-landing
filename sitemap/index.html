@@ -75,16 +75,16 @@
 
       <!-- MAPA DEL SITIO — lo GENERA tools/make-sitemap.py; no editar a
            mano: la próxima regeneración lo pisa. Mismo conjunto de
-           URLs que sitemap.xml, nombres del face-page__romaji de
-           cada página, orden de las tarjetas del padre.
-           check-structure avisa si quedó viejo. -->
+           URLs que sitemap.xml MENOS esta misma página (el
+           autoenlace se quitó a propósito), nombres del
+           face-page__romaji de cada página, orden de las tarjetas
+           del padre. check-structure avisa si quedó viejo. -->
       <section class="face-page__section" aria-labelledby="map-site">
         <h2 id="map-site" class="face-page__subtitle">The Site</h2>
         <ul class="map-list">
           <li><a href="/">Home</a></li>
           <li><a href="/musubi/">Musubi</a></li>
           <li><a href="/method/">Method</a></li>
-          <li><a href="/sitemap/">Site map</a></li>
           <li><a href="/disclaimer/">Disclaimer</a></li>
         </ul>
       </section>

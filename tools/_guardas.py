@@ -365,6 +365,19 @@ def mapa_bloque() -> str:
     caras, sueltos_raiz = orden_tarjetas("/", hijos.get("/", []))
     sitio = [f"/{slug}/" for slug in ORDEN_SITIO if f"/{slug}/" in sueltos_raiz]
     sin_lugar = sorted(set(sueltos_raiz) - set(sitio))
+    # EL AUTOENLACE SE VA (2026-08-08, decisión del autor): la entrada «Site
+    # map» enlazaría a la página que el lector ya está mirando — este bloque
+    # se renderiza SOLO en /sitemap/, así que la exclusión es incondicional y
+    # la entrada DESAPARECE (no queda como texto plano). Es una exclusión del
+    # RENDERIZADO nada más: paginas_publicas() no se toca, sitemap.xml sigue
+    # listando /sitemap/ (página indexable legítima que Google ya conoce) y
+    # el slug SIGUE en ORDEN_SITIO — sin su lugar ahí, el abort de
+    # nivel-superior-sin-lugar frenaría la generación. La guarda
+    # (mapa_desactualizado) compara contra esta MISMA función, así que sigue
+    # el cambio sola. Si /sitemap/ tuviera HIJOS algún día, esta exclusión
+    # también los escondería: ese día se decide de nuevo, no antes.
+    ruta_propia = "/" + RUTA_MAPA.rsplit("/", 1)[0] + "/"
+    sitio = [r for r in sitio if r != ruta_propia]
     if sin_lugar:
         raise MapaInconstruible(
             f"{', '.join(sin_lugar)}: página(s) de nivel superior sin lugar en el "
@@ -378,9 +391,10 @@ def mapa_bloque() -> str:
     lineas = [
         "      " + MAPA_INI + " — lo GENERA tools/make-sitemap.py; no editar a",
         "           mano: la próxima regeneración lo pisa. Mismo conjunto de",
-        "           URLs que sitemap.xml, nombres del face-page__romaji de",
-        "           cada página, orden de las tarjetas del padre.",
-        "           check-structure avisa si quedó viejo. -->",
+        "           URLs que sitemap.xml MENOS esta misma página (el",
+        "           autoenlace se quitó a propósito), nombres del",
+        "           face-page__romaji de cada página, orden de las tarjetas",
+        "           del padre. check-structure avisa si quedó viejo. -->",
         '      <section class="face-page__section" aria-labelledby="map-site">',
         '        <h2 id="map-site" class="face-page__subtitle">The Site</h2>',
         '        <ul class="map-list">',
