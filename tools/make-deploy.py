@@ -92,6 +92,19 @@ NO_PUBLICABLES = (
     # se reactiva, se reactiva en desarrollo y el deploy lo lleva ese día,
     # junto con el <link> que lo cargue.
     "assets/css/maelstrom.css",
+    # EL SISTEMA DE NOTAS, EXCLUSIÓN TEMPORAL (2026-08-08, decisión del autor:
+    # se publica todo lo que no dependa de contenido; las notas se estrenan
+    # con la primera nota real). Son archivos del SITIO, no de trabajo — están
+    # acá por estado, no por naturaleza: construidos y esperando su estreno.
+    # Nada publicado los referencia (el feed de la portada está en
+    # solo-centinelas y /notes/ es huérfana con noindex), así que la
+    # comprobación de referencias no los extraña. AL ESTRENAR /notes/: sacar
+    # estas TRES entradas y devolver notes/search-index.json a CONTRATO (ver
+    # su comentario ahí) — el pase completo, en CLAUDE.md, decisión del
+    # sistema de notas.
+    "notes/",
+    "hajime/nota-ejemplo/",
+    "assets/js/notes.js",
 )
 
 # LA EXCEPCIÓN INVERSA DE MAELSTROM (2026-08-07, sistema de notas): allá, un
@@ -104,6 +117,9 @@ NO_PUBLICABLES = (
 # su valor es cazar cualquier nota futura (.md de borrador, .py suelto, otro
 # .json) sin que nadie mantenga una lista, y una excepción nombrada no la
 # debilita: cualquier otro .json sigue cayendo por el tipo.
+# MIENTRAS notes/ esté en NO_PUBLICABLES esta excepción queda DORMIDA (el
+# filtro por ruta corre antes y el archivo nunca llega a la regla por tipo);
+# se queda puesta para que el estreno no tenga que reconstruirla.
 PUBLICABLES_PESE_AL_TIPO = ("notes/search-index.json",)
 
 # Los que tienen que estar en el árbol publicado, en DOS niveles — y la
@@ -124,10 +140,11 @@ CONTRATO = (
     "favicon.ico", "favicon.svg", "favicon-16x16.png", "favicon-32x32.png",
     "apple-touch-icon.png", "android-chrome-192x192.png",
     "android-chrome-512x512.png",
-    # El índice del buscador de /notes/ (2026-08-07): lo pide notes.js por
-    # fetch — una referencia que verificar_completo no ve (busca href/src/
-    # import, no strings de fetch), así que su presencia se exige acá.
-    "notes/search-index.json",
+    # notes/search-index.json ENTRARÁ acá al estrenar /notes/: lo pide
+    # notes.js por fetch — una referencia que verificar_completo no ve (busca
+    # href/src/import, no strings de fetch), así que su presencia habrá que
+    # exigirla acá. HOY el sistema de notas entero está excluido del artefacto
+    # (ver NO_PUBLICABLES) y un requerido ausente frenaría todo deploy.
 )
 
 # La marca que enlaza cada commit de main con su commit fuente. Si cambia el

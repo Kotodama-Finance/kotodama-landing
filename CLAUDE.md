@@ -483,7 +483,12 @@ del feed, y si un lead no funciona suelto como gancho, se reescribe el lead.
   ejemplo, sacar el noindex de /notes/ (con su comentario), redactar su
   description y su gloss, **sumar `"notes"` a ORDEN_SITIO en _guardas.py**
   — sin ese lugar consciente, make-sitemap ABORTA nombrando la página: es
-  el flujo diseñado del mapa, no un olvido—, regenerar sitemap y notas, y
+  el flujo diseñado del mapa, no un olvido—, **sacar las TRES exclusiones
+  temporales de `NO_PUBLICABLES` en make-deploy.py (`notes/`,
+  `hajime/nota-ejemplo/`, `assets/js/notes.js`) y devolver
+  `notes/search-index.json` a `CONTRATO`** (2026-08-08: el sistema quedó
+  FUERA del artefacto hasta el estreno — ver la decisión del deploy sin
+  contenido), regenerar sitemap y notas, y
   actualizar el baseline. **Y la cadena «First analysis on the way» caduca
   en sus TRES lugares a la vez** (ver la lista de duplicadas en /musubi/).
 - **PUNTO ABIERTO DEL AUTOR — la vuelta de una nota.** El molde dice «Back
