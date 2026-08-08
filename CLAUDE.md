@@ -41,7 +41,36 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-08 (lo más tarde del día), la tanda de CERO
+- Último cierre: **2026-08-08 (después del deploy 8, el cierre del día):
+  la tanda de los CUATRO FRENTES — SIN deploy: el artefacto de main NO
+  cambió.** **(1) La rama `maintenance` también sirve SIN comentarios**:
+  el generador reusa EL MISMO `transformar()` del deploy (una
+  implementación, no dos), la rama quedó regenerada (`1b80019`, con su
+  historia) y verificada sobre el HTML RESULTANTE, y check-maintenance
+  suma cero-`<!--` y cero-`/*`-en-`<style>` probadas EN ROJO — ver la
+  actualización en su decisión. **La rama local quedó ADELANTE de origin;
+  su push espera la confirmación del autor.** **(2) El DISEÑO del acople
+  de check-ready, ENTREGADO sin implementar** (era lo pedido): el
+  criterio recomendado es «página del artefacto SIN noindex no puede
+  llevar placeholders» — la inversa exacta de `noindex_olvidado`, con el
+  noindex que el andamiaje deliberado YA lleva como la marca que
+  distingue seguros (25 TODOs, noindex, pasa) de la tarjeta de sector
+  (fragmento en página indexable, frenaría) — como guarda dentro de
+  make-deploy sobre el ARTEFACTO, dura desde HEAD y aviso bajo
+  `--fuente`; espera la DECISIÓN del autor, ver su fila en los cabos.
+  **(3) El RE-BARRIDO de seguridad, medido sobre EL ARTEFACTO** (los
+  blobs de main del deploy 8 + la maintenance regenerada, como la regla
+  «el servido no es el fuente» exige) **y el texto fechado ENTREGADO al
+  autor** — limpio: 84 `_blank` todos con noopener (80→84 = los DOS del
+  footer × las dos páginas nuevas desde el barrido viejo, /sitemap/ y
+  seguros — nada más cambió), 0 formularios, 0 handlers, 0 `style=`, 1
+  tercero por página (el pixel), el import map único inline (67 bytes
+  post-strip), 0 sumideros en el JS de la casa Y en el vendor.
+  **(4) Los pendientes de este archivo, partidos en DOS GRUPOS con dueño
+  distinto** (EJECUTABLES POR CODE / ESPERAN A MANUEL — ver AL RETOMAR;
+  el DNS anotado como frente aparte). Guardas de la tanda: cinco en
+  verde (pendulum 0.0963, ready `2` esperado, baseline 36 intacto).
+- Último cierre anterior: **2026-08-08 (lo más tarde del día), la tanda de CERO
   COMENTARIOS EN LO SERVIDO — EL OCTAVO DEPLOY, EJECUTADO ENTERO Y
   VERIFICADO EN VIVO 39/39: deploy `f7d2b3f` de fuente `b5bc838`.**
   Requisito sine qua non del autor: ningún comentario HTML/CSS/JS viaja al
@@ -83,7 +112,7 @@ fallidos ya corregidos, y las capturas intermedias.
   palabra «TODOs» en ver-código de /hajime/yorozu/) quedó DISUELTA: ningún
   comentario viaja. La rama maintenance sigue emitiendo comentarios — tanda
   aparte, acordada.
-- Último cierre anterior: **2026-08-08 (todavía más tarde), la tanda de las ANCLAS DE
+- Antes, el mismo día: **2026-08-08 (todavía más tarde), la tanda de las ANCLAS DE
   LA PORTADA — EL SÉPTIMO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN EL
   DOMINIO: deploy `525c58d` de fuente `ac6d7d0`.** El bug (capturas del
   autor): las anclas de la nav aterrizaban con demasiado aire — #method con
@@ -373,13 +402,18 @@ fallidos ya corregidos, y las capturas intermedias.
   derivado) y **el árbol de URLs llega a CUATRO niveles** — verificado que
   nada asume profundidad máxima: guardas y generadores descubren por
   `rglob` y derivan de directorios.
-- **Trabajos pendientes de este lado, DOS (anotados 2026-08-08 a pedido
-  del autor — ver sus filas en los cabos): el RE-BARRIDO DE SEGURIDAD del
-  estático** (re-medir sobre lo SERVIDO y entregarle el texto fechado; su
-  archivo no se edita) **y el DISEÑO del acople de check-ready al deploy**
-  (diagnóstico + dos o tres diseños con costos, SIN implementar).
-- **Decisiones del autor pendientes: UNA (desde el 2026-08-08)** — **el
-  TÍTULO y la LÍNEA DE FUNCIÓN de la tarjeta de sector** en
+- **Trabajos pendientes de este lado: NINGUNO (los dos anotados el
+  2026-08-08 se CERRARON el mismo día, más tarde)**: el re-barrido de
+  seguridad se midió sobre EL ARTEFACTO (main + maintenance) y el texto
+  fechado quedó entregado al autor (su archivo lo pega él); el diseño del
+  acople de check-ready quedó entregado con sus costos — la elección es
+  del autor, ver el bullet siguiente. Ver sus filas en los cabos.
+- **Decisiones del autor pendientes: DOS (desde el 2026-08-08)** — **(a) la
+  DECISIÓN del acople de check-ready al deploy**: el diseño entregado
+  recomienda la guarda de «placeholders indexables» dentro de make-deploy
+  (página del artefacto sin noindex no puede llevar placeholders; dura
+  desde HEAD, aviso bajo `--fuente`) — nada se implementa hasta que elija;
+  y **(b) el TÍTULO y la LÍNEA DE FUNCIÓN de la tarjeta de sector** en
   /hajime/yorozu/: el PATRÓN está construido (la variante sin kanji — ver
   la decisión del patrón de sector), pero **desde el 2026-08-08 el MARCADO
   está FUERA del archivo** (decisión del autor: TODOs visibles en
@@ -454,23 +488,36 @@ sesión.
 **EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 8, CERO
 COMENTARIOS en lo servido — 2026-08-08, verificado en vivo 39/39 byte a
 byte contra el artefacto; desde ese deploy rige LA REGLA «EL SERVIDO NO ES
-EL FUENTE», ver la decisión primera de la lista) — FALTAN EL DNS (fuera del
-repo) Y EL TEXTO DE LA CAPA
-1 DE SEGUROS (dentro del repo; su andamiaje ya está servido con noindex,
-invisible). Y CUATRO PENDIENTES MÁS, para que no se caigan del
-encabezado (2026-08-08, anotados a pedido del autor): (1) el TÍTULO y la
-LÍNEA DE FUNCIÓN de la tarjeta de sector — decisión del autor abierta,
-ver su bullet en Estado; (2) la description y el gloss de /notes/ —
-redacción suya; (3) el RE-BARRIDO DE SEGURIDAD del estático — el §3 de su
-kotodama_infraestructura.md quedó fechado 2026-08-06 y ya corrió varios
-deploys atrás: re-medir sobre lo SERVIDO (los 80 target="_blank"/noopener,
-handlers inline, cargas de terceros, sumideros de inyección) y ENTREGARLE
-el texto con fecha nueva — su archivo no se edita; (4) el DISEÑO del
-acople de check-ready al deploy — diagnóstico y dos o tres diseños con
-costos, SIN implementar: hoy check-ready informa pero no frena, y ninguna
-guarda impide publicar placeholders en una página viva; el acople ingenuo
-bloquearía todo deploy porque hay 36 placeholders legítimos en tres
-páginas de andamiaje.** **SEARCH CONSOLE QUEDÓ VERIFICADO (2026-08-08,
+EL FUENTE», ver la decisión primera de la lista).**
+
+**LOS PENDIENTES VAN EN DOS GRUPOS CON DUEÑO DISTINTO** (partidos el
+2026-08-08 a pedido del autor — antes eran una bolsa y al retomar parecía
+haber seis cosas trabadas):
+
+**EJECUTABLES POR CODE (no dependen de nadie más): hoy NINGUNO.** Los
+tres que había se cerraron el mismo 2026-08-08, más tarde: la rama
+`maintenance` sin comentarios en lo que sirve (ver su decisión y la de la
+transformación), el re-barrido de seguridad del estático (medido sobre EL
+ARTEFACTO y entregado el texto fechado al autor — su archivo lo pega él)
+y el diseño del acople de check-ready (entregado con costos; la elección
+es suya, ver el grupo siguiente).
+
+**ESPERAN A MANUEL (Code no puede avanzarlos):**
+(1) el TÍTULO y la LÍNEA DE FUNCIÓN de la tarjeta de sector — decisión
+abierta, ver su bullet en Estado; (2) la description y el gloss de
+/notes/ — redacción suya; (3) el TEXTO de la capa 1 de seguros — su
+andamiaje ya está servido con noindex, invisible; (4) la PRIMERA NOTA
+REAL — el sistema está construido, el pase de estreno vive en la decisión
+de notas; (5) la DECISIÓN sobre el acople de check-ready al deploy — el
+diseño quedó entregado el 2026-08-08 (recomendada la guarda de
+«placeholders indexables» dentro de make-deploy: página del artefacto sin
+noindex no puede llevar placeholders — dura desde HEAD, aviso bajo
+--fuente); NO se implementa nada hasta que elija.
+
+**EL DNS ES OTRO FRENTE, FUERA DEL REPO — no es pendiente de Code**: los
+pasos 2-4 de la migración (el detalle, más abajo en esta misma sección).
+
+**SEARCH CONSOLE QUEDÓ VERIFICADO (2026-08-08,
 confirmado por Google)**: propiedad de prefijo de URL sobre
 https://kotodamafinance.com/, método etiqueta HTML — **la meta
 `google-site-verification` de la portada NO SE TOCA: si desaparece del
@@ -539,12 +586,12 @@ el texto de la capa 1 de seguros?» (andamiaje listo, servido con noindex
 desde el deploy 4), «¿llegó la primera nota?» — el sistema de notas está
 CONSTRUIDO entero y sin deployar (2026-08-07, ver su decisión) —, «¿pasó
 el autor el título de la tarjeta de sector, o la description y el gloss
-de /notes/?» (redacciones suyas), y los DOS trabajos anotados el
-2026-08-08: el re-barrido de seguridad sobre lo servido (entregable a él)
-y el diseño del acople de check-ready (ver el encabezado de arriba y sus
-filas en los cabos): dentro del
-repo los frentes son esas redacciones más esos dos trabajos, no
-construcción nueva. *(Todo pusheado:
+de /notes/?» (redacciones suyas), y «¿decidió el autor sobre el acople de
+check-ready?» (el diseño se le entregó el 2026-08-08 — ver su fila en los
+cabos). Los dos trabajos de Code anotados ese día se CERRARON ese mismo
+día (el re-barrido, entregado; el diseño, entregado): dentro del repo los
+frentes son esas redacciones y esas decisiones suyas, no construcción
+nueva. *(Todo pusheado:
 la tanda de notas fue con el deploy 5 y el cierre de la vuelta de una nota
 —`fb0f61c`— se pushó el mismo 2026-08-08 con autorización del autor, solo
 a redesign-trust: nada de esto entra al artefacto hasta el estreno de
@@ -553,13 +600,15 @@ a redesign-trust: nada de esto entra al artefacto hasta el estreno de
 La revisión legal del `免責事項` **no es un pendiente**: se decidió publicar sin
 ella.
 
-**Sin decidir dentro del sitio queda UNA cosa (desde el 2026-08-08)**: el
+**Sin decidir dentro del sitio quedan DOS cosas (desde el 2026-08-08)**: el
 título y la línea de función de la tarjeta de sector en /hajime/yorozu/ (el
-patrón existe; el marcado se repone junto con su texto). La vuelta de una
-nota se CERRÓ el 2026-08-08 — «← All notes» más el rótulo de cara enlazado
-en la cabecera; ver la decisión del sistema de notas. Lo anterior — cómo
-enlaza /hajime/yorozu/ a seguros — se cerró con la tarjeta; el `domain` de
-las tarjetas de la portada, antes.
+patrón existe; el marcado se repone junto con su texto), y la decisión
+sobre el acople de check-ready al deploy (el diseño está entregado — ver su
+fila en los cabos; nada se implementa hasta que el autor elija). La vuelta
+de una nota se CERRÓ el 2026-08-08 — «← All notes» más el rótulo de cara
+enlazado en la cabecera; ver la decisión del sistema de notas. Lo anterior
+— cómo enlaza /hajime/yorozu/ a seguros — se cerró con la tarjeta; el
+`domain` de las tarjetas de la portada, antes.
 
 **Para cualquier deploy futuro, releer primero** las secciones «Antes de
 publicar» y «Publicar» del README: son las cuatro guardas MÁS la del deploy
@@ -580,8 +629,8 @@ sección con el detalle.
 
 | Cabo | Estado |
 |---|---|
-| **Re-barrido de seguridad del estático** | **pendiente (anotado 2026-08-08, pedido del autor)**: el §3 de su `kotodama_infraestructura.md` quedó fechado 2026-08-06 y desde entonces corrieron los deploys 5-7 — los conteos de páginas y el listener los corrigió él; el resto (80 `target="_blank"`/noopener, handlers inline, cargas de terceros, sumideros de inyección) son números heredados de otro árbol. **Re-medir sobre lo SERVIDO del dominio y ENTREGARLE el texto con fecha nueva — su archivo NO se edita.** |
-| **Acople de check-ready al deploy: el DISEÑO** | **pendiente (anotado 2026-08-08, pedido del autor)**: hoy check-ready informa pero NO frena (`make-deploy` no lo importa; el acople es el procedimiento humano del README), y ninguna guarda impide publicar placeholders en una página VIVA — la tarjeta de sector lo demostró: solo la decisión del autor evitó publicar TODOs. **El entregable es el DIAGNÓSTICO y dos o tres diseños con costos, NO la implementación**: el acople ingenuo bloquearía todo deploy — hay 36 placeholders legítimos en tres páginas de andamiaje (noindex, fuera del artefacto o invisibles a propósito). |
+| ~~Re-barrido de seguridad del estático~~ | **CERRADO 2026-08-08 (el mismo día que se anotó)**: medido sobre EL ARTEFACTO —los blobs de main (deploy 8) y la rama maintenance regenerada—, como la regla «el servido no es el fuente» exige, y el texto con fecha nueva ENTREGADO al autor (su archivo lo pega él, no se edita). Resultado limpio: 84 `_blank` todos con noopener (80→84 = las DOS páginas nuevas desde el barrido viejo, /sitemap/ y seguros, × los 2 del footer — nada más cambió), 0 formularios, 0 handlers, 0 style=, 1 tercero por página (el pixel), import map único inline (67 bytes post-strip), 0 sumideros en el JS de la casa Y en el vendor. |
+| **Acople de check-ready al deploy** | **el DISEÑO quedó ENTREGADO (2026-08-08); espera la DECISIÓN del autor — nada se implementa hasta que elija.** El diagnóstico: check-ready informa pero NO frena (make-deploy no lo importa; el acople es el procedimiento humano del README) y la tarjeta de sector lo demostró. La distinción que resuelve: «viaja + tiene placeholders» no alcanza (seguros viaja con 25 a propósito) — el criterio es la META noindex, que el andamiaje deliberado YA lleva por decisión: **página del artefacto SIN noindex no puede llevar placeholders** (la inversa exacta de `noindex_olvidado`; juntas cierran el iff andamiaje⟺noindex). Recomendado: guarda dentro de make-deploy sobre el ARTEFACTO, dura desde HEAD y aviso bajo `--fuente`. Verificado que hoy no frenaría nada y que habría cazado la tarjeta. |
 | **Capa 1 de seguros: el TEXTO** | **el frente activo (2026-08-07)**: andamiaje listo en `/hajime/yorozu/japan/seguros/` con 25 placeholders esperando el texto del autor, **con `noindex` mientras tanto** (exclusión del sitemap derivada; al redactar: sacar la meta + regenerar sitemap.xml y /sitemap/ —mismo comando— + baseline — el olvido tiene guarda). **Servido con su noindex desde el deploy 4 (2026-08-07): 200 en el dominio, fuera del sitemap servido — invisible, verificado.** La tarjeta desde /hajime/yorozu/: el PATRÓN existe (2026-08-07) pero **su marcado salió del archivo el 2026-08-08** (los TODOs quedaban visibles en ver-código de una página publicada) — **se repone junto con el título del autor**, y al sacar el noindex vuelve a ser requisito del mapa. Ver la decisión del patrón de sector. |
 | **Sistema de notas** | **construido completo, SIN deployar (2026-08-07)**: contrato de metadatos, molde con nota-fixture, `make-notes.py` (feed entre centinelas + listado + índice), /notes/ con buscador (segunda página con JS), guarda en check-structure probada en NUEVE rojos, excepción de deploy por ruta exacta. Todo noindex, feed vacío, cero enlaces entrantes. **La vuelta y el rótulo de cara se CERRARON el 2026-08-08** («← All notes» a /notes/; `note-face` en el contrato, cinco rojos más — ver la decisión). **Se estrena con la primera nota real** — el pase completo está en su decisión (primera de la lista). |
 | ~~Redacción de Hajime~~ | **CERRADA 2026-08-05**: los 15, con texto del autor. Baseline en cero, `check-ready` en `0`. Cualquier placeholder nuevo es regresión. |
@@ -592,7 +641,7 @@ sección con el detalle.
 | ~~Vista explotada del cubo~~ | **INTEGRADA 2026-08-05**: mergeada a esta rama por decisión del autor, guardas en verde después del merge. Lo que sigue siendo posterior a publicar es la v2 (corrientes de agua) — sólo si el autor la pide. |
 | **Dieta de fuentes** | **~79 KB disponibles** quitando features que el sitio no usa. **Decidido: no se hace ahora.** Se revisa si el CSS llega a usar `font-feature-settings`, `font-variant` o `small-caps`. |
 | **Guarda de castellano** | **incompleta a propósito, y lo dice en su salida.** Cubre diacríticos y una lista de palabras; se le escapa castellano sin ninguna de las dos. Al agregar una página, leer su superficie además de correrla. |
-| **Rama `maintenance`** | **existe, está lista y NO está activa.** Se activa cambiando la rama que publica Pages. Ver la decisión cerrada más abajo. |
+| **Rama `maintenance`** | **existe, está lista y NO está activa.** Se activa cambiando la rama que publica Pages. **Desde el 2026-08-08 sirve SIN comentarios**: el generador pasa el HTML por el MISMO `transformar()` de make-deploy (regenerada: `1b80019`; check-maintenance suma cero-`<!--` y cero-`/*`-en-`<style>`, probadas en rojo). **OJO: la rama local quedó adelante de origin — el push espera la confirmación del autor.** Ver la decisión cerrada más abajo. |
 | **Respaldo de `_dev/` y `_ref/`** | **HECHO 2026-08-06**: `kotodama_respaldo_dev-ref_2026-08-06.zip` (40,8 MB, 85/85 entradas verificadas) en la carpeta del proyecto en OneDrive — repetir por hito con el mismo patrón de nombre fechado. Dos hechos verificados que cierran los miedos de fondo, para no re-preguntarlos: **(1) `_ref/` no era única copia** — los 5 archivos son byte-idénticos (sha256) a copias dentro de `Kotodama Finance website.zip` en OneDrive; **(2) el merge NO borra archivos sin versionar** — git no toca untracked en merge ni checkout; el único riesgo era el disco, y quedó cubierto. Versionarlos se descartó: publicaría ~40 MB de capturas (y las fotos de WhatsApp) en el repo público. |
 | **`@media print`** | **nadie lo miró, pendiente SIN urgencia** (anotado 2026-08-06, pedido del autor): los navegadores quitan los fondos al imprimir y el texto claro queda sobre papel blanco. La única candidata real es /disclaimer/, que nadie imprime. No bloquea publicar. |
 | **Safari** | **sin verificar, riesgo aceptado** (2026-08-06): no corre en Windows. Firefox SÍ pasó un humo completo el mismo día (justificado —ahí con partición de palabras real: Firefox trae diccionarios de hyphens—, marca de agua vertical, multicol de /method/ en 2 columnas, lazy-init, cubo, folio con input confiable, vista explotada). El dato de método que dejó: geckodriver cuelga la creación de sesión en esta máquina — se manejó Firefox por Marionette directo, y un PointerEvent sintético con pointerId inventado muere en setPointerCapture ANTES de deseleccionar: para probar el arrastre hace falta input confiable (WebDriver:PerformActions), no eventos sintéticos. |
@@ -683,9 +732,11 @@ KB); main.js 14 de 22 KB; cube.js 26,6 de 48,7.
 - **Cierra de paso la observación menor del deploy 5**: la palabra «TODOs»
   del comentario ancla de /hajime/yorozu/ ya no viaja al dominio — ningún
   comentario viaja.
-- **La rama `maintenance` quedó AFUERA a sabiendas**: su generador emite
-  HTML con comentarios en castellano y, si se activara, se servirían. Es
-  tanda aparte, acordada con el autor.
+- **La rama `maintenance` quedó AFUERA en el deploy 8 a sabiendas — y se
+  CERRÓ el mismo día, en su tanda aparte (2026-08-08)**: su generador
+  ahora pasa el HTML por el MISMO `transformar()` de acá (una
+  implementación, no dos que derivan), regenerada y probada — ver la
+  actualización en la decisión de la rama `maintenance`.
 
 ### La nav con fondo propio en CSS: opaco por defecto, scroll-driven como mejora
 
@@ -2115,6 +2166,26 @@ ya no aplica**: manda lo redactado. Vale la pena tenerlo presente antes de
 y lo mismo vale para las otras cinco, ver la tabla de `domain` más abajo.
 
 ### La rama `maintenance` existe, está lista y NO está activa
+
+**ACTUALIZACIÓN 2026-08-08 — TAMBIÉN SIRVE SIN COMENTARIOS.** La regla del
+deploy 8 se extendió a esta rama en su tanda aparte, el mismo día: era la
+rama que se activa justo cuando algo se rompió, o sea el peor momento para
+descubrir que sirve notas de trabajo en castellano. El generador pasa el
+HTML por **EL MISMO `transformar()` de make-deploy.py** (importado por
+ruta; una implementación, no dos que derivan — criterio del autor), los
+comentarios siguen viviendo en la PLANTILLA del script —el fuente— y la
+procedencia («no editar a mano») queda donde siempre estuvo: el mensaje
+del commit de la rama. El stripping va en `construir()` y no en
+`publicar()` a propósito: `_dev/maintenance/` y la rama son el mismo
+texto, que es lo que check-maintenance compara (base64 elididos).
+`check-maintenance` suma DOS comprobaciones, probadas EN ROJO con una
+rama rota al lado: cero `<!--` en el HTML, y cero `/*` en el CSS inline —
+aparte, porque el stripper deja el contenido de `<style>` crudo a
+propósito (raw text) y un comentario agregado ahí sobreviviría. La rama
+quedó regenerada (`1b80019`, con su historia) y verificada sobre el HTML
+RESULTANTE de la rama, no sobre la intención: cero comentarios, CNAME
+idéntico al del sitio, mailto único, sin scripts ni formularios, los dos
+HTML el mismo blob, fuentes cubiertas.
 
 Un cartel para bajar el sitio a propósito durante una obra grande. **Rama
 aparte**, huérfana, con cuatro archivos: `index.html`, `404.html` idéntico,

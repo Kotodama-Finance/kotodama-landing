@@ -498,6 +498,11 @@ archivos de la rama a mano no sirve — la próxima corrida los pisa. El texto, 
 diseño y la paleta viven en el script; la paleta la **lee del `:root`** de
 `styles.css`, como `make-og-image.py`.
 
+**Y el HTML sale SIN comentarios (2026-08-08)**: el generador lo pasa por el
+mismo `transformar()` de `make-deploy.py` — «cero comentarios en lo servido»
+rige también en esta rama. Los comentarios viven en la plantilla del script,
+que es el fuente.
+
 Es un cartel, no una página: **una sola petición HTTP**. El CSS, el favicon y
 las fuentes van embebidos, no hay JavaScript y no hay WebGL. Con archivos
 aparte el titular aparecería primero en una fuente del sistema y saltaría al
@@ -514,8 +519,9 @@ rama que no cambia entre commits, así que ahí sólo sería ruido. Se corre al
 tocar la rama y **antes de activarla**, que es cuando importa. Comprueba los dos
 archivos idénticos, el CNAME, que no haya ninguna referencia externa —en esa
 rama cualquier `<link>` o `<script>` es un 404 seguro—, el `noindex`, que el
-mailto sea el mismo del sitio, y la cobertura de las fuentes embebidas contra su
-`cmap`.
+mailto sea el mismo del sitio, que no viaje ningún comentario (ni `<!--` ni
+`/*` en el CSS inline, que el stripper deja crudo a propósito), y la cobertura
+de las fuentes embebidas contra su `cmap`.
 
 No compara bytes contra el generador y no es por comodidad: **el codificador
 woff2 no es determinista** —tres corridas del mismo comando, tres `sha1`
