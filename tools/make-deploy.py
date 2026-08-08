@@ -310,28 +310,73 @@ def transformable(ruta):
     return ruta.endswith((".html", ".css", ".js")) and not ruta.startswith(VENDOR)
 
 
+# SOLO whitespace ASCII, en las tres operaciones de línea y en la
+# normalización de la guarda. Python trata U+00A0 (nbsp) y U+3000 (el espacio
+# ideográfico de la marca de agua 産霊　河川　言霊) como whitespace en
+# strip/split, pero HTML los RENDERIZA siempre: un rstrip() pelado se los
+# comería en silencio (hallazgo de la revisión adversarial, 2026-08-08).
+_WS_ASCII = " \t\r\f"
+RE_ESPACIOS_ASCII = re.compile(r"[ \t\n\r\f]+")
+
+
+def _normalizar_espacios(texto):
+    return RE_ESPACIOS_ASCII.sub(" ", texto).strip(" ")
+
+
 def _limpiar_lineas(texto, relleno):
     lineas = []
     for linea in texto.split("\n"):
         if _MARCA in linea:
             limpia = linea.replace(_MARCA, relleno)
-            if limpia.strip():
-                lineas.append(limpia.rstrip())
+            if limpia.strip(_WS_ASCII):
+                lineas.append(limpia.rstrip(_WS_ASCII))
             # solo-comentario(s): la línea entera se va, con su \n
         else:
             lineas.append(linea)
     return "\n".join(lineas)
 
 
+RE_PRE_HTML = re.compile(r"<(pre|textarea)\b[^>]*>.*?</\1\s*>", re.S | re.I)
+
+
 def quitar_comentarios_html(texto):
-    """<!-- --> fuera de <script>/<style>. El contenido raw no se toca."""
-    partes, pos = [], 0
-    for m in RE_RAW_HTML.finditer(texto):
-        partes.append(RE_COMENT_HTML.sub(_MARCA, texto[pos:m.start()]))
-        partes.append(m.group(0))
-        pos = m.end()
-    partes.append(RE_COMENT_HTML.sub(_MARCA, texto[pos:]))
-    return _limpiar_lineas("".join(partes), "")
+    """<!-- --> fuera de <script>/<style>; adentro de <pre>/<textarea> el
+    comentario sale A NADA y SIN cirugía de líneas (ahí el whitespace es
+    renderizado). UNA pasada posicional: el constructo que ARRANCA primero
+    gana — un <script> dentro de un comentario es texto del comentario (un
+    bloque comentado entero SE VA, como lo ve el parser HTML real), y un
+    <!-- dentro de un bloque raw es texto del raw. La versión anterior
+    protegía los raw ANTES de mirar comentarios y un <script> comentado
+    partía el <!-- de su --> — el comentario sobrevivía y bloqueaba todo
+    deploy (hallazgo de la revisión adversarial, reproducido)."""
+    out, pos, n = [], 0, len(texto)
+    while pos < n:
+        c = texto.find("<!--", pos)
+        m_raw = RE_RAW_HTML.search(texto, pos)
+        m_pre = RE_PRE_HTML.search(texto, pos)
+        candidatos = [x for x in ((c, "com", None),
+                                  (m_raw.start() if m_raw else -1, "raw", m_raw),
+                                  (m_pre.start() if m_pre else -1, "pre", m_pre))
+                      if x[0] >= 0]
+        if not candidatos:
+            out.append(texto[pos:])
+            break
+        ini, tipo, m = min(candidatos)
+        out.append(texto[pos:ini])
+        if tipo == "com":
+            fin = texto.find("-->", ini + 4)
+            if fin < 0:
+                sys.exit("transformación: un <!-- sin su --> — comentario sin "
+                         "cerrar; nada se escribió")
+            out.append(_MARCA)
+            pos = fin + 3
+        elif tipo == "raw":
+            out.append(m.group(0))
+            pos = m.end()
+        else:
+            out.append(RE_COMENT_HTML.sub("", m.group(0)))
+            pos = m.end()
+    return _limpiar_lineas("".join(out), "")
 
 
 def _escanear_css(texto):
@@ -537,7 +582,10 @@ class _EventosHTML(HTMLParser):
 
     def _flush(self):
         if self._data:
-            t = " ".join("".join(self._data).split())
+            # ASCII solo: normalizar con split() pelado colapsaría también
+            # NBSP y U+3000, que HTML renderiza — la guarda quedaría ciega a
+            # un stripper que se los coma.
+            t = _normalizar_espacios("".join(self._data))
             if t:
                 self.eventos.append(("data", t))
             self._data = []
@@ -691,11 +739,19 @@ def verificar_identidad(arbol_pub, arbol_fuente):
     return problemas
 
 
-def verificar_transformacion(arbol_pub, leer_fuente, leer_pub):
+def verificar_transformacion(arbol_pub, leer_fuente, leer_pub, desde_head=True):
     """La guarda 4: cero comentarios y NADA MÁS cambiado, por derivaciones
     INDEPENDIENTES del stripper. Es la red real contra un bug del stripper —
     la identidad recomputa la misma función (tautológica) y check-modes solo
-    navega la portada y /hajime/: el resto del artefacto lo cubre esto."""
+    navega la portada y /hajime/: el resto del artefacto lo cubre esto.
+
+    `desde_head=False` es el rollback (--fuente): las comprobaciones
+    COMPARATIVAS rigen igual (nada que el fuente tenga puede perderse), pero
+    las de PRESENCIA (la meta de Search Console, los bloques de chrome que
+    ese árbol no tenía) siguen la partición del CONTRATO — «el sitio de ese
+    día se publica como era». Sin esto, el rollback documentado a
+    v1-published/v1-content-complete frenaba en seco (hallazgo ALTO de la
+    revisión adversarial, reproducido ejecutando)."""
     problemas = []
     htmls = [r for r in sorted(arbol_pub) if r.endswith(".html")]
 
@@ -710,8 +766,8 @@ def verificar_transformacion(arbol_pub, leer_fuente, leer_pub):
             problemas.append(f"{ruta}: quedaron {len(ep.comentarios)} comentario(s) "
                              f"en el artefacto ({' '.join(ep.comentarios[0].split())[:60]!r}…)")
         # 2. Nada más cambió: mismos eventos (tags y atributos EXACTOS, texto
-        #    normalizado por espacios). Caza el sobre-borrado en CUALQUIER
-        #    página — metas, atributos, prosa.
+        #    normalizado por espacios ASCII). Caza el sobre-borrado en
+        #    CUALQUIER página — metas, atributos, prosa.
         if ef.eventos != ep.eventos:
             detalle = f"{len(ef.eventos)} vs {len(ep.eventos)} eventos"
             for a, b in zip(ef.eventos, ep.eventos):
@@ -720,26 +776,68 @@ def verificar_transformacion(arbol_pub, leer_fuente, leer_pub):
                     break
             problemas.append(f"{ruta}: la transformación cambió algo más que "
                              f"comentarios ({detalle})")
-        # 3. El texto visible, por la derivación que ya usan las guardas del
-        #    fuente (_guardas.texto_visible) — segunda vara independiente.
-        tf = " ".join(G.texto_visible(fuente).split())
-        tp = " ".join(G.texto_visible(pub).split())
+        # 3. El texto visible (_guardas.texto_visible). El fuente entra con
+        #    los comentarios ya quitados A NADA: texto_visible los sustituye
+        #    por UN espacio y con foo<!-- -->bar daba un rojo FALSO («el
+        #    texto cambió») sobre un artefacto correcto — hallazgo de la
+        #    revisión. El valor independiente de esta vara no es el regex de
+        #    comentarios (trivial): es que NO pasa por la cirugía de líneas
+        #    del stripper — la aísla.
+        tf = _normalizar_espacios(G.texto_visible(RE_COMENT_HTML.sub("", fuente)))
+        tp = _normalizar_espacios(G.texto_visible(pub))
         if tf != tp:
             problemas.append(f"{ruta}: el texto visible cambió con la transformación")
+        # 3b. <pre>/<textarea>: ahí el whitespace SE RENDERIZA y las
+        #     normalizaciones de 2 y 3 no lo ven — la comparación es BYTE a
+        #     byte: bloque del artefacto == bloque del fuente sin comentarios,
+        #     sin cirugía de líneas (hallazgo de la revisión: un <pre> con
+        #     comentario perdía saltos e indentación con todo en verde).
+        #     Límite documentado: white-space:pre aplicado por CSS a otro
+        #     elemento no se puede ver estáticamente (hoy styles.css solo
+        #     tiene nowrap).
+        esperados = [RE_COMENT_HTML.sub("", m.group(0))
+                     for m in RE_PRE_HTML.finditer(fuente)]
+        reales = [m.group(0) for m in RE_PRE_HTML.finditer(pub)]
+        if esperados != reales:
+            problemas.append(f"{ruta}: un <pre>/<textarea> cambió byte a byte "
+                             f"con la transformación (whitespace renderizado)")
+        # 3c. Precondición del borde raw: un <script>/<style> inline cuyo
+        #     contenido traiga «<!--» o «</script» entra en el estado
+        #     double-escaped del spec, donde el primer </script> NO cierra —
+        #     y ahí el stripper Y html.parser comparten la MISMA regla
+        #     ingenua: la corrupción sería invisible para toda la guarda
+        #     (hallazgo de la revisión, reproducido con fixture). Se prohíbe
+        #     en el FUENTE, en rojo con nombre — hoy el único inline es el
+        #     import map (JSON) y no lo trae.
+        for m in RE_RAW_HTML.finditer(fuente):
+            cuerpo = m.group(0)[m.group(0).index(">") + 1:].rsplit("</", 1)[0]
+            if "<!--" in cuerpo or f"</{m.group(1).lower()}" in cuerpo.lower():
+                problemas.append(f"{ruta}: un <{m.group(1)}> inline contiene "
+                                 f"«<!--» o «</{m.group(1).lower()}» — el borde raw "
+                                 f"se vuelve ambiguo (double-escaped) y el stripper "
+                                 f"no puede garantizarlo; sacarlo del fuente")
         # 7. Idempotencia: transformar lo transformado no mueve un byte.
         if transformar(ruta, leer_pub(ruta)) != leer_pub(ruta):
             problemas.append(f"{ruta}: la transformación no es idempotente")
 
     # 4. El chrome idéntico ENTRE páginas DEL ARTEFACTO: la garantía de
     #    chrome_divergente, re-establecida donde se sirve (mismos marcadores,
-    #    importados — no una segunda lista).
+    #    importados — no una segunda lista). QUÉ bloques exigir se deriva del
+    #    FUENTE: v1-content-complete no tenía bloque de iconos y exigírselo
+    #    hacía impublicable el punto de restauración del DNS (hallazgo ALTO
+    #    de la revisión); un stripper que muerda un bloque existente sigue
+    #    cayendo — el fuente lo tiene y el artefacto no.
     ref = {}
     for ruta in htmls:
+        fuente = leer_fuente(ruta).decode("utf-8")
         pub = leer_pub(ruta).decode("utf-8")
         for etiqueta, ini, fin in G.BLOQUES_CHROME:
+            if G.bloque_chrome(fuente, ini, fin) is None:
+                continue  # ese árbol no lo tenía: no hay nada que preservar
             b = G.bloque_chrome(pub, ini, fin)
             if b is None:
-                problemas.append(f"{ruta}: el artefacto quedó sin {etiqueta}")
+                problemas.append(f"{ruta}: el artefacto quedó sin {etiqueta} "
+                                 f"(el fuente lo tiene)")
             elif etiqueta not in ref:
                 ref[etiqueta] = (ruta, b)
             elif b != ref[etiqueta][1]:
@@ -755,9 +853,16 @@ def verificar_transformacion(arbol_pub, leer_fuente, leer_pub):
         m = re.search(r'<meta name="google-site-verification" content="[^"]*"\s*/?>',
                       fuente)
         if not m:
-            problemas.append("index.html (fuente): sin la meta google-site-verification "
-                             "— si falta en la portada se pierde la verificación de "
-                             "Search Console (regla de CLAUDE.md)")
+            # PRESENCIA solo desde HEAD: bajo --fuente rige la partición del
+            # CONTRATO («el sitio de ese día se publica como era») — los
+            # fuentes anteriores al deploy 6 no tienen la meta, y exigirla
+            # incondicional mataba el rollback documentado (hallazgo ALTO de
+            # la revisión: --fuente v1-published frenaba y --pisar no exime
+            # de la guarda).
+            if desde_head:
+                problemas.append("index.html (fuente): sin la meta google-site-verification "
+                                 "— si falta en la portada se pierde la verificación de "
+                                 "Search Console (regla de CLAUDE.md)")
         elif m.group(0) not in pub:
             problemas.append("index.html: la meta google-site-verification NO "
                              "sobrevivió a la transformación — publicarla así pierde "
@@ -789,11 +894,28 @@ def verificar_transformacion(arbol_pub, leer_fuente, leer_pub):
     # 6. CSS/JS: la secuencia de tokens significativos no cambió. Los átomos
     #    (strings, templates, regex) comparan VERBATIM; el código, por
     #    palabras. Caza un átomo mordido y dos tokens pegados.
+    #    MÁS el conteo que a esta pareja le faltaba (hallazgo de la
+    #    revisión): «/*» PROHIBIDO en el artefacto CSS/JS de la casa —
+    #    tokens e idempotencia usan EL MISMO scanner del stripper, así que
+    #    un comentario que el scanner clasifique mal (p.ej. tras una
+    #    comilla despareada en código) sobreviviría con todo en verde. El
+    #    ban es independiente de la clasificación. Si algún día un string
+    #    legítimo necesita «/*», este check se revisa a conciencia — rojo
+    #    visible, no publicación silenciosa. LÍMITE DOCUMENTADO: para el
+    #    «//» de línea no hay ban posible (el GLSL del template de
+    #    background.js lo usa legítimamente) — un comentario // atrapado en
+    #    un pseudo-string quedaría; el caso exige una comilla despareada en
+    #    CÓDIGO, que en JS es SyntaxError (check-modes lo ve para
+    #    main/cube; background muere en consola).
     for ruta in sorted(arbol_pub):
         if not transformable(ruta) or ruta.endswith(".html"):
             continue
         fuente = leer_fuente(ruta).decode("utf-8")
         pub = leer_pub(ruta).decode("utf-8")
+        if "/*" in pub:
+            problemas.append(f"{ruta}: quedó un «/*» en el artefacto — comentario "
+                             f"sobreviviente, o un string nuevo que obliga a "
+                             f"revisar este check")
         escanear = _escanear_css if ruta.endswith(".css") else _escanear_js
         tf, tp = _tokens(fuente, escanear), _tokens(pub, escanear)
         if tf != tp:
@@ -1002,7 +1124,8 @@ def main():
     problemas = (verificar_sin_notas(arbol_pub)
                  + verificar_completo(arbol_pub, leer, requeridos)
                  + verificar_identidad(arbol_pub, arbol_todo)
-                 + verificar_transformacion(arbol_pub, leer_fuente, leer))
+                 + verificar_transformacion(arbol_pub, leer_fuente, leer,
+                                            desde_head=fuente_ref is None))
     if problemas:
         print("LA GUARDA FRENÓ EL DEPLOY — nada se commiteó:")
         for p in problemas:
