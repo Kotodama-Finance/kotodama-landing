@@ -460,6 +460,12 @@ def mapa_desactualizado():
 #              summary aparte ni override: un solo texto no puede
 #              contradecirse con el del feed. Si el lead no funciona suelto,
 #              se reescribe el lead.
+#   rótulo  -> el <a class="note-face"> de la cabecera (2026-08-08, decisión
+#              del autor): la copia LEGIBLE de la meta kotodama-face, romaji
+#              enlazado a la cara. Texto y href tienen que coincidir con la
+#              meta y la guarda los compara — dos copias del mismo dato sin
+#              guarda derivan (el armado típico de una nota es copiar otra
+#              como molde y cambiar la meta).
 #
 # UN generador (make-notes.py), UNA pasada, TRES salidas: el feed de la
 # portada (entre centinelas — index.html sigue siendo de mano salvo ese
@@ -476,6 +482,10 @@ def mapa_desactualizado():
 # herramienta de búsqueda por contenido, no un segundo lugar donde leerla.
 
 RE_NOTA_FACE = re.compile(r'<meta name="kotodama-face" content="([^"]*)"')
+# Anclas genéricas (atributos + texto): el filtro por note-face se hace sobre
+# los atributos capturados, para tolerar el ORDEN de atributos — el precedente
+# es tarjetas_de(), donde href-antes-de-class daba un diagnóstico falso.
+RE_NOTA_ANCLA = re.compile(r"<a\b([^>]*)>(.*?)</a>", re.S)
 RE_NOTA_FECHA = re.compile(r'<time datetime="(\d{4}-\d{2}-\d{2})"[^>]*>([^<]*)</time>')
 RE_NOTA_LEAD = re.compile(r'<p class="[^"]*\bnote-lead\b[^"]*"[^>]*>(.*?)</p>', re.S)
 RE_NOTA_H1 = re.compile(r"<h1[^>]*>(.*?)</h1>", re.S)
@@ -532,6 +542,29 @@ def notas_publicables():
                 f"{ruta}: sin <meta name=\"kotodama-face\"> válida — declarar "
                 f"una de: {', '.join(CARAS_ROMAJI)}")
         cara = m.group(1)
+        # El rótulo de cara ENLAZADO en la cabecera (2026-08-08, decisión del
+        # autor): la copia LEGIBLE de la meta kotodama-face — sin él la nota
+        # no muestra a qué cara pertenece. Texto y href tienen que coincidir
+        # con la meta; corregir EL QUE ESTÉ MAL, no el que moleste.
+        rotulo = None
+        for a in RE_NOTA_ANCLA.finditer(h):
+            attrs = a.group(1)
+            if re.search(r'\bclass="[^"]*\bnote-face\b', attrs):
+                mh = re.search(r'href="([^"]*)"', attrs)
+                rotulo = (mh.group(1) if mh else "",
+                          re.sub(r"\s+", " ", a.group(2)).strip())
+                break
+        if rotulo is None:
+            raise NotaInvalida(
+                f"{ruta}: sin el rótulo de cara en la cabecera — falta el "
+                f"<a class=\"note-face\"> junto a la fecha (ver el molde): "
+                f"el lector tiene que ver a qué cara pertenece la nota")
+        if rotulo != (f"/{cara}/", CARAS_ROMAJI[cara]):
+            raise NotaInvalida(
+                f"{ruta}: el rótulo de cara ({rotulo[1]!r} -> {rotulo[0]!r}) "
+                f"no coincide con la meta kotodama-face ({cara!r}: se espera "
+                f"{CARAS_ROMAJI[cara]!r} -> /{cara}/) — son dos copias del "
+                f"MISMO dato; corregir la que esté mal")
         m = RE_NOTA_FECHA.search(h)
         if not m or not m.group(2).strip():
             raise NotaInvalida(

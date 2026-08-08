@@ -26,6 +26,11 @@
                   aparte y SIN override: un solo texto no puede
                   contradecirse con el del feed. Si el lead no funciona
                   suelto como gancho, se reescribe el lead.
+       rótulo  -> el <a class="note-face"> de la cabecera es la copia
+                  LEGIBLE de la meta kotodama-face (2026-08-08, decisión
+                  del autor): texto y href tienen que coincidir con ella,
+                  y la guarda los compara — dos copias del mismo dato sin
+                  guarda derivan.
      El contrato completo y sus guardas: _guardas.notas_publicables(). -->
 <meta name="kotodama-type" content="note">
 <meta name="kotodama-face" content="hajime">
@@ -82,12 +87,20 @@
          otra página del sitio muestra fecha — la nota introduce el primer
          elemento temporal, y feed y archivo ordenan por él.
 
-         La vuelta va a /hajime/ por el criterio del ORIGEN (las notas
-         cuelgan de Hajime). PUNTO ABIERTO, anotado para el autor: el lector
-         que llega por el feed viene de la PORTADA, no de Hajime — dos
-         entradas reales que ninguna página anterior tuvo que resolver. La
-         propuesta está en CLAUDE.md (decisión del sistema de notas); hasta
-         que el autor decida, rige el criterio escrito.
+         La vuelta va a /notes/ («← All notes») — DECIDIDO por el autor
+         (2026-08-08), y cierra el punto que estaba abierto acá: los DOS
+         orígenes reales de una nota son el feed de la portada y /notes/, y
+         con dos orígenes el criterio del ORIGEN no decide — rige el rótulo
+         por convención, el precedente de /disclaimer/ y /sitemap/. «All
+         notes» sirve a los dos orígenes.
+
+         El RÓTULO DE CARA en la cabecera (misma decisión): sin él la nota
+         no muestra a qué cara pertenece — lo declaran la URL y la meta
+         kotodama-face, y el rótulo lo recupera para el lector Y enlaza a la
+         cara. El tratamiento es el del rótulo de cara del listado de
+         /notes/ (romaji en oro — acá lo da la regla global de <a>, sin CSS
+         nuevo), en la línea de la fecha y en su mismo orden: cara · fecha.
+         La clase note-face es del CONTRATO, como note-lead — ver arriba.
 
          El 免責事項 corto va al pie COMO EN TODAS: viene con el footer
          global — no se duplica uno por nota. El completo vive en
@@ -95,7 +108,7 @@
     <article class="face-page">
       <header class="face-page__head">
         <h1 class="face-page__title face-page__title--note todo">TODO: título de la nota de ejemplo</h1>
-        <p class="face-page__date"><time datetime="2026-08-07">7 August 2026</time></p>
+        <p class="face-page__date"><a class="note-face" href="/hajime/">Hajime</a> &middot; <time datetime="2026-08-07">7 August 2026</time></p>
       </header>
 
       <!-- El lead lleva DOS clases y no es redundancia: face-page__lead es
@@ -110,7 +123,7 @@
         <p class="todo">TODO: segundo párrafo del cuerpo — relleno evidente; esta página se borra cuando exista la primera nota real.</p>
       </div>
 
-      <p class="face-page__back"><a href="/hajime/">&larr; Back to Hajime</a></p>
+      <p class="face-page__back"><a href="/notes/">&larr; All notes</a></p>
     </article>
   </main>
 

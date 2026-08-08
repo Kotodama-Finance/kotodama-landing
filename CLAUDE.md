@@ -257,7 +257,7 @@ fallidos ya corregidos, y las capturas intermedias.
   derivado) y **el árbol de URLs llega a CUATRO niveles** — verificado que
   nada asume profundidad máxima: guardas y generadores descubren por
   `rglob` y derivan de directorios.
-- **Decisiones del autor pendientes: DOS (2026-08-07, tarde)** — (1) **el
+- **Decisiones del autor pendientes: UNA (desde el 2026-08-08)** — **el
   TÍTULO y la LÍNEA DE FUNCIÓN de la tarjeta de sector** en
   /hajime/yorozu/: el PATRÓN está construido (la variante sin kanji — ver
   la decisión del patrón de sector), pero **desde el 2026-08-08 el MARCADO
@@ -265,10 +265,11 @@ fallidos ya corregidos, y las capturas intermedias.
   ver-código de una página publicada no van); al pasar él el título, la
   tarjeta se reescribe — el pase de reposición está en esa decisión.
   *(Esto reemplaza al «cómo enlaza /hajime/yorozu/ a seguros», que era la
-  pendiente anterior: la respuesta fue esta tarjeta.)* (2) **la VUELTA de una nota**
-  («Back to Hajime» del criterio del origen contra los dos orígenes reales
-  — feed y archivo; propuesta hecha: «← All notes» — ver el punto abierto
-  en la decisión del sistema de notas). Además esperan TEXTO suyo: la capa
+  pendiente anterior: la respuesta fue esta tarjeta.)* **La VUELTA de una
+  nota se CERRÓ el 2026-08-08: «← All notes», a /notes/, MÁS el rótulo de
+  cara enlazado en la cabecera** — implementado en el molde, con el rótulo
+  dentro del contrato y su guarda probada en rojo; ver la decisión del
+  sistema de notas, que quedó actualizada. Además esperan TEXTO suyo: la capa
   1 de seguros, y la description y el gloss de /notes/ — pases de
   redacción, no decisiones. Las dos
   anteriores se cerraron el 2026-08-05: los kanji de las subcaras (**太一 Taichi · 万
@@ -396,19 +397,21 @@ vigentes son tres: «¿en qué paso del DNS estamos?» (fuera del repo), «¿lle
 el texto de la capa 1 de seguros?» (andamiaje listo, servido con noindex
 desde el deploy 4) y «¿llegó la primera nota?» — el sistema de notas está
 CONSTRUIDO entero y sin deployar (2026-08-07, ver su decisión): dentro del
-repo los frentes son esas redacciones, no construcción. Ojo: lo commiteado
-de la tanda de notas está LOCAL, sin push — pedirle confirmación al autor
-antes de pushear.
+repo los frentes son esas redacciones, no construcción. *(La tanda de notas
+se pushó con el deploy 5, 2026-08-08; lo LOCAL sin push hoy es el cierre de
+la vuelta de una nota, del mismo día — pedirle confirmación al autor antes
+de pushear, como siempre.)*
 
 La revisión legal del `免責事項` **no es un pendiente**: se decidió publicar sin
 ella.
 
-**Sin decidir dentro del sitio quedan DOS cosas (2026-08-07, tarde)**: el
-título y la línea de función de la tarjeta de sector en /hajime/yorozu/ (la
-tarjeta ya está construida; falta su texto), y la vuelta de una nota
-(propuesta: «← All notes»). Ver el bullet de decisiones pendientes en
-Estado. Lo anterior — cómo enlaza /hajime/yorozu/ a seguros — se cerró con
-la tarjeta; el `domain` de las tarjetas de la portada, antes.
+**Sin decidir dentro del sitio queda UNA cosa (desde el 2026-08-08)**: el
+título y la línea de función de la tarjeta de sector en /hajime/yorozu/ (el
+patrón existe; el marcado se repone junto con su texto). La vuelta de una
+nota se CERRÓ el 2026-08-08 — «← All notes» más el rótulo de cara enlazado
+en la cabecera; ver la decisión del sistema de notas. Lo anterior — cómo
+enlaza /hajime/yorozu/ a seguros — se cerró con la tarjeta; el `domain` de
+las tarjetas de la portada, antes.
 
 **Para cualquier deploy futuro, releer primero** las secciones «Antes de
 publicar» y «Publicar» del README: son las cuatro guardas MÁS la del deploy
@@ -430,7 +433,7 @@ sección con el detalle.
 | Cabo | Estado |
 |---|---|
 | **Capa 1 de seguros: el TEXTO** | **el frente activo (2026-08-07)**: andamiaje listo en `/hajime/yorozu/japan/seguros/` con 25 placeholders esperando el texto del autor, **con `noindex` mientras tanto** (exclusión del sitemap derivada; al redactar: sacar la meta + regenerar sitemap.xml y /sitemap/ —mismo comando— + baseline — el olvido tiene guarda). **Servido con su noindex desde el deploy 4 (2026-08-07): 200 en el dominio, fuera del sitemap servido — invisible, verificado.** La tarjeta desde /hajime/yorozu/: el PATRÓN existe (2026-08-07) pero **su marcado salió del archivo el 2026-08-08** (los TODOs quedaban visibles en ver-código de una página publicada) — **se repone junto con el título del autor**, y al sacar el noindex vuelve a ser requisito del mapa. Ver la decisión del patrón de sector. |
-| **Sistema de notas** | **construido completo, SIN deployar (2026-08-07)**: contrato de metadatos, molde con nota-fixture, `make-notes.py` (feed entre centinelas + listado + índice), /notes/ con buscador (segunda página con JS), guarda en check-structure probada en NUEVE rojos, excepción de deploy por ruta exacta. Todo noindex, feed vacío, cero enlaces entrantes. **Se estrena con la primera nota real** — el pase completo está en su decisión (primera de la lista). |
+| **Sistema de notas** | **construido completo, SIN deployar (2026-08-07)**: contrato de metadatos, molde con nota-fixture, `make-notes.py` (feed entre centinelas + listado + índice), /notes/ con buscador (segunda página con JS), guarda en check-structure probada en NUEVE rojos, excepción de deploy por ruta exacta. Todo noindex, feed vacío, cero enlaces entrantes. **La vuelta y el rótulo de cara se CERRARON el 2026-08-08** («← All notes» a /notes/; `note-face` en el contrato, cinco rojos más — ver la decisión). **Se estrena con la primera nota real** — el pase completo está en su decisión (primera de la lista). |
 | ~~Redacción de Hajime~~ | **CERRADA 2026-08-05**: los 15, con texto del autor. Baseline en cero, `check-ready` en `0`. Cualquier placeholder nuevo es regresión. |
 | ~~Logo de LibraryThing~~ | **CERRADO 2026-08-05**: va el archivo oficial en su paleta original, sin alterar — criterio nuevo que disuelve el pendiente de permiso (ver la decisión de tarjetas y `assets/img/README.md`). |
 | ~~Kanji de Taichi/Yorozu/Yūgen~~ | **CERRADO 2026-08-05**: 太一 · 万 · 幽玄, del `context.md` del autor. Aplicados en h1 y `<title>` con el patrón de las caras; subset regenerado (太/幽/玄 eran nuevos). |
@@ -596,13 +599,32 @@ del feed, y si un lead no funciona suelto como gancho, se reescribe el lead.
   contenido), regenerar sitemap y notas, y
   actualizar el baseline. **Y la cadena «First analysis on the way» caduca
   en sus TRES lugares a la vez** (ver la lista de duplicadas en /musubi/).
-- **PUNTO ABIERTO DEL AUTOR — la vuelta de una nota.** El molde dice «Back
-  to Hajime» (criterio del ORIGEN: las notas cuelgan de Hajime), pero los
-  DOS orígenes reales de una nota son el feed de la portada y /notes/ —
-  ninguna página anterior tuvo dos entradas reales. Propuesta: «← All
-  notes» (/notes/), que sirve a los dos orígenes y sigue el precedente de
-  /disclaimer/ y /sitemap/ (rótulo por convención cuando el origen no es
-  único). Lo decide él; hasta entonces rige el criterio escrito.
+- **La VUELTA de una nota — CERRADA (2026-08-08, decisión del autor): «←
+  All notes», a /notes/.** El argumento que la cerró: el criterio del
+  ORIGEN no decide cuando hay DOS orígenes reales (el feed de la portada y
+  /notes/), y ahí rige el rótulo por convención — el precedente de
+  /disclaimer/ y /sitemap/. «All notes» sirve a los dos. Implementado en
+  el molde (la nota-fixture).
+- **Y el RÓTULO DE CARA enlazado en la cabecera (misma decisión, 2026-08-08)**:
+  con «All notes» solo, la nota no mostraba por ningún lado a qué cara
+  pertenece — lo declaran la URL y la meta `kotodama-face`, y el rótulo lo
+  recupera para el lector Y enlaza a la cara. **El tratamiento es el del
+  rótulo de cara del listado de /notes/, trasladado** (instrucción del
+  autor: no inventar un patrón nuevo): romaji en oro — que acá lo da la
+  regla global de `<a>`, **SIN CSS nuevo**: una regla vacía para
+  `note-face` sería el patrón de reglas-sin-uso que este proyecto ya pagó
+  dos veces (anotado junto a `.face-page__date` en el CSS) — en la línea
+  de la fecha y en su mismo orden: **cara · fecha**. **La clase
+  `note-face` entró al CONTRATO** (el precedente de `note-lead`): es la
+  segunda copia visible del dato que ya declara la meta, y dos copias del
+  mismo dato sin guarda derivan — `notas_publicables()` compara texto y
+  href contra la meta y ABORTA nombrando la diferencia (el armado típico
+  de una nota es copiar otra como molde y cambiar la meta: exactamente el
+  olvido que esto vuelve rojo). **Probado EN ROJO con CINCO casos**: sin
+  rótulo, texto que no coincide, href que no coincide, el correcto ENTRA,
+  y href-antes-de-class tolerado (el precedente de `tarjetas_de()`). El
+  fixture es noindex y la guarda no lo valida — por diseño (sus TODO
+  abortarían); el molde ES la referencia del marcado.
 
 ### La tarjeta de SECTOR: la variante sin kanji — el patrón de la familia
 
@@ -2511,6 +2533,9 @@ versión japonesa son un pase aparte del autor. Tampoco se inventan explicacione
 del sistema filosófico ni las razones de los nombres.
 
 ### Otras reglas vigentes
+- **Los rótulos de ayuda del cubo NO se cambian** — «Click a face to select
+  it.» queda como está. Cerrado por el autor (2026-08-08); no volver a
+  proponerlo.
 - **Ningún color literal fuera de `:root`**, incluidos los que consume el JS
   (`cube.js` los lee con `getPropertyValue`, **sin fallback**: si falta un token
   falla con su nombre en vez de disfrazarlo con un hex de repuesto).

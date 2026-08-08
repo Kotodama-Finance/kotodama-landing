@@ -1360,6 +1360,13 @@ button:focus-visible {
   color: var(--c-text);
   text-wrap: balance;
 }
+/* En la línea de la fecha va además el RÓTULO DE CARA enlazado (2026-08-08,
+   decisión del autor): <a class="note-face">, cara · fecha — el orden del
+   listado de /notes/. La clase note-face NO tiene regla A PROPÓSITO: es del
+   CONTRATO (la guarda compara texto y href contra la meta kotodama-face,
+   ver _guardas.notas_publicables), y el oro ya lo da la regla global de <a>
+   — el mismo tratamiento que .note-item__face. Escribirle una regla vacía
+   sería el patrón que este proyecto ya pagó dos veces (reglas sin uso). */
 .face-page__date {
   font-family: var(--font-display);
   font-style: italic;
