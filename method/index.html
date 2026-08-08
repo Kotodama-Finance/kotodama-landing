@@ -137,9 +137,13 @@
              (EDINET, e-Stat, BIS, Damodaran, WID, EPU) simplemente no la
              llevan. -->
 
+        <!-- Cada par cuadrado+rótulo es una UNIDAD (2026-08-08): sueltos en
+             el flex, en móvil el cuadrado hueco quedaba en una fila y su
+             rótulo en la siguiente — un marcador sin rótulo no dice nada.
+             La semántica no cambia: lleno = Official, hueco = Attributed. -->
         <p class="sources__legend">
-          <span class="sources__mark" data-tier="1" aria-hidden="true"></span> Official primary
-          <span class="sources__mark" data-tier="2" aria-hidden="true"></span> Attributed primary
+          <span class="sources__legend-item"><span class="sources__mark" data-tier="1" aria-hidden="true"></span> Official primary</span>
+          <span class="sources__legend-item"><span class="sources__mark" data-tier="2" aria-hidden="true"></span> Attributed primary</span>
         </p>
 
         <h3 class="sources__group">Insurance</h3>

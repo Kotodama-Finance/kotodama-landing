@@ -229,7 +229,10 @@
   --line-gold: rgb(var(--rgb-gold) / 0.35);
   --line-gold-soft: rgb(var(--rgb-gold) / 0.18);
   --line-gold-faint: rgb(var(--rgb-gold) / 0.12);
-  --nav-scrim: rgb(var(--rgb-navy) / 0.82);
+  /* --nav-scrim se fue con .is-scrolled (2026-08-08): el fondo de la nav ya
+     no es un velo semitransparente que pone el JS — es opaco por defecto en
+     CSS, con la transparencia sobre el hero como mejora scroll-driven. Ver
+     el bloque NAV. */
 
   /* Tipografías */
   --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
@@ -477,6 +480,25 @@ button:focus-visible {
 /* -------------------------------------------------------------------------
    NAV
    ------------------------------------------------------------------------- */
+/* EL FONDO ES OPACO POR DEFECTO, EN CSS PURO (2026-08-08, decisión del autor
+   — opción B de las dos que evaluó). Esto REEMPLAZA al mecanismo .is-scrolled
+   que ponía main.js: como solo la portada carga JS, las páginas de prosa
+   nunca recibían fondo y el texto se dibujaba ENCIMA del texto de la nav al
+   scrollear (verificado en iPhone sobre /musubi/ y /method/; reproducido a
+   390px). La regla del reparto:
+     - DEFAULT: fondo opaco (--c-navy) + filete oro. Sin JS, sin condiciones.
+       Un navegador sin soporte de scroll-driven animations se queda con
+       esto — falla visible y benigna (una barra sólida sobre el hero), nunca
+       el bug silencioso del texto superpuesto.
+     - MEJORA PROGRESIVA (@supports abajo): transparente sobre el hero y se
+       asienta al fondo opaco en los primeros 120px de scroll — CSS ligado al
+       scroll (animation-timeline), CERO JavaScript. El orden opaco-default /
+       transparente-mejora NO es negociable: al revés, el navegador viejo
+       hereda el bug.
+   El velo semitransparente con blur (--nav-scrim + backdrop-filter) se fue
+   con .is-scrolled: sobre un fondo opaco el blur no tiene qué desenfocar.
+   prefers-reduced-motion apaga la animación (animation: none global) y deja
+   el opaco: correcto, no hay nada que reponer. */
 .nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -485,22 +507,41 @@ button:focus-visible {
   align-items: center;
   justify-content: space-between;
   padding: 18px clamp(20px, 5vw, 64px);
-  border-bottom: 1px solid transparent;
-  transition: background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
+  background: var(--c-navy);
+  border-bottom: 1px solid rgb(var(--rgb-gold) / 0.14);
 }
-.nav.is-scrolled {
-  background: var(--nav-scrim);
-  border-bottom-color: rgb(var(--rgb-gold) / 0.14);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+@supports (animation-timeline: scroll()) {
+  /* Longhands a propósito: el shorthand animation RESETEA animation-timeline
+     a auto, y el orden de las declaraciones pasaría a importar — una trampa
+     silenciosa para el próximo que edite. Sin animation-duration: con una
+     scroll timeline el progreso lo da el scroll, no el reloj (el patrón de
+     los ejemplos de Chrome y WebKit). El keyframe declara solo el `from`;
+     el `to` implícito es el valor base de arriba — una sola fuente para el
+     estado final. */
+  .nav {
+    animation-name: kf-nav-solid;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: scroll();
+    animation-range: 0px 120px;
+  }
+  @keyframes kf-nav-solid {
+    from { background: transparent; border-bottom-color: transparent; }
+  }
 }
-.nav__brand { display: flex; align-items: baseline; gap: 12px; color: var(--c-gold); }
+/* flex-shrink: 0 + nowrap EN LA MARCA (2026-08-08): sin esto, en anchos de
+   teléfono el flex de la nav APLASTABA el brand por debajo de su contenido
+   y 言霊 envolvía a dos líneas o se superponía con «The Cube» (medido: caja
+   de 27-51px para un contenido de ~54). El kanji queda como está a TODO
+   ancho — lo que se comprime es la fila de enlaces (ver RESPONSIVE). */
+.nav__brand { display: flex; align-items: baseline; gap: 12px; color: var(--c-gold); flex-shrink: 0; }
 .nav__mark {
   font-family: var(--font-ja);
   font-weight: 500;
   font-size: 1.4rem;
   letter-spacing: 0.08em;
   line-height: 1;
+  white-space: nowrap;
 }
 .nav__word {
   font-family: var(--font-ui);
@@ -515,6 +556,11 @@ button:focus-visible {
   font-size: 0.82rem;
   letter-spacing: 0.06em;
   color: var(--c-text-mist);
+  /* Un rótulo de nav no envuelve NUNCA: a ~390px «The Cube» partía en dos
+     líneas al lado del logo (captura de iPhone, 2026-08-08). El nowrap solo
+     no alcanza — empuja la fila y corta «Contact» contra el borde—: va
+     JUNTO con la compresión del breakpoint angosto, abajo en RESPONSIVE. */
+  white-space: nowrap;
 }
 .nav__links a:hover { color: var(--c-gold); }
 
@@ -996,18 +1042,31 @@ button:focus-visible {
 .sources__mark[data-tier="1"] { background: var(--c-gold); }
 .sources__mark[data-tier="2"] { background: transparent; }
 /* Sin leyenda, un marcador es decoración: no se puede deducir qué significa
-   lleno contra hueco mirando la lista. */
+   lleno contra hueco mirando la lista. Cada par cuadrado+rótulo es UNA
+   unidad (.sources__legend-item, 2026-08-08): antes eran spans y texto
+   sueltos en el mismo flex, y en móvil el cuadrado hueco quedaba al final de
+   la primera fila con «Attributed primary» caído a la segunda — un marcador
+   separado de su rótulo no dice nada (captura de iPhone de Manuel). Cuando
+   los dos pares no entran, se apilan ENTEROS, que es el único quiebre que
+   conserva el sentido. La semántica no cambia: lleno = Official primary,
+   hueco = Attributed primary. */
 .sources__legend {
   display: flex;
   align-items: center;
-  gap: 8px;
+  column-gap: 24px;
+  row-gap: 6px;
   flex-wrap: wrap;
   margin-top: clamp(24px, 3vw, 32px);
   font-size: 0.8rem;
   letter-spacing: 0.04em;
   color: var(--c-text-muted);
 }
-.sources__legend .sources__mark:not(:first-child) { margin-left: 16px; }
+.sources__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
 .sources__en a {
   color: var(--c-text);
   border-bottom: 1px solid var(--line-gold-faint);
@@ -1814,6 +1873,19 @@ button:focus-visible {
   .nav__links { gap: 16px; }
   .face-grid { grid-template-columns: repeat(2, 1fr); }
   .hero { padding-top: 100px; }
+}
+
+/* La nav en pantallas de teléfono (2026-08-08, capturas de iPhone de Manuel).
+   Con el nowrap de los rótulos (ver NAV), a 390px la fila medía ~401px:
+   «Contact» cortado contra el borde. Los cinco rótulos QUEDAN — la solución
+   es comprimir, no esconder (los caminos descartados: nav a dos filas, que
+   cambia --nav-h y corre TODOS los destinos de ancla; y esconder o achicar
+   el kanji 言霊, que Manuel quiere como está). Números calibrados MIDIENDO a
+   390/375/360 — ver el registro en CLAUDE.md. */
+@media (max-width: 480px) {
+  .nav { padding-left: 12px; padding-right: 12px; }
+  .nav__links { gap: 8px; }
+  .nav__links a { font-size: 0.72rem; letter-spacing: 0.02em; }
 }
 
 /* -------------------------------------------------------------------------
