@@ -84,8 +84,11 @@ fallidos ya corregidos, y las capturas intermedias.
   tres bloques comparados (re-confirmado contra el bloque de iconos nuevo
   del deploy 5: la comparación empieza en el `<link>` del .ico), token
   verificado carácter por carácter en el fuente Y en el HTML SERVIDO —
-  esto EJECUTA el 4B que estaba preparado; **falta solo que Manuel toque
-  «Verificar» en Search Console**; **(2) IMAJ renombrado y re-dominado**:
+  esto EJECUTA el 4B que estaba preparado *(y CERRÓ: la propiedad quedó
+  VERIFICADA por Google el mismo 2026-08-08 — prefijo de URL sobre
+  https://kotodamafinance.com/, método etiqueta HTML. **LA META NO SE
+  TOCA**: si desaparece del `<head>` de la portada, se pierde la
+  verificación)*; **(2) IMAJ renombrado y re-dominado**:
   資産運用業協会 / www.imaj.or.jp (la fusión del 1/4/2026; la sigla IMAJ
   sigue siendo correcta), cero restos de toushin.or.jp ni del nombre viejo
   en el servido; **(3) Mizuho renombrado con el patrón de «Bank of Japan —
@@ -403,10 +406,13 @@ sesión.
 
 **EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 7, las anclas de
 la portada calibradas por sección — 2026-08-08, verificado en el dominio
-23/23) — FALTAN EL DNS (fuera del repo), QUE MANUEL TOQUE «VERIFICAR»
-EN SEARCH CONSOLE (la meta ya está servida) Y EL TEXTO DE LA CAPA
+23/23) — FALTAN EL DNS (fuera del repo) Y EL TEXTO DE LA CAPA
 1 DE SEGUROS (dentro del repo; su andamiaje ya está servido con noindex,
-invisible).** La
+invisible).** **SEARCH CONSOLE QUEDÓ VERIFICADO (2026-08-08, confirmado
+por Google)**: propiedad de prefijo de URL sobre https://kotodamafinance.com/,
+método etiqueta HTML — **la meta `google-site-verification` de la portada
+NO SE TOCA: si desaparece del `<head>`, se pierde la verificación** (la
+regla vive también en el comentario junto a la meta en index.html). La
 publicación (el paso 5) se ejecutó **ANTES de los pasos 2-4, por decisión del
 autor, y el orden es correcto**: una transferencia de registrador NO cambia
 los nameservers — Namecheap sigue sirviendo la zona durante los ~5 días de la
