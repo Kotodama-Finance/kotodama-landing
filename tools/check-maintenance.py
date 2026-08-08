@@ -124,6 +124,17 @@ def main():
     revisar("@import" not in html and "url(http" not in html,
             "el CSS no trae nada de afuera")
 
+    # CERO COMENTARIOS EN LO SERVIDO — la regla del deploy 8 (2026-08-08),
+    # extendida a esta rama el mismo día: los comentarios viven en la
+    # PLANTILLA de make-maintenance.py y el generador los quita con el MISMO
+    # stripper del deploy. El <style> se mira aparte porque el stripper deja
+    # su contenido crudo a propósito (raw text): un /* */ que alguien agregue
+    # al CSS de la plantilla sobreviviría, y esto es lo que lo caza.
+    print("\nCero comentarios en lo servido")
+    revisar("<!--" not in html, "sin ningún <!-- en el HTML")
+    estilos = re.findall(r"<style[^>]*>(.*?)</style>", html, flags=re.S)
+    revisar(all("/*" not in s for s in estilos), "sin /* en el CSS inline")
+
     print("\nMetadatos")
     revisar(re.search(r'name="robots"[^>]*content="[^"]*noindex', html) is not None,
             "noindex declarado")

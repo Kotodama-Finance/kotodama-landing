@@ -229,6 +229,31 @@ def favicon():
     return "data:image/svg+xml," + svg
 
 
+def stripper():
+    """El stripper de comentarios del deploy, importado de make-deploy.py.
+
+    CERO COMENTARIOS EN LO SERVIDO rige también acá (requisito del autor,
+    2026-08-08 — la regla del deploy 8, extendida a esta rama el mismo día):
+    los comentarios viven en la PLANTILLA de este script, que es el fuente, y
+    se eliminan del artefacto. Se reusa LA MISMA transformación del deploy a
+    propósito — dos implementaciones del mismo requisito derivan, y ésta ya
+    está probada (17 fixtures + 11 mutaciones + revisión adversarial). El
+    import es por ruta porque el guion del nombre impide el import normal.
+
+    La procedencia («no editar la rama a mano») NO se pierde con el
+    comentario GENERADO: vive en el mensaje del commit de la rama.
+    """
+    import importlib.util
+    carpeta = os.path.dirname(os.path.abspath(__file__))
+    if carpeta not in sys.path:
+        sys.path.insert(0, carpeta)  # make-deploy importa _guardas
+    spec = importlib.util.spec_from_file_location(
+        "make_deploy", os.path.join(carpeta, "make-deploy.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
 def construir():
     tk = tokens()
     ja, display, ui = caracteres()
@@ -265,6 +290,11 @@ def construir():
         en_contacto=EN_CONTACTO, correo=CORREO,
         modo_ja="Zen Kaku embebido" if JA_EMBEBIDO else "pila del sistema",
     )
+    # El artefacto sale SIN comentarios, por la misma puerta que el deploy
+    # (ver stripper()). Va acá y no en publicar() para que _dev/maintenance/
+    # y la rama sean el mismo texto — check-maintenance compara uno contra
+    # otro con los base64 elididos, y dos versiones romperían esa guarda.
+    html = stripper().transformar("index.html", html.encode("utf-8")).decode("utf-8")
     return html, pesos
 
 
