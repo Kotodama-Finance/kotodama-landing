@@ -331,6 +331,11 @@ fallidos ya corregidos, y las capturas intermedias.
   derivado) y **el árbol de URLs llega a CUATRO niveles** — verificado que
   nada asume profundidad máxima: guardas y generadores descubren por
   `rglob` y derivan de directorios.
+- **Trabajos pendientes de este lado, DOS (anotados 2026-08-08 a pedido
+  del autor — ver sus filas en los cabos): el RE-BARRIDO DE SEGURIDAD del
+  estático** (re-medir sobre lo SERVIDO y entregarle el texto fechado; su
+  archivo no se edita) **y el DISEÑO del acople de check-ready al deploy**
+  (diagnóstico + dos o tres diseños con costos, SIN implementar).
 - **Decisiones del autor pendientes: UNA (desde el 2026-08-08)** — **el
   TÍTULO y la LÍNEA DE FUNCIÓN de la tarjeta de sector** en
   /hajime/yorozu/: el PATRÓN está construido (la variante sin kanji — ver
@@ -408,11 +413,25 @@ sesión.
 la portada calibradas por sección — 2026-08-08, verificado en el dominio
 23/23) — FALTAN EL DNS (fuera del repo) Y EL TEXTO DE LA CAPA
 1 DE SEGUROS (dentro del repo; su andamiaje ya está servido con noindex,
-invisible).** **SEARCH CONSOLE QUEDÓ VERIFICADO (2026-08-08, confirmado
-por Google)**: propiedad de prefijo de URL sobre https://kotodamafinance.com/,
-método etiqueta HTML — **la meta `google-site-verification` de la portada
-NO SE TOCA: si desaparece del `<head>`, se pierde la verificación** (la
-regla vive también en el comentario junto a la meta en index.html). La
+invisible). Y CUATRO PENDIENTES MÁS, para que no se caigan del
+encabezado (2026-08-08, anotados a pedido del autor): (1) el TÍTULO y la
+LÍNEA DE FUNCIÓN de la tarjeta de sector — decisión del autor abierta,
+ver su bullet en Estado; (2) la description y el gloss de /notes/ —
+redacción suya; (3) el RE-BARRIDO DE SEGURIDAD del estático — el §3 de su
+kotodama_infraestructura.md quedó fechado 2026-08-06 y ya corrió varios
+deploys atrás: re-medir sobre lo SERVIDO (los 80 target="_blank"/noopener,
+handlers inline, cargas de terceros, sumideros de inyección) y ENTREGARLE
+el texto con fecha nueva — su archivo no se edita; (4) el DISEÑO del
+acople de check-ready al deploy — diagnóstico y dos o tres diseños con
+costos, SIN implementar: hoy check-ready informa pero no frena, y ninguna
+guarda impide publicar placeholders en una página viva; el acople ingenuo
+bloquearía todo deploy porque hay 36 placeholders legítimos en tres
+páginas de andamiaje.** **SEARCH CONSOLE QUEDÓ VERIFICADO (2026-08-08,
+confirmado por Google)**: propiedad de prefijo de URL sobre
+https://kotodamafinance.com/, método etiqueta HTML — **la meta
+`google-site-verification` de la portada NO SE TOCA: si desaparece del
+`<head>`, se pierde la verificación** (la regla vive también en el
+comentario junto a la meta en index.html). La
 publicación (el paso 5) se ejecutó **ANTES de los pasos 2-4, por decisión del
 autor, y el orden es correcto**: una transferencia de registrador NO cambia
 los nameservers — Namecheap sigue sirviendo la zona durante los ~5 días de la
@@ -471,11 +490,17 @@ verificada, y deja de ser «cambiar y ver qué pasa». Cada paso se comprueba so
 que es lo que hace el fallo diagnosticable.
 
 **El sitio está listo Y publicado.** Si alguien retoma, las preguntas
-vigentes son tres: «¿en qué paso del DNS estamos?» (fuera del repo), «¿llegó
+vigentes: «¿en qué paso del DNS estamos?» (fuera del repo), «¿llegó
 el texto de la capa 1 de seguros?» (andamiaje listo, servido con noindex
-desde el deploy 4) y «¿llegó la primera nota?» — el sistema de notas está
-CONSTRUIDO entero y sin deployar (2026-08-07, ver su decisión): dentro del
-repo los frentes son esas redacciones, no construcción. *(Todo pusheado:
+desde el deploy 4), «¿llegó la primera nota?» — el sistema de notas está
+CONSTRUIDO entero y sin deployar (2026-08-07, ver su decisión) —, «¿pasó
+el autor el título de la tarjeta de sector, o la description y el gloss
+de /notes/?» (redacciones suyas), y los DOS trabajos anotados el
+2026-08-08: el re-barrido de seguridad sobre lo servido (entregable a él)
+y el diseño del acople de check-ready (ver el encabezado de arriba y sus
+filas en los cabos): dentro del
+repo los frentes son esas redacciones más esos dos trabajos, no
+construcción nueva. *(Todo pusheado:
 la tanda de notas fue con el deploy 5 y el cierre de la vuelta de una nota
 —`fb0f61c`— se pushó el mismo 2026-08-08 con autorización del autor, solo
 a redesign-trust: nada de esto entra al artefacto hasta el estreno de
@@ -511,6 +536,8 @@ sección con el detalle.
 
 | Cabo | Estado |
 |---|---|
+| **Re-barrido de seguridad del estático** | **pendiente (anotado 2026-08-08, pedido del autor)**: el §3 de su `kotodama_infraestructura.md` quedó fechado 2026-08-06 y desde entonces corrieron los deploys 5-7 — los conteos de páginas y el listener los corrigió él; el resto (80 `target="_blank"`/noopener, handlers inline, cargas de terceros, sumideros de inyección) son números heredados de otro árbol. **Re-medir sobre lo SERVIDO del dominio y ENTREGARLE el texto con fecha nueva — su archivo NO se edita.** |
+| **Acople de check-ready al deploy: el DISEÑO** | **pendiente (anotado 2026-08-08, pedido del autor)**: hoy check-ready informa pero NO frena (`make-deploy` no lo importa; el acople es el procedimiento humano del README), y ninguna guarda impide publicar placeholders en una página VIVA — la tarjeta de sector lo demostró: solo la decisión del autor evitó publicar TODOs. **El entregable es el DIAGNÓSTICO y dos o tres diseños con costos, NO la implementación**: el acople ingenuo bloquearía todo deploy — hay 36 placeholders legítimos en tres páginas de andamiaje (noindex, fuera del artefacto o invisibles a propósito). |
 | **Capa 1 de seguros: el TEXTO** | **el frente activo (2026-08-07)**: andamiaje listo en `/hajime/yorozu/japan/seguros/` con 25 placeholders esperando el texto del autor, **con `noindex` mientras tanto** (exclusión del sitemap derivada; al redactar: sacar la meta + regenerar sitemap.xml y /sitemap/ —mismo comando— + baseline — el olvido tiene guarda). **Servido con su noindex desde el deploy 4 (2026-08-07): 200 en el dominio, fuera del sitemap servido — invisible, verificado.** La tarjeta desde /hajime/yorozu/: el PATRÓN existe (2026-08-07) pero **su marcado salió del archivo el 2026-08-08** (los TODOs quedaban visibles en ver-código de una página publicada) — **se repone junto con el título del autor**, y al sacar el noindex vuelve a ser requisito del mapa. Ver la decisión del patrón de sector. |
 | **Sistema de notas** | **construido completo, SIN deployar (2026-08-07)**: contrato de metadatos, molde con nota-fixture, `make-notes.py` (feed entre centinelas + listado + índice), /notes/ con buscador (segunda página con JS), guarda en check-structure probada en NUEVE rojos, excepción de deploy por ruta exacta. Todo noindex, feed vacío, cero enlaces entrantes. **La vuelta y el rótulo de cara se CERRARON el 2026-08-08** («← All notes» a /notes/; `note-face` en el contrato, cinco rojos más — ver la decisión). **Se estrena con la primera nota real** — el pase completo está en su decisión (primera de la lista). |
 | ~~Redacción de Hajime~~ | **CERRADA 2026-08-05**: los 15, con texto del autor. Baseline en cero, `check-ready` en `0`. Cualquier placeholder nuevo es regresión. |
