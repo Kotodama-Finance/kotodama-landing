@@ -1093,6 +1093,28 @@ def castellano_publicado():
     return problemas
 
 
+# Los tres bloques duplicados que se comparan carácter por carácter. La lista
+# vive a nivel de módulo desde el 2026-08-08 porque tiene DOS consumidores:
+# chrome_divergente (sobre el FUENTE, cada commit) y la guarda de
+# transformación de make-deploy.py (sobre el ARTEFACTO transformado, cada
+# deploy) — dos listas de marcadores habrían divergido, el patrón del mapa.
+BLOQUES_CHROME = (("nav", '<header id="nav"', "</header>"),
+                  ("footer", '<footer id="footer"', "</footer>"),
+                  ("bloque de iconos",
+                   '<link rel="icon" href="/favicon.ico"',
+                   '<link rel="manifest" href="/site.webmanifest">'))
+
+
+def bloque_chrome(html: str, ini: str, fin: str):
+    """El bloque [ini..fin] de una página, o None si no está entero."""
+    try:
+        a = html.index(ini)
+        b = html.index(fin, a) + len(fin)
+        return html[a:b]
+    except ValueError:
+        return None
+
+
 def chrome_divergente():
     """El nav, el footer y el bloque de iconos están duplicados en todas las
     páginas: no hay build step que los comparta. La duplicación es aceptable si
@@ -1102,23 +1124,11 @@ def chrome_divergente():
     El bloque de iconos va del primer <link rel="icon"> al <link rel="manifest">
     (2026-08-06): son cuatro etiquetas seguidas y el manifest cierra el grupo —
     si una página agrega, saca o reordena una, el bloque difiere y esto lo ve."""
-    def bloque(html, ini, fin):
-        try:
-            a = html.index(ini)
-            b = html.index(fin, a) + len(fin)
-            return html[a:b]
-        except ValueError:
-            return None
-
     ref, problemas = {}, []
     for p in htmls():
         html = p.read_text(encoding="utf-8")
-        for etiqueta, ini, fin in (("nav", '<header id="nav"', "</header>"),
-                                   ("footer", '<footer id="footer"', "</footer>"),
-                                   ("bloque de iconos",
-                                    '<link rel="icon" href="/favicon.ico"',
-                                    '<link rel="manifest" href="/site.webmanifest">')):
-            b = bloque(html, ini, fin)
+        for etiqueta, ini, fin in BLOQUES_CHROME:
+            b = bloque_chrome(html, ini, fin)
             if b is None:
                 problemas.append(f"{nombre(p)}: no tiene {etiqueta}")
                 continue

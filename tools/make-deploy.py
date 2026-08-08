@@ -10,11 +10,18 @@ POR QUÉ MAIN SE GENERA Y NO SE MERGEA (decisión del autor, ago 2026). GitHub
 Pages publica la rama entera, así que un merge de redesign-trust habría servido
 CLAUDE.md, tools/ y docs/ desde kotodamafinance.com — las notas de trabajo en
 la misma URL que la credencial profesional del autor. main publica SOLO el
-sitio; el trabajo vive en la rama de desarrollo. Esto tapa las notas como
-DOCUMENTOS con URL propia; NO tapa las menciones dentro de lo servido (los
-comentarios de los HTML, en castellano, nombran CLAUDE.md y tools/ — política
-ya decidida) ni el repo público en GitHub, donde la rama de desarrollo sigue
-visible (limitación aceptada: repo privado + Pages exige plan de pago).
+sitio; el trabajo vive en la rama de desarrollo.
+
+Y DESDE EL 2026-08-08 EL DEPLOY ADEMÁS QUITA LOS COMENTARIOS de los HTML, CSS
+y JS publicados — ver «LA TRANSFORMACIÓN DEL ARTEFACTO», abajo. Esto REVIERTE
+la política que decía acá que los comentarios se quedaban en lo servido: el
+autor la revisó — el filtro por tipo tapaba las notas como DOCUMENTOS, pero
+los comentarios viajaban DENTRO de archivos publicados, y eso era un hueco del
+filtro, no una decisión. Los comentarios NO se tocan en el fuente: viven donde
+cumplen su función, pegados a la línea que explican; lo único que cambia es
+que dejan de viajar a main. Lo que sigue sin taparse es el repo público en
+GitHub, donde la rama de desarrollo sigue visible (limitación aceptada: repo
+privado + Pages exige plan de pago).
 
 MAIN ES UNA RAMA-ARTEFACTO QUE NADIE EDITA A MANO, igual que `maintenance`: un
 artefacto derivado no se mantiene, se regenera. La tentación contra la que esto
@@ -24,15 +31,22 @@ lo pisaría en silencio. Por eso el script compara el main actual contra lo que
 FRENA si no coinciden — ver verificar_main_intacta().
 
 EL MECANISMO ES PLUMBING, SIN CHECKOUT — el patrón de make-maintenance.py: se
-leen los blobs del commit fuente (mismos OID, así que lo probado y lo publicado
-son byte-idénticos POR CONSTRUCCIÓN: ni copia por filesystem, ni riesgo CRLF),
-se arma el árbol filtrado con un índice temporal, y se commitea sobre main con
-el hash fuente en el mensaje. El árbol de trabajo y HEAD no se tocan en ningún
-momento. El push lo hace el autor, aparte — este script sólo mueve la rama
-LOCAL.
+leen los blobs del commit fuente, los .html/.css/.js publicables pasan por la
+transformación (función PURA de los bytes: mismo fuente -> mismo artefacto, en
+cualquier máquina) y el resto conserva su OID. Desde el 2026-08-08 «lo probado
+y lo publicado son el mismo objeto» vale MÓDULO LA TRANSFORMACIÓN DECLARADA:
+la guarda 3 la recomputa blob por blob y la 4 verifica el contenido por
+derivaciones independientes. Los blobs nuevos se escriben con `hash-object -w
+--stdin` SIN `--path`, a propósito: con --path git aplicaría el filtro clean
+de autocrlf y el determinismo entre máquinas moriría por el mismo riesgo CRLF
+que este mecanismo existe para eliminar. Efecto lateral asumido: también las
+corridas de verificación (--solo-verificar, verificar_main_intacta) ESCRIBEN
+objetos sueltos en la base — inofensivo, los junta el gc. El árbol de trabajo
+y HEAD no se tocan en ningún momento. El push lo hace el autor, aparte — este
+script sólo mueve la rama LOCAL.
 
 LA GUARDA ES TODO-O-NADA y corre adentro, antes de commitear (probada EN ROJO
-contra sus tres modos de falla antes de confiar en su verde — el registro está
+contra sus modos de falla antes de confiar en su verde — el registro está
 en CLAUDE.md, decisión de la rama de deploy):
 
 1. COMPLETO — cada URL del sitemap tiene su index.html; cada referencia
@@ -41,17 +55,32 @@ en CLAUDE.md, decisión de la rama de deploy):
    requeridos están — en dos niveles: los CRITICOS (CNAME, .nojekyll, index,
    404) son duros SIEMPRE, el CONTRATO (favicons, manifest, og-image, robots,
    sitemap) es duro desde HEAD y aviso bajo --fuente. La partición está
-   explicada junto a las constantes.
+   explicada junto a las constantes. Desde la transformación corre sobre los
+   bytes TRANSFORMADOS: lo que se verifica ES lo que se publica.
 2. SIN NOTAS — por TIPO además de por lista: cero .md, .py y .json en lo
    publicado (el sitio no sirve ninguno de esos tipos; el manifest es
    .webmanifest), cero tools/ y docs/. Una nota futura con CUALQUIER nombre
    cae por el tipo, sin depender de que la lista de exclusión esté al día.
    La excepción que el tipo NO caza es maelstrom.css —un .css legítimo—, por
    eso está en la lista explícita Y en una comprobación propia.
-3. IDENTIDAD — cada blob del árbol publicado tiene el mismo OID que en el
-   commit fuente. Hoy es trivialmente cierto por construcción; existe para que
-   una refactorización futura que transforme archivos en el camino no pase en
-   silencio.
+3. IDENTIDAD — en DOS clases desde la transformación: los tipos NO
+   transformados exigen el MISMO OID que en el commit fuente (la guarda
+   original, que existía justamente «para que una refactorización futura que
+   transforme archivos no pase en silencio» — disparó a propósito una vez,
+   con este cambio); los transformados exigen bytes == transformar(blob
+   fuente) RECOMPUTADO, que es además la corrida doble que verifica el
+   determinismo (la lección del woff2). OJO: para el camino transformado esa
+   comparación es TAUTOLÓGICA frente a un bug del stripper — los dos lados
+   salen de la misma función—; de eso se ocupa la guarda 4.
+4. TRANSFORMACIÓN — cero comentarios en el artefacto y NADA MÁS cambiado,
+   verificado por derivaciones INDEPENDIENTES del stripper: html.parser del
+   stdlib (stream de eventos fuente↔artefacto, cero eventos de comentario),
+   texto_visible de _guardas, el chrome idéntico ENTRE páginas del artefacto,
+   el contrato de supervivencia con nombre (meta de Search Console, import
+   map, gc-pixel por página, las noindex, el @license del vendor) y la
+   igualdad de tokens en CSS/JS. Es la red real contra un stripper con un
+   bug: check-modes contra el artefacto solo navega la portada y /hajime/ —
+   las otras páginas las cubre esto.
 
 Y una cuarta, de mantenimiento de la propia lista: si una entrada de
 NO_PUBLICABLES no matchea nada en el commit fuente, el script FRENA — una
@@ -65,6 +94,14 @@ import re
 import subprocess
 import sys
 import tempfile
+from html.parser import HTMLParser
+
+# La lógica compartida de las guardas de texto: texto_visible, RE_NOINDEX,
+# sin_comentarios y los marcadores del chrome. Importarla y no copiarla es la
+# regla del mapa: la guarda de transformación compara contra LAS MISMAS
+# derivaciones que usan check-structure y check-ready, sin segunda
+# implementación.
+import _guardas as G
 
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -229,6 +266,320 @@ RE_URL_CSS = re.compile(r"url\(\s*['\"]?([^'\")]+)['\"]?\s*\)")
 RE_IMPORT_JS = re.compile(r"""\b(?:from|import)\s*\(?\s*['"]([^'"]+)['"]""")
 
 
+# ---------------------------------------------------------------------------
+# LA TRANSFORMACIÓN DEL ARTEFACTO: cero comentarios en lo servido
+# (2026-08-08, requisito del autor — condición sine qua non, no preferencia).
+# Los comentarios del fuente son notas de trabajo en castellano y el filtro
+# por TIPO no los veía: viven DENTRO de archivos que sí se publican. Se
+# eliminan ACÁ, al generar el artefacto; el fuente NO se toca nunca.
+#
+# Función PURA de (ruta, bytes) -> bytes: sin timestamps, sin aleatoriedad,
+# sin estado — el determinismo es lo que mantiene vivos el detector de hotfix
+# y la idempotencia («ya está en este contenido»), y verificar_identidad lo
+# comprueba recomputando.
+#
+# QUÉ NO SE TRANSFORMA, y por qué:
+#   - assets/vendor/ (three.module.js): su primer comentario es el @license
+#     MIT, que exige conservarse; los otros ~2350 son comentarios de la
+#     biblioteca en inglés, no notas de trabajo. Queda en la clase
+#     OID-idéntico de verificar_identidad. Decisión del autor (2026-08-08).
+#   - El contenido de <script>/<style> en los HTML: texto crudo, se copia tal
+#     cual (el único script inline del sitio es el import map, JSON sin
+#     comentarios; <style> inline hoy no hay — verificado).
+#   - Los template literals de los JS: opacos para el stripper — su contenido
+#     es un STRING del programa (el caso real es el GLSL de background.js:
+#     quitar sus comentarios sería editar el shader, que es código cerrado;
+#     el autor los reescribió en inglés en el fuente, 2026-08-08).
+#
+# LOS RELLENOS NO SON IGUALES ENTRE LENGUAJES, y es semántica, no gusto:
+# en HTML el comentario no aporta NI un espacio (foo<!-- -->bar renderiza
+# «foobar»), así que se quita a nada; en CSS y JS un /* */ es SEPARADOR de
+# tokens (a/* */b son DOS tokens), así que se reemplaza por UN espacio. El //
+# muere en su \n, que se conserva — la inserción automática de ; (ASI) no se
+# altera. Una línea que queda solo-espacios se elimina ENTERA; una que
+# conserva contenido se recorta al final (rstrip).
+
+VENDOR = "assets/vendor/"
+_MARCA = "\x00"  # marcador interno del stripper; transformar() aborta si el
+                 # archivo lo trae de fábrica (hoy: ninguno, verificado)
+
+RE_RAW_HTML = re.compile(r"<(script|style)\b[^>]*>.*?</\1\s*>", re.S | re.I)
+
+
+def transformable(ruta):
+    return ruta.endswith((".html", ".css", ".js")) and not ruta.startswith(VENDOR)
+
+
+def _limpiar_lineas(texto, relleno):
+    lineas = []
+    for linea in texto.split("\n"):
+        if _MARCA in linea:
+            limpia = linea.replace(_MARCA, relleno)
+            if limpia.strip():
+                lineas.append(limpia.rstrip())
+            # solo-comentario(s): la línea entera se va, con su \n
+        else:
+            lineas.append(linea)
+    return "\n".join(lineas)
+
+
+def quitar_comentarios_html(texto):
+    """<!-- --> fuera de <script>/<style>. El contenido raw no se toca."""
+    partes, pos = [], 0
+    for m in RE_RAW_HTML.finditer(texto):
+        partes.append(RE_COMENT_HTML.sub(_MARCA, texto[pos:m.start()]))
+        partes.append(m.group(0))
+        pos = m.end()
+    partes.append(RE_COMENT_HTML.sub(_MARCA, texto[pos:]))
+    return _limpiar_lineas("".join(partes), "")
+
+
+def _escanear_css(texto):
+    """[(tipo, ini, fin)] cubriendo TODO el texto: 'code' | 'atomo' (string)
+    | 'coment'. Los strings se saltan para que un /* adentro no arranque un
+    comentario falso."""
+    segs, i, n, a = [], 0, len(texto), 0
+    while i < n:
+        c = texto[i]
+        if c in "'\"":
+            if a < i:
+                segs.append(("code", a, i))
+            q, j = c, i + 1
+            while j < n and texto[j] != q:
+                j += 2 if texto[j] == "\\" else 1
+            j = min(j + 1, n)
+            segs.append(("atomo", i, j))
+            a = i = j
+        elif c == "/" and i + 1 < n and texto[i + 1] == "*":
+            if a < i:
+                segs.append(("code", a, i))
+            j = texto.find("*/", i + 2)
+            j = n if j < 0 else j + 2
+            segs.append(("coment", i, j))
+            a = i = j
+        else:
+            i += 1
+    if a < n:
+        segs.append(("code", a, n))
+    return segs
+
+
+# Palabras tras las que un / abre un REGEX y no una división. Es la
+# heurística estándar de lexers de JS; los casos trampa reales del repo
+# están en las pruebas en rojo (main.js /(^|-)2g$/ tras ||, notes.js con
+# comilla doble dentro de la clase, */ dentro de un regex).
+_PALABRAS_REGEX = frozenset((
+    "return", "typeof", "case", "in", "of", "new", "delete", "void",
+    "instanceof", "do", "else", "yield", "await"))
+
+
+def _escanear_js(texto):
+    """[(tipo, ini, fin)] SIN cubrir los huecos de código: 'atomo' (string,
+    template literal con sus tramos crudos, regex) | 'coment'. Un template
+    con ${} alterna tramos crudos (atomo) y código adentro — los comentarios
+    dentro de un ${} sí se detectan; el texto crudo del template, jamás."""
+    spans, i, n = [], 0, len(texto)
+    prev, prev_word = "", ""
+    pila = []
+
+    def tramo_crudo(j):
+        """Texto crudo de template desde j; devuelve (fin, abrió_expr)."""
+        while j < n:
+            ch = texto[j]
+            if ch == "\\":
+                j += 2
+            elif ch == "`":
+                return j + 1, False
+            elif ch == "$" and j + 1 < n and texto[j + 1] == "{":
+                return j + 2, True
+            else:
+                j += 1
+        return n, False
+
+    while i < n:
+        c = texto[i]
+        if c == "`":
+            j, expr = tramo_crudo(i + 1)
+            spans.append(("atomo", i, j))
+            if expr:
+                pila.append("tpl")
+            prev, prev_word, i = "`", "", j
+        elif c == "}" and pila and pila[-1] == "tpl":
+            pila.pop()
+            j, expr = tramo_crudo(i + 1)
+            spans.append(("atomo", i, j))
+            if expr:
+                pila.append("tpl")
+            prev, prev_word, i = "`", "", j
+        elif c == "{":
+            pila.append("{")
+            prev, prev_word, i = c, "", i + 1
+        elif c == "}":
+            if pila:
+                pila.pop()
+            prev, prev_word, i = c, "", i + 1
+        elif c in "'\"":
+            q, j = c, i + 1
+            while j < n and texto[j] != q:
+                j += 2 if texto[j] == "\\" else 1
+            j = min(j + 1, n)
+            spans.append(("atomo", i, j))
+            prev, prev_word, i = q, "", j
+        elif c == "/" and i + 1 < n and texto[i + 1] == "/":
+            j = texto.find("\n", i)
+            j = n if j < 0 else j
+            spans.append(("coment", i, j))
+            i = j
+        elif c == "/" and i + 1 < n and texto[i + 1] == "*":
+            j = texto.find("*/", i + 2)
+            j = n if j < 0 else j + 2
+            spans.append(("coment", i, j))
+            i = j
+        elif c == "/" and (prev == "" or prev in "=([{,;:!&|?+-*%~^<>"
+                           or prev_word in _PALABRAS_REGEX):
+            j, en_clase = i + 1, False
+            while j < n:
+                ch = texto[j]
+                if ch == "\\":
+                    j += 2
+                    continue
+                if ch == "[":
+                    en_clase = True
+                elif ch == "]":
+                    en_clase = False
+                elif ch == "/" and not en_clase:
+                    j += 1
+                    break
+                elif ch == "\n":
+                    break  # no cerró: no era un regex — se trata como código
+                j += 1
+            spans.append(("atomo", i, j))
+            prev, prev_word, i = "/", "", j
+        else:
+            if not c.isspace():
+                m = re.match(r"[A-Za-z0-9_$]+", texto[i:])
+                if m:
+                    prev_word = m.group(0)
+                    prev = prev_word[-1]
+                    i += len(prev_word)
+                    continue
+                prev, prev_word = c, ""
+            i += 1
+    return spans
+
+
+def _quitar_spans(texto, spans):
+    out, pos = [], 0
+    for tipo, a, b in spans:
+        out.append(texto[pos:a])
+        out.append(_MARCA if tipo == "coment" else texto[a:b])
+        pos = b
+    out.append(texto[pos:])
+    return "".join(out)
+
+
+def quitar_comentarios_css(texto):
+    return _limpiar_lineas(_quitar_spans(texto, _escanear_css(texto)), " ")
+
+
+def quitar_comentarios_js(texto):
+    return _limpiar_lineas(_quitar_spans(texto, _escanear_js(texto)), " ")
+
+
+def transformar(ruta, data):
+    """bytes -> bytes. La única puerta: pura, determinista, todo-o-nada."""
+    try:
+        texto = data.decode("utf-8")
+    except UnicodeDecodeError as e:
+        sys.exit(f"transformación: {ruta} no decodifica como UTF-8 ({e}) — "
+                 f"nada se escribió")
+    if _MARCA in texto:
+        sys.exit(f"transformación: {ruta} contiene el byte NUL que el "
+                 f"stripper usa como marcador interno — nada se escribió")
+    if ruta.endswith(".html"):
+        nuevo = quitar_comentarios_html(texto)
+    elif ruta.endswith(".css"):
+        nuevo = quitar_comentarios_css(texto)
+    else:
+        nuevo = quitar_comentarios_js(texto)
+    return nuevo.encode("utf-8")
+
+
+def _tokens(texto, escanear):
+    """Los tokens SIGNIFICATIVOS: átomos (strings/templates/regex) verbatim,
+    el código partido por espacios, los comentarios afuera. La igualdad de
+    esta secuencia entre original y transformado es lo que caza a un stripper
+    que muerda un átomo o pegue dos tokens (a/* */b -> «ab»)."""
+    toks, pos = [], 0
+    for tipo, a, b in escanear(texto):
+        if pos < a:
+            toks += texto[pos:a].split()
+        if tipo == "atomo":
+            toks.append(texto[a:b])
+        elif tipo == "code":
+            toks += texto[a:b].split()
+        pos = b
+    toks += texto[pos:].split()
+    return toks
+
+
+class _EventosHTML(HTMLParser):
+    """Stream de eventos para comparar fuente y artefacto SIN depender del
+    stripper: html.parser es un tokenizer INDEPENDIENTE del stdlib. El texto
+    se acumula y se normaliza por espacios — un comentario parte el texto en
+    dos eventos; quitarlo los une, y la acumulación hace que las dos formas
+    comparen iguales. Los comentarios van a su propia lista: en el artefacto
+    esa lista tiene que estar VACÍA."""
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.eventos, self.comentarios, self._data = [], [], []
+
+    def _flush(self):
+        if self._data:
+            t = " ".join("".join(self._data).split())
+            if t:
+                self.eventos.append(("data", t))
+            self._data = []
+
+    def handle_starttag(self, tag, attrs):
+        self._flush()
+        self.eventos.append(("in", tag, tuple(attrs)))
+
+    def handle_startendtag(self, tag, attrs):
+        self._flush()
+        self.eventos.append(("inout", tag, tuple(attrs)))
+
+    def handle_endtag(self, tag):
+        self._flush()
+        self.eventos.append(("out", tag))
+
+    def handle_data(self, data):
+        self._data.append(data)
+
+    def handle_comment(self, data):
+        self.comentarios.append(data)  # sin flush: el texto de alrededor se une
+
+    def handle_decl(self, decl):
+        self._flush()
+        self.eventos.append(("decl", decl))
+
+    def handle_pi(self, data):
+        self._flush()
+        self.eventos.append(("pi", data))
+
+    def close(self):
+        self._flush()
+        super().close()
+
+
+def _eventos_html(texto):
+    p = _EventosHTML()
+    p.feed(texto)
+    p.close()
+    return p
+
+
 def _resolver(base_dir, ref):
     """Normaliza una referencia a ruta dentro del árbol; None si es externa
     o un fragmento de la misma página."""
@@ -312,20 +663,186 @@ def verificar_sin_notas(arbol):
 
 
 def verificar_identidad(arbol_pub, arbol_fuente):
-    """Cada blob publicado es EL MISMO objeto que en el commit fuente."""
+    """Cada blob publicado es el del fuente — o su transformación EXACTA.
+
+    Dos clases desde el 2026-08-08: los tipos NO transformados exigen el
+    MISMO OID (la guarda original — sigue cazando un blob ajeno colado); los
+    transformados exigen bytes == transformar(blob fuente), RECOMPUTADO acá,
+    que es a la vez la corrida doble que verifica el determinismo (la lección
+    del woff2: correr el generador dos veces antes de confiar en comparar
+    salidas). Para el camino transformado esta comparación es TAUTOLÓGICA
+    frente a un bug del stripper — ambos lados salen de la misma función—;
+    la que mira el CONTENIDO es verificar_transformacion."""
     problemas = []
     for ruta, (modo, oid) in sorted(arbol_pub.items()):
         if ruta not in arbol_fuente:
             problemas.append(f"{ruta}: está en el árbol publicado y no en el commit fuente")
-        elif arbol_fuente[ruta] != (modo, oid):
+            continue
+        modo_f, oid_f = arbol_fuente[ruta]
+        if transformable(ruta):
+            if modo != modo_f:
+                problemas.append(f"{ruta}: cambió el modo ({modo_f} -> {modo})")
+            elif contenido(oid) != transformar(ruta, contenido(oid_f)):
+                problemas.append(f"{ruta}: el blob publicado NO es la transformación "
+                                 f"del blob fuente (¿no-determinismo, o un blob ajeno?)")
+        elif (modo_f, oid_f) != (modo, oid):
             problemas.append(f"{ruta}: blob distinto del commit fuente "
-                             f"({oid[:12]} != {arbol_fuente[ruta][1][:12]})")
+                             f"({oid[:12]} != {oid_f[:12]}) y no es un tipo transformable")
+    return problemas
+
+
+def verificar_transformacion(arbol_pub, leer_fuente, leer_pub):
+    """La guarda 4: cero comentarios y NADA MÁS cambiado, por derivaciones
+    INDEPENDIENTES del stripper. Es la red real contra un bug del stripper —
+    la identidad recomputa la misma función (tautológica) y check-modes solo
+    navega la portada y /hajime/: el resto del artefacto lo cubre esto."""
+    problemas = []
+    htmls = [r for r in sorted(arbol_pub) if r.endswith(".html")]
+
+    for ruta in htmls:
+        fuente = leer_fuente(ruta).decode("utf-8")
+        pub = leer_pub(ruta).decode("utf-8")
+
+        ef, ep = _eventos_html(fuente), _eventos_html(pub)
+        # 1. Cero comentarios, contados por html.parser (no por el regex del
+        #    stripper): un comentario que el stripper no vio, esto lo ve.
+        if ep.comentarios:
+            problemas.append(f"{ruta}: quedaron {len(ep.comentarios)} comentario(s) "
+                             f"en el artefacto ({' '.join(ep.comentarios[0].split())[:60]!r}…)")
+        # 2. Nada más cambió: mismos eventos (tags y atributos EXACTOS, texto
+        #    normalizado por espacios). Caza el sobre-borrado en CUALQUIER
+        #    página — metas, atributos, prosa.
+        if ef.eventos != ep.eventos:
+            detalle = f"{len(ef.eventos)} vs {len(ep.eventos)} eventos"
+            for a, b in zip(ef.eventos, ep.eventos):
+                if a != b:
+                    detalle = f"fuente {a!r} vs artefacto {b!r}"
+                    break
+            problemas.append(f"{ruta}: la transformación cambió algo más que "
+                             f"comentarios ({detalle})")
+        # 3. El texto visible, por la derivación que ya usan las guardas del
+        #    fuente (_guardas.texto_visible) — segunda vara independiente.
+        tf = " ".join(G.texto_visible(fuente).split())
+        tp = " ".join(G.texto_visible(pub).split())
+        if tf != tp:
+            problemas.append(f"{ruta}: el texto visible cambió con la transformación")
+        # 7. Idempotencia: transformar lo transformado no mueve un byte.
+        if transformar(ruta, leer_pub(ruta)) != leer_pub(ruta):
+            problemas.append(f"{ruta}: la transformación no es idempotente")
+
+    # 4. El chrome idéntico ENTRE páginas DEL ARTEFACTO: la garantía de
+    #    chrome_divergente, re-establecida donde se sirve (mismos marcadores,
+    #    importados — no una segunda lista).
+    ref = {}
+    for ruta in htmls:
+        pub = leer_pub(ruta).decode("utf-8")
+        for etiqueta, ini, fin in G.BLOQUES_CHROME:
+            b = G.bloque_chrome(pub, ini, fin)
+            if b is None:
+                problemas.append(f"{ruta}: el artefacto quedó sin {etiqueta}")
+            elif etiqueta not in ref:
+                ref[etiqueta] = (ruta, b)
+            elif b != ref[etiqueta][1]:
+                problemas.append(f"{ruta}: el {etiqueta} del artefacto difiere "
+                                 f"del de {ref[etiqueta][0]}")
+
+    # 5. El contrato de supervivencia, con nombre: piezas que el punto 2 ya
+    #    cubre pero cuyo rojo tiene que nombrar la pieza — el diagnóstico
+    #    «cambió un evento» no le dice al operador que perdió Search Console.
+    if "index.html" in arbol_pub:
+        fuente = leer_fuente("index.html").decode("utf-8")
+        pub = leer_pub("index.html").decode("utf-8")
+        m = re.search(r'<meta name="google-site-verification" content="[^"]*"\s*/?>',
+                      fuente)
+        if not m:
+            problemas.append("index.html (fuente): sin la meta google-site-verification "
+                             "— si falta en la portada se pierde la verificación de "
+                             "Search Console (regla de CLAUDE.md)")
+        elif m.group(0) not in pub:
+            problemas.append("index.html: la meta google-site-verification NO "
+                             "sobrevivió a la transformación — publicarla así pierde "
+                             "la verificación de Search Console")
+        if ('<script type="importmap">' in fuente
+                and '<script type="importmap">' not in pub):
+            problemas.append("index.html: el import map no sobrevivió — el cubo "
+                             "muere en silencio para todo visitante")
+    for ruta in htmls:
+        fuente = leer_fuente(ruta).decode("utf-8")
+        pub = leer_pub(ruta).decode("utf-8")
+        if fuente.count('class="gc-pixel"') != pub.count('class="gc-pixel"'):
+            problemas.append(f"{ruta}: el pixel de GoatCounter no sobrevivió a la "
+                             f"transformación")
+        # El noindex del fuente se lee SIN comentarios (citarlo en un
+        # comentario no es declararlo — el criterio de _guardas); en el
+        # artefacto ya no hay comentarios que filtrar.
+        tiene_f = bool(G.RE_NOINDEX.search(G.sin_comentarios(fuente)))
+        tiene_p = bool(G.RE_NOINDEX.search(pub))
+        if tiene_f != tiene_p:
+            problemas.append(f"{ruta}: la meta noindex "
+                             f"{'DESAPARECIÓ' if tiene_f else 'APARECIÓ'} con la "
+                             f"transformación")
+    v = VENDOR + "three.module.js"
+    if v in arbol_pub and b"@license" not in leer_pub(v)[:400]:
+        problemas.append(f"{v}: perdió su @license — el vendor NO se transforma "
+                         f"(licencia MIT, exige conservarse)")
+
+    # 6. CSS/JS: la secuencia de tokens significativos no cambió. Los átomos
+    #    (strings, templates, regex) comparan VERBATIM; el código, por
+    #    palabras. Caza un átomo mordido y dos tokens pegados.
+    for ruta in sorted(arbol_pub):
+        if not transformable(ruta) or ruta.endswith(".html"):
+            continue
+        fuente = leer_fuente(ruta).decode("utf-8")
+        pub = leer_pub(ruta).decode("utf-8")
+        escanear = _escanear_css if ruta.endswith(".css") else _escanear_js
+        tf, tp = _tokens(fuente, escanear), _tokens(pub, escanear)
+        if tf != tp:
+            detalle = f"{len(tf)} vs {len(tp)} tokens"
+            for a, b in zip(tf, tp):
+                if a != b:
+                    detalle = f"{a[:40]!r} vs {b[:40]!r}"
+                    break
+            problemas.append(f"{ruta}: los tokens divergen tras la transformación "
+                             f"({detalle})")
+        if transformar(ruta, leer_pub(ruta)) != leer_pub(ruta):
+            problemas.append(f"{ruta}: la transformación no es idempotente")
     return problemas
 
 
 # ---------------------------------------------------------------------------
 # Escritura y protección de main
 # ---------------------------------------------------------------------------
+
+def escribir_blob(data):
+    """Escribe bytes como blob y devuelve su OID. SIN --path a propósito: con
+    --path, hash-object aplica el filtro clean de autocrlf y el determinismo
+    entre máquinas muere por el mismo riesgo CRLF que el plumbing elimina."""
+    r = subprocess.run(("git", "hash-object", "-w", "--stdin"), cwd=RAIZ,
+                       input=data, capture_output=True)
+    if r.returncode:
+        sys.exit(f"git hash-object: {r.stderr.decode('utf-8', 'replace')}")
+    return r.stdout.decode().strip()
+
+
+def arbol_publicable(commit, _memo={}):
+    """El árbol de deploy de un commit: filtrado + TRANSFORMADO.
+
+    La única puerta de generación — main() y verificar_main_intacta pasan por
+    acá, sin segunda implementación: si divergieran, el detector de hotfix
+    creería que main se editó a mano. El memo por (oid, extensión) evita
+    re-transformar el mismo blob entre la regeneración del detector y el
+    deploy (vive lo que el proceso, a propósito)."""
+    pub = {}
+    for ruta, (modo, oid) in filtrar(arbol_de(commit)).items():
+        if transformable(ruta):
+            clave = (oid, ruta.rsplit(".", 1)[1])
+            if clave not in _memo:
+                _memo[clave] = escribir_blob(transformar(ruta, contenido(oid)))
+            pub[ruta] = (modo, _memo[clave])
+        else:
+            pub[ruta] = (modo, oid)
+    return pub
+
 
 def escribir_arbol(arbol):
     """Escribe el árbol en la base de objetos con un índice TEMPORAL: ni el
@@ -383,14 +900,28 @@ def verificar_main_intacta(ref=None):
                     f"  (¿historia reescrita? ¿clon parcial?): no se puede verificar que "
                     f"{RAMA_DESTINO} esté intacta.\n"
                     f"  Para publicar igual, asumiendo el riesgo: --pisar")
-        regenerado = escribir_arbol(filtrar(arbol_de(m.group(1))))
+        regenerado = escribir_arbol(arbol_publicable(m.group(1)))
         actual = git("rev-parse", f"{cabeza}^{{tree}}").strip()
         if regenerado != actual:
+            # LA DOBLE REGENERACIÓN DIAGNÓSTICA (2026-08-08, decisión del
+            # autor: nada de --pisar a ciegas ante un mismatch esperado). Un
+            # deploy generado ANTES del stripper copiaba los blobs tal cual;
+            # si la regla VIEJA (filtrado solo) reproduce la punta, main está
+            # INTACTA — nadie la editó a mano, solo cambió el generador — y
+            # se publica encima sin pisar nada. Un hotfix a mano no coincide
+            # con NINGUNA de las dos regeneraciones y sigue frenando.
+            pre = escribir_arbol(filtrar(arbol_de(m.group(1))))
+            if pre == actual:
+                return (True, cabeza,
+                        f"{RAMA_DESTINO} intacta: su árbol es el deploy PRE-TRANSFORMACIÓN "
+                        f"de su Fuente declarada ({m.group(1)[:12]}) — anterior al "
+                        f"stripper de comentarios; se publica encima")
             return (False, cabeza,
                     f"la punta de {RAMA_DESTINO} ({cabeza[:12]}) declara Fuente {m.group(1)[:12]} "
-                    f"pero su árbol NO coincide con lo regenerado desde ahí:\n"
-                    f"  alguien editó {RAMA_DESTINO} a mano, o las reglas de exclusión cambiaron "
-                    f"desde ese deploy.\n"
+                    f"pero su árbol NO coincide con lo regenerado desde ahí\n"
+                    f"  (ni con transformación ni sin ella): alguien editó {RAMA_DESTINO} a mano, "
+                    f"o las reglas de exclusión\n"
+                    f"  o de transformación cambiaron desde ese deploy.\n"
                     f"  Revisar con: git diff {actual[:12]} {regenerado[:12]}\n"
                     f"  Para publicar igual (PISANDO esa diferencia): --pisar")
         return (True, cabeza, f"{RAMA_DESTINO} intacta: su árbol coincide con lo regenerado "
@@ -455,8 +986,13 @@ def main():
             print(f"  aviso: la exclusión «{pat}» no matchea nada en {etiqueta} — "
                   f"esperable en un commit anterior a su creación; la regla por tipo sigue vigilando")
 
-    arbol_pub = filtrar(arbol_todo)
+    arbol_filtrado = filtrar(arbol_todo)
+    # El árbol que se PUBLICA: filtrado + transformado (cero comentarios en
+    # .html/.css/.js fuera de assets/vendor/). Las guardas de contenido miran
+    # los bytes TRANSFORMADOS: lo verificado es lo publicado.
+    arbol_pub = arbol_publicable(fuente)
     leer = lambda ruta: contenido(arbol_pub[ruta][1])
+    leer_fuente = lambda ruta: contenido(arbol_filtrado[ruta][1])
     requeridos = (CRITICOS + CONTRATO) if fuente_ref is None else CRITICOS
     if fuente_ref is not None:
         for r in CONTRATO:
@@ -465,7 +1001,8 @@ def main():
                       f"día no lo tenía; se publica como era")
     problemas = (verificar_sin_notas(arbol_pub)
                  + verificar_completo(arbol_pub, leer, requeridos)
-                 + verificar_identidad(arbol_pub, arbol_todo))
+                 + verificar_identidad(arbol_pub, arbol_todo)
+                 + verificar_transformacion(arbol_pub, leer_fuente, leer))
     if problemas:
         print("LA GUARDA FRENÓ EL DEPLOY — nada se commiteó:")
         for p in problemas:
@@ -473,8 +1010,10 @@ def main():
         return 1
 
     excluidos = sorted(set(arbol_todo) - set(arbol_pub))
+    transformados = sorted(r for r in arbol_pub if transformable(r))
     print(f"Fuente: {fuente[:12]} ({etiqueta})")
-    print(f"Árbol publicable: {len(arbol_pub)} archivos; excluidos {len(excluidos)} de trabajo")
+    print(f"Árbol publicable: {len(arbol_pub)} archivos; excluidos {len(excluidos)} de trabajo; "
+          f"{len(transformados)} transformados (comentarios fuera)")
 
     if solo_verificar:
         print("\nPublicables:")
@@ -509,7 +1048,8 @@ def main():
     git("update-ref", f"refs/heads/{RAMA_DESTINO}", commit, cabeza)
     print(f"  {RAMA_DESTINO} -> {commit[:12]} (local)")
     print("\nLo que sigue (a mano, en este orden — el detalle en el README, «Publicar»):")
-    print(f"  1. verificar el artefacto una vez en navegador (check-modes contra el árbol de {RAMA_DESTINO})")
+    print(f"  1. verificar el artefacto una vez en navegador (check-modes contra el árbol de {RAMA_DESTINO};")
+    print("     navega la portada y /hajime/ — el resto del artefacto ya lo cubrió la guarda 4)")
     print(f"  2. git push origin {RAMA_DESTINO}")
     print(f"  3. el tag de publicación va en el commit FUENTE ({fuente[:12]}), no en {RAMA_DESTINO}")
     print("  4. después del push: kotodamafinance.com/CLAUDE.md y /tools/check-ready.py tienen que dar 404")
