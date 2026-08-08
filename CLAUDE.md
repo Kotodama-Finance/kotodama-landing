@@ -41,10 +41,29 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-08, la tanda del DEPLOY SIN CONTENIDO — todo lo
-  que no depende de texto pendiente, construido y commiteado LOCAL; la
-  sesión está PARADA en la aprobación del favicon (parada obligatoria de
-  la instrucción) y el deploy 5 NO se ejecutó todavía.** Lo hecho, cada
+- Último cierre: **2026-08-08, la tanda del DEPLOY SIN CONTENIDO —
+  EJECUTADA ENTERA Y PUBLICADA: deploy `b78cf0b` de fuente `41c9d32` (el
+  QUINTO), procedimiento del README completo (cinco guardas en verde con
+  `2` esperado de ready, guarda del deploy, check-modes contra el árbol
+  REAL de main servido en :8000), push de main Y de redesign-trust (el
+  fuente trazable en origin), y VERIFICADO EN EL DOMINIO**: el fondo de la
+  nav opaco al scrollear y transparente arriba (medido con navegador
+  contra el dominio a 390), rótulos en una línea con Contact adentro
+  (right 378 de 390), leyenda indivisible, /sitemap/ sin autoenlace (0 en
+  el bloque del mapa, 1 en el footer), JILI como tier 2 y ÚLTIMO de
+  Insurance en el servido, EDINET a disclosure2 sin resto de la vieja,
+  /favicon-192x192.png en 200 con su `<link sizes="192x192">` en la
+  portada servida, **los CUATRO binarios grandes sha256-idénticos a los
+  locales** (la maciza servida, no caché vieja), /hajime/yorozu/ sin la
+  tarjeta en lo renderizado, seguros en statu quo (200 + noindex,follow),
+  **y la exclusión de notas verificada DEL LADO SERVIDO: /notes/,
+  /hajime/nota-ejemplo/, /assets/js/notes.js y /notes/search-index.json
+  en 404**, /CLAUDE.md y /tools/ en 404, www→apex 301, sitemap.xml
+  servido con 14 URLs y cero menciones. **UNA observación menor
+  reportada**: el comentario ancla de /hajime/yorozu/ contiene la PALABRA
+  «TODO» (meta-mención: «el marcado con TODOs se retiró») visible solo en
+  ver-código — si el criterio estricto del autor la alcanza, son dos
+  palabras a reformular en el próximo deploy. El detalle de la tanda: Lo hecho, cada
   uno con su commit y las guardas en verde: **(1)** el artefacto se
   desacopló del contenido — `notes/`, `hajime/nota-ejemplo/` y
   `assets/js/notes.js` en `NO_PUBLICABLES` como exclusión TEMPORAL (41
@@ -310,9 +329,10 @@ ninguna de las cuatro guardas la mira; su decisión cerrada está más abajo.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 4, con /sitemap/,
-2026-08-07) — FALTAN EL DNS (fuera del repo) Y EL TEXTO DE LA CAPA 1 DE
-SEGUROS (dentro del repo; su andamiaje ya está servido con noindex,
+**EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 5, la tanda sin
+contenido — nav con fondo, móvil, /sitemap/ sin autoenlace, favicon maciza,
+EDINET — 2026-08-08) — FALTAN EL DNS (fuera del repo) Y EL TEXTO DE LA CAPA
+1 DE SEGUROS (dentro del repo; su andamiaje ya está servido con noindex,
 invisible).** La
 publicación (el paso 5) se ejecutó **ANTES de los pasos 2-4, por decisión del
 autor, y el orden es correcto**: una transferencia de registrador NO cambia
