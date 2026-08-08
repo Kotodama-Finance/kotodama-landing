@@ -41,7 +41,49 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-08 (todavía más tarde), la tanda de las ANCLAS DE
+- Último cierre: **2026-08-08 (lo más tarde del día), la tanda de CERO
+  COMENTARIOS EN LO SERVIDO — EL OCTAVO DEPLOY, EJECUTADO ENTERO Y
+  VERIFICADO EN VIVO 39/39: deploy `f7d2b3f` de fuente `b5bc838`.**
+  Requisito sine qua non del autor: ningún comentario HTML/CSS/JS viaja al
+  dominio — el filtro por tipo no veía lo que vive DENTRO de archivos
+  publicados (216 comentarios / 76,3 KB en las 16 páginas; styles.css era
+  DOS TERCIOS comentarios). La solución es LA TRANSFORMACIÓN en
+  make-deploy.py (el fuente NO se tocó: los comentarios siguen pegados a la
+  línea que explican) con su guarda de contenido — la decisión completa,
+  PRIMERA de la lista, que incluye **LA REGLA NUEVA CON NOMBRE: EL SERVIDO
+  NO ES EL FUENTE** (toda verificación de bytes servidos va contra el
+  ARTEFACTO; todo diagnóstico del dominio reproduce la transformación antes
+  de concluir). El diseño se aprobó con sus cuatro decisiones (vendor sin
+  transformar por el @license; los DOS comentarios GLSL del shader
+  reescritos EN INGLÉS en el fuente — siguen sirviéndose, son strings del
+  programa; la doble regeneración diagnóstica — el estreno pasó SIN
+  --pisar, con el diagnóstico «deploy PRE-TRANSFORMACIÓN» exacto;
+  robots.txt/sitemap.xml fuera de alcance). **Probado antes de confiar**:
+  17 fixtures + 11 mutaciones dirigidas en rojo, E2E de 21 casos sobre rama
+  descartable (ambos modos de hotfix frenando), y una revisión adversarial
+  de 12 agentes que confirmó 8 hallazgos por reproducción — los 8
+  corregidos, DOS de ellos ALTOS que mataban el rollback documentado
+  (`--fuente v1-published`/`v1-content-complete` frenaban por exigir
+  incondicional la meta de Search Console y el bloque de iconos; ahora la
+  presencia rige solo desde HEAD y el chrome exigido SE DERIVA del fuente —
+  re-verificado: los dos tags publican). **La verificación en vivo aplicó
+  la regla nueva por primera vez**: las 16 páginas y los 4 CSS/JS servidos
+  BYTE A BYTE contra los blobs de main, cero `<!--`, la meta de Search
+  Console con su token, seguros 200+noindex, gc-pixel, import map,
+  three.module.js sha256 intacto con su @license, sitemap.xml byte-idéntico
+  (14 URLs), las notas y /CLAUDE.md en 404. Guardas: cinco en verde
+  (pendulum 0.0951, ready `2` esperado, baseline 36 intacto). De paso
+  quedaron cerradas las DOS verificaciones sueltas de la tanda: el charset
+  YA ESTABA (`<meta charset="UTF-8">` primera etiqueta del head en las 18 —
+  la premisa del DOM no reproducía contra el fuente crudo) y el comentario
+  de la nav con «ocho páginas» + atribución a check-ready se corrigió en
+  las NUEVE páginas que lo llevaban (sin número a propósito: el conteo en
+  un comentario es el fingerprint que caduca — este caso lo probó) más el
+  «las otras ocho» de la 404. Y la observación menor del deploy 5 (la
+  palabra «TODOs» en ver-código de /hajime/yorozu/) quedó DISUELTA: ningún
+  comentario viaja. La rama maintenance sigue emitiendo comentarios — tanda
+  aparte, acordada.
+- Último cierre anterior: **2026-08-08 (todavía más tarde), la tanda de las ANCLAS DE
   LA PORTADA — EL SÉPTIMO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN EL
   DOMINIO: deploy `525c58d` de fuente `ac6d7d0`.** El bug (capturas del
   autor): las anclas de la nav aterrizaban con demasiado aire — #method con
@@ -73,7 +115,7 @@ fallidos ya corregidos, y las capturas intermedias.
   CSS). El comentario de #cube-view en index.html quedó actualizado en el
   fuente (el viejo decía que la nav aterrizaba en el título «por el
   contexto» — ya no) y viaja en el próximo deploy.
-- Último cierre anterior: **2026-08-08 (más tarde), la tanda de SEARCH CONSOLE +
+- Antes, el mismo día: **2026-08-08 (más tarde), la tanda de SEARCH CONSOLE +
   FUENTES — EL SEXTO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN EL DOMINIO:
   deploy `e20289e` de fuente `0398d9f`**, procedimiento del README completo
   (cinco guardas en verde con `2` esperado de ready y pendulum sano en
@@ -409,9 +451,11 @@ ninguna de las cuatro guardas la mira; su decisión cerrada está más abajo.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 7, las anclas de
-la portada calibradas por sección — 2026-08-08, verificado en el dominio
-23/23) — FALTAN EL DNS (fuera del repo) Y EL TEXTO DE LA CAPA
+**EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 8, CERO
+COMENTARIOS en lo servido — 2026-08-08, verificado en vivo 39/39 byte a
+byte contra el artefacto; desde ese deploy rige LA REGLA «EL SERVIDO NO ES
+EL FUENTE», ver la decisión primera de la lista) — FALTAN EL DNS (fuera del
+repo) Y EL TEXTO DE LA CAPA
 1 DE SEGUROS (dentro del repo; su andamiaje ya está servido con noindex,
 invisible). Y CUATRO PENDIENTES MÁS, para que no se caigan del
 encabezado (2026-08-08, anotados a pedido del autor): (1) el TÍTULO y la
