@@ -41,7 +41,42 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-07 (todavía más tarde), la tanda de auditoría +
+- Último cierre: **2026-08-08, la tanda del DEPLOY SIN CONTENIDO — todo lo
+  que no depende de texto pendiente, construido y commiteado LOCAL; la
+  sesión está PARADA en la aprobación del favicon (parada obligatoria de
+  la instrucción) y el deploy 5 NO se ejecutó todavía.** Lo hecho, cada
+  uno con su commit y las guardas en verde: **(1)** el artefacto se
+  desacopló del contenido — `notes/`, `hajime/nota-ejemplo/` y
+  `assets/js/notes.js` en `NO_PUBLICABLES` como exclusión TEMPORAL (41
+  publicables; `notes/search-index.json` salió de `CONTRATO` mientras
+  tanto; el pase de estreno en la decisión de notas deshace todo esto);
+  **(2)** los tres bugs de móvil de las capturas de iPhone, reproducidos a
+  390 ANTES de tocar y verificados EJECUTANDO — ver la decisión nueva de
+  la nav («La nav con fondo propio»); **(3)** el autoenlace de /sitemap/
+  fuera del renderizado (la exclusión vive en `mapa_bloque()`, la guarda
+  la siguió sola — sitemap.xml byte-idéntico); **(4)** EDINET APLICADO a
+  disclosure2 en /method/ (era propuesta; IMAJ sigue pendiente de Manuel);
+  **(5)** 4B preparado sin ejecutar: la meta de Search Console va en
+  index.html entre `twitter:card` y el comentario de iconos — FUERA de los
+  tres bloques comparados — cuando Manuel pase el token. **LO QUE FRENA EL
+  DEPLOY, además del favicon: la tarjeta de sector.** Vive DENTRO de
+  /hajime/yorozu/index.html — página publicada—, así que la selección por
+  archivos NO puede excluirla: hoy el deploy la publicaría con sus DOS
+  TODOs en castellano VISIBLES y ninguna guarda lo frena (la de castellano
+  exime «TODO», make-deploy no cuenta placeholders, check-ready no está
+  acoplado — solo informa). Diagnóstico reportado a Manuel en la parada
+  con la propuesta de comentarla HTML hasta que él pase el título
+  (placeholders() la sigue contando por el quirk de comentarios → baseline
+  estable; el mapa no la necesita mientras seguros siga noindex —
+  verificado en `mapa_bloque()`: una tarjeta a página no listada se ignora
+  y seguros no está en `paginas_publicas()`). El favicon: diagnóstico
+  hecho (el head declara ico 16/32/48 + svg + apple-touch 180, todo 200 en
+  el dominio, robots abierto — la causa probable del globo es RETRASO de
+  rastreo, no un archivo chico), candidato 192 con 言霊 apilados en el
+  círculo inscrito generado en scratchpad con renders a 16/24 para su
+  veredicto. NADA de esta tanda está pusheado; el deploy 5 y la
+  verificación en vivo van tras su respuesta.
+- Último cierre anterior: **2026-08-07 (todavía más tarde), la tanda de auditoría +
   el SISTEMA DE NOTAS + la tarjeta de sector — construido y commiteado
   LOCAL, SIN deployar y SIN push (instrucción de la sesión).** La
   auditoría, verificada contra el fuente antes de tocar: JILI a Tier 2 y al
@@ -384,6 +419,46 @@ sección con el detalle.
 
 ## Decisiones cerradas — no rediscutir
 
+### La nav con fondo propio en CSS: opaco por defecto, scroll-driven como mejora
+
+**2026-08-08, decisión del autor (opción B) — y REEMPLAZA al mecanismo
+`is-scrolled` de main.js, que se retiró CON su CSS y su token
+`--nav-scrim`.** El bug: la nav es fixed y transparente, el fondo lo ponía
+el JS al scrollear — y solo la portada carga JS, así que en las páginas de
+prosa el texto se dibujaba encima del de la nav (capturas de iPhone en
+/musubi/ y /method/; reproducido a 390px antes de tocar).
+
+- **El reparto, y EL ORDEN NO ES NEGOCIABLE**: fondo OPACO (`--c-navy` +
+  filete oro) como default en CSS puro; la transparencia sobre el hero es
+  MEJORA PROGRESIVA con `animation-timeline: scroll()` dentro de
+  `@supports`, cero JS (keyframe solo-`from`; el `to` implícito es el valor
+  base — una sola fuente del estado final). Escrito al revés, el navegador
+  sin soporte hereda el bug; escrito así, hereda una barra sólida sobre el
+  hero — falla visible y benigna. Quien «restaure» is-scrolled o vuelva la
+  transparencia al default está reintroduciendo el bug silencioso.
+- **Verificado EJECUTANDO, no leyendo tablas** (Chrome headless):
+  transparente a scroll 0, `rgba(4,13,24,0.5)` a 60px (la animación
+  PROGRESA), opaco a 600; el fallback (animación anulada) opaco SIEMPRE;
+  `prefers-reduced-motion` emulado → la regla global `animation: none` la
+  apaga y queda el opaco, correcto. **Safari de iOS NO se pudo ejecutar en
+  esta máquina (el riesgo aceptado de siempre)**: si su soporte falta o
+  falla, el @supports lo deja en opaco — el modo de fallo es el diseñado.
+  Longhands a propósito: el shorthand `animation` resetea
+  `animation-timeline` (trampa de orden anotada en el CSS).
+- **La compresión de la nav en teléfono (≤480px)**: nowrap en los rótulos
+  («The Cube» partía a dos líneas), padding 12 / gap 8 / 0.72rem / 0.02em,
+  y **`flex-shrink: 0` + nowrap en la marca 言霊** — el flex la aplastaba
+  (caja de 27-51px para ~54 de contenido: kanji envuelto o superpuesto).
+  Medido: una línea por rótulo y Contact adentro a 390/375/360 (right
+  378/363/348, nav 62.2px de alto — `--nav-h` y las anclas no se tocaron);
+  1440 sin cambios. **A 320px la fila sigue sin entrar (corte visible,
+  asumido)** — los caminos descartados: nav a dos filas (cambia `--nav-h` y
+  corre TODOS los destinos de ancla) y esconder o achicar el kanji (el
+  autor lo quiere como está). Los CINCO rótulos quedan.
+- **La leyenda de /method/**: cada par cuadrado+rótulo es una unidad
+  (`.sources__legend-item`, inline-flex nowrap); si no entran, se apilan
+  ENTEROS. Semántica intacta: lleno = Official, hueco = Attributed.
+
 ### El sistema de notas: contrato, molde, generador y archivo — construido, SIN deployar
 
 **2026-08-07, decidido por el autor; construido completo en esta sesión.**
@@ -561,11 +636,18 @@ UNA página y el footer lleva sólo la puerta.
   que no hay origen único — exactamente el caso de /disclaimer/, que
   también se alcanza desde el footer global y ya tenía ese rótulo. No es
   una categoría nueva: es el precedente aplicado.
-- **/sitemap/ se lista A SÍ MISMA y va a sitemap.xml**: es una página
-  indexable más. Una excepción en cualquiera de las dos rompería el
-  conjunto único (un mapa exhaustivo que se omite a sí mismo tiene un
-  hueco), y mecánicamente no necesita caso especial: entra por
-  ORDEN_SITIO como cualquier página de nivel superior.
+- **/sitemap/ va a sitemap.xml pero YA NO se lista a sí misma (2026-08-08,
+  decisión del autor — REVIERTE el «se lista a sí misma» que decía acá)**:
+  la entrada «Site map» enlazaba a la página que el lector ya está mirando
+  y DESAPARECE del renderizado (no queda texto plano). La exclusión vive en
+  `mapa_bloque()` — la única derivación, compartida con la guarda, que
+  siguió el cambio sola (probado en rojo y en verde) — y es SOLO del HTML:
+  `paginas_publicas()` intacta, sitemap.xml byte-idéntico con /sitemap/
+  adentro (indexable legítima que Google ya conoce), el slug SIGUE en
+  ORDEN_SITIO (sin su lugar, el abort de nivel superior frena la
+  generación). El enlace del footer también es autoenlace en esa página y
+  NO se tocó: arreglarlo rompería la identidad byte a byte de los
+  dieciocho footers, que vale más.
 
 - **Los nombres salen del `face-page__romaji` de cada página** — el nombre
   con que la página se presenta en su h1: corto, sin kanji, sin
