@@ -81,11 +81,19 @@ en CLAUDE.md, decisión de la rama de deploy):
    igualdad de tokens en CSS/JS. Es la red real contra un stripper con un
    bug: check-modes contra el artefacto solo navega la portada y /hajime/ —
    las otras páginas las cubre esto.
+5. PLACEHOLDERS INDEXABLES — una página del artefacto SIN noindex no puede
+   llevar placeholders TODO (aprobada por el autor el 2026-08-08: el diseño
+   A del acople de check-ready — la guarda que faltaba cuando la tarjeta de
+   sector casi publica sus dos TODO). El conteo es EL MISMO de check-ready
+   (_guardas.placeholders_de, una sola derivación) sobre los bytes
+   transformados. FRENA desde HEAD; bajo --fuente AVISA y publica — un
+   rollback publica el sitio de aquel día como era.
 
-Y una cuarta, de mantenimiento de la propia lista: si una entrada de
-NO_PUBLICABLES no matchea nada en el commit fuente, el script FRENA — una
-exclusión que no excluye nada es la lista desactualizada (¿se renombró el
-archivo?), y maelstrom.css renombrado se publicaría sin que el tipo lo cace.
+Y una más, de mantenimiento de la propia lista (el ordinal se quitó a
+propósito: ya quedó viejo una vez): si una entrada de NO_PUBLICABLES no
+matchea nada en el commit fuente, el script FRENA — una exclusión que no
+excluye nada es la lista desactualizada (¿se renombró el archivo?), y
+maelstrom.css renombrado se publicaría sin que el tipo lo cace.
 """
 import json
 import os
@@ -931,6 +939,47 @@ def verificar_transformacion(arbol_pub, leer_fuente, leer_pub, desde_head=True):
     return problemas
 
 
+def verificar_placeholders_indexables(arbol_pub, leer):
+    """Página INDEXABLE del artefacto con placeholders TODO — la guarda que
+    faltaba cuando la tarjeta de sector casi publica sus dos TODO en una
+    página viva con las cinco guardas en verde (2026-08-08; el diseño A del
+    acople de check-ready, aprobado por el autor).
+
+    El criterio: «viaja + tiene placeholders» no distingue nada — el
+    andamiaje de seguros viaja con 25 a propósito. La marca que SÍ distingue
+    es la meta noindex, que el andamiaje deliberado YA lleva por decisión
+    (capa 1 de seguros): una página del artefacto SIN noindex es contenido
+    vivo indexable, y un fragmento incompleto dentro de una página terminada
+    nunca puede llevar noindex sin desindexarla. Es la inversa exacta de
+    noindex_olvidado (check-ready: sin placeholders => sin noindex); juntas
+    cierran el iff andamiaje<=>noindex.
+
+    El conteo es LA MISMA derivación que check-ready (G.placeholders_de —
+    condición del autor: dos derivaciones del mismo conteo derivan), sobre
+    los bytes TRANSFORMADOS: lo que se mide es lo que se sirve, y el quirk
+    de placeholders-dentro-de-comentarios no puede disparar acá porque el
+    artefacto no tiene comentarios.
+
+    Devuelve hallazgos; la SEVERIDAD la decide main(): FRENA desde HEAD,
+    AVISA bajo --fuente — un rollback publica el sitio de aquel día como
+    era (condición del autor; la lección de los dos rollbacks que la tanda
+    del stripper rompió por exigencias incondicionales).
+    """
+    hallazgos = []
+    for ruta in sorted(arbol_pub):
+        if not ruta.endswith(".html"):
+            continue
+        html = leer(ruta).decode("utf-8")
+        if G.RE_NOINDEX.search(html):
+            continue
+        n = G.placeholders_de(html)
+        if n:
+            hallazgos.append(f"{ruta}: {n} placeholder(s) TODO en página "
+                             f"INDEXABLE del artefacto (sin noindex) — "
+                             f"castellano de trabajo quedaría vivo en el dominio")
+    return hallazgos
+
+
 # ---------------------------------------------------------------------------
 # Escritura y protección de main
 # ---------------------------------------------------------------------------
@@ -1126,6 +1175,15 @@ def main():
                  + verificar_identidad(arbol_pub, arbol_todo)
                  + verificar_transformacion(arbol_pub, leer_fuente, leer,
                                             desde_head=fuente_ref is None))
+    # Placeholders en página indexable: FRENA desde HEAD, AVISA bajo --fuente
+    # (un rollback publica el sitio de aquel día como era — decisión del
+    # autor, 2026-08-08; el detalle en el docstring de la función).
+    hallazgos_ph = verificar_placeholders_indexables(arbol_pub, leer)
+    if fuente_ref is None:
+        problemas += hallazgos_ph
+    else:
+        for h in hallazgos_ph:
+            print(f"  aviso: {h} — el sitio de ese día se publica como era")
     if problemas:
         print("LA GUARDA FRENÓ EL DEPLOY — nada se commiteó:")
         for p in problemas:

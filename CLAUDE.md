@@ -48,16 +48,16 @@ fallidos ya corregidos, y las capturas intermedias.
   implementación, no dos), la rama quedó regenerada (`1b80019`, con su
   historia) y verificada sobre el HTML RESULTANTE, y check-maintenance
   suma cero-`<!--` y cero-`/*`-en-`<style>` probadas EN ROJO — ver la
-  actualización en su decisión. **La rama local quedó ADELANTE de origin;
-  su push espera la confirmación del autor.** **(2) El DISEÑO del acople
-  de check-ready, ENTREGADO sin implementar** (era lo pedido): el
-  criterio recomendado es «página del artefacto SIN noindex no puede
-  llevar placeholders» — la inversa exacta de `noindex_olvidado`, con el
-  noindex que el andamiaje deliberado YA lleva como la marca que
-  distingue seguros (25 TODOs, noindex, pasa) de la tarjeta de sector
-  (fragmento en página indexable, frenaría) — como guarda dentro de
-  make-deploy sobre el ARTEFACTO, dura desde HEAD y aviso bajo
-  `--fuente`; espera la DECISIÓN del autor, ver su fila en los cabos.
+  actualización en su decisión. **Pusheada a origin con autorización del
+  autor (junto con redesign-trust): la rama de emergencia remota ya es la
+  versión sin comentarios.** **(2) El DISEÑO del acople de check-ready,
+  ENTREGADO — y el autor APROBÓ EL DISEÑO A el mismo día: la guarda está
+  IMPLEMENTADA y probada en rojo** — ver la decisión nueva, primera de la
+  lista («La guarda de placeholders indexables»): página INDEXABLE del
+  artefacto no puede llevar placeholders TODO (la inversa de
+  `noindex_olvidado` — seguros con su noindex pasa, la tarjeta de sector
+  habría frenado), con el conteo COMPARTIDO vía `_guardas.placeholders_de`
+  y AVISO en vez de freno bajo `--fuente`, las dos condiciones suyas.
   **(3) El RE-BARRIDO de seguridad, medido sobre EL ARTEFACTO** (los
   blobs de main del deploy 8 + la maintenance regenerada, como la regla
   «el servido no es el fuente» exige) **y el texto fechado ENTREGADO al
@@ -408,12 +408,10 @@ fallidos ya corregidos, y las capturas intermedias.
   fechado quedó entregado al autor (su archivo lo pega él); el diseño del
   acople de check-ready quedó entregado con sus costos — la elección es
   del autor, ver el bullet siguiente. Ver sus filas en los cabos.
-- **Decisiones del autor pendientes: DOS (desde el 2026-08-08)** — **(a) la
-  DECISIÓN del acople de check-ready al deploy**: el diseño entregado
-  recomienda la guarda de «placeholders indexables» dentro de make-deploy
-  (página del artefacto sin noindex no puede llevar placeholders; dura
-  desde HEAD, aviso bajo `--fuente`) — nada se implementa hasta que elija;
-  y **(b) el TÍTULO y la LÍNEA DE FUNCIÓN de la tarjeta de sector** en
+- **Decisiones del autor pendientes: UNA (desde el 2026-08-08)** — *(la del
+  acople de check-ready se CERRÓ el mismo día: aprobó el diseño A y la
+  guarda quedó implementada — ver la decisión primera de la lista)* — **el
+  TÍTULO y la LÍNEA DE FUNCIÓN de la tarjeta de sector** en
   /hajime/yorozu/: el PATRÓN está construido (la variante sin kanji — ver
   la decisión del patrón de sector), pero **desde el 2026-08-08 el MARCADO
   está FUERA del archivo** (decisión del autor: TODOs visibles en
@@ -508,11 +506,9 @@ abierta, ver su bullet en Estado; (2) la description y el gloss de
 /notes/ — redacción suya; (3) el TEXTO de la capa 1 de seguros — su
 andamiaje ya está servido con noindex, invisible; (4) la PRIMERA NOTA
 REAL — el sistema está construido, el pase de estreno vive en la decisión
-de notas; (5) la DECISIÓN sobre el acople de check-ready al deploy — el
-diseño quedó entregado el 2026-08-08 (recomendada la guarda de
-«placeholders indexables» dentro de make-deploy: página del artefacto sin
-noindex no puede llevar placeholders — dura desde HEAD, aviso bajo
---fuente); NO se implementa nada hasta que elija.
+de notas. *(La quinta que estuvo acá unas horas — la decisión del acople
+de check-ready — se CERRÓ el mismo 2026-08-08: aprobó el diseño A y la
+guarda quedó implementada; ver la decisión primera de la lista.)*
 
 **EL DNS ES OTRO FRENTE, FUERA DEL REPO — no es pendiente de Code**: los
 pasos 2-4 de la migración (el detalle, más abajo en esta misma sección).
@@ -584,14 +580,13 @@ que es lo que hace el fallo diagnosticable.
 vigentes: «¿en qué paso del DNS estamos?» (fuera del repo), «¿llegó
 el texto de la capa 1 de seguros?» (andamiaje listo, servido con noindex
 desde el deploy 4), «¿llegó la primera nota?» — el sistema de notas está
-CONSTRUIDO entero y sin deployar (2026-08-07, ver su decisión) —, «¿pasó
+CONSTRUIDO entero y sin deployar (2026-08-07, ver su decisión) —, y «¿pasó
 el autor el título de la tarjeta de sector, o la description y el gloss
-de /notes/?» (redacciones suyas), y «¿decidió el autor sobre el acople de
-check-ready?» (el diseño se le entregó el 2026-08-08 — ver su fila en los
-cabos). Los dos trabajos de Code anotados ese día se CERRARON ese mismo
-día (el re-barrido, entregado; el diseño, entregado): dentro del repo los
-frentes son esas redacciones y esas decisiones suyas, no construcción
-nueva. *(Todo pusheado:
+de /notes/?» (redacciones suyas). Los dos trabajos de Code anotados el
+2026-08-08 se CERRARON ese mismo día (el re-barrido, entregado; el diseño
+del acople, entregado, APROBADO e implementado como la guarda de
+placeholders indexables): dentro del repo los frentes son esas redacciones
+suyas, no construcción nueva. *(Todo pusheado:
 la tanda de notas fue con el deploy 5 y el cierre de la vuelta de una nota
 —`fb0f61c`— se pushó el mismo 2026-08-08 con autorización del autor, solo
 a redesign-trust: nada de esto entra al artefacto hasta el estreno de
@@ -600,15 +595,15 @@ a redesign-trust: nada de esto entra al artefacto hasta el estreno de
 La revisión legal del `免責事項` **no es un pendiente**: se decidió publicar sin
 ella.
 
-**Sin decidir dentro del sitio quedan DOS cosas (desde el 2026-08-08)**: el
+**Sin decidir dentro del sitio queda UNA cosa (desde el 2026-08-08)**: el
 título y la línea de función de la tarjeta de sector en /hajime/yorozu/ (el
-patrón existe; el marcado se repone junto con su texto), y la decisión
-sobre el acople de check-ready al deploy (el diseño está entregado — ver su
-fila en los cabos; nada se implementa hasta que el autor elija). La vuelta
-de una nota se CERRÓ el 2026-08-08 — «← All notes» más el rótulo de cara
-enlazado en la cabecera; ver la decisión del sistema de notas. Lo anterior
-— cómo enlaza /hajime/yorozu/ a seguros — se cerró con la tarjeta; el
-`domain` de las tarjetas de la portada, antes.
+patrón existe; el marcado se repone junto con su texto). La decisión del
+acople de check-ready se CERRÓ el mismo día — diseño A aprobado e
+implementado, ver la decisión primera de la lista. La vuelta de una nota
+se CERRÓ el 2026-08-08 — «← All notes» más el rótulo de cara enlazado en
+la cabecera; ver la decisión del sistema de notas. Lo anterior — cómo
+enlaza /hajime/yorozu/ a seguros — se cerró con la tarjeta; el `domain` de
+las tarjetas de la portada, antes.
 
 **Para cualquier deploy futuro, releer primero** las secciones «Antes de
 publicar» y «Publicar» del README: son las cuatro guardas MÁS la del deploy
@@ -630,7 +625,7 @@ sección con el detalle.
 | Cabo | Estado |
 |---|---|
 | ~~Re-barrido de seguridad del estático~~ | **CERRADO 2026-08-08 (el mismo día que se anotó)**: medido sobre EL ARTEFACTO —los blobs de main (deploy 8) y la rama maintenance regenerada—, como la regla «el servido no es el fuente» exige, y el texto con fecha nueva ENTREGADO al autor (su archivo lo pega él, no se edita). Resultado limpio: 84 `_blank` todos con noopener (80→84 = las DOS páginas nuevas desde el barrido viejo, /sitemap/ y seguros, × los 2 del footer — nada más cambió), 0 formularios, 0 handlers, 0 style=, 1 tercero por página (el pixel), import map único inline (67 bytes post-strip), 0 sumideros en el JS de la casa Y en el vendor. |
-| **Acople de check-ready al deploy** | **el DISEÑO quedó ENTREGADO (2026-08-08); espera la DECISIÓN del autor — nada se implementa hasta que elija.** El diagnóstico: check-ready informa pero NO frena (make-deploy no lo importa; el acople es el procedimiento humano del README) y la tarjeta de sector lo demostró. La distinción que resuelve: «viaja + tiene placeholders» no alcanza (seguros viaja con 25 a propósito) — el criterio es la META noindex, que el andamiaje deliberado YA lleva por decisión: **página del artefacto SIN noindex no puede llevar placeholders** (la inversa exacta de `noindex_olvidado`; juntas cierran el iff andamiaje⟺noindex). Recomendado: guarda dentro de make-deploy sobre el ARTEFACTO, dura desde HEAD y aviso bajo `--fuente`. Verificado que hoy no frenaría nada y que habría cazado la tarjeta. |
+| ~~Acople de check-ready al deploy~~ | **CERRADO 2026-08-08: el autor aprobó el diseño A y la guarda quedó IMPLEMENTADA** — `verificar_placeholders_indexables` en make-deploy: página INDEXABLE del artefacto no puede llevar placeholders TODO (la inversa de `noindex_olvidado`; seguros con su noindex pasa, la tarjeta de sector habría frenado), conteo COMPARTIDO vía `_guardas.placeholders_de`, FRENA desde HEAD y AVISA bajo `--fuente`. Probada en rojo end-to-end (worktree descartable con commit real). Ver la decisión, primera de la lista. |
 | **Capa 1 de seguros: el TEXTO** | **el frente activo (2026-08-07)**: andamiaje listo en `/hajime/yorozu/japan/seguros/` con 25 placeholders esperando el texto del autor, **con `noindex` mientras tanto** (exclusión del sitemap derivada; al redactar: sacar la meta + regenerar sitemap.xml y /sitemap/ —mismo comando— + baseline — el olvido tiene guarda). **Servido con su noindex desde el deploy 4 (2026-08-07): 200 en el dominio, fuera del sitemap servido — invisible, verificado.** La tarjeta desde /hajime/yorozu/: el PATRÓN existe (2026-08-07) pero **su marcado salió del archivo el 2026-08-08** (los TODOs quedaban visibles en ver-código de una página publicada) — **se repone junto con el título del autor**, y al sacar el noindex vuelve a ser requisito del mapa. Ver la decisión del patrón de sector. |
 | **Sistema de notas** | **construido completo, SIN deployar (2026-08-07)**: contrato de metadatos, molde con nota-fixture, `make-notes.py` (feed entre centinelas + listado + índice), /notes/ con buscador (segunda página con JS), guarda en check-structure probada en NUEVE rojos, excepción de deploy por ruta exacta. Todo noindex, feed vacío, cero enlaces entrantes. **La vuelta y el rótulo de cara se CERRARON el 2026-08-08** («← All notes» a /notes/; `note-face` en el contrato, cinco rojos más — ver la decisión). **Se estrena con la primera nota real** — el pase completo está en su decisión (primera de la lista). |
 | ~~Redacción de Hajime~~ | **CERRADA 2026-08-05**: los 15, con texto del autor. Baseline en cero, `check-ready` en `0`. Cualquier placeholder nuevo es regresión. |
@@ -641,7 +636,7 @@ sección con el detalle.
 | ~~Vista explotada del cubo~~ | **INTEGRADA 2026-08-05**: mergeada a esta rama por decisión del autor, guardas en verde después del merge. Lo que sigue siendo posterior a publicar es la v2 (corrientes de agua) — sólo si el autor la pide. |
 | **Dieta de fuentes** | **~79 KB disponibles** quitando features que el sitio no usa. **Decidido: no se hace ahora.** Se revisa si el CSS llega a usar `font-feature-settings`, `font-variant` o `small-caps`. |
 | **Guarda de castellano** | **incompleta a propósito, y lo dice en su salida.** Cubre diacríticos y una lista de palabras; se le escapa castellano sin ninguna de las dos. Al agregar una página, leer su superficie además de correrla. |
-| **Rama `maintenance`** | **existe, está lista y NO está activa.** Se activa cambiando la rama que publica Pages. **Desde el 2026-08-08 sirve SIN comentarios**: el generador pasa el HTML por el MISMO `transformar()` de make-deploy (regenerada: `1b80019`; check-maintenance suma cero-`<!--` y cero-`/*`-en-`<style>`, probadas en rojo). **OJO: la rama local quedó adelante de origin — el push espera la confirmación del autor.** Ver la decisión cerrada más abajo. |
+| **Rama `maintenance`** | **existe, está lista y NO está activa.** Se activa cambiando la rama que publica Pages. **Desde el 2026-08-08 sirve SIN comentarios**: el generador pasa el HTML por el MISMO `transformar()` de make-deploy (regenerada: `1b80019`; check-maintenance suma cero-`<!--` y cero-`/*`-en-`<style>`, probadas en rojo). **Pusheada a origin ese mismo día con autorización del autor** — la rama de emergencia remota ya es la versión sin comentarios. Ver la decisión cerrada más abajo. |
 | **Respaldo de `_dev/` y `_ref/`** | **HECHO 2026-08-06**: `kotodama_respaldo_dev-ref_2026-08-06.zip` (40,8 MB, 85/85 entradas verificadas) en la carpeta del proyecto en OneDrive — repetir por hito con el mismo patrón de nombre fechado. Dos hechos verificados que cierran los miedos de fondo, para no re-preguntarlos: **(1) `_ref/` no era única copia** — los 5 archivos son byte-idénticos (sha256) a copias dentro de `Kotodama Finance website.zip` en OneDrive; **(2) el merge NO borra archivos sin versionar** — git no toca untracked en merge ni checkout; el único riesgo era el disco, y quedó cubierto. Versionarlos se descartó: publicaría ~40 MB de capturas (y las fotos de WhatsApp) en el repo público. |
 | **`@media print`** | **nadie lo miró, pendiente SIN urgencia** (anotado 2026-08-06, pedido del autor): los navegadores quitan los fondos al imprimir y el texto claro queda sobre papel blanco. La única candidata real es /disclaimer/, que nadie imprime. No bloquea publicar. |
 | **Safari** | **sin verificar, riesgo aceptado** (2026-08-06): no corre en Windows. Firefox SÍ pasó un humo completo el mismo día (justificado —ahí con partición de palabras real: Firefox trae diccionarios de hyphens—, marca de agua vertical, multicol de /method/ en 2 columnas, lazy-init, cubo, folio con input confiable, vista explotada). El dato de método que dejó: geckodriver cuelga la creación de sesión en esta máquina — se manejó Firefox por Marionette directo, y un PointerEvent sintético con pointerId inventado muere en setPointerCapture ANTES de deseleccionar: para probar el arrastre hace falta input confiable (WebDriver:PerformActions), no eventos sintéticos. |
@@ -650,6 +645,49 @@ sección con el detalle.
 ---
 
 ## Decisiones cerradas — no rediscutir
+
+### La guarda de placeholders indexables: el deploy FRENA lo que check-ready solo informaba
+
+**2026-08-08, diseño A del acople de check-ready, APROBADO E IMPLEMENTADO
+el mismo día** (el diagnóstico y los diseños descartados quedaron en la
+entrega al autor; acá va lo vigente). El hueco que cierra: check-ready
+informa pero no frenaba nada (make-deploy no lo miraba; el acople era el
+paso humano del README), y la tarjeta de sector casi publica sus dos TODO
+en una página viva con las cinco guardas en verde — la atajó la decisión
+del autor, no una guarda.
+
+- **El criterio: una página INDEXABLE del artefacto no puede llevar
+  placeholders TODO.** «Viaja + tiene placeholders» no distingue nada —
+  seguros viaja con 25 a propósito—; la marca que distingue es la META
+  noindex, que el andamiaje deliberado YA lleva por decisión (capa 1 de
+  seguros). Un fragmento incompleto dentro de una página terminada nunca
+  puede llevar noindex sin desindexarla: exactamente el caso tarjeta. Es
+  **la inversa de `noindex_olvidado`** (sin placeholders ⇒ sin noindex);
+  juntas cierran el iff andamiaje⟺noindex. No hizo falta metadato nuevo.
+- **Las dos condiciones del autor, cumplidas**: (1) bajo `--fuente` AVISA
+  y publica — un rollback publica el sitio de aquel día como era (la
+  lección de los dos rollbacks que la tanda del stripper rompió por
+  exigencias incondicionales); la severidad la decide `main()`, la función
+  solo devuelve hallazgos. (2) El conteo NO se reimplementó:
+  `placeholders()` de `_guardas` se partió en **`placeholders_de(html)`**
+  —la derivación única, sobre texto— y el envoltorio de árbol de siempre;
+  check-ready/check-structure y el deploy cuentan con LA MISMA función.
+  El refactor no movió el conteo (verificado: 36 en 3 páginas, seguros 25).
+- **Mide el ARTEFACTO, no el fuente**: los bytes transformados — lo que se
+  mide es lo que se sirve, y el quirk de placeholders-dentro-de-comentarios
+  no puede disparar ahí porque el artefacto no tiene comentarios.
+- **Probada EN ROJO end-to-end**: el freno desde HEAD con un commit REAL
+  en un worktree descartable (un TODO en /musubi/ → exit 1 nombrando
+  página y conteo — el primer intento corrió el make-deploy VIEJO del
+  checkout del worktree y dio verde: había que copiar el script editado,
+  el test se corrigió), el aviso bajo `--fuente` contra el mismo commit
+  (exit 0 con la línea de aviso), las dos familias de placeholder y el
+  skip por noindex en sintéticos, HEAD real en verde, y los DOS tags de
+  rollback publicando.
+- **check-ready NO cambió y sigue siendo otra cosa**: informa el progreso
+  de redacción sobre el árbol de trabajo (18 páginas, exit 2 esperado).
+  La guarda nueva es la puerta de embarque sobre el artefacto. No hay
+  acople de códigos de salida — lo acoplado es la INVARIANTE.
 
 ### CERO comentarios en lo SERVIDO: el deploy TRANSFORMA — y EL SERVIDO YA NO ES EL FUENTE
 

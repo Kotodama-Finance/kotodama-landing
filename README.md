@@ -318,9 +318,13 @@ blob fuente), que **la transformación no haya tocado nada más que
 comentarios** (la guarda de contenido: cero comentarios en el artefacto por
 `html.parser`, mismo stream de eventos, mismo texto visible, el chrome
 idéntico entre páginas del artefacto, la meta de Search Console/import
-map/gc-pixel/noindex vivos, tokens de CSS/JS intactos), y que **nadie haya
-editado `main` a mano** desde el último deploy. El procedimiento completo del
-día, en «Publicar», acá abajo.
+map/gc-pixel/noindex vivos, tokens de CSS/JS intactos), que **ninguna página
+INDEXABLE del artefacto lleve placeholders TODO** (desde el 2026-08-08 — el
+mismo conteo de `check-ready`, compartido vía `_guardas.placeholders_de`;
+una página con noindex puede: así viaja el andamiaje deliberado. FRENA desde
+HEAD; bajo `--fuente` solo avisa — un rollback publica el sitio de aquel día
+como era), y que **nadie haya editado `main` a mano** desde el último deploy.
+El procedimiento completo del día, en «Publicar», acá abajo.
 
 **Desde el 2026-08-08 el deploy TRANSFORMA: elimina los comentarios de los
 HTML, CSS y JS publicados** (los comentarios son notas de trabajo y no viajan

@@ -69,8 +69,12 @@ def sin_comentarios(html: str) -> str:
     return re.sub(r"<!--.*?-->", " ", html, flags=re.S)
 
 
-def placeholders() -> dict:
-    """{página: cantidad de placeholders sin redactar}, sólo las que tienen.
+def placeholders_de(html: str) -> int:
+    """Los placeholders sin redactar de UN html. LA derivación única del
+    conteo — check-ready/check-structure la usan vía placeholders() sobre el
+    árbol de trabajo, y la guarda de placeholders indexables de make-deploy
+    la usa sobre los bytes del ARTEFACTO (condición del autor, 2026-08-08:
+    dos derivaciones del mismo conteo derivan).
 
     Cuenta DOS familias, y la segunda se agregó tarde por un agujero real: los
     placeholders de metadatos no llevan `class="todo"` porque no son elementos
@@ -79,17 +83,22 @@ def placeholders() -> dict:
     descripción de esta cara.», que es exactamente el fallo que esta guarda
     existe para evitar: castellano dirigido al autor en producción.
     """
+    n = len(re.findall(r'class="[^"]*\btodo\b[^"]*"', html))
+    # metadatos: <title> y cualquier content="…" (description, og:*)
+    for m in re.findall(r"<title>(.*?)</title>", html, flags=re.S):
+        if "TODO" in m:
+            n += 1
+    for m in re.findall(r'<meta[^>]*\bcontent="([^"]*)"', html):
+        if "TODO" in m:
+            n += 1
+    return n
+
+
+def placeholders() -> dict:
+    """{página: cantidad de placeholders sin redactar}, sólo las que tienen."""
     cuenta = {}
     for p in htmls():
-        h = p.read_text(encoding="utf-8")
-        n = len(re.findall(r'class="[^"]*\btodo\b[^"]*"', h))
-        # metadatos: <title> y cualquier content="…" (description, og:*)
-        for m in re.findall(r"<title>(.*?)</title>", h, flags=re.S):
-            if "TODO" in m:
-                n += 1
-        for m in re.findall(r'<meta[^>]*\bcontent="([^"]*)"', h):
-            if "TODO" in m:
-                n += 1
+        n = placeholders_de(p.read_text(encoding="utf-8"))
         if n:
             cuenta[nombre(p)] = n
     return cuenta
