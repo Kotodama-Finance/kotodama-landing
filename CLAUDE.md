@@ -558,6 +558,91 @@ sección con el detalle.
 
 ## Decisiones cerradas — no rediscutir
 
+### CERO comentarios en lo SERVIDO: el deploy TRANSFORMA — y EL SERVIDO YA NO ES EL FUENTE
+
+**2026-08-08, requisito del autor (condición sine qua non, no preferencia).
+REVIERTE el «los comentarios se quedan en lo servido» de la decisión de la
+rama de deploy.** El deploy filtraba por TIPO de archivo, así que las notas
+de trabajo que viven DENTRO de los HTML/CSS/JS publicados —los comentarios,
+en castellano— viajaban enteras al dominio: era un hueco del filtro, no una
+decisión. Medido antes de tocar: **216 comentarios / 76,3 KB en las 16
+páginas servidas** (la portada: 41 / 14 KB, el 48% de sus bytes);
+**styles.css llevaba DOS TERCIOS del archivo en comentarios** (63,6 de 95,4
+KB); main.js 14 de 22 KB; cube.js 26,6 de 48,7.
+
+- **LA REGLA CON NOMBRE — EL SERVIDO NO ES EL FUENTE.** Desde el deploy 8
+  hay una transformación en el medio: el HTML/CSS/JS publicado YA NO es
+  reproducible desde el fuente por copia. **Toda verificación futura de
+  bytes servidos se compara contra el ARTEFACTO (el árbol de `main`), nunca
+  contra `redesign-trust`; y cualquier diagnóstico de algo raro en el
+  dominio tiene que REPRODUCIR la transformación antes de concluir** (leer
+  el blob de `main`, o regenerar con `make-deploy.py --solo-verificar`).
+  Los diagnósticos DOM-contra-red del registro que comparan contra el
+  fuente cargan con esta salvedad desde ahora; el fingerprint del conteo de
+  `view-transition` (0 en el vigente) sobrevive tal cual — no vive en
+  comentarios.
+- **Los comentarios NO se tocan en el fuente, nunca**: quedan pegados a la
+  línea que explican, que es donde cumplen su función. La eliminación vive
+  en `make-deploy.py` (`transformar()` + `quitar_comentarios_*`), al
+  generar el artefacto. Nada se archiva ni se muda a un `.md` aparte.
+- **Qué transforma**: los `.html/.css/.js` publicables (hoy 20: 16 páginas
+  + styles.css + main/cube/background). **Qué NO, y por qué**:
+  `assets/vendor/` (el primer comentario de three.module.js es su
+  `@license` MIT, que exige conservarse — sigue en la clase OID-idéntico);
+  el contenido de `<script>`/`<style>` (texto crudo; el único inline del
+  sitio es el import map, JSON sin comentarios); los template literals de
+  los JS (su contenido es un STRING del programa — el caso real es el GLSL
+  de background.js, cuyos DOS comentarios de cola SIGUEN sirviéndose: el
+  autor los hizo reescribir EN INGLÉS en el fuente, porque quitarlos sería
+  editar el shader cerrado); y `sitemap.xml`/`robots.txt` (no son HTML; sus
+  comentarios son superficie deliberada en inglés — confirmado por él).
+- **Los rellenos por lenguaje son semántica, no prolijidad**: en HTML el
+  comentario se quita A NADA (`foo<!-- -->bar` renderiza «foobar»); en CSS
+  y JS un `/* */` es SEPARADOR de tokens (`a/* */b` son DOS) y se reemplaza
+  por UN espacio; el `//` muere en su `\n`, que se conserva — el ASI no se
+  altera. La línea que queda solo-espacios se va entera; la que conserva
+  contenido se recorta al final.
+- **La garantía no se debilitó, y la pieza que lo sostiene es la GUARDA 4
+  (contenido)**: la identidad recomputada es TAUTOLÓGICA ante un bug del
+  stripper (los dos lados salen de la misma función) y check-modes solo
+  navega la portada y /hajime/. Por eso la guarda del deploy verifica el
+  contenido por derivaciones INDEPENDIENTES: cero comentarios contados por
+  html.parser, mismo stream de eventos fuente↔artefacto (tags y atributos
+  EXACTOS, texto normalizado), `texto_visible` idéntico, el chrome idéntico
+  ENTRE páginas del artefacto (los marcadores ahora viven en
+  `_guardas.BLOQUES_CHROME`, compartidos con chrome_divergente — una sola
+  lista), el contrato de supervivencia con nombre (la meta de Search
+  Console, el import map, el gc-pixel por página, las noindex, el @license
+  del vendor) y la igualdad de tokens en CSS/JS. **Probada EN ROJO**: 11
+  mutaciones dirigidas (cada una frena nombrando la pieza), 17 fixtures del
+  stripper con las líneas trampa REALES del repo (regex tras `||` en
+  main.js, `*/` dentro de un regex, el template GLSL opaco, string con URL,
+  CSS con `/*` en string, UTF-8 cortado, NUL), y un E2E de 21 casos sobre
+  rama descartable.
+- **verificar_main_intacta regenera por la MISMA puerta
+  (`arbol_publicable`) y ganó la DOBLE REGENERACIÓN DIAGNÓSTICA** (decisión
+  del autor: nada de `--pisar` a ciegas ante un mismatch esperado): si la
+  punta de main coincide con la regla VIEJA (filtrado solo), es un deploy
+  pre-transformación — INTACTA, se publica encima sin pisar; un hotfix a
+  mano no coincide con NINGUNA de las dos regeneraciones y frena, en sus
+  dos modos (con y sin marca `Fuente:`), los dos probados en el E2E.
+- **`hash-object -w --stdin` SIN `--path`, a propósito**: con `--path` git
+  aplicaría el filtro clean de autocrlf y el determinismo entre máquinas
+  moriría por el mismo riesgo CRLF que el plumbing existe para eliminar.
+  Efecto lateral asumido: también las corridas de verificación escriben
+  objetos sueltos en la base (inofensivo; los junta el gc).
+- **Los centinelas del feed, del listado y del mapa NO necesitaron
+  excepción, y no es casualidad**: generadores y guardas leen y escriben
+  SOLO el fuente, que los conserva; el artefacto no los consume (notes.js
+  empareja por `data-url`; ningún JS lee nodos de comentario). Se eliminan
+  del artefacto como cualquier comentario.
+- **Cierra de paso la observación menor del deploy 5**: la palabra «TODOs»
+  del comentario ancla de /hajime/yorozu/ ya no viaja al dominio — ningún
+  comentario viaja.
+- **La rama `maintenance` quedó AFUERA a sabiendas**: su generador emite
+  HTML con comentarios en castellano y, si se activara, se servirían. Es
+  tanda aparte, acordada con el autor.
+
 ### La nav con fondo propio en CSS: opaco por defecto, scroll-driven como mejora
 
 **2026-08-08, decisión del autor (opción B) — y REEMPLAZA al mecanismo
@@ -1035,12 +1120,14 @@ igual que `maintenance`: un artefacto derivado no se mantiene, se regenera.
   notas del repo (Code perdería su memoria entre sesiones — lo que salvó el
   retomado tras el crash; costo demasiado alto).
 - **Qué tapa y qué NO, explícito a pedido del autor**: tapa las notas como
-  **documentos con URL propia** en el dominio. NO tapa las **menciones**
-  dentro de lo servido —los comentarios de los HTML, en castellano, nombran
-  `CLAUDE.md` y `tools/` en vista-fuente: política ya decidida, se quedan—
-  ni el repo público en GitHub, donde la rama de desarrollo sigue visible
-  (limitación aceptada; efecto lateral bueno: la default branch es `main`,
-  así que quien cae al repo ve solo el sitio).
+  **documentos con URL propia** en el dominio. **Y desde el 2026-08-08
+  TAMBIÉN las menciones dentro de lo servido: la política «los comentarios
+  se quedan» quedó REVERTIDA por el autor** — el deploy los elimina del
+  artefacto (ver la decisión de la transformación, primera de la lista; el
+  fuente los conserva). Lo que sigue sin taparse es el repo público en
+  GitHub, donde la rama de desarrollo sigue visible (limitación aceptada;
+  efecto lateral bueno: la default branch es `main`, así que quien cae al
+  repo ve solo el sitio).
 - **La lista autoritativa de exclusión es `NO_PUBLICABLES` en el script**
   (acá se resume, no se duplica): `CLAUDE.md`, `README.md`, `.gitignore`,
   `docs/`, `tools/`, `assets/img/README.md`, y **`assets/css/maelstrom.css`
@@ -1116,15 +1203,19 @@ igual que `maintenance`: un artefacto derivado no se mantiene, se regenera.
   tipos de trabajo, referencias rotas) y el CONTRATO del sitio de hoy
   (favicons, manifest, og-image, robots, sitemap) solo AVISA — el sitio de
   ese día se publica como era.
-- **Byte-idéntico por construcción**: el deploy reusa los MISMOS blobs del
-  commit fuente (plumbing, sin checkout, sin riesgo CRLF) — lo probado en
-  desarrollo y lo publicado son el mismo objeto, no una copia en la que
-  confiar. Por eso las guardas siguen corriendo donde siempre, y lo único
-  nuevo que puede fallar —la SELECCIÓN— es exactamente lo que la guarda del
-  deploy verifica. El día de publicar se agrega UNA corrida de `check-modes`
-  contra el árbol de `main` servido en `:8000` (la única de navegador contra
-  el artefacto real) y, tras el push, los 404 de las notas comprobados EN EL
-  DOMINIO — la propiedad que motivó todo esto, verificada donde importa.
+- **Byte-idéntico por construcción — DESDE EL 2026-08-08, MÓDULO LA
+  TRANSFORMACIÓN**: el deploy reusa los blobs del commit fuente para todo lo
+  no transformable (plumbing, sin checkout, sin riesgo CRLF) y los
+  `.html/.css/.js` publicables pasan por el stripper de comentarios — ver la
+  decisión de la transformación, primera de la lista, que es también donde
+  vive la regla «el servido no es el fuente». Lo que puede fallar ya no es
+  solo la SELECCIÓN sino también la transformación, y las DOS tienen guarda
+  dentro del deploy (identidad en dos clases + la guarda 4 de contenido). El
+  día de publicar se agrega UNA corrida de `check-modes` contra el árbol de
+  `main` servido en `:8000` (la única de navegador contra el artefacto real;
+  navega la portada y /hajime/ — el resto lo cubre la guarda 4) y, tras el
+  push, los 404 de las notas comprobados EN EL DOMINIO — la propiedad que
+  motivó todo esto, verificada donde importa.
 
 ### Analytics: GoatCounter en modo PIXEL, en las CATORCE — IMPLEMENTADO
 

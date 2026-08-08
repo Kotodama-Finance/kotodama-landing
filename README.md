@@ -309,10 +309,26 @@ prueba. `check-ready.py` no puede cubrirlo: son estilos computados y eventos.
 propio `make-deploy.py`**, que corre sola al generar `main` y es todo-o-nada
 —si algo falla, no se commitea nada—. Verifica que el árbol publicado esté
 **completo** (cada URL del sitemap con su página; cada referencia de los HTML,
-el CSS y los JS resuelta adentro del árbol), que **no lleve notas** (por tipo
-—cero `.md`/`.py`/`.json`— además de por lista), que cada blob sea **idéntico**
-al del commit fuente, y que **nadie haya editado `main` a mano** desde el
-último deploy. El procedimiento completo del día, en «Publicar», acá abajo.
+el CSS y los JS resuelta adentro del árbol — sobre los bytes YA transformados:
+lo verificado es lo publicado), que **no lleve notas** (por tipo —cero
+`.md`/`.py`/`.json`— además de por lista), la **identidad en dos clases**
+(cada blob no transformado, idéntico al del commit fuente; cada
+`.html`/`.css`/`.js` publicado, igual a la transformación recomputada de su
+blob fuente), que **la transformación no haya tocado nada más que
+comentarios** (la guarda de contenido: cero comentarios en el artefacto por
+`html.parser`, mismo stream de eventos, mismo texto visible, el chrome
+idéntico entre páginas del artefacto, la meta de Search Console/import
+map/gc-pixel/noindex vivos, tokens de CSS/JS intactos), y que **nadie haya
+editado `main` a mano** desde el último deploy. El procedimiento completo del
+día, en «Publicar», acá abajo.
+
+**Desde el 2026-08-08 el deploy TRANSFORMA: elimina los comentarios de los
+HTML, CSS y JS publicados** (los comentarios son notas de trabajo y no viajan
+al dominio; el fuente no se toca — la decisión completa, en `CLAUDE.md`).
+Consecuencia con regla propia: **lo servido ya NO es byte-idéntico al
+fuente** — cualquier comparación de bytes servidos va contra el árbol de
+`main`, no contra `redesign-trust`, y cualquier diagnóstico sobre el dominio
+tiene que reproducir la transformación antes de concluir.
 
 ### Una trampa de CSS que ya mordió dos veces
 
@@ -394,7 +410,10 @@ Desde `redesign-trust`, con el árbol limpio:
 6. **Después del push, comprobar EN EL DOMINIO que las notas no estén** — es
    la propiedad que motivó todo esto: `kotodamafinance.com/CLAUDE.md`,
    `/README.md` y `/tools/check-ready.py` tienen que dar **404**, y la
-   portada tiene que cargar entera (cubo incluido).
+   portada tiene que cargar entera (cubo incluido). **Y que los comentarios
+   tampoco**: el ver-código de la portada servida sin ningún `<!--` (salvo
+   dentro de `<script>`/`<style>`, donde no hay), con la meta de Search
+   Console intacta.
 
 ### Rollback: volver a un estado bueno ya publicado
 
