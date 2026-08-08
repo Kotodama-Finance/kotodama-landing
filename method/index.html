@@ -26,6 +26,7 @@
      Se generan con tools/make-favicon.py, que documenta el porqué de cada formato. -->
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-192x192.png" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="stylesheet" href="/assets/css/styles.css">
@@ -137,9 +138,13 @@
              (EDINET, e-Stat, BIS, Damodaran, WID, EPU) simplemente no la
              llevan. -->
 
+        <!-- Cada par cuadrado+rótulo es una UNIDAD (2026-08-08): sueltos en
+             el flex, en móvil el cuadrado hueco quedaba en una fila y su
+             rótulo en la siguiente — un marcador sin rótulo no dice nada.
+             La semántica no cambia: lleno = Official, hueco = Attributed. -->
         <p class="sources__legend">
-          <span class="sources__mark" data-tier="1" aria-hidden="true"></span> Official primary
-          <span class="sources__mark" data-tier="2" aria-hidden="true"></span> Attributed primary
+          <span class="sources__legend-item"><span class="sources__mark" data-tier="1" aria-hidden="true"></span> Official primary</span>
+          <span class="sources__legend-item"><span class="sources__mark" data-tier="2" aria-hidden="true"></span> Attributed primary</span>
         </p>
 
         <h3 class="sources__group">Insurance</h3>
@@ -149,8 +154,15 @@
           <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.sonpo.or.jp/en/" target="_blank" rel="noopener">GIAJ</a><span class="sources__ja" lang="ja">日本損害保険協会</span><span class="sources__note">Non-life aggregates, by line and by company.</span></span></li>
           <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.giroj.or.jp/" target="_blank" rel="noopener">GIROJ</a><span class="sources__ja" lang="ja">損害保険料率算出機構</span><span class="sources__note">Statutory rating organisation: reference rates, standard rates, and unified member statistics in CSV.</span></span></li>
           <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.nihonjishin.co.jp/" target="_blank" rel="noopener">Japan Earthquake Reinsurance</a><span class="sources__ja" lang="ja">日本地震再保険</span><span class="sources__note">Sole reinsurer of household earthquake cover: scheme structure and claims paid by event since 1966.</span></span></li>
-          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.jili.or.jp/" target="_blank" rel="noopener">JILI</a><span class="sources__ja" lang="ja">生命保険文化センター</span><span class="sources__note">Household surveys on life insurance demand.</span></span></li>
           <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.actuaries.jp/" target="_blank" rel="noopener">Institute of Actuaries of Japan</a><span class="sources__ja" lang="ja">日本アクチュアリー会</span><span class="sources__note">The standard mortality table the FSA adopts for reserves and premiums.</span></span></li>
+          <!-- JILI bajó de Tier 1 a Tier 2 (ago 2026, decisión del autor, en el
+               catálogo del context.md): es primaria sobre su propia encuesta,
+               pero sin adopción regulatoria — el contraste exacto con la
+               アクチュアリー会, cuyo 標準生命表 lo adopta la FSA. Va al FINAL del
+               bloque porque esta misma página declara «Within each, official
+               primary first»: cambiar el badge y dejarla en el medio
+               contradiría la regla enunciada dos párrafos más arriba. -->
+          <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://www.jili.or.jp/" target="_blank" rel="noopener">JILI</a><span class="sources__ja" lang="ja">生命保険文化センター</span><span class="sources__note">Household surveys on life insurance demand.</span></span></li>
         </ul>
         <h3 class="sources__group">Banking</h3>
         <ul class="sources">
@@ -161,7 +173,7 @@
         </ul>
         <h3 class="sources__group">Corporate filings and capital markets</h3>
         <ul class="sources">
-          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://disclosure.edinet-fsa.go.jp/" target="_blank" rel="noopener">EDINET</a><span class="sources__note">Statutory disclosure for listed companies, in XBRL.</span></span></li>
+          <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://disclosure2.edinet-fsa.go.jp/" target="_blank" rel="noopener">EDINET</a><span class="sources__note">Statutory disclosure for listed companies, in XBRL.</span></span></li>
           <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://jpx-jquants.com/en" target="_blank" rel="noopener">J-Quants API</a><span class="sources__note">Historical prices and corporate financials from JPX.</span></span></li>
           <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.jpx.co.jp/english/markets/data-catalog/" target="_blank" rel="noopener">JPX Data Catalog</a><span class="sources__note">Indices, volumes, and derivatives.</span></span></li>
         </ul>

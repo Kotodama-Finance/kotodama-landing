@@ -1,10 +1,13 @@
 /* =========================================================================
    Orquestador de la página.
    - Inicializa el océano de fondo.
-   - Nav: fondo al scrollear.
    - Pausa el mar cuando el hero no está visible (ahorro en móvil/desktop).
    - Sincroniza la grilla de caras con el panel de detalle.
    - Hidrata el cubo 3D (Three.js) si el módulo carga; si no, queda la grilla.
+   (El fondo de la nav al scrollear DEJÓ de ser de este archivo, 2026-08-08:
+   es CSS puro — opaco por defecto + scroll-driven como mejora—, porque el
+   mecanismo por JS solo cubría la portada y las páginas de prosa quedaban
+   sin fondo. Ver el bloque NAV de styles.css.)
    ========================================================================= */
 
 import { initSea } from './background.js';
@@ -19,14 +22,6 @@ const reduce = window.matchMedia
 /* ---- Fondo océano ------------------------------------------------------- */
 const seaCanvas = document.getElementById('sea');
 const sea = initSea(seaCanvas, reduce);
-
-/* ---- Nav: fondo al scrollear -------------------------------------------- */
-const nav = document.getElementById('nav');
-function onScroll() {
-  nav.classList.toggle('is-scrolled', window.scrollY > 60);
-}
-window.addEventListener('scroll', onScroll, { passive: true });
-onScroll();
 
 /* ---- Pausar el mar cuando el hero sale de vista -------------------------- */
 if (sea && sea.setHeroVisible) {
@@ -191,7 +186,7 @@ const stage = document.getElementById('cube-stage');
 const grid = document.querySelector('.face-grid');
 
 /* ---- Control de la vista explotada ---------------------------------------
-   El enlace «The idea behind the cube →» de .cube__more se REEMPLAZA en modo
+   El enlace «The idea underneath the cube →» de .cube__more se REEMPLAZA en modo
    3D por el botón Explode/Reassemble — decisión del autor: explotar el cubo
    es una invitación más fuerte que un enlace a leer, y /musubi/ sigue
    accesible por la nav y por el núcleo. El <a> QUEDA en el HTML como capa
