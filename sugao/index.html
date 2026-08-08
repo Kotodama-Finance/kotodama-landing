@@ -6,11 +6,6 @@
 <title>Sugao 素顔 — Kotodama Finance</title>
 <meta name="description" content="Manuel Vivo Casarotti, the person behind Kotodama Finance: seventeen years in financial services, from insurance operations to risk management, reading Japanese sources in the original.">
 <link rel="canonical" href="https://kotodamafinance.com/sugao/">
-<!-- Open Graph: la tarjeta que se ve al compartir el enlace en un chat o una
-     red. Sin esto el enlace viaja como una línea de texto pelada.
-     og:url y og:image tienen que ser ABSOLUTAS: el que arma la vista previa no
-     es el navegador del lector y no puede resolver una ruta relativa.
-     La imagen la genera tools/make-og-image.py. -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kotodamafinance.com/sugao/">
 <meta property="og:title" content="Sugao 素顔 — Kotodama Finance">
@@ -19,11 +14,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Kotodama Finance: the 言霊 mark in gold above the brand name, on deep navy.">
-<!-- Sin esto X muestra una miniatura cuadrada en vez de la tarjeta ancha. -->
 <meta name="twitter:card" content="summary_large_image">
-<!-- Iconos. El .ico existe porque el navegador pide /favicon.ico haya o no
-     <link>: sin el archivo, cada carga deja un 404 en la consola.
-     Se generan con tools/make-favicon.py, que documenta el porqué de cada formato. -->
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-192x192.png" sizes="192x192" type="image/png">
@@ -33,10 +24,6 @@
 </head>
 <body class="page">
 
-<!-- Página de texto: no carga el shader del mar ni Three.js. Sólo el CSS
-     compartido y el script de la nav. -->
-  <!-- NAV — rutas absolutas para que el bloque sea idéntico en las ocho páginas.
-       tools/check-ready.py verifica que no derive. -->
   <header id="nav" class="nav">
     <a class="nav__brand" href="/">
       <span class="nav__mark" lang="ja">言霊</span>
@@ -52,16 +39,8 @@
   </header>
 
   <main>
-    <!-- El kanji de ESTA cara como marca de agua del costado; decisión y
-         perillas en styles.css (.face-page__watermark). -->
     <div class="face-page__watermark" aria-hidden="true" lang="ja">素顔</div>
     <article class="face-page">
-      <!-- SIN eyebrow: decía «The human behind» y la línea de función de abajo
-           dice lo mismo mejor. Dos rótulos para una sola idea es ruido.
-           SIN línea de estado: decía «Intro live · profiles deferred» y ya no es
-           cierto — el contenido está completo. Lo único pendiente (el registro
-           de lecturas) lo dice el cierre, en prosa y en su lugar. Un estado que
-           anuncia una falta que no existe es peor que no tener estado. -->
       <header class="face-page__head">
         <h1 class="face-page__title">
           <span class="face-page__kanji" lang="ja">素顔</span>
@@ -70,33 +49,11 @@
         <p class="face-page__gloss">The person behind the platform</p>
       </header>
 
-      <!-- LA PERSONA ENTERA DETRÁS DEL PROYECTO. Se publica ya, completa.
-           SIN introducción: el contenido arranca directo en el perfil
-           profesional, que es lo que contesta la pregunta que trae el lector.
-           SIN FOTO, y sin hueco reservado para una: la credibilidad la carga el
-           enlace a LinkedIn, que es verificable por quien lo lea.
-           El 免責事項 NO va acá. El corto vive en el footer de todas las páginas
-           y el completo en /disclaimer/. Meterlo también acá sería empezar a
-           duplicar texto legal, que es justo lo que se evita.
-           TEXTO DEFINITIVO (versión de lanzamiento, en inglés). La versión
-           japonesa es un pase aparte: no traducir de acá. -->
 
-      <!-- PERFIL PROFESIONAL — en PROSA, no en formato CV. Una lista de puestos
-           y fechas se lee como currículum y no responde la pregunta que trae el
-           lector, que es qué habilita a esta persona a publicar esto.
-           El encabezado es el NOMBRE, sin una línea de rol debajo: el rol lo
-           cubre el texto, y repetirlo arriba lo volvería una ficha. -->
       <section class="face-page__section" aria-labelledby="sugao-pro">
         <h2 id="sugao-pro" class="face-page__subtitle">Manuel Vivo Casarotti</h2>
         <div class="face-page__body">
-          <!-- «first in… and later in…» ordena la SECUENCIA REAL (operations fue
-               primero; nombrarlas juntas sugeriría paralelo, falso) y «work» y no
-               «a job» porque con dos áreas el singular no concuerda — redacción
-               del autor, 2026-08-06. -->
           <p>Kotodama Finance began with a frustration I lived. For years I worked inside multinational insurers, first in insurance operations and later in risk management &mdash; work that runs on information &mdash; and I kept hitting the same wall: what I needed existed, but it was scattered, slow to reach, and written to inform without revealing. The numbers were public and still opaque. Closing that opacity &mdash; public information that still fails to inform &mdash; is what this platform sets out to do.</p>
-          <!-- La enumeración va con guiones y no comas: son cinco elementos y con
-               comas se empastaba contra el resto de la oración (autor, 2026-08-06,
-               al nombrar operations explícito donde antes solo se sugería). -->
           <p>The instinct to close it comes from the work. Across seventeen years in financial services I moved through the whole arc of an insurance business &mdash; underwriting, claims, operations, management and the Board &mdash; and built the parts that turn raw figures into decisions. That is where I learned to tell a figure that has been verified from one that has merely been repeated &mdash; the difference this platform is built on.</p>
           <p>It is also why we begin where we do. Insurance is the sector I know from the inside; Japan is where I live and work in the language. The first node of a larger map, not its edge.</p>
         </div>
@@ -105,37 +62,14 @@
         </ul>
       </section>
 
-      <!-- PERFIL PERSONAL — se publica ya. Los demás perfiles (IMDb,
-           MyAnimeList, Steam, GitHub) NO entran todavía y por eso no hay slots
-           vacíos esperándolos: un hueco reservado para algo que no está se lee
-           como página incompleta. Cuando existan, se agregan a esta lista. -->
       <section class="face-page__section" aria-labelledby="sugao-personal">
         <h2 id="sugao-personal" class="face-page__subtitle">Off the clock</h2>
         <div class="face-page__body">
           <p>What ties most of this together is a taste for hard problems. I became a risk manager by vocation, not by training &mdash; I came to it because untangling something complex and making it hold still is the kind of work I enjoy. Risk is a puzzle; so is a financial system; so is a Rubik&rsquo;s cube &mdash; only the most honest-looking of the three.</p>
-          <!-- «told elsewhere» enlaza a /musubi/: el enlace va en las palabras
-               que nombran lo que hay del otro lado, no en un «ver más» pegado
-               al final. -->
           <p>The same appetite runs through what I read. Literature mostly, but my longest obsession is mythology and religious studies &mdash; old ways of naming the world so it can be understood. That interest leaves fingerprints on this project, though where and how is a longer story <a href="/musubi/">told elsewhere</a>.</p>
           <p>Away from the desk I climb and camp when I can. Japan has been generous here &mdash; Mount Fuji five times so far. Sailing is the one I still owe myself: I love being on the water, and haven&rsquo;t yet managed it on this side of the world.</p>
           <p>A slower, more personal record of what I read and watch is on the way.</p>
         </div>
-        <!-- TARJETAS DE PERFIL — reemplazan al enlace de texto suelto. La
-             estructura está pensada para crecer: IMDb, MyAnimeList, Steam y
-             GitHub se agregan acá CUANDO se publiquen — SIN slots vacíos ni
-             tarjetas de «próximamente», que ocupan lugar y prometen lo que no
-             existe. La tarjeta ENTERA es el enlace, no sólo el nombre.
-             EL LOGO VA EN SU PALETA ORIGINAL, SIN ALTERAR — criterio del
-             autor (ago 2026) que REVIERTE el monocromo en oro que decía acá:
-             recolorear la marca de otro es apropiársela. El archivo es el
-             oficial tal cual (ver assets/img/README.md, que documenta también
-             por qué eso hace el uso defendible con los términos inaccesibles
-             — 403 al acceso automatizado). Aplica a los cuatro que vienen.
-             El alt va VACÍO a propósito: el nombre «LibraryThing» está al
-             lado y un lector de pantalla lo diría dos veces.
-             El enlace de LinkedIn del perfil profesional NO se convierte en
-             tarjeta: es una credencial dentro de esa sección, no parte de este
-             registro. -->
         <ul class="profile-cards">
           <li>
             <a class="profile-card" href="https://www.librarything.com/catalog/Manuel_Vivo" target="_blank" rel="noopener">
@@ -153,7 +87,6 @@
     </article>
   </main>
 
-  <!-- FOOTER -->
   <footer id="footer" class="footer">
     <div class="footer__top">
       <div class="footer__brand">
@@ -163,9 +96,6 @@
         </p>
         <p class="footer__tag">Where economic currents become visible. Open access.</p>
       </div>
-      <!-- SIN columna «Platform»: enlazaba a The Cube y Method — dos de cinco
-           secciones, las dos ya presentes en la nav de arriba. Una selección
-           arbitraria que duplica navegación no orienta: ruido. -->
       <div class="footer__cols">
         <div class="footer__col">
           <p class="footer__label">Reach us</p>
@@ -178,17 +108,6 @@
         </div>
       </div>
     </div>
-    <!-- 免責事項 CORTO — se repite en TODAS las páginas a propósito, y es la
-         única duplicación deliberada de texto legal del sitio. Una advertencia
-         sólo cumple su función si está donde el lector está leyendo; por eso va
-         en el footer global y no en una página a la que haya que llegar.
-         El texto COMPLETO vive UNA sola vez, en /disclaimer/, y desde acá se
-         enlaza. Duplicar el largo lo haría derivar, y un sitio que se
-         contradice en su propio descargo pierde lo único que el descargo da.
-         SIN el rótulo 免責事項 delante: era la traducción japonesa de
-         «disclaimer», o sea japonés ornamental en la versión inglesa — la
-         misma textura que 立方体 o 一次資料, que ya se sacaron. Los cuatro
-         glifos se conservan en el subset para /ja/ (ver el @font-face). -->
     <p class="footer__disclaimer">
       Kotodama Finance is published for information only and is not investment or financial advice.
       <a href="/disclaimer/">Full disclaimer &rarr;</a>
@@ -199,9 +118,6 @@
     </div>
   </footer>
 
-  <!-- Pixel de GoatCounter (medición sin JS — la decisión y sus reglas, en
-       CLAUDE.md). p= es la ruta de ESTA página: por eso vive FUERA de los
-       bloques que las guardas comparan byte a byte (nav, footer, iconos). -->
   <img src="https://realshinka.goatcounter.com/count?p=/sugao/" alt="" width="1" height="1" loading="eager" class="gc-pixel">
 </body>
 </html>

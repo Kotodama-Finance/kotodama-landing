@@ -6,11 +6,6 @@
 <title>Method — Kotodama Finance</title>
 <meta name="description" content="How a figure gets here: what counts as a primary source, how every number is verified against the original document, and the full list of sources we read.">
 <link rel="canonical" href="https://kotodamafinance.com/method/">
-<!-- Open Graph: la tarjeta que se ve al compartir el enlace en un chat o una
-     red. Sin esto el enlace viaja como una línea de texto pelada.
-     og:url y og:image tienen que ser ABSOLUTAS: el que arma la vista previa no
-     es el navegador del lector y no puede resolver una ruta relativa.
-     La imagen la genera tools/make-og-image.py. -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kotodamafinance.com/method/">
 <meta property="og:title" content="Method — Kotodama Finance">
@@ -19,11 +14,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Kotodama Finance: the 言霊 mark in gold above the brand name, on deep navy.">
-<!-- Sin esto X muestra una miniatura cuadrada en vez de la tarjeta ancha. -->
 <meta name="twitter:card" content="summary_large_image">
-<!-- Iconos. El .ico existe porque el navegador pide /favicon.ico haya o no
-     <link>: sin el archivo, cada carga deja un 404 en la consola.
-     Se generan con tools/make-favicon.py, que documenta el porqué de cada formato. -->
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-192x192.png" sizes="192x192" type="image/png">
@@ -33,7 +24,6 @@
 </head>
 <body class="page">
 
-<!-- Página de texto: no carga el shader del mar ni Three.js. -->
   <header id="nav" class="nav">
     <a class="nav__brand" href="/">
       <span class="nav__mark" lang="ja">言霊</span>
@@ -49,27 +39,6 @@
   </header>
 
   <main>
-    <!-- /method/ — EL MÉTODO Y LA LISTA TAXATIVA DE FUENTES ------------------
-         La sección #method de la portada NO se reemplaza: queda como RESUMEN
-         (tres pilares y cuatro pasos) y la nav «Method» sigue apuntando ahí.
-         Esta página es el desarrollo, y se llega por el enlace de su pie.
-
-         LA LISTA SE DERIVA DE §Fuentes de Datos Mapeadas del context.md, que
-         es la fuente de verdad; acá no se mantiene una copia paralela. Al
-         actualizarla se parte de ese archivo, NO de esta página.
-
-         Tres cosas que la lista NO trae, y cada una por una razón distinta:
-         · El Tier 3 (catálogos, archivos, bases de prensa) — lo cubre el
-           párrafo «a third category we read and do not list».
-         · EDINET DB y Yahoo Finance Japan — parsean y redistribuyen dato de
-           otro, o sea que son SECUNDARIAS. Publicarlas acá contradiría, en la
-           misma pantalla, el principio que esta página declara. Se siguen
-           usando como herramienta de conveniencia; la cifra se cita del emisor.
-         · japan_insurance_v2.xlsx — archivo interno del proyecto, degradado a
-           Tier 3 por el propio autor. No es una fuente pública.
-
-         TEXTO DEFINITIVO (versión de lanzamiento, en inglés). La versión
-         japonesa es un pase aparte: no traducir de acá. -->
     <article class="face-page">
       <header class="face-page__head">
         <h1 class="face-page__title">
@@ -91,27 +60,10 @@
           <p>Verification means the original document, not the total. A figure is checked against the release it came from, line by line. Reconciling to a published total is not the same thing &mdash; an aggregate can balance with compensating errors inside it, and we have found exactly that in our own working files. Units get checked separately, because Japanese sources move between <span lang="ja">百万円</span>, <span lang="ja">十億円</span> and <span lang="ja">兆円</span> across tables in the same document, and a mislabelled unit is a factor-of-a-thousand error that no total will catch.</p>
           <p>When sources disagree or revise, we say so. Official figures get revised; two bodies measuring similar things with different methods produce different numbers, and neither is wrong. Where that happens, we publish the discrepancy rather than picking a winner quietly, and we name the methodology that separates them. A revision is dated, not overwritten.</p>
           <p>What travels with every figure: its origin, its date, and its revision state. Enough to take any number here, go to the body that issued it, and find the same number. That is the standard. Where a figure cannot meet it, it does not appear &mdash; and where a whole measure cannot be built from primary sources, we say that too, instead of estimating our way around the gap.</p>
-          <!-- DECLARACIÓN DE PROCEDENCIA DEL TEXTO. Va acá y en ninguna otra
-               página: /method/ es donde se declara cómo se produce lo que se
-               publica, así que es donde corresponde decir cómo se produjo el
-               texto mismo. Un sitio que le exige trazabilidad al dato y no
-               declara la de su propia prosa tiene un punto ciego — y si alguien
-               lo descubre después sin que esté dicho, el daño al rigor es mayor
-               que el costo de decirlo.
-               Va DENTRO del cuerpo de esta sección, sin título propio: es una
-               línea, y un h3 encima la anunciaría como un tema aparte cuando es
-               el cierre de qué cuenta como fuente.
-               «Credit where credit's due» — con WHERE. «were» es un error de
-               tipeo que se lee como tal. -->
           <p>Credit where credit&rsquo;s due: This project would not have been possible without my AI assistant.</p>
         </div>
       </section>
 
-      <!-- El modificador --wide saca la LISTA (leyenda, grupos y entradas) de
-           la columna de lectura al ancho completo, en pantallas anchas. El h2
-           y la prosa de la sección se quedan EN la columna: el salto marca
-           dónde termina el argumento y empieza la referencia. Decisión y
-           reglas en styles.css (.face-page__section--wide). -->
       <section class="face-page__section face-page__section--wide" aria-labelledby="method-fuentes">
         <h2 id="method-fuentes" class="face-page__subtitle">The sources</h2>
         <div class="face-page__body">
@@ -123,25 +75,7 @@
           <p>The list grows as the platform does. It is a record of what we actually read, not a statement of ambition, and a source appears here once it has been used.</p>
         </div>
 
-        <!-- La marca de tier va como cuadrado lleno / hueco, el mismo
-             vocabulario que los puntos de estado de las caras: lleno = tiene
-             sello oficial, hueco = primaria atribuida. Con leyenda arriba,
-             porque un marcador sin leyenda es decoración.
 
-             EL NOMBRE JAPONÉS VA DEBAJO DEL INGLÉS, no en columna propia. Acá
-             NO es traducción ni adorno: es el nombre oficial de la entidad
-             (損害保険料率算出機構, 日本損害保険協会), y quien busque la fuente
-             en Japón lo necesita. En columna, su ancho variable corría el
-             arranque del inglés fila por fila y el de GIROJ partía en dos
-             líneas desalineando la marca de tier; como línea secundaria la
-             alineación queda pareja sola, y las entradas sin nombre japonés
-             (EDINET, e-Stat, BIS, Damodaran, WID, EPU) simplemente no la
-             llevan. -->
-
-        <!-- Cada par cuadrado+rótulo es una UNIDAD (2026-08-08): sueltos en
-             el flex, en móvil el cuadrado hueco quedaba en una fila y su
-             rótulo en la siguiente — un marcador sin rótulo no dice nada.
-             La semántica no cambia: lleno = Official, hueco = Attributed. -->
         <p class="sources__legend">
           <span class="sources__legend-item"><span class="sources__mark" data-tier="1" aria-hidden="true"></span> Official primary</span>
           <span class="sources__legend-item"><span class="sources__mark" data-tier="2" aria-hidden="true"></span> Attributed primary</span>
@@ -155,13 +89,6 @@
           <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.giroj.or.jp/" target="_blank" rel="noopener">GIROJ</a><span class="sources__ja" lang="ja">損害保険料率算出機構</span><span class="sources__note">Statutory rating organisation: reference rates, standard rates, and unified member statistics in CSV.</span></span></li>
           <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.nihonjishin.co.jp/" target="_blank" rel="noopener">Japan Earthquake Reinsurance</a><span class="sources__ja" lang="ja">日本地震再保険</span><span class="sources__note">Sole reinsurer of household earthquake cover: scheme structure and claims paid by event since 1966.</span></span></li>
           <li data-tier="1"><span class="sources__mark" data-tier="1" aria-hidden="true"></span><span class="sources__en"><a href="https://www.actuaries.jp/" target="_blank" rel="noopener">Institute of Actuaries of Japan</a><span class="sources__ja" lang="ja">日本アクチュアリー会</span><span class="sources__note">The standard mortality table the FSA adopts for reserves and premiums.</span></span></li>
-          <!-- JILI bajó de Tier 1 a Tier 2 (ago 2026, decisión del autor, en el
-               catálogo del context.md): es primaria sobre su propia encuesta,
-               pero sin adopción regulatoria — el contraste exacto con la
-               アクチュアリー会, cuyo 標準生命表 lo adopta la FSA. Va al FINAL del
-               bloque porque esta misma página declara «Within each, official
-               primary first»: cambiar el badge y dejarla en el medio
-               contradiría la regla enunciada dos párrafos más arriba. -->
           <li data-tier="2"><span class="sources__mark" data-tier="2" aria-hidden="true"></span><span class="sources__en"><a href="https://www.jili.or.jp/" target="_blank" rel="noopener">JILI</a><span class="sources__ja" lang="ja">生命保険文化センター</span><span class="sources__note">Household surveys on life insurance demand.</span></span></li>
         </ul>
         <h3 class="sources__group">Banking</h3>
@@ -255,9 +182,6 @@
         </p>
         <p class="footer__tag">Where economic currents become visible. Open access.</p>
       </div>
-      <!-- SIN columna «Platform»: enlazaba a The Cube y Method — dos de cinco
-           secciones, las dos ya presentes en la nav de arriba. Una selección
-           arbitraria que duplica navegación no orienta: ruido. -->
       <div class="footer__cols">
         <div class="footer__col">
           <p class="footer__label">Reach us</p>
@@ -270,17 +194,6 @@
         </div>
       </div>
     </div>
-    <!-- 免責事項 CORTO — se repite en TODAS las páginas a propósito, y es la
-         única duplicación deliberada de texto legal del sitio. Una advertencia
-         sólo cumple su función si está donde el lector está leyendo; por eso va
-         en el footer global y no en una página a la que haya que llegar.
-         El texto COMPLETO vive UNA sola vez, en /disclaimer/, y desde acá se
-         enlaza. Duplicar el largo lo haría derivar, y un sitio que se
-         contradice en su propio descargo pierde lo único que el descargo da.
-         SIN el rótulo 免責事項 delante: era la traducción japonesa de
-         «disclaimer», o sea japonés ornamental en la versión inglesa — la
-         misma textura que 立方体 o 一次資料, que ya se sacaron. Los cuatro
-         glifos se conservan en el subset para /ja/ (ver el @font-face). -->
     <p class="footer__disclaimer">
       Kotodama Finance is published for information only and is not investment or financial advice.
       <a href="/disclaimer/">Full disclaimer &rarr;</a>
@@ -291,9 +204,6 @@
     </div>
   </footer>
 
-  <!-- Pixel de GoatCounter (medición sin JS — la decisión y sus reglas, en
-       CLAUDE.md). p= es la ruta de ESTA página: por eso vive FUERA de los
-       bloques que las guardas comparan byte a byte (nav, footer, iconos). -->
   <img src="https://realshinka.goatcounter.com/count?p=/method/" alt="" width="1" height="1" loading="eager" class="gc-pixel">
 </body>
 </html>

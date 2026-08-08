@@ -6,11 +6,6 @@
 <title>Kizuna 絆 — Kotodama Finance</title>
 <meta name="description" content="Understanding to action: knowing a market and operating in one are different problems. Kizuna is the bridge for companies and professionals crossing over.">
 <link rel="canonical" href="https://kotodamafinance.com/kizuna/">
-<!-- Open Graph: la tarjeta que se ve al compartir el enlace en un chat o una
-     red. Sin esto el enlace viaja como una línea de texto pelada.
-     og:url y og:image tienen que ser ABSOLUTAS: el que arma la vista previa no
-     es el navegador del lector y no puede resolver una ruta relativa.
-     La imagen la genera tools/make-og-image.py. -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kotodamafinance.com/kizuna/">
 <meta property="og:title" content="Kizuna 絆 — Kotodama Finance">
@@ -19,11 +14,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Kotodama Finance: the 言霊 mark in gold above the brand name, on deep navy.">
-<!-- Sin esto X muestra una miniatura cuadrada en vez de la tarjeta ancha. -->
 <meta name="twitter:card" content="summary_large_image">
-<!-- Iconos. El .ico existe porque el navegador pide /favicon.ico haya o no
-     <link>: sin el archivo, cada carga deja un 404 en la consola.
-     Se generan con tools/make-favicon.py, que documenta el porqué de cada formato. -->
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-192x192.png" sizes="192x192" type="image/png">
@@ -33,10 +24,6 @@
 </head>
 <body class="page">
 
-<!-- Página de texto: no carga el shader del mar ni Three.js. Sólo el CSS
-     compartido y el script de la nav. -->
-  <!-- NAV — rutas absolutas para que el bloque sea idéntico en las ocho páginas.
-       tools/check-ready.py verifica que no derive. -->
   <header id="nav" class="nav">
     <a class="nav__brand" href="/">
       <span class="nav__mark" lang="ja">言霊</span>
@@ -52,8 +39,6 @@
   </header>
 
   <main>
-    <!-- El kanji de ESTA cara como marca de agua del costado; decisión y
-         perillas en styles.css (.face-page__watermark). -->
     <div class="face-page__watermark" aria-hidden="true" lang="ja">絆</div>
     <article class="face-page">
       <header class="face-page__head">
@@ -76,7 +61,6 @@
     </article>
   </main>
 
-  <!-- FOOTER -->
   <footer id="footer" class="footer">
     <div class="footer__top">
       <div class="footer__brand">
@@ -86,9 +70,6 @@
         </p>
         <p class="footer__tag">Where economic currents become visible. Open access.</p>
       </div>
-      <!-- SIN columna «Platform»: enlazaba a The Cube y Method — dos de cinco
-           secciones, las dos ya presentes en la nav de arriba. Una selección
-           arbitraria que duplica navegación no orienta: ruido. -->
       <div class="footer__cols">
         <div class="footer__col">
           <p class="footer__label">Reach us</p>
@@ -101,17 +82,6 @@
         </div>
       </div>
     </div>
-    <!-- 免責事項 CORTO — se repite en TODAS las páginas a propósito, y es la
-         única duplicación deliberada de texto legal del sitio. Una advertencia
-         sólo cumple su función si está donde el lector está leyendo; por eso va
-         en el footer global y no en una página a la que haya que llegar.
-         El texto COMPLETO vive UNA sola vez, en /disclaimer/, y desde acá se
-         enlaza. Duplicar el largo lo haría derivar, y un sitio que se
-         contradice en su propio descargo pierde lo único que el descargo da.
-         SIN el rótulo 免責事項 delante: era la traducción japonesa de
-         «disclaimer», o sea japonés ornamental en la versión inglesa — la
-         misma textura que 立方体 o 一次資料, que ya se sacaron. Los cuatro
-         glifos se conservan en el subset para /ja/ (ver el @font-face). -->
     <p class="footer__disclaimer">
       Kotodama Finance is published for information only and is not investment or financial advice.
       <a href="/disclaimer/">Full disclaimer &rarr;</a>
@@ -122,9 +92,6 @@
     </div>
   </footer>
 
-  <!-- Pixel de GoatCounter (medición sin JS — la decisión y sus reglas, en
-       CLAUDE.md). p= es la ruta de ESTA página: por eso vive FUERA de los
-       bloques que las guardas comparan byte a byte (nav, footer, iconos). -->
   <img src="https://realshinka.goatcounter.com/count?p=/kizuna/" alt="" width="1" height="1" loading="eager" class="gc-pixel">
 </body>
 </html>

@@ -6,11 +6,6 @@
 <title>Site map &mdash; Kotodama Finance</title>
 <meta name="description" content="Every page of Kotodama Finance, in one place: the six faces of the Cube, their subpages, and the pages of the site itself.">
 <link rel="canonical" href="https://kotodamafinance.com/sitemap/">
-<!-- Open Graph: la tarjeta que se ve al compartir el enlace en un chat o una
-     red. Sin esto el enlace viaja como una línea de texto pelada.
-     og:url y og:image tienen que ser ABSOLUTAS: el que arma la vista previa no
-     es el navegador del lector y no puede resolver una ruta relativa.
-     La imagen la genera tools/make-og-image.py. -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kotodamafinance.com/sitemap/">
 <meta property="og:title" content="Site map &mdash; Kotodama Finance">
@@ -19,11 +14,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Kotodama Finance: the 言霊 mark in gold above the brand name, on deep navy.">
-<!-- Sin esto X muestra una miniatura cuadrada en vez de la tarjeta ancha. -->
 <meta name="twitter:card" content="summary_large_image">
-<!-- Iconos. El .ico existe porque el navegador pide /favicon.ico haya o no
-     <link>: sin el archivo, cada carga deja un 404 en la consola.
-     Se generan con tools/make-favicon.py, que documenta el porqué de cada formato. -->
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-192x192.png" sizes="192x192" type="image/png">
@@ -33,7 +24,6 @@
 </head>
 <body class="page">
 
-<!-- Página de texto: no carga el shader del mar ni Three.js. -->
   <header id="nav" class="nav">
     <a class="nav__brand" href="/">
       <span class="nav__mark" lang="ja">言霊</span>
@@ -49,23 +39,6 @@
   </header>
 
   <main>
-    <!-- /sitemap/ — EL MAPA DEL SITIO ------------------------------------
-         La misma lista que sitemap.xml, para humanos: el XML se lo damos a
-         las máquinas, esta página al lector. Por eso comparte nombre con el
-         archivo — son dos renderizaciones de la misma lista — y por eso el
-         árbol lo GENERA tools/make-sitemap.py en la misma corrida (entre los
-         marcadores de abajo; no editarlo a mano: la regeneración lo pisa).
-
-         Nació como bloque en el footer de todas las páginas y el autor lo
-         REVIRTIÓ el mismo día: demasiado footer, y crecía con cada sección.
-         El footer conserva sólo el enlace «Site map» en su línea de abajo.
-
-         Molde de /method/: cabecera sin kanji (no hay uno cerrado para esta
-         página y no se inventa) y sin marca de agua (la marca es el kanji de
-         la PROPIA página; sin kanji no hay marca — criterio de /method/).
-         La vuelta va a la portada: a esta página se llega desde el footer de
-         CUALQUIER página, o sea que no hay un origen único — el mismo caso
-         que /disclaimer/, y su mismo rótulo («Back to the start»). -->
     <article class="face-page">
       <header class="face-page__head">
         <h1 class="face-page__title">
@@ -74,12 +47,6 @@
         <p class="face-page__gloss">Every page, in one place</p>
       </header>
 
-      <!-- MAPA DEL SITIO — lo GENERA tools/make-sitemap.py; no editar a
-           mano: la próxima regeneración lo pisa. Mismo conjunto de
-           URLs que sitemap.xml MENOS esta misma página (el
-           autoenlace se quitó a propósito), nombres del
-           face-page__romaji de cada página, orden de las tarjetas
-           del padre. check-structure avisa si quedó viejo. -->
       <section class="face-page__section" aria-labelledby="map-site">
         <h2 id="map-site" class="face-page__subtitle">The Site</h2>
         <ul class="map-list">
@@ -106,7 +73,6 @@
           <li><a href="/kizuna/">Kizuna</a></li>
         </ul>
       </section>
-      <!-- FIN DEL MAPA DEL SITIO -->
 
       <p class="face-page__back"><a href="/">&larr; Back to the start</a></p>
     </article>
@@ -121,9 +87,6 @@
         </p>
         <p class="footer__tag">Where economic currents become visible. Open access.</p>
       </div>
-      <!-- SIN columna «Platform»: enlazaba a The Cube y Method — dos de cinco
-           secciones, las dos ya presentes en la nav de arriba. Una selección
-           arbitraria que duplica navegación no orienta: ruido. -->
       <div class="footer__cols">
         <div class="footer__col">
           <p class="footer__label">Reach us</p>
@@ -136,17 +99,6 @@
         </div>
       </div>
     </div>
-    <!-- 免責事項 CORTO — se repite en TODAS las páginas a propósito, y es la
-         única duplicación deliberada de texto legal del sitio. Una advertencia
-         sólo cumple su función si está donde el lector está leyendo; por eso va
-         en el footer global y no en una página a la que haya que llegar.
-         El texto COMPLETO vive UNA sola vez, en /disclaimer/, y desde acá se
-         enlaza. Duplicar el largo lo haría derivar, y un sitio que se
-         contradice en su propio descargo pierde lo único que el descargo da.
-         SIN el rótulo 免責事項 delante: era la traducción japonesa de
-         «disclaimer», o sea japonés ornamental en la versión inglesa — la
-         misma textura que 立方体 o 一次資料, que ya se sacaron. Los cuatro
-         glifos se conservan en el subset para /ja/ (ver el @font-face). -->
     <p class="footer__disclaimer">
       Kotodama Finance is published for information only and is not investment or financial advice.
       <a href="/disclaimer/">Full disclaimer &rarr;</a>
@@ -157,9 +109,6 @@
     </div>
   </footer>
 
-  <!-- Pixel de GoatCounter (medición sin JS — la decisión y sus reglas, en
-       CLAUDE.md). p= es la ruta de ESTA página: por eso vive FUERA de los
-       bloques que las guardas comparan byte a byte (nav, footer, iconos). -->
   <img src="https://realshinka.goatcounter.com/count?p=/sitemap/" alt="" width="1" height="1" loading="eager" class="gc-pixel">
 </body>
 </html>

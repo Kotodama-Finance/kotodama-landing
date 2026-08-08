@@ -6,11 +6,6 @@
 <title>Disclaimer — Kotodama Finance</title>
 <meta name="description" content="The full disclaimer for Kotodama Finance: information only, not investment or financial advice, plus terms on sources, liability, and governing law.">
 <link rel="canonical" href="https://kotodamafinance.com/disclaimer/">
-<!-- Open Graph: la tarjeta que se ve al compartir el enlace en un chat o una
-     red. Sin esto el enlace viaja como una línea de texto pelada.
-     og:url y og:image tienen que ser ABSOLUTAS: el que arma la vista previa no
-     es el navegador del lector y no puede resolver una ruta relativa.
-     La imagen la genera tools/make-og-image.py. -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kotodamafinance.com/disclaimer/">
 <meta property="og:title" content="Disclaimer — Kotodama Finance">
@@ -19,11 +14,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Kotodama Finance: the 言霊 mark in gold above the brand name, on deep navy.">
-<!-- Sin esto X muestra una miniatura cuadrada en vez de la tarjeta ancha. -->
 <meta name="twitter:card" content="summary_large_image">
-<!-- Iconos. El .ico existe porque el navegador pide /favicon.ico haya o no
-     <link>: sin el archivo, cada carga deja un 404 en la consola.
-     Se generan con tools/make-favicon.py, que documenta el porqué de cada formato. -->
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-192x192.png" sizes="192x192" type="image/png">
@@ -33,7 +24,6 @@
 </head>
 <body class="page">
 
-<!-- Página de texto: no carga el shader del mar ni Three.js. -->
   <header id="nav" class="nav">
     <a class="nav__brand" href="/">
       <span class="nav__mark" lang="ja">言霊</span>
@@ -49,34 +39,8 @@
   </header>
 
   <main>
-    <!-- 免責事項 COMPLETO — el ÚNICO lugar del sitio donde vive el texto largo.
-         El footer de TODAS las páginas lleva una línea corta que enlaza acá.
-         La regla, que está en CLAUDE.md: el corto se REPITE (esa repetición es
-         su función: tiene que estar donde sea que el lector esté leyendo), y el
-         completo NO se duplica NUNCA. Dos copias de un texto legal derivan, y
-         cuando derivan el sitio se contradice a sí mismo en lo único donde no
-         puede permitirse hacerlo.
-         TEXTO DEFINITIVO (versión de lanzamiento, en inglés).
-
-         SE PUBLICA SIN REVISIÓN DE UN PROFESIONAL LEGAL JAPONÉS, POR DECISIÓN
-         DE MANUEL. Es decisión tomada, no un pendiente que se pasó por alto:
-         hubo acá una marca de borrador y una guarda en check-ready.py que
-         bloqueaban la publicación hasta que lo revisara un benrishi o abogado,
-         y se retiraron las dos a propósito. Lo que sostiene la decisión es el
-         marco legal verificado por él —la FIEA no aplica sin asesoría
-         contractual ni recomendaciones de inversión, y el 景表法 queda cubierto
-         por el principio de rigor de fuentes—, y está anotado en CLAUDE.md.
-         Quien vuelva a leer esto y eche de menos la revisión: no falta, se
-         decidió que no.
-         Los encabezados de cláusula van en <strong> dentro del propio párrafo,
-         no como <h2>: son rótulos de una sola oración dentro de un documento
-         continuo, y sacarlos a línea aparte partiría el texto legal en ocho
-         secciones que se leerían como independientes entre sí. -->
     <article class="face-page">
       <header class="face-page__head">
-        <!-- Sin eyebrow: decía 免責事項, la traducción japonesa de «disclaimer»
-             — japonés ornamental en la versión inglesa, misma textura que
-             立方体 o 一次資料. Los glifos siguen en el subset para /ja/. -->
         <h1 class="face-page__title">
           <span class="face-page__romaji">Disclaimer</span>
         </h1>
@@ -90,8 +54,6 @@
         <p><strong>External links.</strong> This site links to official and third-party sources. We do not control those sites and are not responsible for their content or availability.</p>
         <p><strong>Changes.</strong> This site, its content, and this disclaimer may change at any time without notice.</p>
         <p><strong>Governing law.</strong> This disclaimer is governed by the laws of Japan.</p>
-        <!-- La cláusula de idioma se revisa cuando exista /ja/: puede invertirse
-             cuál versión prevalece. Ver CLAUDE.md. -->
         <p><strong>Language.</strong> This disclaimer is published in English. Should a translation be provided, the English version prevails until a translated version is designated as authoritative.</p>
       </div>
 
@@ -108,9 +70,6 @@
         </p>
         <p class="footer__tag">Where economic currents become visible. Open access.</p>
       </div>
-      <!-- SIN columna «Platform»: enlazaba a The Cube y Method — dos de cinco
-           secciones, las dos ya presentes en la nav de arriba. Una selección
-           arbitraria que duplica navegación no orienta: ruido. -->
       <div class="footer__cols">
         <div class="footer__col">
           <p class="footer__label">Reach us</p>
@@ -123,17 +82,6 @@
         </div>
       </div>
     </div>
-    <!-- 免責事項 CORTO — se repite en TODAS las páginas a propósito, y es la
-         única duplicación deliberada de texto legal del sitio. Una advertencia
-         sólo cumple su función si está donde el lector está leyendo; por eso va
-         en el footer global y no en una página a la que haya que llegar.
-         El texto COMPLETO vive UNA sola vez, en /disclaimer/, y desde acá se
-         enlaza. Duplicar el largo lo haría derivar, y un sitio que se
-         contradice en su propio descargo pierde lo único que el descargo da.
-         SIN el rótulo 免責事項 delante: era la traducción japonesa de
-         «disclaimer», o sea japonés ornamental en la versión inglesa — la
-         misma textura que 立方体 o 一次資料, que ya se sacaron. Los cuatro
-         glifos se conservan en el subset para /ja/ (ver el @font-face). -->
     <p class="footer__disclaimer">
       Kotodama Finance is published for information only and is not investment or financial advice.
       <a href="/disclaimer/">Full disclaimer &rarr;</a>
@@ -144,9 +92,6 @@
     </div>
   </footer>
 
-  <!-- Pixel de GoatCounter (medición sin JS — la decisión y sus reglas, en
-       CLAUDE.md). p= es la ruta de ESTA página: por eso vive FUERA de los
-       bloques que las guardas comparan byte a byte (nav, footer, iconos). -->
   <img src="https://realshinka.goatcounter.com/count?p=/disclaimer/" alt="" width="1" height="1" loading="eager" class="gc-pixel">
 </body>
 </html>

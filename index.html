@@ -3,20 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Título y description DERIVADOS del hero, no escritos aparte: son el mismo
-     texto del autor, recortado a la medida del buscador. Si el hero cambia,
-     cambian los dos. La versión anterior («Japan's financial system, made
-     legible» / «An open, free reading of how capital actually moves…») quedó
-     del hero viejo y sobrevivió a su reemplazo, que es justo el modo de fallo:
-     el <head> no se ve al mirar la página. -->
 <title>Kotodama Finance — Capital moves in currents</title>
 <meta name="description" content="The numbers are public and still opaque. Kotodama Finance reads them the other way: openly, from the primary source, in plain language. We begin with Japan.">
 <link rel="canonical" href="https://kotodamafinance.com/">
-<!-- Open Graph: la tarjeta que se ve al compartir el enlace en un chat o una
-     red. Sin esto el enlace viaja como una línea de texto pelada.
-     og:url y og:image tienen que ser ABSOLUTAS: el que arma la vista previa no
-     es el navegador del lector y no puede resolver una ruta relativa.
-     La imagen la genera tools/make-og-image.py. -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kotodamafinance.com/">
 <meta property="og:title" content="Kotodama Finance">
@@ -25,18 +14,8 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Kotodama Finance: the 言霊 mark in gold above the brand name, on deep navy.">
-<!-- Sin esto X muestra una miniatura cuadrada en vez de la tarjeta ancha. -->
 <meta name="twitter:card" content="summary_large_image">
-<!-- Verificación de Search Console (2026-08-08): token de Google, pegado tal
-     cual lo dio — un carácter cambiado falla sin decir por qué. SOLO en la
-     portada: la propiedad es de tipo «prefijo de URL» sobre el dominio. Vive
-     ACÁ a propósito, FUERA de los tres bloques que chrome_divergente compara
-     byte a byte (nav, footer, y el de iconos, que empieza en el <link> del
-     .ico de abajo). -->
 <meta name="google-site-verification" content="pQSeEV-gAUWGwF2WuaPPESz00qknkRE0S8Px6nrMzbI" />
-<!-- Iconos. El .ico existe porque el navegador pide /favicon.ico haya o no
-     <link>: sin el archivo, cada carga deja un 404 en la consola.
-     Se generan con tools/make-favicon.py, que documenta el porqué de cada formato. -->
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-192x192.png" sizes="192x192" type="image/png">
@@ -46,13 +25,9 @@
 </head>
 <body>
 
-  <!-- Fondo: océano WebGL. El degradado de piso vive en el background del body,
-       así que si el contexto no arranca nunca queda un hueco. -->
   <canvas id="sea" aria-hidden="true"></canvas>
   <div class="vignette" aria-hidden="true"></div>
 
-  <!-- NAV — rutas absolutas para que el bloque sea idéntico en las ocho páginas.
-       tools/check-ready.py verifica que no derive. -->
   <header id="nav" class="nav">
     <a class="nav__brand" href="/">
       <span class="nav__mark" lang="ja">言霊</span>
@@ -69,94 +44,38 @@
 
   <main>
 
-    <!-- HERO -->
     <section id="top" class="hero">
       <div class="hero__inner">
         <p class="badge"><span class="badge__dot" aria-hidden="true"></span>First analysis on the way</p>
-        <!-- El <em> va en la segunda frase, que es donde estaba antes («from the
-             source»): es el tratamiento en oro cursiva del hero, y sin él el
-             titular queda plano. El corte de línea cae en el punto, o sea donde
-             ya cortaba la frase. El TEXTO es literal; esto es sólo su puesta. -->
-        <!-- Sin puntos (2026-08-06, autor): las dos frases están en filas distintas
-             —el <br> es el corte— y el salto ya hace la separación. OJO: la og-image
-             lleva este titular EN UNA LÍNEA, y ahí el punto ES el separador — la
-             tarjeta lo conserva a propósito; ver el comentario de LINEA en
-             tools/make-og-image.py. -->
         <h1 class="hero__title">Capital moves in currents<br><em>Most of them run unseen</em></h1>
         <div class="rule"></div>
-        <!-- La razón de empezar por Japón es la MISMA en las tres páginas que la
-             dan, y no por casualidad: /musubi/ la enuncia entera («porque es
-             donde vivimos, y porque un sistema en el que vivís es el que tenés
-             motivo de entender primero»), el hero toma la segunda mitad y el
-             About la primera. Antes decía «where the questions are sharpest and
-             the record runs deepest», que es una comparación contra un término
-             que nunca se nombra —¿más filosas que dónde?— y por lo tanto no se
-             puede verificar. En un sitio cuyo argumento es que toda afirmación
-             es trazable, ésa era la línea que no se sostenía. Al tocarla, mirar
-             las otras dos. -->
         <p class="hero__lead">A financial system informs without revealing &mdash; the numbers are public and still opaque. Kotodama Finance reads them the other way: openly, from the primary source, in plain language. We begin with Japan, because a system you live inside is the one you have reason to understand first.</p>
       </div>
-      <!-- Sin botones: «Enter the cube» y «Read the method» apuntaban a dos
-           secciones que ya están en la nav, y la flecha de abajo dice lo mismo
-           una tercera vez. La única salida del hero es esa flecha. -->
       <a class="hero__scroll" href="#cube" aria-label="Scroll to the cube"><span aria-hidden="true">&darr;</span></a>
     </section>
 
-    <!-- THE CUBE -->
     <section id="cube" class="cube">
       <div class="cube__wrap">
         <div class="cube__head">
           <div>
-            <!-- Sin «· 立方体»: era japonés ORNAMENTAL, la traducción literal de
-                 la palabra inglesa de al lado. Ver la regla en CLAUDE.md. -->
             <p class="eyebrow">The Cube</p>
             <h2 class="section-title">Six faces, one level. The backbone of the whole platform.</h2>
-            <!-- Las dos últimas frases están TAMBIÉN en /musubi/, al cierre del
-                 bloque «Nothing means anything alone», a propósito del autor.
-                 Son dos copias del mismo texto y no hay guarda que las compare:
-                 si se redacta una, hay que mirar la otra. -->
             <p class="section-lead">Each face is a way into the system. None sits above another. One is live today; the rest carry an honest status. The map is real even where the ground is not yet built.</p>
           </div>
         </div>
 
-        <!-- id="cube-view": el destino de «Back to the Cube» desde las caras.
-             Apunta al CUBO mismo y no a #cube (el título de la sección): quien
-             vuelve ya leyó la introducción, y aterrizar en el título dejaba el
-             cubo más de media pantalla abajo. La nav sí sigue apuntando a
-             #cube — quien llega por primera vez necesita el contexto. -->
         <div class="cube__layout" id="cube-view">
 
-          <!-- Toggle ARRIBA del escenario. Debajo saltaría: al pasar a modo
-               grilla el escenario computa display:none y la grilla mide menos,
-               así que el control se movería justo cuando lo estás tocando.
-               Acá lo que tiene encima no cambia entre modos. -->
           <div class="cube__toggle" role="tablist" aria-label="Cube view" hidden>
             <button type="button" role="tab" id="tab-3d" aria-selected="true" data-view="3d">3D cube</button>
             <button type="button" role="tab" id="tab-grid" aria-selected="false" data-view="grid">Grid of six</button>
           </div>
 
-          <!-- Navegación de caras -->
           <div class="cube__nav">
-            <!-- Escenario 3D: lo monta el JS. aria-hidden porque la nav accesible es la grilla. -->
             <div id="cube-stage" class="cube__stage" aria-hidden="true" hidden></div>
 
-            <!-- BASELINE: grilla de seis como lista semántica (nav real sin JS) -->
-<!-- El `domain` de la tarjeta NO es idéntico a la línea de función de su
-                   página, y eso es deliberado: la tarjeta se lee de un vistazo
-                   entre seis, la línea de función se lee sola y con calma. Cada
-                   tarjeta es la versión COMPRIMIDA de su línea, no otra etiqueta
-                   — quien entra encuentra continuidad, no dos nombres para lo
-                   mismo. Todas sin barra, mismo registro corto.
-                   Estos valores YA NO salen del archivo de referencia, que sigue
-                   diciendo «Data / Analysis», «Connect», «Act / Business». Ver la
-                   tabla de campos superados en CLAUDE.md antes de "restaurar"
-                   alguno desde ahí. -->
             <ul class="face-grid" aria-label="The six faces">
               <li>
-                <!-- Hajime en `light` y Sugao en `active`: los estados dicen lo
-                     que HAY publicado, no cuál cara pesa más en el proyecto.
-                     El porqué completo, en assets/js/main.js (FACES), que es
-                     donde el JS los vuelve a aplicar al seleccionar. -->
                 <a class="face-card" href="/hajime/" data-face="hajime" data-state="light">
                   <span class="face-card__top">
                     <span class="face-card__kanji" lang="ja">肇</span>
@@ -231,34 +150,13 @@
             </ul>
           </div>
 
-          <!-- Entrada: ayuda, estado y botón.
-               El estado y el botón viven en un FOLIO que arranca con altura
-               cero y se despliega al seleccionar una cara. Antes el espacio
-               estaba reservado desde el inicio; el cambio es seguro porque el
-               folio está DEBAJO del cubo y de la grilla: lo que se corre es el
-               enlace a Musubi y lo que sigue, nunca la cara que el usuario
-               acaba de tocar. Ver .cube__folio en el CSS.
-               `inert` de arranque: plegado no es sólo invisible, tampoco es
-               tabulable ni lo lee un lector de pantalla. -->
           <div class="cube__enter">
-            <!-- El texto de acá es el del modo GRILLA a propósito: sin JS la
-                 capa visible es la grilla y no hay nada que arrastrar. El de
-                 3D («Drag to turn. …») lo pone setView('3d') en la carga del
-                 módulo, junto con la reserva del layout 3D (ver main.js). -->
             <p class="cube__hint">Click a face to select it.</p>
             <div class="cube__folio" id="cube-folio" inert>
               <div class="cube__folio-in">
                 <p class="status" id="cube-status" data-state="active">
                   <span class="dot" data-state="active" aria-hidden="true"></span><span id="cube-status-text"></span>
                 </p>
-                <!-- CON texto por defecto, sincronizado con el href por defecto
-                     (2026-08-07): un <a> vacío no tiene nombre accesible
-                     (WCAG 2.4.4/4.1.2). El folio `inert` lo tapa en los
-                     navegadores que soportan inert, pero un nombre por defecto
-                     cubre a los que no, y a cualquier lector del DOM. El JS lo
-                     REESCRIBE al seleccionar (setActiveFace pone href y texto
-                     ANTES de abrir el folio), así que este texto sólo se lee en
-                     el estado sin JS — donde /hajime/ es el destino real. -->
                 <a class="btn btn--solid btn--sm cube__open" id="cube-open" href="/hajime/">Open Hajime &rarr;</a>
               </div>
             </div>
@@ -266,52 +164,25 @@
 
         </div>
 
-          <!-- Sin JS, este enlace es la salida a /musubi/ (baseline). Con el
-               cubo en 3D, main.js lo REEMPLAZA por el botón de la vista
-               explotada («Explode the Cube» / «Reassemble the Cube») —
-               decisión del autor: explotar el cubo es una invitación más
-               fuerte que un enlace a leer, y /musubi/ sigue accesible por la
-               nav y por el núcleo. En modo grilla, y si la hidratación falla,
-               vuelve el enlace. -->
           <p class="cube__more"><a href="/musubi/">The idea underneath the cube &rarr;</a></p>
 
       </div>
     </section>
 
-    <!-- FEED DE NOTAS — lo GENERA tools/make-notes.py; no editar a
-         mano: la próxima regeneración lo pisa. Título + lead (el
-         resumen ES el lead de la nota, sin campo aparte) + read
-         more; las últimas 3, el resto en /notes/. Con cero
-         notas publicables queda VACÍO a propósito: ninguna caja
-         vacía. check-structure avisa si quedó viejo. -->
-    <!-- FIN DEL FEED DE NOTAS -->
 
-    <!-- ABOUT -->
     <section id="about" class="about">
       <div class="about__watermark" aria-hidden="true" lang="ja">産霊　河川　言霊</div>
       <div class="about__inner">
         <p class="eyebrow">About</p>
-        <!-- Sin «through Japan»: el motor es global y Japón es el primer nodo,
-             no el tema. Es la misma corrección que ya pasó por el hero,
-             /musubi/ y /sugao/ — anclar el proyecto en Japón lo achicaba. -->
         <p class="about__statement">Capital moves in currents most people never see. Kotodama Finance exists to make those currents visible &mdash; and to keep them open to everyone.</p>
         <div class="about__body">
           <p>The cube is our map. Six faces, held at the same level, because understanding a financial system means holding data, people, learning, and action together &mdash; not ranking one over the rest.</p>
-          <!-- Misma corrección que en el hero: «where the questions are sharpest
-               and the sources richest» comparaba contra nada. Acá va la PRIMERA
-               mitad de la razón de /musubi/; el hero lleva la segunda. -->
           <p>Japan is the first node, not the frontier. We start here because it is where we live. The method is meant to travel.</p>
-          <!-- Antes decía «We lead with meaning; the Japanese is the flavour»,
-               que declaraba DECORATIVOS los kanji — y /musubi/ existe para
-               explicar que no lo son. El sitio se contradecía entre dos
-               páginas; ganó la versión de /musubi/, que es la página que
-               desarrolla la idea. -->
           <p>Each face carries a Japanese word &mdash; <span lang="ja">肇</span>, <span lang="ja">素顔</span>, <span lang="ja">絆</span> &mdash; chosen because it names what that area does more precisely than an English label would. The words are not decoration; where they come from is a longer story. What they promise is written plainly, in language anyone can read.</p>
         </div>
       </div>
     </section>
 
-    <!-- METHOD -->
     <section id="method" class="method">
       <div class="method__wrap">
         <div class="method__head">
@@ -320,9 +191,6 @@
           <p class="section-lead">Not summaries of summaries. We read the filings, releases, and datasets themselves, cite where every figure came from, and publish the method alongside the finding. This is the moat &mdash; and the reason to trust the map.</p>
         </div>
 
-        <!-- Sin los kanji de encabezado (一次資料 / 追跡可能 / 公開): cada uno
-             traducía literalmente el título inglés que tenía debajo. Se guardan
-             para la versión japonesa, donde serán el original y no el adorno. -->
         <div class="method__cards">
           <div class="method-card">
             <h3 class="method-card__title">Primary source</h3>
@@ -347,38 +215,10 @@
               <li><span class="steps__n">03</span><span><strong>Cite</strong> the origin, date, and revision on every number.</span></li>
               <li><span class="steps__n">04</span><span><strong>Publish</strong> the analysis and its method, openly and for free.</span></li>
             </ol>
-            <!-- Al pie de ESTA columna, pegado a los cuatro pasos — REVIERTE el
-                 centrado bajo las dos columnas, a pedido del autor (2026-08-05).
-                 Es hijo de .method__how (no ítem de la grilla), así que queda al
-                 final del contenido y NO se estira al fondo de la altura de la
-                 columna de fuentes. Sigue siendo UN solo enlace: dos al mismo
-                 destino a pocas líneas se leen como un error. -->
             <p class="method__more"><a href="/method/">Read the full method &rarr;</a></p>
           </div>
           <div class="method__sources">
             <p class="eyebrow eyebrow--muted">Sources we read directly</p>
-            <!-- CINCO de ejemplo, no la lista entera: japonesas y globales, para
-                 que se vea que el alcance no es sólo Japón. La lista taxativa
-                 vive en /method/, a un enlace de acá.
-                 SIN nombres japoneses en la portada — antes BOJ y FSA los
-                 llevaban en una columna propia y las otras tres filas quedaban
-                 con la columna vacía: dispareja. Los glifos se conservan en el
-                 subset para /ja/, y en /method/ el nombre oficial japonés sigue
-                 — ahí no es adorno sino el nombre con el que se llega a la
-                 fuente, como línea secundaria bajo el nombre inglés.
-                 SIN LOGOS EN NINGUNA FILA (2026-08-05, decisión del autor):
-                 se investigaron los cinco y sólo la FSA servía un archivo
-                 oficial utilizable — con cuatro filas sin logo y una con, el
-                 sello suelto quedaba más raro que la columna pareja, así que
-                 se quitó también ése. La investigación se conserva en
-                 assets/img/README.md (qué publica cada uno y por qué no
-                 sirve: BOJ sólo fondo opaco — limpiarlo es alterarlo—, EDINET
-                 no tiene logo, BIS rechaza conexiones, Damodaran no tiene
-                 marca), junto con el criterio de reposición: el día que
-                 alguna publique un archivo oficial utilizable, se repone con
-                 el criterio LibraryThing (oficial SIN alterar, paleta
-                 original, tamaño sello). QUE NADIE LO COMPLETE con SVGs de
-                 Wikipedia o similares: no son el archivo oficial. -->
             <ul class="sources">
               <li><span class="sources__en"><span>Bank of Japan (BOJ)</span><span class="sources__note">Monetary policy, flow of funds.</span></span></li>
               <li><span class="sources__en"><span>Financial Services Agency (FSA)</span><span class="sources__note">Regulation, disclosure.</span></span></li>
@@ -393,7 +233,6 @@
 
   </main>
 
-  <!-- FOOTER -->
   <footer id="footer" class="footer">
     <div class="footer__top">
       <div class="footer__brand">
@@ -403,9 +242,6 @@
         </p>
         <p class="footer__tag">Where economic currents become visible. Open access.</p>
       </div>
-      <!-- SIN columna «Platform»: enlazaba a The Cube y Method — dos de cinco
-           secciones, las dos ya presentes en la nav de arriba. Una selección
-           arbitraria que duplica navegación no orienta: ruido. -->
       <div class="footer__cols">
         <div class="footer__col">
           <p class="footer__label">Reach us</p>
@@ -418,17 +254,6 @@
         </div>
       </div>
     </div>
-    <!-- 免責事項 CORTO — se repite en TODAS las páginas a propósito, y es la
-         única duplicación deliberada de texto legal del sitio. Una advertencia
-         sólo cumple su función si está donde el lector está leyendo; por eso va
-         en el footer global y no en una página a la que haya que llegar.
-         El texto COMPLETO vive UNA sola vez, en /disclaimer/, y desde acá se
-         enlaza. Duplicar el largo lo haría derivar, y un sitio que se
-         contradice en su propio descargo pierde lo único que el descargo da.
-         SIN el rótulo 免責事項 delante: era la traducción japonesa de
-         «disclaimer», o sea japonés ornamental en la versión inglesa — la
-         misma textura que 立方体 o 一次資料, que ya se sacaron. Los cuatro
-         glifos se conservan en el subset para /ja/ (ver el @font-face). -->
     <p class="footer__disclaimer">
       Kotodama Finance is published for information only and is not investment or financial advice.
       <a href="/disclaimer/">Full disclaimer &rarr;</a>
@@ -439,15 +264,11 @@
     </div>
   </footer>
 
-  <!-- Three.js vendoreado localmente; sin CDN en runtime -->
   <script type="importmap">
   { "imports": { "three": "./assets/vendor/three.module.js" } }
   </script>
   <script type="module" src="./assets/js/main.js"></script>
 
-  <!-- Pixel de GoatCounter (medición sin JS — la decisión y sus reglas, en
-       CLAUDE.md). p= es la ruta de ESTA página: por eso vive FUERA de los
-       bloques que las guardas comparan byte a byte (nav, footer, iconos). -->
   <img src="https://realshinka.goatcounter.com/count?p=/" alt="" width="1" height="1" loading="eager" class="gc-pixel">
 </body>
 </html>

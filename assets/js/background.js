@@ -1,46 +1,11 @@
-/* =========================================================================
-   Fondo: océano WebGL.
-   Shader y parámetros = versión de PRODUCCIÓN (fbm de 5 octavas), calibrada y
-   aprobada. NO tocar el GLSL ni los valores SPEED/BREATH.
-
-   ---------------------------------------------------------------------------
-   PALETA DEL MAR: VIVE EN EL GLSL, NO EN :root
-   ---------------------------------------------------------------------------
-   Es la única excepción al sistema de tokens del proyecto. Los colores del
-   océano son constantes dentro del fragment shader, porque forman parte del
-   código calibrado a mano que está cerrado. Cambiar el color del mar exige
-   editar el shader acá abajo; tocar :root no tiene ningún efecto sobre él.
-
-   Las constantes son tres, en la función main() (~línea 107), y se mezclan
-   según la altura de ola H:
-     deep  = vec3(0.001, 0.009, 0.024)   ~#000206   senos, la parte más honda
-     mid   = vec3(0.024, 0.075, 0.130)   ~#061321   cuerpo del agua
-     crest = vec3(0.075, 0.150, 0.215)   ~#132637   crestas iluminadas
-   Más un realce vertical aditivo: col += uv.y * vec3(0.010, 0.020, 0.030),
-   que aclara levemente hacia el horizonte.
-
-   Los valores van directo a gl_FragColor sin corrección de gamma, así que se
-   leen como sRGB. Quedan dentro de la familia navy de la marca (mid es casi
-   idéntico al fondo de sección), pero NO están sincronizados con los tokens:
-   si la paleta cambia en :root, estos hay que actualizarlos a mano.
-   ---------------------------------------------------------------------------
-
-   Estrategia de rendimiento:
-   - Desktop: resolución completa (DPR hasta 2), sin cap de FPS.
-   - Móvil (pointer:coarse): media resolución (DPR*0.5) + cap de 25 fps.
-   - prefers-reduced-motion: se dibuja UN solo frame estático (atmósfera del
-     shader, sin movimiento) y se detiene el loop.
-   - Sin WebGL: se oculta el canvas y se muestra el fallback CSS (.sea-fallback).
-   ========================================================================= */
 
 const VERT = 'attribute vec2 p; void main(){ gl_Position=vec4(p,0.0,1.0); }';
 
-// Fragment shader — copiado 1:1 de index.html en producción (5 octavas).
 const FRAG = `
 precision highp float;
 uniform vec2 u_res; uniform float u_time;
-uniform float u_speed;   // velocidad del viaje de las olas
-uniform float u_breath;  // respiracion del swell (independiente)
+uniform float u_speed;   // travel speed of the waves
+uniform float u_breath;  // breathing of the swell (independent)
 
 vec4 mod289(vec4 x){return x-floor(x*(1.0/289.0))*289.0;}
 vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
@@ -138,14 +103,9 @@ void main(){
   gl_FragColor = vec4(col,1.0);
 }`;
 
-// Valores calibrados de producción — no tocar.
 const SPEED = 0.040;
 const BREATH = 0.050;
 
-/* Instante del frame estático que se dibuja con prefers-reduced-motion.
-   NO puede ser t=0: ahí el campo de ruido está en su estado más plano y el mar
-   sale sin forma. A t=12s el swell ya viajó y tiene relieve.
-   Ajustable: initSea(canvas, reduce, stillTime) toma cualquier otro instante. */
 const STILL_TIME = 12.0;
 
 function compile(gl, type, src) {
@@ -156,24 +116,14 @@ function compile(gl, type, src) {
   return s;
 }
 
-/**
- * Inicializa el océano de fondo.
- * @param {HTMLCanvasElement} canvas  #sea
- * @param {boolean} reduce            prefers-reduced-motion activo
- * @param {number} [stillTime]        instante del frame estático (reduced-motion)
- */
 export function initSea(canvas, reduce, stillTime = STILL_TIME) {
-  // Si el contexto no arranca, ocultamos el canvas y queda el degradado de piso
-  // que vive en el background del body. Nunca hay un hueco.
-  // En reduced-motion dibujamos un único frame: preserveDrawingBuffer evita que
-  // el canvas se vacíe tras el primer composite.
   const attrs = reduce ? { preserveDrawingBuffer: true } : undefined;
   const gl = canvas.getContext('webgl', attrs) || canvas.getContext('experimental-webgl', attrs);
   if (!gl) { canvas.style.display = 'none'; return null; }
 
   const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
-  const resScale = coarse ? 0.5 : 1;         // móvil: media resolución
-  const minFrame = coarse ? 40 : 0;          // móvil: cap ~25 fps
+  const resScale = coarse ? 0.5 : 1;
+  const minFrame = coarse ? 40 : 0;
 
   const prog = gl.createProgram();
   gl.attachShader(prog, compile(gl, gl.VERTEX_SHADER, VERT));
@@ -210,17 +160,13 @@ export function initSea(canvas, reduce, stillTime = STILL_TIME) {
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 
-  // reduced-motion: un frame estático (mar con forma, sin movimiento), sin loop.
   if (reduce) {
     const still = () => drawAt(stillTime);
     still();
-    // redibujar el frame estático si cambia el tamaño (sin animar)
     window.addEventListener('resize', still);
     return { drawAt, setHeroVisible() {} };
   }
 
-  // Loop animado. Se pausa cuando el hero no está visible (lo maneja main.js
-  // vía el flag heroVisible) o con la pestaña oculta.
   const state = { heroVisible: true };
   const s0 = performance.now();
   let last = 0;
@@ -232,7 +178,6 @@ export function initSea(canvas, reduce, stillTime = STILL_TIME) {
     drawAt((now - s0) * 0.001);
   })(s0);
 
-  // handle para que main.js pause/reanude según visibilidad
   return {
     setHeroVisible(v) { state.heroVisible = v; },
     drawAt,
