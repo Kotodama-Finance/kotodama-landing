@@ -138,6 +138,7 @@ CRITICOS = ("CNAME", ".nojekyll", "index.html", "404.html")
 CONTRATO = (
     "robots.txt", "sitemap.xml", "site.webmanifest", "og-image.png",
     "favicon.ico", "favicon.svg", "favicon-16x16.png", "favicon-32x32.png",
+    "favicon-192x192.png",  # 言霊 maciza para Google (2026-08-08), con <link> propio
     "apple-touch-icon.png", "android-chrome-192x192.png",
     "android-chrome-512x512.png",
     # notes/search-index.json ENTRARÁ acá al estrenar /notes/: lo pide

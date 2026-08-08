@@ -4,21 +4,42 @@
     python tools/make-favicon.py            # genera los archivos definitivos
     python tools/make-favicon.py --strip    # además, la tira de comparación
 
+DOS MARCAS POR TAMAÑO, UNA POR SUPERFICIE (2026-08-08, decisión del autor —
+esto ACTUALIZA el «言 solo en todo» anterior): las superficies CHICAS (la
+pestaña: ico, svg, 16/32) siguen con 言 solo — a 16px dos kanji son dos
+manchas, la decisión original—; las superficies GRANDES (favicon-192x192,
+android-chrome 192/512, apple-touch 180) llevan 言霊 en la variante MACIZA:
+apilados en vertical, trazo engrosado (+~50%, dilatación en supersampleo),
+separación al 5% del lado, y la marca al 100% del CÍRCULO INSCRITO con
+encaje por TINTA (Google y Android recortan en círculo: las esquinas del
+cuadrado se pierden). El motivo: Google muestra el favicon del resultado a
+~16-24px PERO lo toma de un archivo grande, y el autor eligió la marca
+completa con masa («bloque vertical macizo, no columna rayada» — la
+calibración quedó en la hoja de la parada, 2026-08-08). Las cuatro grandes
+van UNIFICADAS a pedido suyo: dos marcas según el dispositivo era peor que
+una. El límite conocido y aceptado: apilados, el ancho útil es ~45% del
+lienzo contra ~76% del kanji solo.
+
 Produce, en la raíz del sitio (que es donde el navegador los busca):
-  favicon.ico          16+32+48 px, PNG embebido. Mata el 404 implícito:
-                       el navegador pide /favicon.ico haya o no <link>.
-                       (El 48 va de más respecto del pedido «16 y 32»: es
-                       para el acceso directo de Windows y no cuesta nada.)
-  favicon.svg          vectorial, con el kanji como PATH (no como <text>):
-                       un favicon no carga webfonts, así que un <text
-                       font-family="Zen Kaku..."> caería a una fuente del
-                       sistema y el trazo no sería el de la marca.
-  favicon-16x16.png    los dos tamaños clásicos, sueltos, para quien los
-  favicon-32x32.png    quiera referenciar directo (el <link> del sitio usa
-                       el .ico + el .svg; estos dos no se enlazan).
-  apple-touch-icon.png 180x180, para «añadir a pantalla de inicio» en iOS.
-  android-chrome-192x192.png  los de Android/PWA. NO llevan <link>: se
-  android-chrome-512x512.png  referencian desde site.webmanifest.
+  favicon.ico          16+32+48 px, PNG embebido, 言 solo. Mata el 404
+                       implícito: el navegador pide /favicon.ico haya o no
+                       <link>. (El 48 va de más respecto del pedido «16 y
+                       32»: es para el acceso directo de Windows.)
+  favicon.svg          vectorial, 言 solo, con el kanji como PATH (no como
+                       <text>): un favicon no carga webfonts, así que un
+                       <text font-family="Zen Kaku..."> caería a una fuente
+                       del sistema y el trazo no sería el de la marca.
+  favicon-16x16.png    los dos tamaños clásicos, 言 solo, sueltos (el
+  favicon-32x32.png    <link> del sitio usa el .ico + el .svg; estos dos no
+                       se enlazan).
+  favicon-192x192.png  言霊 MACIZA — el que mira Google: enlazado con
+                       <link rel="icon" sizes="192x192"> en las dieciocho
+                       páginas (dentro del bloque de iconos que
+                       check-structure compara byte a byte).
+  apple-touch-icon.png 180x180, 言霊 MACIZA, para «añadir a pantalla de
+                       inicio» en iOS.
+  android-chrome-192x192.png  言霊 MACIZA, los de Android/PWA. NO llevan
+  android-chrome-512x512.png  <link>: se referencian desde site.webmanifest.
   site.webmanifest     el manifest mínimo que los enlaza (en INGLÉS: es
                        superficie publicada, la regla de la frontera).
 
@@ -117,6 +138,78 @@ def dibujar_kanji(px: int, texto: str, ttf: Path, fondo, tinta, relleno=0.76) ->
     return im
 
 
+def _glifo_mascara(texto: str, ttf: Path, tam_px: int, engrosar_f: float) -> Image.Image:
+    """Máscara (L) de un kanji recortada a su tinta; engrosar_f dilata el
+    trazo esa fracción del lado, POR LADO (MaxFilter en el supersampleo)."""
+    tam = tam_px * SS
+    im = Image.new("L", (tam * 2, tam * 2), 0)
+    d = ImageDraw.Draw(im)
+    f = ImageFont.truetype(str(ttf), tam)
+    izq, arr, der, aba = d.textbbox((0, 0), texto, font=f)
+    d.text((-izq + tam // 4, -arr + tam // 4), texto, font=f, fill=255)
+    if engrosar_f > 0:
+        n = max(1, int(tam * engrosar_f))
+        im = im.filter(ImageFilter.MaxFilter(2 * n + 1))
+    return im.crop(im.getbbox())
+
+
+def dibujar_maciza(px: int, ttf: Path, fondo=NAVY, tinta=GOLD,
+                   gap_f=0.05, engrosar_f=0.02, tol=0.985) -> Image.Image:
+    """言霊 MACIZA: apilados, trazo engrosado, tinta al borde del círculo.
+
+    El encaje es por TINTA y no por caja: la marca se escala hasta que su
+    píxel de tinta más lejano queda a tol·radio del centro. La ganancia
+    sobre la caja es chica (~0.6%: el trazo inferior de 霊 es de ancho
+    completo) pero el criterio es el correcto — lo que importa es la tinta
+    contra el recorte circular de Google/Android, no el rectángulo.
+    Los tres números (gap 0.05, engrosar 0.02, tol 0.985) son la
+    calibración que aprobó el autor sobre la hoja de la parada
+    (2026-08-08): menos gap fusionaba los kanji a 192, menos grosor volvía
+    a la «columna rayada», y sin tolerancia la tinta tocaba el borde del
+    recorte.
+
+    El supersampleo se CAPEA a un lienzo de ~1536: el x8 existe para la
+    fidelidad de los tamaños chicos, y a 512 daría un lienzo de 4096 donde
+    el MaxFilter del engrosado (kernel proporcional al lienzo) tarda
+    minutos sin mover un píxel del resultado final."""
+    import math
+    ss = max(1, min(SS, 1536 // px))
+    grande = px * ss
+    r = grande / 2
+    K0 = int(grande * 0.45)
+    g1 = _glifo_mascara("言", ttf, K0 // SS, engrosar_f)
+    g2 = _glifo_mascara("霊", ttf, K0 // SS, engrosar_f)
+
+    def a_lado(g):
+        esc = min(K0 / g.width, K0 / g.height)
+        return g.resize((max(1, int(g.width * esc)), max(1, int(g.height * esc))),
+                        Image.LANCZOS)
+    g1, g2 = a_lado(g1), a_lado(g2)
+    gap = int(K0 * gap_f)
+    W, H = max(g1.width, g2.width), g1.height + gap + g2.height
+    marca = Image.new("L", (W, H), 0)
+    marca.paste(g1, ((W - g1.width) // 2, 0))
+    marca.paste(g2, ((W - g2.width) // 2, g1.height + gap))
+
+    pix = marca.load()
+    cx, cy = W / 2, H / 2
+    d2max = 0.0
+    for y in range(H):
+        for x in range(W):
+            if pix[x, y] > 8:
+                d2 = (x - cx) ** 2 + (y - cy) ** 2
+                if d2 > d2max:
+                    d2max = d2
+    esc = (r * tol) / math.sqrt(d2max)
+    marca = marca.resize((max(1, int(W * esc)), max(1, int(H * esc))), Image.LANCZOS)
+
+    im = lienzo(grande, fondo)
+    oro = Image.new("RGBA", marca.size, tinta + (0,))
+    oro.putalpha(marca)
+    im.alpha_composite(oro, (int(r - marca.width / 2), int(r - marca.height / 2)))
+    return im.resize((px, px), Image.LANCZOS)
+
+
 def dibujar_cubo(px: int, fondo, tinta) -> Image.Image:
     """Cubo isométrico: hexágono + tres radios. Tres rombos, nada más."""
     import math
@@ -134,13 +227,15 @@ def dibujar_cubo(px: int, fondo, tinta) -> Image.Image:
     return im.resize((px, px), Image.LANCZOS)
 
 
-# Las cuatro variantes que se comparan. La que se publica es la primera.
+# Las variantes que se comparan en la tira. En las superficies chicas se
+# publica la A; en las grandes, la E (ver el encabezado).
 def variantes(ttf):
     return [
         ("A  言 oro sobre navy",  lambda px: dibujar_kanji(px, "言", ttf, NAVY, GOLD)),
         ("B  言 navy sobre oro",  lambda px: dibujar_kanji(px, "言", ttf, GOLD, NAVY)),
-        ("C  言霊 completo",      lambda px: dibujar_kanji(px, "言霊", ttf, NAVY, GOLD, 0.86)),
+        ("C  言霊 horizontal",    lambda px: dibujar_kanji(px, "言霊", ttf, NAVY, GOLD, 0.86)),
         ("D  cubo isométrico",    lambda px: dibujar_cubo(px, NAVY, GOLD)),
+        ("E  言霊 maciza",        lambda px: dibujar_maciza(px, ttf)),
     ]
 
 
@@ -276,18 +371,26 @@ def main():
     ttf = ttf_temporal()
     elegida = dict(zip("ABCD", [v[1] for v in variantes(ttf)]))[args.variante.upper()]
 
+    # Las superficies CHICAS (la pestaña): 言 solo, la variante elegida.
     escribir_ico(RAIZ / "favicon.ico", [elegida(t) for t in (16, 32, 48)])
-    for lado, archivo in ((16, "favicon-16x16.png"), (32, "favicon-32x32.png"),
-                          (180, "apple-touch-icon.png"),
-                          (192, "android-chrome-192x192.png"),
-                          (512, "android-chrome-512x512.png")):
+    for lado, archivo in ((16, "favicon-16x16.png"), (32, "favicon-32x32.png")):
         elegida(lado).convert("RGB").save(RAIZ / archivo, optimize=True)
+    # Las superficies GRANDES: 言霊 MACIZA, unificadas (decisión del autor,
+    # 2026-08-08 — ver el encabezado). El 192 se renderiza UNA vez y se
+    # escribe en las dos rutas que lo sirven: mismo contenido por
+    # construcción.
+    maciza192 = dibujar_maciza(192, ttf)
+    maciza192.convert("RGB").save(RAIZ / "favicon-192x192.png", optimize=True)
+    maciza192.convert("RGB").save(RAIZ / "android-chrome-192x192.png", optimize=True)
+    dibujar_maciza(180, ttf).convert("RGB").save(RAIZ / "apple-touch-icon.png", optimize=True)
+    dibujar_maciza(512, ttf).convert("RGB").save(RAIZ / "android-chrome-512x512.png", optimize=True)
     escribir_svg(RAIZ / "favicon.svg", ttf)
     escribir_manifest(RAIZ / "site.webmanifest")
 
     for n in ("favicon.ico", "favicon.svg", "favicon-16x16.png", "favicon-32x32.png",
-              "apple-touch-icon.png", "android-chrome-192x192.png",
-              "android-chrome-512x512.png", "site.webmanifest"):
+              "favicon-192x192.png", "apple-touch-icon.png",
+              "android-chrome-192x192.png", "android-chrome-512x512.png",
+              "site.webmanifest"):
         print(f"  {n:28} {os.path.getsize(RAIZ / n):>6} B")
 
     if args.strip:

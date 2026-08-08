@@ -74,13 +74,15 @@ fallidos ya corregidos, y las capturas intermedias.
   en los 41 publicables y responde 200 en el dominio DESDE EL DEPLOY 4
   (2026-08-07), a propósito y verificado entonces: publicado e invisible
   (noindex, sin enlaces, fuera de sitemap y mapa) no es lo mismo que no
-  publicado, y quedó confirmado de nuevo hoy contra el dominio. El favicon: diagnóstico
-  hecho (el head declara ico 16/32/48 + svg + apple-touch 180, todo 200 en
-  el dominio, robots abierto — la causa probable del globo es RETRASO de
-  rastreo, no un archivo chico), candidato 192 con 言霊 apilados en el
-  círculo inscrito generado en scratchpad con renders a 16/24 para su
-  veredicto. NADA de esta tanda está pusheado; el deploy 5 y la
-  verificación en vivo van tras su respuesta.
+  publicado, y quedó confirmado de nuevo hoy contra el dominio. El favicon: el autor rechazó
+  la apilada original («pierde por presencia») y APROBÓ la variante MACIZA
+  sobre la segunda hoja de renders — implementada: ver la actualización
+  2026-08-08 en la decisión del favicon (dos marcas por tamaño, cuatro
+  superficies grandes unificadas, URLs intactas, el 192 píxel-idéntico al
+  aprobado). La tarjeta de sector salió del MARCADO por su decisión
+  (baseline 36; el patrón y el pase de reposición quedan — ver su
+  decisión). NADA de esta tanda está pusheado; el deploy 5 real y el push
+  los confirma él tras el reporte de guardas + --solo-verificar.
 - Último cierre anterior: **2026-08-07 (todavía más tarde), la tanda de auditoría +
   el SISTEMA DE NOTAS + la tarjeta de sector — construido y commiteado
   LOCAL, SIN deployar y SIN push (instrucción de la sesión).** La
@@ -1625,7 +1627,42 @@ rango) y rellenar los costados (el halo).
   exige la regla de arriba: mediana 6.1–8.7px, máxima 13.1, cero sobre 16px.
   Con esto la portada no tiene más prosa de cuerpo sin justificar.
 
-### El favicon: 言 solo en oro sobre navy — juego completo, cerrado
+### El favicon: 言 solo en las superficies CHICAS, 言霊 MACIZA en las GRANDES
+
+**ACTUALIZACIÓN 2026-08-08, aprobada por el autor sobre renders — esto
+MATIZA el «言 solo en todo» de abajo: ahora son DOS marcas por tamaño, UNA
+por superficie.** El disparador: Google mostraba el globo genérico en los
+resultados (diagnóstico: los archivos estaban sanos — ico 16/32/48 + svg +
+apple-touch 180, todo 200, robots abierto; la causa probable era retraso de
+rastreo) y el autor decidió que el favicon que ve Google lleve la marca
+completa. Las reglas nuevas:
+
+- **Las superficies CHICAS (la pestaña) siguen con 言 solo**: ico, svg,
+  16/32 png — a 16px dos kanji son dos manchas; la decisión original sigue
+  valiendo donde se tomó. Regeneradas byte-idénticas (verificado por git).
+- **Las superficies GRANDES llevan 言霊 MACIZA, las CUATRO unificadas**
+  (condición del autor: no dos marcas según el dispositivo):
+  `favicon-192x192.png` (NUEVO, con `<link rel="icon" sizes="192x192">` en
+  las dieciocho páginas, dentro del bloque de iconos comparado),
+  `android-chrome-192x192.png` (mismo contenido que el nuevo, byte-idéntico
+  por construcción: un solo render), `android-chrome-512x512.png` y
+  `apple-touch-icon.png`. **Ninguna URL existente se movió** — los archivos
+  se reemplazaron en su lugar (Google cachea favicons entre rastreos).
+- **La variante MACIZA** (`dibujar_maciza` en make-favicon.py, variante E
+  de la tira): 言 arriba y 霊 abajo, trazo engrosado ~2% del lado POR LADO
+  (+~50% de grosor, dilatación en el supersampleo), separación al 5% del
+  lado, y la marca al 100% del CÍRCULO INSCRITO con **encaje por TINTA**
+  (tol 0.985) — Google y Android recortan en círculo. La primera apilada
+  (gap 10%, 94% del círculo, sin engrosar) la rechazó el autor: «pierde
+  por PRESENCIA — columna fina y rayada»; la maciza busca masa, no leer 霊
+  a 16px. Límite conocido: apilados, el ancho útil es ~45% del lienzo
+  contra ~76% del kanji solo — no lo mueve ninguna calibración.
+- **El 192 publicado es PÍXEL-IDÉNTICO al de la hoja que aprobó** (delta 0
+  medido contra el render de la parada). El supersampleo se capea a ~1536
+  en los tamaños grandes (el x8 a 512 tardaba minutos en el MaxFilter sin
+  mover el resultado — anotado en el docstring).
+
+El registro original del 2026-08-06, que sigue valiendo para las chicas:
 
 **2026-08-06, especificación del autor.** El diseño ya era ése (la variante A
 del generador, elegida en su momento); lo que esta tanda agregó es el juego
