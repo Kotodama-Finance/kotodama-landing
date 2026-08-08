@@ -397,10 +397,11 @@ vigentes son tres: «¿en qué paso del DNS estamos?» (fuera del repo), «¿lle
 el texto de la capa 1 de seguros?» (andamiaje listo, servido con noindex
 desde el deploy 4) y «¿llegó la primera nota?» — el sistema de notas está
 CONSTRUIDO entero y sin deployar (2026-08-07, ver su decisión): dentro del
-repo los frentes son esas redacciones, no construcción. *(La tanda de notas
-se pushó con el deploy 5, 2026-08-08; lo LOCAL sin push hoy es el cierre de
-la vuelta de una nota, del mismo día — pedirle confirmación al autor antes
-de pushear, como siempre.)*
+repo los frentes son esas redacciones, no construcción. *(Todo pusheado:
+la tanda de notas fue con el deploy 5 y el cierre de la vuelta de una nota
+—`fb0f61c`— se pushó el mismo 2026-08-08 con autorización del autor, solo
+a redesign-trust: nada de esto entra al artefacto hasta el estreno de
+/notes/. Los push siguen pidiendo su confirmación, como siempre.)*
 
 La revisión legal del `免責事項` **no es un pendiente**: se decidió publicar sin
 ella.
