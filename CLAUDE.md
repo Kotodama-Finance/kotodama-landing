@@ -41,7 +41,39 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-08 (más tarde), la tanda de SEARCH CONSOLE +
+- Último cierre: **2026-08-08 (todavía más tarde), la tanda de las ANCLAS DE
+  LA PORTADA — EL SÉPTIMO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN EL
+  DOMINIO: deploy `525c58d` de fuente `ac6d7d0`.** El bug (capturas del
+  autor): las anclas de la nav aterrizaban con demasiado aire — #method con
+  ~191px de franja vacía y #cube mostrando encabezado+párrafo con el cubo
+  cortado 305px (1440×900). **ANTES de tocar se verificó la estabilidad del
+  destino, como pidió él**: cinco cargas frescas por ancla en dos viewports
+  — dispersión 0px, drift post-aterrizaje 0px, clic idéntico a carga — la
+  hipótesis del lazy-init quedó DESCARTADA (la reserva del layout 3D hace
+  su trabajo); los píxeles entre sus capturas de iPhone son la barra de URL
+  del visual viewport, no la página. **La solución está en la decisión de
+  anclas (actualizada): scroll-margin-top POR SECCIÓN, derivado de la MISMA
+  var(--pad-top) del padding** — #cube con margen NEGATIVO deliberado (el
+  aterrizaje pasa de largo el encabezado: conmutador arriba, cubo ENTERO
+  debajo) más el término de cabecera de texto medido (con cap min(6vw,87px)
+  y base móvil gorda: el error del ajuste va SIEMPRE al aire). **Verificado
+  EJECUTANDO en 25 anchos (320–2560): peor gap del toggle +6.3px — nunca
+  bajo la nav**; reduced-motion aterriza idéntico. Resultado a 1440×900:
+  toggle a 18px de la nav, cubo entero (765<900), encabezado afuera; METHOD
+  a 12px con las tres tarjetas enteras (652) y «How we work» asomando
+  (724); About mismo criterio; footer SIN tocar (clampeado por el fin del
+  documento, correo visible). A 390: toggle a 38px, cubo entero (582<844),
+  rótulos a 16px. **VERIFICADO EN VIVO contra el dominio: 23/23** — las
+  cuatro anclas por carga directa en los dos viewports Y los dos accesos a
+  #cube (clic de nav y flecha del hero), más la meta de google-site-
+  verification SERVIDA con su token intacto y los cuatro archivos de notas
+  fuera del artefacto (confirmados en la lista de excluidos del
+  --solo-verificar). Guardas: cinco en verde (pendulum 0.0964, ready `2`
+  esperado, baseline 36 sin regenerar — no se tocó chrome comparado, solo
+  CSS). El comentario de #cube-view en index.html quedó actualizado en el
+  fuente (el viejo decía que la nav aterrizaba en el título «por el
+  contexto» — ya no) y viaja en el próximo deploy.
+- Último cierre anterior: **2026-08-08 (más tarde), la tanda de SEARCH CONSOLE +
   FUENTES — EL SEXTO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN EL DOMINIO:
   deploy `e20289e` de fuente `0398d9f`**, procedimiento del README completo
   (cinco guardas en verde con `2` esperado de ready y pendulum sano en
@@ -76,7 +108,7 @@ fallidos ya corregidos, y las capturas intermedias.
   el de 2026-08-06 (§3 del doc de infraestructura del autor) — nada que
   este deploy invalide; el re-barrido, cuando se haga, va sobre lo servido
   desde hoy.
-- Último cierre anterior: **2026-08-08, la tanda del DEPLOY SIN CONTENIDO —
+- Antes, el mismo día: **2026-08-08, la tanda del DEPLOY SIN CONTENIDO —
   EJECUTADA ENTERA Y PUBLICADA: deploy `b78cf0b` de fuente `41c9d32` (el
   QUINTO), procedimiento del README completo (cinco guardas en verde con
   `2` esperado de ready, guarda del deploy, check-modes contra el árbol
@@ -369,9 +401,9 @@ ninguna de las cuatro guardas la mira; su decisión cerrada está más abajo.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 6, Search Console
-con el token real + IMAJ y Mizuho en /method/ — 2026-08-08, verificado en
-el dominio) — FALTAN EL DNS (fuera del repo), QUE MANUEL TOQUE «VERIFICAR»
+**EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 7, las anclas de
+la portada calibradas por sección — 2026-08-08, verificado en el dominio
+23/23) — FALTAN EL DNS (fuera del repo), QUE MANUEL TOQUE «VERIFICAR»
 EN SEARCH CONSOLE (la meta ya está servida) Y EL TEXTO DE LA CAPA
 1 DE SEGUROS (dentro del repo; su andamiaje ya está servido con noindex,
 invisible).** La
@@ -1377,22 +1409,50 @@ salió de caché) y `performance.timeOrigin` (¿la pestaña cargó antes del pus
 
 ### Las anclas aterrizan con el layout ya estable — y cada destino tiene el suyo
 
-Cerrado en la revisión de quince puntos (2026-08-04):
+Cerrado en la revisión de quince puntos (2026-08-04); **ACTUALIZADA el
+2026-08-08 con la calibración POR SECCIÓN de las anclas de la portada**
+(decisión del autor sobre capturas — deploy 7):
 
-- **`scroll-margin-top: calc(var(--nav-h) + 12px)`** (= 96px) sobre `section`,
-  **`footer`** y `.cube__layout`. El footer va listado aparte porque no es
-  `<section>` y era el único destino de la nav sin margen — Contact aterrizaba
-  con la marca tapada por la nav fija. La nav real mide 63px (medida, no
-  asumida); el resto es respiro.
+- **La regla global `scroll-margin-top: calc(var(--nav-h) + 12px)`** (= 96px)
+  sobre `section`, **`footer`** y `.cube__layout` SIGUE, y es la que rige en
+  las subpáginas. El footer va listado aparte porque no es `<section>` y era
+  el único destino de la nav sin margen. **La nav real mide 65.7px a 1440 y
+  62.2 a 390 (re-medida 2026-08-08, tras el fondo opaco del deploy 5 — el
+  «63px» anterior quedó viejo).**
+- **Desde el 2026-08-08 las TRES secciones de la portada llevan margen
+  PROPIO, derivado del padding** (la misma `var(--pad-top)` que usa el
+  padding — una sola fuente, cero copias): el aire de #method (~191px de
+  franja) y #about era el padding-top de la sección sumado al respiro.
+  Ahora el rótulo aterriza a ~12px de la nav (16 en móvil), con las tres
+  tarjetas de method enteras y «How we work» asomando a 1440×900.
+- **#cube lleva margen NEGATIVO DELIBERADO (decisión del autor): el
+  aterrizaje PASA el encabezado** — conmutador 3D/Grid arriba, cubo ENTERO
+  debajo, «Six faces...» y su párrafo fuera de pantalla, arriba. Esto
+  REEMPLAZA al «quien llega por primera vez necesita el contexto» que decía
+  acá: el contexto queda scrolleando hacia arriba. La nav y la flecha del
+  hero SIGUEN apuntando a `/#cube` (no separarlas ni crear otra ancla — y
+  NO re-apuntarlas a `/#cube-view`: los dos anclas tienen margen distinto a
+  propósito). El margen suma un término por la ALTURA DE LA CABECERA DE
+  TEXTO, que CSS no puede medir: ajuste lineal sobre alturas MEDIDAS, con
+  `min(6vw, 87px)` capeando donde los clamps de fuente topan y base móvil
+  más gorda (el reflow del texto es un serrucho de ±31px) — **el error va
+  SIEMPRE al aire: verificado ejecutando en 25 anchos (320–2560), peor gap
+  +6.3px, el toggle nunca bajo la nav**. El detalle vive en el comentario
+  del CSS («Las anclas de la PORTADA»); si se toca la cabecera del cubo
+  (texto, cuerpos, márgenes), re-medir ese término.
+- **La estabilidad del destino quedó verificada ANTES de calibrar** (pedido
+  del autor): cinco cargas frescas por ancla, dos viewports — dispersión
+  0px, drift 0px, clic idéntico a carga, reduced-motion idéntico. Los
+  píxeles de diferencia entre capturas de iPhone son la barra de URL del
+  visual viewport, no la página.
 - **«Back to the Cube» apunta a `/#cube-view`** (el ancla de `.cube__layout`),
-  no a `/#cube`: quien vuelve ya leyó la introducción, y aterrizar en el título
-  dejaba el cubo 57% visible. La nav sigue apuntando a `/#cube` — quien llega
-  por primera vez necesita el contexto. Verificado: cubo 100% visible a
-  1440×900; a 1280×720 se recorta un 4% del canvas que cae en el aire del
-  encuadre, el cubo dibujado entra entero.
+  con su margen de 96px intacto — no se tocó. El footer aterriza CLAMPEADO
+  por el fin del documento (el margen no influye; queda como red) con el
+  correo visible.
 - La condición que hace que todo esto funcione es la **reserva del layout 3D**
   (ver la decisión del lazy-init): sin altura estable, el destino se corre
-  después del aterrizaje y ningún scroll-margin lo salva.
+  después del aterrizaje y ningún scroll-margin lo salva. Es también lo que
+  la verificación de estabilidad del 2026-08-08 confirmó midiendo.
 
 ### Rótulos de vuelta según el ORIGEN — criterio cerrado
 

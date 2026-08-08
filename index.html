@@ -120,10 +120,15 @@
         </div>
 
         <!-- id="cube-view": el destino de «Back to the Cube» desde las caras.
-             Apunta al CUBO mismo y no a #cube (el título de la sección): quien
-             vuelve ya leyó la introducción, y aterrizar en el título dejaba el
-             cubo más de media pantalla abajo. La nav sí sigue apuntando a
-             #cube — quien llega por primera vez necesita el contexto. -->
+             Apunta al CUBO mismo y no a #cube (el título de la sección). La
+             nav y la flecha del hero siguen apuntando a #cube, pero DESDE EL
+             2026-08-08 su aterrizaje también cae acá: el scroll-margin-top
+             NEGATIVO de #cube (decisión del autor, ver «Aterrizaje de
+             anclas» en el CSS) pasa de largo el encabezado — el conmutador
+             arriba y el cubo entero debajo, el contexto queda scrolleando
+             hacia arriba. No re-apuntar la nav a #cube-view: los dos anclas
+             tienen margen DISTINTO a propósito (el de #cube-view es el de
+             «Back to the Cube», ya medido). -->
         <div class="cube__layout" id="cube-view">
 
           <!-- Toggle ARRIBA del escenario. Debajo saltaría: al pasar a modo
