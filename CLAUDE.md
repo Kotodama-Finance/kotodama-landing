@@ -696,10 +696,17 @@ LinkedIn.
   y el bloque de iconos: FUERA de los tres bloques que compara
   `chrome_divergente` (el de iconos empieza en el `<link>` del .ico), el
   mismo lugar y por el mismo motivo que la meta de Search Console.
-- **La description NO se redactó: es LA MISMA meta description, tal cual,
-  entera** — que a su vez deriva del hero. Si el hero cambia, cambian los
-  TRES textos (title, description, JSON-LD); la dependencia está anotada en
-  los dos comentarios del `<head>`.
+- **La description NO se redactó: DERIVA de la meta description — que a su
+  vez deriva del hero — CON UN RECORTE deliberado del autor (2026-08-10,
+  deploy 10): va SIN la frase final «We begin with Japan.»** La frase es el
+  estado transitorio del proyecto, y la definición de la ENTIDAD no lleva
+  lo temporal (Japón es el primer nodo, no el tema — el criterio de
+  siempre). La meta description y el hero SÍ la conservan: describen la
+  página de hoy, no la entidad. Es el patrón de la og-image con la
+  puntuación: misma fuente, divergencia deliberada y ACOTADA, anotada en
+  los dos lados. Si el hero cambia, cambian los tres textos — y el recorte
+  se mantiene al re-derivar; la dependencia está anotada en los dos
+  comentarios del `<head>`.
 - **NADA que no esté ya publicado en el sitio** (regla del autor): sin
   dirección, sin teléfono, sin fecha de fundación, sin founder — el
   desajuste entre datos estructurados y lo visible penaliza. Campos: name,
