@@ -41,7 +41,40 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-08 (después del deploy 8, el cierre del día):
+- Último cierre: **2026-08-10: el JSON-LD de Organization en la portada —
+  EL NOVENO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN VIVO: deploy
+  `1279c87` de fuente `1ef1bd8`.** El disparador, con evidencia: el AI
+  Overview de Google citaba LinkedIn (con el «currently in initial
+  development» de antes del lanzamiento) porque el dominio no daba su
+  definición en formato máquina. Lo publicado: el bloque schema.org
+  Organization en el `<head>` de la portada, y solo ahí — entre la meta de
+  Search Console y el bloque de iconos, FUERA de los bloques comparados—,
+  con la description IDÉNTICA a la meta description (deriva del hero: tres
+  textos, una sola fuente), logo la 512 maciza, sameAs X + LinkedIn, y SIN
+  alternateName (ァ y ナ no están en el subset — el matiz y la vuelta, en
+  la decisión). **Ver la decisión nueva, primera de la lista**, que
+  registra además: la REFUTACIÓN de la premisa del segundo hash de CSP (el
+  bloque es un DATA BLOCK no ejecutable — `script-src` no lo alcanza; el
+  único hash sigue siendo el del import map), la supervivencia BYTE A BYTE
+  en el contrato del deploy (generalizada a todas las páginas y todos los
+  bloques, probada en rojo), y el hallazgo ALTA de la revisión adversarial
+  de 5 lentes, reproducido y corregido (la prosa del comentario citaba los
+  literales que la precondición 3c prohíbe y abría un match fantasma que
+  frenaba todo deploy en falso — reformulada; REGLA NUEVA: esos literales
+  no se escriben en comentarios de un HTML publicable). Validación:
+  `json.loads` sobre el artefacto Y sobre lo servido, el vocabulario
+  oficial de schema.org descargado (las cinco propiedades con su dominio
+  en regla), las cuatro URLs absolutas en 200, y **validator.schema.org
+  contra el dominio EN VIVO: Organization, 0 errores, 0 advertencias**.
+  Verificación en vivo 21/21: portada BYTE A BYTE idéntica al blob de
+  main, meta de Search Console con su token, las cuatro rutas de notas y
+  /CLAUDE.md en 404, seguros 200+noindex, sitemap.xml con 14 URLs.
+  Guardas: cinco en verde (pendulum 0.0963, ready `2` esperado, baseline
+  36 intacto) + check-modes corrido ADEMÁS contra el árbol real de main
+  servido en :8000. El texto de reemplazo del §3 (dos scripts inline; el
+  JSON-LD NO suma hash a la CSP) quedó ENTREGADO al autor — su archivo lo
+  pega él.
+- Último cierre anterior: **2026-08-08 (después del deploy 8, el cierre del día):
   la tanda de los CUATRO FRENTES — SIN deploy: el artefacto de main NO
   cambió.** **(1) La rama `maintenance` también sirve SIN comentarios**:
   el generador reusa EL MISMO `transformar()` del deploy (una
@@ -70,7 +103,7 @@ fallidos ya corregidos, y las capturas intermedias.
   distinto** (EJECUTABLES POR CODE / ESPERAN A MANUEL — ver AL RETOMAR;
   el DNS anotado como frente aparte). Guardas de la tanda: cinco en
   verde (pendulum 0.0963, ready `2` esperado, baseline 36 intacto).
-- Último cierre anterior: **2026-08-08 (lo más tarde del día), la tanda de CERO
+- Antes, el 2026-08-08 (lo más tarde del día): **la tanda de CERO
   COMENTARIOS EN LO SERVIDO — EL OCTAVO DEPLOY, EJECUTADO ENTERO Y
   VERIFICADO EN VIVO 39/39: deploy `f7d2b3f` de fuente `b5bc838`.**
   Requisito sine qua non del autor: ningún comentario HTML/CSS/JS viaja al
@@ -483,10 +516,11 @@ ninguna de las cuatro guardas la mira; su decisión cerrada está más abajo.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 8, CERO
-COMENTARIOS en lo servido — 2026-08-08, verificado en vivo 39/39 byte a
-byte contra el artefacto; desde ese deploy rige LA REGLA «EL SERVIDO NO ES
-EL FUENTE», ver la decisión primera de la lista).**
+**EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 9, el JSON-LD de
+Organization en la portada — 2026-08-10, verificado en vivo 21/21 byte a
+byte contra el artefacto y con validator.schema.org en 0 errores; desde el
+deploy 8 rige LA REGLA «EL SERVIDO NO ES EL FUENTE», ver la decisión
+«CERO comentarios en lo SERVIDO»).**
 
 **LOS PENDIENTES VAN EN DOS GRUPOS CON DUEÑO DISTINTO** (partidos el
 2026-08-08 a pedido del autor — antes eran una bolsa y al retomar parecía
