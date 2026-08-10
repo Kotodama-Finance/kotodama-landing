@@ -318,7 +318,9 @@ blob fuente), que **la transformación no haya tocado nada más que
 comentarios** (la guarda de contenido: cero comentarios en el artefacto por
 `html.parser`, mismo stream de eventos, mismo texto visible, el chrome
 idéntico entre páginas del artefacto, la meta de Search Console/import
-map/gc-pixel/noindex vivos, tokens de CSS/JS intactos), que **ninguna página
+map/JSON-LD de Organization/gc-pixel/noindex vivos — el JSON-LD además BYTE
+A BYTE, porque mal formado Google lo ignora en silencio—, tokens de CSS/JS
+intactos), que **ninguna página
 INDEXABLE del artefacto lleve placeholders TODO** (desde el 2026-08-08 — el
 mismo conteo de `check-ready`, compartido vía `_guardas.placeholders_de`;
 una página con noindex puede: así viaja el andamiaje deliberado. FRENA desde

@@ -292,8 +292,9 @@ RE_IMPORT_JS = re.compile(r"""\b(?:from|import)\s*\(?\s*['"]([^'"]+)['"]""")
 #     biblioteca en inglés, no notas de trabajo. Queda en la clase
 #     OID-idéntico de verificar_identidad. Decisión del autor (2026-08-08).
 #   - El contenido de <script>/<style> en los HTML: texto crudo, se copia tal
-#     cual (el único script inline del sitio es el import map, JSON sin
-#     comentarios; <style> inline hoy no hay — verificado).
+#     cual (los DOS scripts inline del sitio —el import map y, desde el
+#     2026-08-10, el JSON-LD de Organization, ambos en la portada— son JSON
+#     sin comentarios; <style> inline hoy no hay — verificado).
 #   - Los template literals de los JS: opacos para el stripper — su contenido
 #     es un STRING del programa (el caso real es el GLSL de background.js:
 #     quitar sus comentarios sería editar el shader, que es código cerrado;
@@ -815,8 +816,8 @@ def verificar_transformacion(arbol_pub, leer_fuente, leer_pub, desde_head=True):
         #     y ahí el stripper Y html.parser comparten la MISMA regla
         #     ingenua: la corrupción sería invisible para toda la guarda
         #     (hallazgo de la revisión, reproducido con fixture). Se prohíbe
-        #     en el FUENTE, en rojo con nombre — hoy el único inline es el
-        #     import map (JSON) y no lo trae.
+        #     en el FUENTE, en rojo con nombre — hoy los inline son el import
+        #     map y el JSON-LD de la portada (JSON los dos) y no lo traen.
         for m in RE_RAW_HTML.finditer(fuente):
             cuerpo = m.group(0)[m.group(0).index(">") + 1:].rsplit("</", 1)[0]
             if "<!--" in cuerpo or f"</{m.group(1).lower()}" in cuerpo.lower():
@@ -885,6 +886,22 @@ def verificar_transformacion(arbol_pub, leer_fuente, leer_pub, desde_head=True):
         if fuente.count('class="gc-pixel"') != pub.count('class="gc-pixel"'):
             problemas.append(f"{ruta}: el pixel de GoatCounter no sobrevivió a la "
                              f"transformación")
+        # El JSON-LD sobrevive BYTE A BYTE (2026-08-10, hoy: el de
+        # Organization en la portada): el stripper copia el contenido de
+        # script crudo, así que cada bloque ld+json del fuente tiene que
+        # aparecer idéntico en el artefacto. Un JSON-LD alterado no avisa:
+        # Google lo ignora y la definición de la entidad vuelve a quedar
+        # afuera del dominio. Condicionado al FUENTE (como el import map):
+        # los fuentes anteriores no lo tienen y un rollback publica el sitio
+        # de aquel día como era. TODAS las páginas y TODOS los bloques
+        # (finditer, no search) — la revisión adversarial del 2026-08-10
+        # señaló que la primera versión miraba solo el primero de index.html.
+        for m in re.finditer(r'<script type="application/ld\+json">.*?</script>',
+                             fuente, re.S):
+            if m.group(0) not in pub:
+                problemas.append(f"{ruta}: un JSON-LD no sobrevivió byte a byte "
+                                 f"a la transformación — mal formado, Google lo "
+                                 f"ignora en silencio")
         # El noindex del fuente se lee SIN comentarios (citarlo en un
         # comentario no es declararlo — el criterio de _guardas); en el
         # artefacto ya no hay comentarios que filtrar.

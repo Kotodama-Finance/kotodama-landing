@@ -36,6 +36,49 @@
      chrome_divergente compara byte a byte (nav, footer, y el de iconos, que
      empieza en el <link> del .ico de abajo). -->
 <meta name="google-site-verification" content="pQSeEV-gAUWGwF2WuaPPESz00qknkRE0S8Px6nrMzbI" />
+<!-- Datos estructurados de Organization (2026-08-10): la definición de la
+     entidad en formato máquina, DESDE el dominio — el AI Overview de Google
+     describía el proyecto citando LinkedIn (con un estado de antes del
+     lanzamiento) porque el sitio no daba la suya. SOLO en la portada, y ACÁ
+     a propósito: FUERA de los tres bloques que chrome_divergente compara
+     (igual que la meta de Search Console de arriba).
+     La description es LA MISMA meta description de arriba, tal cual — o sea
+     que también DERIVA del hero: si el hero cambia, cambian los tres textos.
+     NADA que no esté ya publicado en el sitio (sin founder, dirección,
+     teléfono ni fecha de fundación: el desajuste entre datos estructurados y
+     lo visible penaliza). El alternateName 言霊ファイナンス quedó AFUERA:
+     ァ y ナ no están en el subset de Zen Kaku (regla del autor, 2026-08-10;
+     si algún día se regenera el subset con ellos, puede entrar).
+     Es el SEGUNDO script inline de la página (el otro es el import map, al
+     pie del body) — pero NO suma hash a una CSP futura: es un DATA BLOCK
+     (tipo no ejecutable), el navegador no lo ejecuta y script-src no lo
+     alcanza; Google lee el marcado igual. El único hash de script-src sigue
+     siendo el del import map — verificado, ver la decisión en CLAUDE.md.
+     El stripper del deploy copia el contenido de los bloques script CRUDO;
+     su precondición (3c en make-deploy.py) exige que ningún bloque inline
+     traiga una apertura de comentario HTML ni su propio cierre de etiqueta
+     — el JSON no los trae. Y OJO AL EDITAR ESTE COMENTARIO: esa
+     precondición lee el fuente crudo, comentarios incluidos, con un regex
+     ciego a comentarios — escribir ACÁ esos literales (la etiqueta de
+     apertura de script con sus ángulos, la apertura de comentario, el
+     cierre de script) abre un match fantasma que cruza hasta el bloque
+     real y frena todo deploy en falso. Le pasó a la primera versión de
+     esta prosa (revisión adversarial, 2026-08-10): esos literales no se
+     escriben en comentarios de un HTML publicable. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Kotodama Finance",
+  "url": "https://kotodamafinance.com/",
+  "logo": "https://kotodamafinance.com/android-chrome-512x512.png",
+  "description": "The numbers are public and still opaque. Kotodama Finance reads them the other way: openly, from the primary source, in plain language. We begin with Japan.",
+  "sameAs": [
+    "https://x.com/KotodamaFinance",
+    "https://www.linkedin.com/company/kotodamafinance/"
+  ]
+}
+</script>
 <!-- Iconos. El .ico existe porque el navegador pide /favicon.ico haya o no
      <link>: sin el archivo, cada carga deja un 404 en la consola.
      Se generan con tools/make-favicon.py, que documenta el porqué de cada formato. -->

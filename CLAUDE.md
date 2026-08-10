@@ -646,6 +646,83 @@ sección con el detalle.
 
 ## Decisiones cerradas — no rediscutir
 
+### El JSON-LD de Organization en la portada: la definición de la entidad, desde el dominio
+
+**2026-08-10, instrucción del autor — el deploy 9.** El disparador, con
+evidencia: el AI Overview de Google describía el proyecto citando LinkedIn
+como fuente — descripción correcta salvo el estado, «currently in initial
+development», texto de antes del lanzamiento — porque el dominio no daba su
+propia definición en formato máquina y Google la completaba con lo de
+afuera. La fuente de un AI Overview no se puede forzar; lo que sí se puede
+es dar la definición desde el propio dominio, que es el hueco que llenaba
+LinkedIn.
+
+- **Un `<script type="application/ld+json">` con schema.org Organization en
+  el `<head>` de la PORTADA, y solo ahí** — entre la meta de Search Console
+  y el bloque de iconos: FUERA de los tres bloques que compara
+  `chrome_divergente` (el de iconos empieza en el `<link>` del .ico), el
+  mismo lugar y por el mismo motivo que la meta de Search Console.
+- **La description NO se redactó: es LA MISMA meta description, tal cual,
+  entera** — que a su vez deriva del hero. Si el hero cambia, cambian los
+  TRES textos (title, description, JSON-LD); la dependencia está anotada en
+  los dos comentarios del `<head>`.
+- **NADA que no esté ya publicado en el sitio** (regla del autor): sin
+  dirección, sin teléfono, sin fecha de fundación, sin founder — el
+  desajuste entre datos estructurados y lo visible penaliza. Campos: name,
+  url, logo (la 512 maciza 言霊, URL absoluta), description, sameAs (los
+  perfiles de X y LinkedIn del footer). Las cuatro URLs verificadas en 200.
+- **El alternateName 言霊ファイナンス quedó AFUERA**: ァ (U+30A1) y ナ
+  (U+30CA) no están en el subset de Zen Kaku — medido contra la cmap con 猫
+  de control — y la regla del autor era no usarlo sin cobertura. El matiz
+  para el día que se reabra: el contenido de `<script>` NO se renderiza
+  (`texto_visible()` lo excluye, la guarda de cobertura ni lo mira), así que
+  técnicamente entraría sin regenerar nada; entra si el autor lo decide.
+- **Es el SEGUNDO script inline de la portada** (el otro: el import map),
+  **pero NO suma hash a la CSP futura — la premisa del segundo hash se
+  verificó y NO se sostiene**: es un DATA BLOCK (tipo no ejecutable), el
+  navegador no lo ejecuta y `script-src` no lo alcanza; el único hash de
+  `script-src` sigue siendo el del import map, y Google lee el marcado con
+  o sin CSP. El inventario del §3 quedó actualizado (texto entregado al
+  autor, que lo pega él). Ver la decisión de la CSP, que registra la
+  refutación.
+- **El stripper lo deja crudo — CONFIRMADO ejecutando, no leyendo**: el
+  bloque sobrevive BYTE A BYTE a `transformar()`, el comentario de arriba
+  no viaja, y la precondición 3c (el CONTENIDO del bloque no puede traer
+  `<!--` ni `</script`) lo cubre — el JSON no los trae. **La supervivencia
+  entró al CONTRATO con nombre** en la guarda del deploy: cada bloque
+  ld+json del fuente tiene que aparecer idéntico en el artefacto, en TODAS
+  las páginas y TODOS los bloques (finditer — la revisión señaló que la
+  primera versión miraba solo el primero de index.html), frena nombrando la
+  pieza, y va condicionado al FUENTE, como el import map (los fuentes
+  viejos no lo tienen: un rollback publica el sitio de aquel día como era).
+  Probada en rojo: bloque mutado y bloque ausente, los dos frenan.
+- **EL HALLAZGO ALTA de la revisión adversarial (workflow de 5 lentes +
+  refutadores, 2026-08-10), reproducido por dos lentes y CORREGIDO — y es
+  regla desde ahora**: la precondición 3c escanea el fuente CRUDO con un
+  regex ciego a comentarios, así que un COMENTARIO cuya prosa escriba los
+  literales de la etiqueta de apertura de script / apertura de comentario /
+  cierre de script abre un match FANTASMA (arranca en el literal del
+  comentario y cierra en el `</script>` REAL de un bloque de más abajo) y
+  FRENA todo deploy en falso — le pasó a la primera versión del comentario
+  del propio bloque, que citaba esos literales al documentar la
+  precondición. Mi prueba no lo vio porque probó `transformar()` y no la
+  precondición, y `--solo-verificar` lee HEAD, donde el comentario no
+  existía. **La corrección fue reformular la prosa** (el precedente exacto
+  del comentario del andamiaje de seguros con el quirk de
+  `placeholders()`); hacer 3c consciente de comentarios se descartó — un
+  regex ingenuo reintroduciría el borde double-escaped que 3c existe para
+  vigilar, y la pasada posicional del stripper ahí sería más maquinaria
+  para un caso que una regla de redacción cierra. **LA REGLA: en los
+  comentarios de un HTML publicable no se escriben esos literales.** Está
+  anotada también en el propio comentario del bloque.
+- **Validado de verdad, no a ojo**: `json.loads` sobre los bytes del
+  ARTEFACTO; el tipo y las cinco propiedades contra el vocabulario oficial
+  de schema.org DESCARGADO (existen todas y su domainIncludes cubre
+  Organization; logo admite URL como valor); las cuatro URLs absolutas en
+  200. Un JSON-LD mal formado no avisa — Google lo ignora en silencio y el
+  hueco queda igual que antes—, por eso la validación y el contrato de
+  supervivencia son parte del cambio, no adorno.
+
 ### La guarda de placeholders indexables: el deploy FRENA lo que check-ready solo informaba
 
 **2026-08-08, diseño A del acople de check-ready, APROBADO E IMPLEMENTADO
@@ -720,8 +797,9 @@ KB); main.js 14 de 22 KB; cube.js 26,6 de 48,7.
   + styles.css + main/cube/background). **Qué NO, y por qué**:
   `assets/vendor/` (el primer comentario de three.module.js es su
   `@license` MIT, que exige conservarse — sigue en la clase OID-idéntico);
-  el contenido de `<script>`/`<style>` (texto crudo; el único inline del
-  sitio es el import map, JSON sin comentarios); los template literals de
+  el contenido de `<script>`/`<style>` (texto crudo; los inline del sitio
+  —el import map y, desde el 2026-08-10, el JSON-LD de Organization, los
+  dos en la portada— son JSON sin comentarios); los template literals de
   los JS (su contenido es un STRING del programa — el caso real es el GLSL
   de background.js, cuyos DOS comentarios de cola SIGUEN sirviéndose: el
   autor los hizo reescribir EN INGLÉS en el fuente, porque quitarlos sería
@@ -2109,10 +2187,17 @@ importa más que la decisión:
   que el aporte real de una CSP acá es ~nulo; lo único valioso que daría un
   header —anti-clickjacking— la meta NO lo puede: `frame-ancestors` se ignora
   en meta CSP, y GitHub Pages no permite headers.
-- El costo sí es real: **el único script inline del sitio es el import map**,
-  y `script-src` exigiría su hash sha256 — **que caduca con cada edición del
-  import map y rompe el cubo EN SILENCIO para todo visitante**. Exactamente la
-  clase de rotura invisible que este proyecto no acepta.
+- El costo sí es real: **el único script inline EJECUTABLE del sitio es el
+  import map**, y `script-src` exigiría su hash sha256 — **que caduca con
+  cada edición del import map y rompe el cubo EN SILENCIO para todo
+  visitante**. Exactamente la clase de rotura invisible que este proyecto no
+  acepta. **El JSON-LD de Organization (2026-08-10) NO cambia esta cuenta, y
+  se verificó antes de anotarlo**: es un DATA BLOCK — tipo no ejecutable—,
+  el navegador no lo ejecuta y `script-src` no lo alcanza (el algoritmo de
+  «prepare a script» corta antes del chequeo de CSP), y Google lee el
+  marcado crudo con o sin CSP. La premisa «suma un segundo hash» se verificó
+  y NO se sostiene — que nadie agregue ese hash «por completitud» a la CSP
+  del PaaS: sería mantener un hash que no protege nada.
 - **La batería completa de headers va al pasar a PaaS** (CSP con Report-Only
   primero, frame-ancestors, HSTS, nosniff, Referrer-Policy, COOP) — está
   anotada allá, con el detalle. Si alguien propone «sumar seguridad» al HTML
