@@ -41,9 +41,27 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-10: el JSON-LD de Organization en la portada —
-  EL NOVENO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN VIVO: deploy
-  `1279c87` de fuente `1ef1bd8`.** El disparador, con evidencia: el AI
+- Último cierre: **2026-08-10 (más tarde): el recorte de la description
+  del schema — EL DÉCIMO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN VIVO:
+  deploy `bef16be` de fuente `0e77701`.** Corrección del autor sobre el
+  deploy 9: «We begin with Japan.» SALE de la description del JSON-LD — es
+  el estado transitorio del proyecto y la definición de la ENTIDAD no
+  lleva lo temporal (Japón es el primer nodo, no el tema — el criterio de
+  siempre) — mientras la meta description y el hero LA CONSERVAN:
+  describen la página de hoy, no la entidad. La regla de derivación quedó
+  actualizada en la decisión del JSON-LD (el patrón de la og-image con la
+  puntuación: misma fuente, divergencia deliberada y ACOTADA, anotada en
+  los dos lados; el recorte se mantiene al re-derivar). Guardas: cinco en
+  verde (pendulum 0.0961, ready `2` esperado, baseline 36 intacto) +
+  check-modes contra el árbol real de main servido en :8000. Verificado
+  en vivo: portada BYTE A BYTE idéntica al blob de main (15.133 bytes),
+  la description servida SIN la frase y la meta description servida CON
+  ella, **validator.schema.org contra el dominio: Organization, 0
+  errores, 0 advertencias**; notas y /CLAUDE.md en 404, Search Console
+  intacta, seguros y sitemap en statu quo.
+- Último cierre anterior: **2026-08-10: el JSON-LD de Organization en la
+  portada — EL NOVENO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN VIVO:
+  deploy `1279c87` de fuente `1ef1bd8`.** El disparador, con evidencia: el AI
   Overview de Google citaba LinkedIn (con el «currently in initial
   development» de antes del lanzamiento) porque el dominio no daba su
   definición en formato máquina. Lo publicado: el bloque schema.org
@@ -74,8 +92,8 @@ fallidos ya corregidos, y las capturas intermedias.
   servido en :8000. El texto de reemplazo del §3 (dos scripts inline; el
   JSON-LD NO suma hash a la CSP) quedó ENTREGADO al autor — su archivo lo
   pega él.
-- Último cierre anterior: **2026-08-08 (después del deploy 8, el cierre del día):
-  la tanda de los CUATRO FRENTES — SIN deploy: el artefacto de main NO
+- Antes, el 2026-08-08 (después del deploy 8, el cierre del día): **la
+  tanda de los CUATRO FRENTES — SIN deploy: el artefacto de main NO
   cambió.** **(1) La rama `maintenance` también sirve SIN comentarios**:
   el generador reusa EL MISMO `transformar()` del deploy (una
   implementación, no dos), la rama quedó regenerada (`1b80019`, con su
@@ -516,11 +534,12 @@ ninguna de las cuatro guardas la mira; su decisión cerrada está más abajo.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 9, el JSON-LD de
-Organization en la portada — 2026-08-10, verificado en vivo 21/21 byte a
-byte contra el artefacto y con validator.schema.org en 0 errores; desde el
-deploy 8 rige LA REGLA «EL SERVIDO NO ES EL FUENTE», ver la decisión
-«CERO comentarios en lo SERVIDO»).**
+**EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 10 — el JSON-LD
+de Organization en la portada, con la description recortada por el autor
+— 2026-08-10, verificado en vivo 21/21 byte a byte contra el artefacto y
+con validator.schema.org en 0 errores; desde el deploy 8 rige LA REGLA
+«EL SERVIDO NO ES EL FUENTE», ver la decisión «CERO comentarios en lo
+SERVIDO»).**
 
 **LOS PENDIENTES VAN EN DOS GRUPOS CON DUEÑO DISTINTO** (partidos el
 2026-08-08 a pedido del autor — antes eran una bolsa y al retomar parecía
