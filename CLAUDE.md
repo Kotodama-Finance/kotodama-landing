@@ -41,7 +41,39 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-10 (más tarde): el recorte de la description
+- Último cierre: **2026-08-14: la flecha del hero sin enlace — EL
+  UNDÉCIMO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN VIVO: deploy
+  `c9740a1` de fuente `87eb8b0`.** Decisión del autor: la flecha del hero
+  dejó de ser el enlace a #cube y es un `<div>` decorativo — aria-hidden,
+  sin destino, visualmente idéntico. El motivo: el camino hacia abajo es
+  SCROLLEAR, y el enlace PERJUDICABA a quien lo usaba — el aterrizaje
+  calibrado de #cube saltea el encabezado del cubo (correcto desde la
+  nav, que ya sabe adónde va; malo para quien baja por primera vez);
+  «The Cube» sigue en la nav. Con el enlace se fueron el aria-label
+  «Scroll to the cube», el `:hover` dorado y la tabulación — **ver la
+  decisión de anclas, actualizada**. main.js no dependía del enlace
+  (cero referencias, verificado ANTES de sacarlo) y no se tocó chrome
+  comparado (baseline 36 intacto, sin regenerar). De paso: el comentario
+  del token `--c-text-muted-2` listaba a la flecha como consumidor y era
+  FALSO (va en mist con alfa) — corregido; como vive dentro del `:root`,
+  la og-image se regeneró DOS veces con PNG byte-idéntico (sha256) y
+  lock resellado. La revisión adversarial pre-deploy (4 lentes +
+  refutadores) dio el cambio LIMPIO en accesibilidad, CSS/JS y guardas,
+  y confirmó 3 hallazgos de REGISTRO, corregidos antes de commitear: la
+  lista «corregida» del token seguía incompleta (3 de 5 consumidores);
+  «dieciséis páginas» en dos comentarios era el conteo-que-caduca que el
+  deploy 8 prohibió (quedó «todas las páginas» — el número además era
+  falso contra el fuente, que tiene 18 con nav); y «deploy 11» estaba
+  escrito ANTES de que el deploy existiera (la convención numera solo
+  deploys ejecutados). Guardas: cinco en verde (pendulum 0.0963, ready
+  `2` esperado) + check-modes contra el árbol real de main servido en
+  :8000. Verificado en vivo 23/23: portada Y styles.css BYTE A BYTE
+  idénticos a los blobs de main, la flecha servida como `<div
+  aria-hidden>` sin href ni aria-label, cero «Scroll to the cube», cero
+  `hero__scroll:hover` en el CSS servido, Search Console con su token,
+  JSON-LD parseando (description sin la frase temporal), nav con The
+  Cube → /#cube, import map y gc-pixel vivos, notas y /CLAUDE.md en 404.
+- Último cierre anterior: **2026-08-10 (más tarde): el recorte de la description
   del schema — EL DÉCIMO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN VIVO:
   deploy `bef16be` de fuente `0e77701`.** Corrección del autor sobre el
   deploy 9: «We begin with Japan.» SALE de la description del JSON-LD — es
@@ -59,7 +91,7 @@ fallidos ya corregidos, y las capturas intermedias.
   ella, **validator.schema.org contra el dominio: Organization, 0
   errores, 0 advertencias**; notas y /CLAUDE.md en 404, Search Console
   intacta, seguros y sitemap en statu quo.
-- Último cierre anterior: **2026-08-10: el JSON-LD de Organization en la
+- Antes, el 2026-08-10: **el JSON-LD de Organization en la
   portada — EL NOVENO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN VIVO:
   deploy `1279c87` de fuente `1ef1bd8`.** El disparador, con evidencia: el AI
   Overview de Google citaba LinkedIn (con el «currently in initial
@@ -534,10 +566,9 @@ ninguna de las cuatro guardas la mira; su decisión cerrada está más abajo.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 10 — el JSON-LD
-de Organization en la portada, con la description recortada por el autor
-— 2026-08-10, verificado en vivo 21/21 byte a byte contra el artefacto y
-con validator.schema.org en 0 errores; desde el deploy 8 rige LA REGLA
+**EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 11 — la flecha
+del hero sin enlace, decorativa — 2026-08-14, verificado en vivo 23/23
+byte a byte contra el artefacto; desde el deploy 8 rige LA REGLA
 «EL SERVIDO NO ES EL FUENTE», ver la decisión «CERO comentarios en lo
 SERVIDO»).**
 
@@ -1807,8 +1838,8 @@ salió de caché) y `performance.timeOrigin` (¿la pestaña cargó antes del pus
 Cerrado en la revisión de quince puntos (2026-08-04); **ACTUALIZADA el
 2026-08-08 con la calibración POR SECCIÓN de las anclas de la portada**
 (decisión del autor sobre capturas — deploy 7); **y el 2026-08-14 la flecha
-del hero DEJÓ DE SER ENLACE** (decisión del autor — viaja en el próximo
-deploy; ver el bullet de #cube):
+del hero DEJÓ DE SER ENLACE** (decisión del autor — deploy 11; ver el
+bullet de #cube):
 
 - **La regla global `scroll-margin-top: calc(var(--nav-h) + 12px)`** (= 96px)
   sobre `section`, **`footer`** y `.cube__layout` SIGUE, y es la que rige en
@@ -1829,7 +1860,7 @@ deploy; ver el bullet de #cube):
   acá: el contexto queda scrolleando hacia arriba. La nav SIGUE apuntando a
   `/#cube` (no crear otra ancla — y NO re-apuntarla a `/#cube-view`: los dos
   anclas tienen margen distinto a propósito). **La flecha del hero DEJÓ DE
-  SER ENLACE el 2026-08-14 (decisión del autor): es decorativa,
+  SER ENLACE el 2026-08-14 (decisión del autor — deploy 11): es decorativa,
   aria-hidden, sin destino, visualmente idéntica.** El motivo, que es lo que
   hay que recordar antes de «reponerle» el href: el camino hacia abajo es
   SCROLLEAR, y el enlace PERJUDICABA a quien lo usaba — este aterrizaje
