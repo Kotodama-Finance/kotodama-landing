@@ -41,7 +41,43 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-14 (cierra el día, después del ensayo): LA COPIA
+- Último cierre: **2026-08-14 (cierra el día): EL INTERCAMBIO DE METAS DE
+  VERIFICACIÓN — EL DUODÉCIMO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN VIVO
+  14/14: deploy `3d28290` de fuente `bb22f27`.** Sale la meta de Google y
+  entra la de Bing, en el mismo hueco (entre `twitter:card` y el bloque de
+  iconos, fuera de los bloques comparados). El motivo: Search Console migró
+  a la cuenta de Google del proyecto con propiedad de DOMINIO verificada
+  por TXT en la zona de Xserver (verificado por el autor contra los
+  nameservers autoritativos; la propiedad vieja de prefijo — la que
+  sostenía la meta — removida DESPUÉS de verificar la nueva); y Bing había
+  importado su propiedad desde Search Console, así que heredaba una
+  verificación muerta — se rehízo por HTML Meta Tag con cuenta propia.
+  **Esto DEROGÓ la regla «la meta de Search Console NO se toca» en SEIS
+  lugares** — los cinco del barrido (comentario de index.html, AL RETOMAR,
+  la nota en el registro del deploy 6, el contrato de make-deploy.py, el
+  análisis de riesgo del rollback en el README) **más el SEXTO que encontró
+  la revisión adversarial (su hallazgo ALTA): el paso 7 del procedimiento
+  de publicar seguía exigiendo verificar la meta de Google tras el push** —
+  ahora pide la de Bing con su token y dice que cero
+  google-site-verification es lo correcto. **La meta de Bing heredó el
+  tratamiento entero**: comentario pegado a la línea y el lugar con nombre
+  en el contrato del deploy (presencia desde HEAD, supervivencia a la
+  transformación) — **probado en rojo y en los rollbacks**: un fuente sin
+  la meta FRENA nombrándola; `--fuente v1-published`, `v1-content-complete`
+  y `87eb8b0` (deploy 11: Google sí, Bing no) publican en verde. La
+  revisión (2 lentes + refutadores) confirmó 3 hallazgos de REGISTRO, los 3
+  corregidos antes del deploy (el paso 7; la variante en vivo del ensayo
+  remitiendo a un riesgo declarado inexistente; y «salió en el deploy»
+  escrito antes de que el deploy existiera). Guardas: cinco en verde
+  (pendulum 0.0948, ready `2` esperado) + check-modes contra el árbol real
+  de main servido en :8000. Verificado en vivo 14/14 AL PRIMER INTENTO:
+  portada byte a byte idéntica al blob de main, la meta de Bing servida con
+  etiqueta y token EXACTOS y única, CERO google-site-verification, JSON-LD
+  parseando (Organization), cero comentarios, import map y gc-pixel vivos,
+  las cuatro rutas de notas y /CLAUDE.md y /tools/ en 404. **LO QUE QUEDA
+  ES DE MANUEL: apretar «verificar» en Bing Webmaster Tools — la etiqueta
+  ya está SERVIDA.**
+- Último cierre anterior: **2026-08-14 (después del ensayo): LA COPIA
   DERIVADA DE CLAUDE.md EN ONEDRIVE + LA REGLA DE CITAR EL REGISTRO — SIN
   deploy: el artefacto de main NO cambió.** El problema (pedido del autor,
   con evidencia): el Claude del chat de diseño NO llega a C:\Dev — su
@@ -695,6 +731,10 @@ y el diseño del acople de check-ready (entregado con costos; la elección
 es suya, ver el grupo siguiente).
 
 **ESPERAN A MANUEL (Code no puede avanzarlos):**
+**(0) APRETAR «VERIFICAR» EN BING WEBMASTER TOOLS — lo más inmediato**: la
+etiqueta `msvalidate.01` está SERVIDA desde el deploy 12 (2026-08-14),
+verificada en vivo con el token exacto; solo falta el clic (no se podía
+antes del deploy — Bing tiene que ver la etiqueta servida);
 (1) el TÍTULO y la LÍNEA DE FUNCIÓN de la tarjeta de sector — decisión
 abierta, ver su bullet en Estado; (2) la description y el gloss de
 /notes/ — redacción suya; (3) el TEXTO de la capa 1 de seguros — su
@@ -721,8 +761,8 @@ autor contra los nameservers autoritativos; «Ownership verified», método
 «Domain name provider»), y la propiedad vieja de prefijo de URL — la que
 sostenía la meta — fue removida DESPUÉS de verificar la nueva, en el orden
 correcto. **Lo que NO se toca ahora es el TXT en el DNS, que es
-independiente de este repo.** La meta salió del `<head>` con el commit
-fuente del 2026-08-14 (el deploy de esa tanda la saca del dominio), y en su
+independiente de este repo.** La meta salió del `<head>` en el deploy 12
+(2026-08-14, verificado en vivo: cero ocurrencias servidas), y en su
 hueco entró la de BING (`msvalidate.01`): Bing había
 importado su propiedad desde Search Console — heredaba una verificación que
 acababa de morir — y se rehízo por HTML Meta Tag con cuenta propia. **LA
