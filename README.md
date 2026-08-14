@@ -319,7 +319,7 @@ lo verificado es lo publicado), que **no lleve notas** (por tipo —cero
 blob fuente), que **la transformación no haya tocado nada más que
 comentarios** (la guarda de contenido: cero comentarios en el artefacto por
 `html.parser`, mismo stream de eventos, mismo texto visible, el chrome
-idéntico entre páginas del artefacto, la meta de Search Console/import
+idéntico entre páginas del artefacto, la meta de verificación de Bing/import
 map/JSON-LD de Organization/gc-pixel/noindex vivos — el JSON-LD además BYTE
 A BYTE, porque mal formado Google lo ignora en silencio—, tokens de CSS/JS
 intactos), que **ninguna página
@@ -472,9 +472,10 @@ git push origin main
   el sitio — generado de `<hash>`»; el título entra con los que siguen — la
   historia no se reescribe). Los tags de hito apuntan a fuentes de agosto de
   2026 y valen como historia, no como retorno de emergencia: un rollback ahí
-  perdería la verificación de Search Console y las correcciones posteriores
-  (criterio revisado con el autor, 2026-08-14) — en el apuro, el commit
-  bueno se elige del menú.
+  perdería la meta de verificación de Bing, el JSON-LD y las correcciones
+  posteriores (criterio revisado con el autor, 2026-08-14; la verificación
+  de GOOGLE ya no depende del HTML — desde ese día es TXT en el DNS) — en el
+  apuro, el commit bueno se elige del menú.
 - **La historia no se reescribe**: el rollback es un commit NUEVO encima de
   `main`, sin force-push. Pages publica en un par de minutos.
 - **Los avisos del rollback son esperables, no errores**: si el commit bueno
@@ -503,9 +504,11 @@ ni el dominio:
 
 - **Qué mostraría el dominio con `--fuente v1-published`**: desaparecen
   `/sitemap/`, `/hajime/yorozu/japan/seguros/` y `/favicon-192x192.png`
-  (404); la portada pierde **LA META DE SEARCH CONSOLE y el JSON-LD de
+  (404); la portada pierde **LA META DE VERIFICACIÓN VIGENTE y el JSON-LD de
   Organization** — los dos son posteriores al tag (medido contra el árbol
-  del tag: cero ocurrencias)—; `/method/` vuelve al dominio viejo de IMAJ
+  del tag el 2026-08-14, entonces con la meta de Search Console: cero
+  ocurrencias; hoy la meta vigente es la de Bing, también posterior)—;
+  `/method/` vuelve al dominio viejo de IMAJ
   (toushin.or.jp); la flecha del hero vuelve a ser enlace; la nav vuelve al
   fondo por JS (el bug móvil del deploy 5). El sitio viejo es un sitio SANO
   y completo — es el que se publicó el 2026-08-06 —, servido sin comentarios
@@ -519,11 +522,15 @@ ni el dominio:
   repo**: el precedente del deploy 2 quedó encolado ~24 h, y la palanca es
   el commit VACÍO de retrigger (con su `Fuente:` — ver la decisión de la
   rama de deploy en CLAUDE.md).
-- **El riesgo que manda**: la meta de Search Console AUSENTE durante la
-  ventana. Google la re-verifica periódicamente; si el chequeo cae justo
-  ahí, avisa y hay período de gracia antes de expirar la propiedad, y
-  re-verificar con el mismo token (que vuelve con el paso de vuelta) la
-  recupera. Ventana corta = riesgo bajo; cola trabada = crece con las horas.
+- **El riesgo que manda** *(REVISADO el 2026-08-14, después del ensayo)*:
+  cuando se midió, era la meta de Search Console ausente durante la ventana.
+  **Ese riesgo ya no existe**: la verificación de Google es propiedad de
+  DOMINIO por TXT en el DNS, independiente de lo que sirva el HTML. El
+  equivalente hoy, más chico, es **la meta de verificación de BING ausente**
+  (`msvalidate.01`, en la portada desde el 2026-08-14): Bing la re-chequea
+  periódicamente; si el chequeo cae en la ventana, re-verificar con el mismo
+  token (que vuelve con el paso de vuelta) la recupera. Ventana corta =
+  riesgo bajo; cola trabada = crece con las horas.
 
 **La variante EN SECO — casi toda la evidencia, exposición cero.** Ensaya
 todo el camino salvo el build de Pages, que es la parte de MENOR
@@ -554,9 +561,11 @@ cualquier reconsideración futura:
   precedente del deploy 2 —un build encolado ~24 horas del lado de GitHub,
   sin incidente declarado— la convierte en «hasta un día» si la cola de
   Pages se traba justo en el medio. Y con un día entero sin la meta de
-  Search Console en la portada, la pérdida de la verificación deja de ser
-  improbable: el chequeo periódico de Google tiene todo ese tiempo para
-  caer adentro.
+  verificación en la portada, la pérdida de esa verificación deja de ser
+  improbable: el chequeo periódico tiene todo ese tiempo para caer adentro.
+  *(Cuando el autor lo pesó, la meta era la de Search Console; desde el
+  2026-08-14 Google va por TXT en el DNS y la meta expuesta es la de BING —
+  el argumento sigue en pie con apuesta menor.)*
 - **Durante la ventana, el dominio sirve /method/ con el dominio VIEJO de
   IMAJ** (toushin.or.jp — corregido en el deploy 6): un error citable en
   vivo, en la página que abre un reclutador, en el sitio cuyo argumento es

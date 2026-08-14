@@ -341,7 +341,10 @@ fallidos ya corregidos, y las capturas intermedias.
   VERIFICADA por Google el mismo 2026-08-08 — prefijo de URL sobre
   https://kotodamafinance.com/, método etiqueta HTML. **LA META NO SE
   TOCA**: si desaparece del `<head>` de la portada, se pierde la
-  verificación)*; **(2) IMAJ renombrado y re-dominado**:
+  verificación. **DEROGADO el 2026-08-14**: Search Console migró a
+  propiedad de DOMINIO por TXT en el DNS y la meta salió del head — en su
+  lugar vive la de Bing; ver SEARCH CONSOLE en AL RETOMAR)*; **(2) IMAJ
+  renombrado y re-dominado**:
   資産運用業協会 / www.imaj.or.jp (la fusión del 1/4/2026; la sigla IMAJ
   sigue siendo correcta), cero restos de toushin.or.jp ni del nombre viejo
   en el servido; **(3) Mizuho renombrado con el patrón de «Bank of Japan —
@@ -709,12 +712,23 @@ se cerró el 2026-08-08: diseño A implementado.)*
 **EL DNS ES OTRO FRENTE, FUERA DEL REPO — no es pendiente de Code**: los
 pasos 2-4 de la migración (el detalle, más abajo en esta misma sección).
 
-**SEARCH CONSOLE QUEDÓ VERIFICADO (2026-08-08,
-confirmado por Google)**: propiedad de prefijo de URL sobre
-https://kotodamafinance.com/, método etiqueta HTML — **la meta
-`google-site-verification` de la portada NO SE TOCA: si desaparece del
-`<head>`, se pierde la verificación** (la regla vive también en el
-comentario junto a la meta en index.html). La
+**SEARCH CONSOLE: LA VERIFICACIÓN YA NO VIVE EN EL HTML (2026-08-14) — esto
+DEROGA la regla «la meta google-site-verification NO SE TOCA» que rigió
+desde el 2026-08-08.** Search Console migró de la cuenta personal a la
+cuenta de Google del proyecto: la propiedad nueva es de tipo DOMINIO,
+verificada por un registro TXT en la zona de Xserver (verificado por el
+autor contra los nameservers autoritativos; «Ownership verified», método
+«Domain name provider»), y la propiedad vieja de prefijo de URL — la que
+sostenía la meta — fue removida DESPUÉS de verificar la nueva, en el orden
+correcto. **Lo que NO se toca ahora es el TXT en el DNS, que es
+independiente de este repo.** La meta salió del `<head>` en el deploy del
+2026-08-14, y en su hueco entró la de BING (`msvalidate.01`): Bing había
+importado su propiedad desde Search Console — heredaba una verificación que
+acababa de morir — y se rehízo por HTML Meta Tag con cuenta propia. **LA
+META DE BING ES AHORA LA QUE NO SE TOCA**: Bing la lee al verificar y en
+re-chequeos posteriores — si desaparece del `<head>` de la portada, se
+pierde la verificación (la regla vive también en el comentario junto a la
+meta en index.html, y el contrato del deploy la exige por nombre). La
 publicación (el paso 5) se ejecutó **ANTES de los pasos 2-4, por decisión del
 autor, y el orden es correcto**: una transferencia de registrador NO cambia
 los nameservers — Namecheap sigue sirviendo la zona durante los ~5 días de la
@@ -938,10 +952,11 @@ es dar la definición desde el propio dominio, que es el hueco que llenaba
 LinkedIn.
 
 - **Un `<script type="application/ld+json">` con schema.org Organization en
-  el `<head>` de la PORTADA, y solo ahí** — entre la meta de Search Console
-  y el bloque de iconos: FUERA de los tres bloques que compara
-  `chrome_divergente` (el de iconos empieza en el `<link>` del .ico), el
-  mismo lugar y por el mismo motivo que la meta de Search Console.
+  el `<head>` de la PORTADA, y solo ahí** — entre la meta de verificación
+  (hoy la de Bing; hasta el 2026-08-14, la de Search Console) y el bloque de
+  iconos: FUERA de los tres bloques que compara `chrome_divergente` (el de
+  iconos empieza en el `<link>` del .ico), el mismo lugar y por el mismo
+  motivo que esa meta.
 - **La description NO se redactó: DERIVA de la meta description — que a su
   vez deriva del hero — CON UN RECORTE deliberado del autor (2026-08-10,
   deploy 10): va SIN la frase final «We begin with Japan.»** La frase es el
@@ -1107,8 +1122,9 @@ KB); main.js 14 de 22 KB; cube.js 26,6 de 48,7.
   EXACTOS, texto normalizado), `texto_visible` idéntico, el chrome idéntico
   ENTRE páginas del artefacto (los marcadores ahora viven en
   `_guardas.BLOQUES_CHROME`, compartidos con chrome_divergente — una sola
-  lista), el contrato de supervivencia con nombre (la meta de Search
-  Console, el import map, el gc-pixel por página, las noindex, el @license
+  lista), el contrato de supervivencia con nombre (la meta de verificación
+  — la de Search Console hasta el 2026-08-14, hoy la de Bing—, el import
+  map, el gc-pixel por página, las noindex, el @license
   del vendor) y la igualdad de tokens en CSS/JS. **Probada EN ROJO**: 11
   mutaciones dirigidas (cada una frena nombrando la pieza), 17 fixtures del
   stripper con las líneas trampa REALES del repo (regex tras `||` en

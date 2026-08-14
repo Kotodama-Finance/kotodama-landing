@@ -27,21 +27,26 @@
 <meta property="og:image:alt" content="Kotodama Finance: the 言霊 mark in gold above the brand name, on deep navy.">
 <!-- Sin esto X muestra una miniatura cuadrada en vez de la tarjeta ancha. -->
 <meta name="twitter:card" content="summary_large_image">
-<!-- Verificación de Search Console — VERIFICADA por Google (2026-08-08):
-     propiedad de prefijo de URL sobre el dominio, método etiqueta HTML.
-     ESTA META NO SE TOCA NI SE MUEVE: si desaparece del <head> de la
-     portada, se pierde la verificación de la propiedad. El token va pegado
-     tal cual lo dio Google — un carácter cambiado falla sin decir por qué.
+<!-- Verificación de Bing Webmaster Tools — método HTML Meta Tag
+     (2026-08-14): propiedad propia, reemplaza a la que Bing había importado
+     de Search Console (esa heredaba una verificación que murió al migrar
+     Google a propiedad de DOMINIO por TXT en el DNS — desde entonces la
+     verificación de Google NO vive en este HTML: lo que no se toca de ese
+     lado es el registro TXT en la zona del DNS, no una meta).
+     ESTA META NO SE TOCA NI SE MUEVE: Bing la lee al verificar y en
+     re-chequeos posteriores — si desaparece del <head> de la portada, se
+     pierde la verificación de la propiedad. El token va pegado tal cual lo
+     dio Bing — un carácter cambiado falla sin decir por qué.
      SOLO en la portada. Vive ACÁ a propósito, FUERA de los tres bloques que
      chrome_divergente compara byte a byte (nav, footer, y el de iconos, que
      empieza en el <link> del .ico de abajo). -->
-<meta name="google-site-verification" content="pQSeEV-gAUWGwF2WuaPPESz00qknkRE0S8Px6nrMzbI" />
+<meta name="msvalidate.01" content="19B4933CC83A89C83F9BF71B6E33DF32" />
 <!-- Datos estructurados de Organization (2026-08-10): la definición de la
      entidad en formato máquina, DESDE el dominio — el AI Overview de Google
      describía el proyecto citando LinkedIn (con un estado de antes del
      lanzamiento) porque el sitio no daba la suya. SOLO en la portada, y ACÁ
      a propósito: FUERA de los tres bloques que chrome_divergente compara
-     (igual que la meta de Search Console de arriba).
+     (igual que la meta de verificación de Bing de arriba).
      La description DERIVA de la meta description de arriba — o sea del
      hero: si el hero cambia, cambian los tres textos — CON UN RECORTE
      deliberado del autor (2026-08-10): va SIN la frase final «We begin

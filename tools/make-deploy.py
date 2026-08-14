@@ -79,7 +79,7 @@ en CLAUDE.md, decisión de la rama de deploy):
    verificado por derivaciones INDEPENDIENTES del stripper: html.parser del
    stdlib (stream de eventos fuente↔artefacto, cero eventos de comentario),
    texto_visible de _guardas, el chrome idéntico ENTRE páginas del artefacto,
-   el contrato de supervivencia con nombre (meta de Search Console, import
+   el contrato de supervivencia con nombre (meta de Bing, import
    map, gc-pixel por página, las noindex, el @license del vendor) y la
    igualdad de tokens en CSS/JS. Es la red real contra un stripper con un
    bug: check-modes contra el artefacto solo navega la portada y /hajime/ —
@@ -760,9 +760,9 @@ def verificar_transformacion(arbol_pub, leer_fuente, leer_pub, desde_head=True):
 
     `desde_head=False` es el rollback (--fuente): las comprobaciones
     COMPARATIVAS rigen igual (nada que el fuente tenga puede perderse), pero
-    las de PRESENCIA (la meta de Search Console, los bloques de chrome que
-    ese árbol no tenía) siguen la partición del CONTRATO — «el sitio de ese
-    día se publica como era». Sin esto, el rollback documentado a
+    las de PRESENCIA (la meta de verificación de Bing, los bloques de chrome
+    que ese árbol no tenía) siguen la partición del CONTRATO — «el sitio de
+    ese día se publica como era». Sin esto, el rollback documentado a
     v1-published/v1-content-complete frenaba en seco (hallazgo ALTO de la
     revisión adversarial, reproducido ejecutando)."""
     problemas = []
@@ -859,27 +859,32 @@ def verificar_transformacion(arbol_pub, leer_fuente, leer_pub, desde_head=True):
 
     # 5. El contrato de supervivencia, con nombre: piezas que el punto 2 ya
     #    cubre pero cuyo rojo tiene que nombrar la pieza — el diagnóstico
-    #    «cambió un evento» no le dice al operador que perdió Search Console.
+    #    «cambió un evento» no le dice al operador que perdió la verificación
+    #    de Bing. (Hasta el 2026-08-14 la pieza era la meta de Search
+    #    Console; Google migró a propiedad de DOMINIO por TXT en el DNS —
+    #    independiente del HTML — y la meta que ahora sostiene una
+    #    verificación es la de Bing Webmaster Tools.)
     if "index.html" in arbol_pub:
         fuente = leer_fuente("index.html").decode("utf-8")
         pub = leer_pub("index.html").decode("utf-8")
-        m = re.search(r'<meta name="google-site-verification" content="[^"]*"\s*/?>',
+        m = re.search(r'<meta name="msvalidate\.01" content="[^"]*"\s*/?>',
                       fuente)
         if not m:
             # PRESENCIA solo desde HEAD: bajo --fuente rige la partición del
             # CONTRATO («el sitio de ese día se publica como era») — los
-            # fuentes anteriores al deploy 6 no tienen la meta, y exigirla
-            # incondicional mataba el rollback documentado (hallazgo ALTO de
-            # la revisión: --fuente v1-published frenaba y --pisar no exime
-            # de la guarda).
+            # fuentes anteriores a este cambio no tienen la meta de Bing, y
+            # exigirla incondicional mataría el rollback documentado (el
+            # hallazgo ALTO de la revisión del deploy 8, con la meta de
+            # Google: --fuente v1-published frenaba y --pisar no exime de la
+            # guarda).
             if desde_head:
-                problemas.append("index.html (fuente): sin la meta google-site-verification "
+                problemas.append("index.html (fuente): sin la meta msvalidate.01 "
                                  "— si falta en la portada se pierde la verificación de "
-                                 "Search Console (regla de CLAUDE.md)")
+                                 "Bing Webmaster Tools (regla de CLAUDE.md)")
         elif m.group(0) not in pub:
-            problemas.append("index.html: la meta google-site-verification NO "
+            problemas.append("index.html: la meta msvalidate.01 NO "
                              "sobrevivió a la transformación — publicarla así pierde "
-                             "la verificación de Search Console")
+                             "la verificación de Bing Webmaster Tools")
         if ('<script type="importmap">' in fuente
                 and '<script type="importmap">' not in pub):
             problemas.append("index.html: el import map no sobrevivió — el cubo "
