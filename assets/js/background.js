@@ -4,8 +4,8 @@ const VERT = 'attribute vec2 p; void main(){ gl_Position=vec4(p,0.0,1.0); }';
 const FRAG = `
 precision highp float;
 uniform vec2 u_res; uniform float u_time;
-uniform float u_speed;   // velocidad del viaje de las olas
-uniform float u_breath;  // respiracion del swell (independiente)
+uniform float u_speed;   // travel speed of the waves
+uniform float u_breath;  // breathing of the swell (independent)
 
 vec4 mod289(vec4 x){return x-floor(x*(1.0/289.0))*289.0;}
 vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
