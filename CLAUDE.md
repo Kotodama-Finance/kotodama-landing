@@ -532,7 +532,17 @@ fallidos ya corregidos, y las capturas intermedias.
   fechado quedó entregado al autor (su archivo lo pega él); el diseño del
   acople de check-ready quedó entregado con sus costos — la elección es
   del autor, ver el bullet siguiente. Ver sus filas en los cabos.
-- **Decisiones del autor pendientes: UNA (la tarjeta de sector)** — *(la
+- **Decisiones del autor pendientes: DOS** — **la NUEVA (2026-08-14): el
+  ENSAYO DEL ROLLBACK, ¿en vivo o en seco?** La parada quedó entregada en
+  el chat con todo medido (qué desaparece del dominio — la meta de Search
+  Console y el JSON-LD entre eso—, la ventana de ~15-30 min con el
+  max-age=600 de Pages, el riesgo de la cola trabada, y la interacción de
+  la flecha, que se revierte sola); la recomendación de Code es la
+  variante EN SECO (rollback real + vuelta en main local con
+  --previsualizar en el medio, sin push del rollback — casi toda la
+  evidencia, exposición cero), y el procedimiento COMPLETO de las dos
+  variantes quedó documentado en el README («El ensayo del rollback»).
+  NADA ejecutado: se ejecuta lo que él decida. *(la
   del NOMBRADO de los deploys se CERRÓ el mismo 2026-08-14: el autor
   aceptó la refutación del esquema last-good ENTERA («importaba ceremonia
   de contextos con equipo», sus palabras), LOS TAGS QUEDAN COMO ESTÁN, y
@@ -636,7 +646,11 @@ abierta, ver su bullet en Estado; (2) la description y el gloss de
 /notes/ — redacción suya; (3) el TEXTO de la capa 1 de seguros — su
 andamiaje ya está servido con noindex, invisible; (4) la PRIMERA NOTA
 REAL — el sistema está construido, el pase de estreno vive en la decisión
-de notas. *(La quinta que estuvo acá unas horas — el NOMBRADO de los
+de notas; **(5) el ENSAYO DEL ROLLBACK (2026-08-14): decidir la variante**
+— la parada con las respuestas está entregada en el chat, el procedimiento
+de las dos variantes (en seco / en vivo) en el README («El ensayo del
+rollback»), y la recomendación es EN SECO; nada se ejecuta sin su
+decisión. *(La que estuvo acá unas horas — el NOMBRADO de los
 deploys para el rollback — se CERRÓ el mismo 2026-08-14: el autor aceptó
 la recomendación, los tags quedan como están, y el título del commit
 fuente ya viaja en la primera línea del mensaje del deploy — ver el

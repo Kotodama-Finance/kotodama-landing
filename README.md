@@ -486,6 +486,61 @@ git push origin main
 - Si lo que hace falta es **bajar el sitio**, eso no es un rollback: es la
   rama `maintenance` (sección siguiente).
 
+### El ensayo del rollback — el procedimiento, escrito ANTES de ejecutarlo
+
+Un rollback real nunca se ejecutó en el dominio (a la fecha de esta sección,
+2026-08-14): la capacidad está verificada por las guardas, por las pruebas en
+clon y por `--solo-verificar`, no por evidencia en vivo. Lo MEDIDO ese día
+para la parada del ensayo — todo en local y en solo lectura, sin tocar `main`
+ni el dominio:
+
+- **Qué mostraría el dominio con `--fuente v1-published`**: desaparecen
+  `/sitemap/`, `/hajime/yorozu/japan/seguros/` y `/favicon-192x192.png`
+  (404); la portada pierde **LA META DE SEARCH CONSOLE y el JSON-LD de
+  Organization** — los dos son posteriores al tag (medido contra el árbol
+  del tag: cero ocurrencias)—; `/method/` vuelve al dominio viejo de IMAJ
+  (toushin.or.jp); la flecha del hero vuelve a ser enlace; la nav vuelve al
+  fondo por JS (el bug móvil del deploy 5). El sitio viejo es un sitio SANO
+  y completo — es el que se publicó el 2026-08-06 —, servido sin comentarios
+  (la transformación la aplica el script VIGENTE, no el del tag). Los dos
+  tags publican con el script de hoy: `--solo-verificar --fuente` en verde
+  con avisos esperables (verificado 2026-08-14).
+- **La ventana**: un build de Pages por deploy (~2-10 min, medido en la
+  serie) MÁS el `Cache-Control: max-age=600` que Pages sirve (medido contra
+  el dominio): con los DOS builds del ensayo, exposición efectiva de la
+  versión vieja ~15-30 min. **La cola de Pages no está bajo control del
+  repo**: el precedente del deploy 2 quedó encolado ~24 h, y la palanca es
+  el commit VACÍO de retrigger (con su `Fuente:` — ver la decisión de la
+  rama de deploy en CLAUDE.md).
+- **El riesgo que manda**: la meta de Search Console AUSENTE durante la
+  ventana. Google la re-verifica periódicamente; si el chequeo cae justo
+  ahí, avisa y hay período de gracia antes de expirar la propiedad, y
+  re-verificar con el mismo token (que vuelve con el paso de vuelta) la
+  recupera. Ventana corta = riesgo bajo; cola trabada = crece con las horas.
+
+**La variante EN SECO — casi toda la evidencia, exposición cero.** Ensaya
+todo el camino salvo el build de Pages, que es la parte de MENOR
+incertidumbre (Pages construye la rama que le den; ya construyó doce):
+
+1. `python tools/make-deploy.py --fuente v1-published` — el rollback REAL,
+   commiteado en `main` local (no `--solo-verificar`: el camino entero).
+2. `python tools/make-deploy.py --previsualizar` — navegar el sitio VIEJO
+   tal como Pages lo serviría, byte a byte.
+3. `python tools/make-deploy.py` — la VUELTA, desde HEAD, commiteada encima
+   (ejercita a `verificar_main_intacta` con un rollback en la punta).
+4. `--previsualizar` de nuevo — el estado actual restaurado, verificado.
+5. El push puede ir en el momento o esperar al próximo deploy real: la punta
+   ES el estado actual (árbol idéntico al publicado — Pages no cambia un
+   byte), y los dos commits del ensayo quedan en la historia como registro.
+
+**La variante EN VIVO** agrega, entre los pasos 2 y 3, el push del rollback
+y la verificación en el dominio (portada vieja en 200, /sitemap/ en 404,
+notas en 404), y después del paso 3 el push de la vuelta con la verificación
+de siempre. **Solo con decisión explícita del autor**, sabiendo la ventana y
+el riesgo de Search Console de arriba; el mejor tag para ensayar es
+`v1-published` (un sitio que ya estuvo servido; `v1-content-complete` es
+pre-publicación y saldría sin el juego de favicons).
+
 ## La rama `maintenance`: bajar el sitio para una obra grande
 
 Un cartel para cuando haya que dejar el sitio fuera de línea a propósito. **No
