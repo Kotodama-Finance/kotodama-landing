@@ -5,6 +5,9 @@
     python tools/make-deploy.py --solo-verificar    # arma el árbol y corre la guarda, sin commitear
     python tools/make-deploy.py --fuente <ref>      # publica desde otro commit (rollback)
     python tools/make-deploy.py --pisar             # publica aunque main tenga ediciones a mano
+    python tools/make-deploy.py --previsualizar     # sirve la punta LOCAL de main en :8001
+                                                    #   (navegar EL ARTEFACTO antes del push;
+                                                    #    --puerto <n> si el 8001 está ocupado)
 
 POR QUÉ MAIN SE GENERA Y NO SE MERGEA (decisión del autor, ago 2026). GitHub
 Pages publica la rama entera, así que un merge de redesign-trust habría servido
@@ -99,6 +102,7 @@ import json
 import os
 import posixpath
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -1131,7 +1135,146 @@ def verificar_main_intacta(ref=None):
                           f"primer deploy, se publica encima")
 
 
+def previsualizar(puerto):
+    """Sirve la punta LOCAL de main, para NAVEGARLA antes del push.
+
+    El hueco que cierra (2026-08-14, pedido del autor): desde el deploy 8 EL
+    SERVIDO NO ES EL FUENTE — hay una transformación en el medio—, así que
+    probar contra el árbol de trabajo no muestra lo que va a salir, y
+    check-modes contra main es automático y navega dos páginas. Esto es lo
+    otro: un humano mirando EL ARTEFACTO completo — el commit de main que el
+    push publicaría — con su navegador, antes de publicarlo.
+
+    No genera nada: main local YA ES el artefacto (lo armó la corrida sin
+    flags). Se materializa en un worktree efímero (_dev/preview, detached) y
+    se sirve con http.server. Ctrl+C cierra y borra el worktree; si una
+    corrida anterior murió sin limpiar (kill duro: el finally no corre), los
+    restos se barren al arrancar la siguiente.
+
+    EL PUERTO ES 8001 A PROPÓSITO: el :8000 es del árbol de trabajo
+    (desarrollo y guardas) y el flujo del deploy lo baja y lo relevanta — en
+    su propio puerto, la previsualización convive con todo eso sin pisarse.
+
+    Límites conocidos: http.server no sirve 404.html ante rutas inexistentes
+    como hace Pages — para previsualizar esa página, navegar /404.html. Es
+    UNA previsualización a la vez: dos instancias compartirían _dev/preview
+    y la segunda barrería el worktree de la primera. Y la preview es una
+    FOTO de la punta de main al abrirla: tras otro make-deploy, cerrarla
+    (Ctrl+C) y relanzarla — un F5 seguiría mostrando el artefacto anterior,
+    sin ninguna señal de estar viejo.
+    """
+    from functools import partial
+    from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+
+    class _Servidor(ThreadingHTTPServer):
+        # SO_REUSEADDR APAGADO a propósito: HTTPServer lo trae puesto, y en
+        # Windows ese flag permite bindear un puerto YA ocupado SIN error.
+        # No alcanza solo: ver el pre-chequeo del puerto, abajo.
+        allow_reuse_address = False
+
+    r = subprocess.run(("git", "rev-parse", "--verify", "--quiet",
+                        f"refs/heads/{RAMA_DESTINO}"), cwd=RAIZ, capture_output=True)
+    if r.returncode:
+        sys.exit(f"no hay rama {RAMA_DESTINO} local que previsualizar — correr "
+                 f"primero make-deploy sin flags")
+    # La ocupación del puerto se detecta CONECTANDO, no bindeando — el bind en
+    # Windows no ve el conflicto real: un wildcard (0.0.0.0/::, lo que abre
+    # `python -m http.server`) y el loopback 127.0.0.1 conviven como bindings
+    # DISTINTOS sin error, y la preview le robaría el tráfico de localhost al
+    # otro servidor en silencio (medido 2026-08-14 contra el servidor de
+    # desarrollo). La sonda pregunta lo que importa: ¿alguien YA atiende acá?
+    import socket
+    with socket.socket() as sonda:
+        sonda.settimeout(0.5)
+        if sonda.connect_ex(("127.0.0.1", puerto)) == 0:
+            sys.exit(f"el puerto {puerto} ya está sirviendo algo (¿el servidor de "
+                     f"desarrollo del árbol de trabajo?) — cerrarlo, o pasar "
+                     f"--puerto <n> para usar otro")
+    cabeza = r.stdout.decode().strip()
+    titulo = git("log", "-1", "--format=%s", RAMA_DESTINO).strip()
+    marca = MARCA_FUENTE.search(git("log", "-1", "--format=%B", RAMA_DESTINO))
+    ruta = os.path.join(RAIZ, "_dev", "preview")
+
+    def barrer(abortar):
+        # El barrido cubre las TRES formas de resto medidas (revisión
+        # adversarial 2026-08-14, las tres reproducidas antes de cubrirlas):
+        # (1) worktree registrado vivo — lo saca remove; el --force va DOS
+        # veces porque un worktree locked (lo deja un kill en mal momento)
+        # exige el doble force; (2) worktree registrado con el directorio
+        # borrado a mano — lo cura el prune, que por eso corre SIEMPRE y no
+        # solo si el directorio existe (la primera versión lo gateaba con
+        # exists() y se salteaba justo la cura); (3) un directorio suelto
+        # que nunca fue worktree — rmtree: la ruta es efímera por contrato
+        # del modo. Nada de acá usa git(): un fallo de un paso es parte del
+        # barrido (el siguiente lo cubre), no motivo de morir con el fatal
+        # crudo.
+        subprocess.run(("git", "worktree", "remove", "--force", "--force", ruta),
+                       cwd=RAIZ, capture_output=True)
+        subprocess.run(("git", "worktree", "prune"), cwd=RAIZ, capture_output=True)
+        if os.path.exists(ruta):
+            shutil.rmtree(ruta, ignore_errors=True)
+        if abortar and os.path.exists(ruta):
+            sys.exit(f"no se pudo despejar {ruta} — borrarlo a mano y reintentar")
+
+    barrer(abortar=True)
+    # -c core.autocrlf=false A PROPÓSITO: el checkout escribe los BYTES del
+    # blob tal cual (LF), sin la conversión CRLF de Windows — lo que se
+    # navega es byte a byte lo que Pages va a servir. Sin esto la preview
+    # servía 288 CRLF que el artefacto no tiene (medido 2026-08-14; es la
+    # misma trampa CRLF que el lock de la og-image ya documenta).
+    git("-c", "core.autocrlf=false", "worktree", "add", "--detach", ruta, RAMA_DESTINO)
+    try:
+        try:
+            servidor = _Servidor(
+                ("127.0.0.1", puerto),
+                partial(SimpleHTTPRequestHandler, directory=ruta))
+        except OSError as e:
+            sys.exit(f"no se pudo abrir el puerto {puerto} ({e.strerror or e}) — "
+                     f"¿ocupado? Cerrar el otro proceso o pasar --puerto <n>")
+        print("Sirviendo EL ARTEFACTO (la punta local de main, NO el árbol de trabajo):")
+        print(f"  {RAMA_DESTINO} = {cabeza[:12]}  «{titulo}»")
+        if marca:
+            print(f"  Fuente declarada: {marca.group(1)[:12]}")
+        # La URL va con 127.0.0.1 y NO con localhost, a propósito: es la
+        # interfaz realmente bindeada. «localhost» puede resolver a ::1
+        # PRIMERO (medido en esta máquina), y con algo escuchando solo en
+        # ::1 en el mismo puerto el navegador mostraría OTRO contenido
+        # creyendo mirar el artefacto — la sonda de arriba es AF_INET y a
+        # ese listener no lo ve (reproducido en la revisión adversarial).
+        print(f"  http://127.0.0.1:{puerto}/")
+        # flush: si stdout va redirigido (log, pipe), el encabezado saldría
+        # recién al cerrar — el log de requests va por stderr y aparecería
+        # ANTES, con el encabezado invisible (pasó en la primera prueba).
+        print("  Ctrl+C para cerrar; el worktree temporal se borra solo.",
+              flush=True)
+        with servidor:
+            servidor.serve_forever()
+    except KeyboardInterrupt:
+        print("\ncerrando la previsualización")
+    finally:
+        barrer(abortar=False)
+    return 0
+
+
 def main():
+    if "--previsualizar" in sys.argv:
+        # Modo exclusivo: sirve lo que main YA tiene y sale — no verifica, no
+        # commitea, no mira los demás flags. La generación es la corrida sin
+        # flags; esto es el paso de MIRARLA.
+        puerto = 8001
+        if "--puerto" in sys.argv:
+            i = sys.argv.index("--puerto")
+            # isdecimal y rango, no isdigit a secas: isdigit acepta «²» (que
+            # después revienta el int) y sin rango un 70000 moría con el
+            # OverflowError crudo de la sonda y un 0 servía en un puerto
+            # efímero del SO imprimiendo una URL inutilizable — los tres
+            # reproducidos en la revisión adversarial (2026-08-14).
+            if (i + 1 >= len(sys.argv) or not sys.argv[i + 1].isdecimal()
+                    or not 1 <= int(sys.argv[i + 1]) <= 65535):
+                sys.exit("--puerto necesita un número entre 1 y 65535")
+            puerto = int(sys.argv[i + 1])
+        return previsualizar(puerto)
+
     solo_verificar = "--solo-verificar" in sys.argv
     pisar = "--pisar" in sys.argv
     fuente_ref = None
@@ -1248,9 +1391,11 @@ def main():
     print("\nLo que sigue (a mano, en este orden — el detalle en el README, «Publicar»):")
     print(f"  1. verificar el artefacto una vez en navegador (check-modes contra el árbol de {RAMA_DESTINO};")
     print("     navega la portada y /hajime/ — el resto del artefacto ya lo cubrió la guarda 4)")
-    print(f"  2. git push origin {RAMA_DESTINO}")
-    print(f"  3. el tag de publicación va en el commit FUENTE ({fuente[:12]}), no en {RAMA_DESTINO}")
-    print("  4. después del push: kotodamafinance.com/CLAUDE.md y /tools/check-ready.py tienen que dar 404")
+    print("  2. mirarlo con ojos humanos: python tools/make-deploy.py --previsualizar")
+    print("     (sirve ESTE artefacto en http://localhost:8001 — el sitio como va a quedar)")
+    print(f"  3. git push origin {RAMA_DESTINO}")
+    print(f"  4. el tag de publicación va en el commit FUENTE ({fuente[:12]}), no en {RAMA_DESTINO}")
+    print("  5. después del push: kotodamafinance.com/CLAUDE.md y /tools/check-ready.py tienen que dar 404")
     return 0
 
 

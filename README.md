@@ -280,16 +280,18 @@ Tiene que terminar con `LISTO PARA PUBLICAR` y código de salida 0. Comprueba:
 2. **Que el subset japonés cubra todos los glifos del sitio** (ver abajo).
 3. **Que el nav y el footer no hayan derivado** entre todas las páginas.
 
-Hoy sale **2** y **es lo esperado** — desde el 2026-08-07 el andamiaje de la
-capa 1 de seguros (`/hajime/yorozu/japan/seguros/`) tiene 25 placeholders a
-propósito, esperando el texto del autor. El significado del código 2 alterna
-entre esperado y regresión según si hay andamiaje deliberado en pie — ya
-cambió CUATRO veces, y la historia completa vive en el docstring de
+Hoy sale **2** y **es lo esperado** — desde el 2026-08-07 hay andamiaje
+deliberado con placeholders esperando texto del autor (la capa 1 de seguros
+y, desde ese mismo día, el sistema de notas). El significado del código 2
+alterna entre esperado y regresión según si hay andamiaje deliberado en pie
+— ya cambió CUATRO veces, y la historia completa vive en el docstring de
 `check-ready.py`, que es el que hay que leer antes de interpretar una
 corrida. La referencia estable: **el baseline de `check-structure` dice el
-techo acordado** (hoy 25, todos en esa página); placeholders POR ENCIMA del
-baseline son regresión — castellano dirigido al autor que se coló—, y `1`
-sigue siendo estructura rota, siempre.
+techo acordado**, y su fuente es `tools/placeholders-baseline.json` — el
+número vive ahí, no acá (una copia en prosa ya caducó una vez: decía «25 en
+una página» cuando el baseline real era 36 en tres); placeholders POR
+ENCIMA del baseline son regresión — castellano dirigido al autor que se
+coló—, y `1` sigue siendo estructura rota, siempre.
 
 Y con el sitio servido, la guarda de comportamiento del cubo:
 
@@ -360,10 +362,12 @@ contra lo que regeneraría desde la `Fuente:` que ese commit declara— y frena
 antes de pisar.
 
 **La primera publicación salió el 2026-08-06** con este procedimiento, tal
-como está escrito abajo: deploy `824fada` desde el fuente `6dc8214` (tag
+como estaba escrito entonces: deploy `824fada` desde el fuente `6dc8214` (tag
 `v1-published`), verificado en el dominio — rutas nuevas en 200, notas en
-404, CNAME y HTTPS intactos, pixel disparando. Los seis pasos alcanzaron sin
-improvisar nada.
+404, CNAME y HTTPS intactos, pixel disparando. Los seis pasos de aquel día
+alcanzaron sin improvisar nada. *(El paso 4 —la previsualización humana— se
+sumó el 2026-08-14: desde que el deploy transforma, el árbol de trabajo ya no
+muestra lo que va a salir.)*
 
 ### El día de publicar
 
@@ -394,13 +398,38 @@ Desde `redesign-trust`, con el árbol limpio:
    git worktree remove _dev/main-check
    ```
 
-4. **Push:**
+4. **Mirarlo con ojos humanos, ANTES del push.** check-modes es automático y
+   navega dos páginas; este paso es navegar el sitio COMPLETO tal como va a
+   quedar. **Lo que se navega es EL ARTEFACTO** —la punta local de `main`,
+   con la transformación aplicada—, **no el árbol de trabajo**, que desde el
+   deploy 8 ya no es lo que se sirve:
+
+   ```bash
+   python tools/make-deploy.py --previsualizar
+   ```
+
+   Abre la punta de `main` en `http://127.0.0.1:8001/` (worktree temporal,
+   se borra solo; la URL va con `127.0.0.1` a propósito — es la interfaz
+   bindeada, y `localhost` puede resolver a `::1` y mostrar OTRO servidor).
+   Se cierra con `Ctrl+C`. Va en el **8001** a propósito: el `:8000` es del
+   árbol de trabajo y el paso 3 lo baja y lo relevanta — en su puerto
+   propio, la previsualización no se pisa con nada. Si algo no convence, NO
+   pushear: se corrige el fuente, guardas de nuevo, y otro `make-deploy` —
+   el commit nuevo queda encima del que no se publicó y el push publica la
+   punta (la historia local intermedia es inofensiva). **Y la preview es
+   una FOTO de la punta de `main` al abrirla**: tras ese otro
+   `make-deploy`, cerrarla y relanzarla — un F5 seguiría mostrando el
+   artefacto anterior sin ninguna señal de estar viejo. Detalle:
+   `http.server` no sirve `404.html` ante rutas inexistentes como hace
+   Pages — esa página se previsualiza navegando `/404.html`.
+
+5. **Push:**
 
    ```bash
    git push origin main
    ```
 
-5. **El tag de publicación, en el commit FUENTE de `redesign-trust`** —el que
+6. **El tag de publicación, en el commit FUENTE de `redesign-trust`** —el que
    pasó por las guardas—, no en `main`; el mensaje del commit de `main` ya
    lleva el hash cruzado (`Fuente:`). El nombre lo elige el autor en el
    momento (los hitos anteriores fueron `v1-dark` y `v1-content-complete`):
@@ -413,7 +442,7 @@ Desde `redesign-trust`, con el árbol limpio:
    git push origin <nombre-del-tag>
    ```
 
-6. **Después del push, comprobar EN EL DOMINIO que las notas no estén** — es
+7. **Después del push, comprobar EN EL DOMINIO que las notas no estén** — es
    la propiedad que motivó todo esto: `kotodamafinance.com/CLAUDE.md`,
    `/README.md` y `/tools/check-ready.py` tienen que dar **404**, y la
    portada tiene que cargar entera (cubo incluido). **Y que los comentarios

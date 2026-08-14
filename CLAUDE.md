@@ -41,7 +41,31 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-14: la flecha del hero sin enlace — EL
+- Último cierre: **2026-08-14 (más tarde): la previsualización del
+  artefacto — SIN deploy: el artefacto de main NO cambió.** El hueco que
+  cierra (pedido del autor): desde el deploy 8 EL SERVIDO NO ES EL FUENTE
+  y no había forma humana de VER el sitio como va a quedar antes del push.
+  Lo nuevo: **`python tools/make-deploy.py --previsualizar`** sirve la
+  punta LOCAL de main en :8001 desde un worktree efímero — ver el bullet
+  nuevo en la decisión de la rama de deploy, que registra las TRES trampas
+  medidas (el autocrlf del checkout que metía 288 CRLF, el bind de Windows
+  que NO detecta el puerto ocupado — wildcard y loopback conviven y la
+  preview robaba el tráfico de localhost—, y el buffer del encabezado). El
+  procedimiento del README pasó a SIETE pasos: el 4 es la previsualización
+  humana, y dice explícito que se navega EL ARTEFACTO, no el árbol de
+  trabajo. Probado ejecutando en verde y en rojo, y pasado por revisión
+  adversarial (3 lentes + refutadores): 10 hallazgos confirmados por
+  reproducción, los 10 corregidos antes de commitear — el detalle vive en
+  el bullet de la decisión. `--solo-verificar` sigue exit 0. **Y la pregunta de los TAGS DE ROLLBACK quedó CONTESTADA al
+  autor en el chat, SIN implementar (su instrucción)**: el criterio
+  vigente está escrito (hitos, no rutina; un tag no se mueve), los dos
+  tags viejos ya no son puntos de retorno operativos (son historia — un
+  rollback ahí perdería Search Console, JSON-LD, favicons y las
+  correcciones de bugs), y la recomendación fue ponerle NOMBRE a cada
+  deploy en el MENSAJE del commit de main (hoy los once dicen lo mismo) en
+  vez de un tag móvil «last-good», que acá es ceremonia. La decisión es
+  suya — ver la pendiente nueva.
+- Último cierre anterior: **2026-08-14: la flecha del hero sin enlace — EL
   UNDÉCIMO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN VIVO: deploy
   `c9740a1` de fuente `87eb8b0`.** Decisión del autor: la flecha del hero
   dejó de ser el enlace a #cube y es un `<div>` decorativo — aria-hidden,
@@ -73,7 +97,7 @@ fallidos ya corregidos, y las capturas intermedias.
   `hero__scroll:hover` en el CSS servido, Search Console con su token,
   JSON-LD parseando (description sin la frase temporal), nav con The
   Cube → /#cube, import map y gc-pixel vivos, notas y /CLAUDE.md en 404.
-- Último cierre anterior: **2026-08-10 (más tarde): el recorte de la description
+- Antes, el 2026-08-10 (más tarde): **el recorte de la description
   del schema — EL DÉCIMO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN VIVO:
   deploy `bef16be` de fuente `0e77701`.** Corrección del autor sobre el
   deploy 9: «We begin with Japan.» SALE de la description del JSON-LD — es
@@ -491,9 +515,17 @@ fallidos ya corregidos, y las capturas intermedias.
   fechado quedó entregado al autor (su archivo lo pega él); el diseño del
   acople de check-ready quedó entregado con sus costos — la elección es
   del autor, ver el bullet siguiente. Ver sus filas en los cabos.
-- **Decisiones del autor pendientes: UNA (desde el 2026-08-08)** — *(la del
-  acople de check-ready se CERRÓ el mismo día: aprobó el diseño A y la
-  guarda quedó implementada — ver la decisión primera de la lista)* — **el
+- **Decisiones del autor pendientes: DOS (desde el 2026-08-14)** — *(la del
+  acople de check-ready se CERRÓ el 2026-08-08: aprobó el diseño A y la
+  guarda quedó implementada — ver su decisión)*. **La nueva (2026-08-14):
+  el NOMBRADO de los deploys para el rollback** — la respuesta a sus tres
+  preguntas sobre los tags quedó entregada en el chat, sin implementar
+  (su instrucción): la recomendación es que el mensaje del commit de main
+  lleve el TÍTULO del commit fuente (hoy los once deploys dicen
+  exactamente lo mismo y elegir un rollback es excavar hexadecimales), en
+  vez de un tag móvil «last-good» que acá es ceremonia y choca con «UN TAG
+  NO SE MUEVE»; los tags de hito siguen como están. Si aprueba, es un
+  cambio chico en make-deploy.py. **La anterior: el
   TÍTULO y la LÍNEA DE FUNCIÓN de la tarjeta de sector** en
   /hajime/yorozu/: el PATRÓN está construido (la variante sin kanji — ver
   la decisión del patrón de sector), pero **desde el 2026-08-08 el MARCADO
@@ -590,8 +622,13 @@ abierta, ver su bullet en Estado; (2) la description y el gloss de
 /notes/ — redacción suya; (3) el TEXTO de la capa 1 de seguros — su
 andamiaje ya está servido con noindex, invisible; (4) la PRIMERA NOTA
 REAL — el sistema está construido, el pase de estreno vive en la decisión
-de notas. *(La quinta que estuvo acá unas horas — la decisión del acople
-de check-ready — se CERRÓ el mismo 2026-08-08: aprobó el diseño A y la
+de notas; **(5) el NOMBRADO de los deploys para el rollback (2026-08-14)**
+— la respuesta a sus tres preguntas sobre los tags está entregada en el
+chat, sin implementar por su instrucción: la recomendación es el título
+del commit fuente en el mensaje del deploy (ver su bullet en Estado,
+«Decisiones del autor pendientes»); si aprueba, es un cambio chico en
+make-deploy.py. *(La del acople
+de check-ready se CERRÓ el 2026-08-08: aprobó el diseño A y la
 guarda quedó implementada; ver la decisión primera de la lista.)*
 
 **EL DNS ES OTRO FRENTE, FUERA DEL REPO — no es pendiente de Code**: los
@@ -681,7 +718,9 @@ ella.
 
 **Sin decidir dentro del sitio queda UNA cosa (desde el 2026-08-08)**: el
 título y la línea de función de la tarjeta de sector en /hajime/yorozu/ (el
-patrón existe; el marcado se repone junto con su texto). La decisión del
+patrón existe; el marcado se repone junto con su texto). *(Y UNA de
+TOOLING desde el 2026-08-14, fuera del sitio: el nombrado de los deploys —
+ver ESPERAN A MANUEL, punto 5.)* La decisión del
 acople de check-ready se CERRÓ el mismo día — diseño A aprobado e
 implementado, ver la decisión primera de la lista. La vuelta de una nota
 se CERRÓ el 2026-08-08 — «← All notes» más el rótulo de cara enlazado en
@@ -1505,6 +1544,50 @@ igual que `maintenance`: un artefacto derivado no se mantiene, se regenera.
   tipos de trabajo, referencias rotas) y el CONTRATO del sitio de hoy
   (favicons, manifest, og-image, robots, sitemap) solo AVISA — el sitio de
   ese día se publica como era.
+- **`--previsualizar` (2026-08-14, pedido del autor): el paso de MIRAR el
+  artefacto con ojos humanos, ANTES del push.** El hueco que cierra: desde
+  el deploy 8 el árbol de trabajo NO es lo que se sirve, y check-modes
+  contra main es automático y navega dos páginas — no había forma de VER el
+  sitio completo como va a quedar. El modo NO genera nada (la corrida sin
+  flags ya dejó el artefacto como punta local de `main`): la sirve desde un
+  worktree efímero `_dev/preview` en `127.0.0.1:8001` — **el 8001 A
+  PROPÓSITO: el :8000 es del árbol de trabajo** (desarrollo y guardas, y el
+  flujo del deploy lo baja y lo relevanta); en su puerto propio la preview
+  convive con todo eso. Ctrl+C cierra y borra el worktree; los restos de un
+  kill duro se barren al arrancar la siguiente corrida. Es modo EXCLUSIVO
+  (ignora los demás flags) y UNA preview a la vez (dos compartirían el
+  worktree). **Tres trampas medidas en la construcción, no deducidas**:
+  (1) el checkout del worktree aplicaba autocrlf y la preview servía 288
+  CRLF que el artefacto no tiene — va con `-c core.autocrlf=false`: lo que
+  se navega es BYTE A BYTE lo que Pages sirve; (2) **en Windows el bind NO
+  detecta el puerto ocupado** — un wildcard (`0.0.0.0`/`::`, lo que abre
+  `python -m http.server`) y el loopback conviven como bindings DISTINTOS
+  sin error, y la preview le robaba el tráfico de localhost al servidor de
+  desarrollo en silencio (además SO_REUSEADDR, que HTTPServer trae puesto,
+  deja bindear hasta el puerto idéntico) — la ocupación se detecta
+  CONECTANDO (sonda antes de armar nada) y el flag va apagado; (3) el
+  encabezado con flush, porque redirigido quedaba invisible detrás del log
+  de requests. El paso quedó como el 4 del procedimiento del README
+  («Publicar», hoy siete pasos) y en la lista «Lo que sigue» que imprime el
+  deploy. Probado EJECUTANDO: lo servido byte a byte contra los blobs de
+  main (con el árbol de trabajo sirviendo distinto en :8000 a la vez, la
+  prueba de que es el artefacto), notas de trabajo en 404, Ctrl+C y puerto
+  ocupado limpian, el kill duro se recupera solo, no escribe nada, y el
+  camino del deploy sigue en verde tras el cambio. **La revisión
+  adversarial (3 lentes + refutadores, 2026-08-14) confirmó 10 hallazgos
+  por reproducción — los 10 corregidos antes de commitear**, y dejó tres
+  reglas del modo: el barrido de restos cubre TRES formas (worktree vivo
+  con doble --force por el caso locked; prune SIEMPRE — no gateado por
+  exists(), que salteaba justo la cura del worktree-sin-directorio; rmtree
+  del directorio que nunca fue worktree); **la URL impresa es 127.0.0.1 y
+  NO localhost** (localhost puede resolver a ::1 primero y con un listener
+  solo-::1 el navegador mostraría OTRO contenido creyendo mirar el
+  artefacto — reproducido); y `--puerto` valida isdecimal + rango 1-65535
+  (70000 moría con OverflowError crudo; 0 servía en un puerto efímero con
+  URL inutilizable; «²» pasaba isdigit y reventaba el int). La preview
+  además es una FOTO de la punta de main al abrirla — tras otro
+  make-deploy se cierra y se relanza; está en el docstring y en el paso 4
+  del README.
 - **Byte-idéntico por construcción — DESDE EL 2026-08-08, MÓDULO LA
   TRANSFORMACIÓN**: el deploy reusa los blobs del commit fuente para todo lo
   no transformable (plumbing, sin checkout, sin riesgo CRLF) y los
