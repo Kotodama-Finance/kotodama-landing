@@ -1114,6 +1114,135 @@ BLOQUES_CHROME = (("nav", '<header id="nav"', "</header>"),
                    '<link rel="manifest" href="/site.webmanifest">'))
 
 
+# --- La copia derivada de CLAUDE.md en OneDrive ------------------------------
+# (2026-08-14, pedido del autor.) El Claude del chat no llega a C:\Dev: lee
+# solo la carpeta de Claude en OneDrive, así que armaba prompts a ciegas sobre
+# el archivo que tiene las respuestas — en una sesión preguntó tres cosas ya
+# registradas. make-copia-claudemd.py genera la copia (entera, con encabezado
+# DERIVADA que declara fecha y commit); esto vigila que no quede vieja.
+#
+# La comparación va contra HEAD:CLAUDE.md (el blob: LF, sin autocrlf) y NO
+# contra el árbol de trabajo, a propósito: la copia deriva SIEMPRE de un
+# commit, así que a mitad de una tanda (CLAUDE.md editado sin commitear) la
+# copia legítima es la del commit anterior y esta guarda sigue en verde; el
+# rojo aparece recién si el commit se hizo y la regeneración se olvidó — que
+# es exactamente el olvido a cazar. Si la carpeta de OneDrive no existe (otra
+# máquina), se omite con aviso: la copia es un artefacto de ESTA máquina, no
+# del repo.
+COPIA_CLAUDEMD = Path(r"C:\Users\vivom\OneDrive\Documents\Claude\Projects"
+                      r"\Home Server\Kotodama Finance\kotodama_CLAUDE_copia.md")
+COPIA_MARCA = "<!-- FIN DEL ENCABEZADO DERIVADO -->\n\n"
+RE_COPIA_COMMIT = re.compile(r"commit `([0-9a-f]{40})`")
+RE_COPIA_FECHA_GEN = re.compile(r"Copia generada el (\d{4}-\d{2}-\d{2})")
+
+
+def encabezado_copia(commit, titulo, fecha_commit, fecha_gen):
+    """El encabezado DERIVADA completo, marca de cierre incluida.
+
+    Es LA plantilla única: el generador la escribe y la guarda la RECONSTRUYE
+    para comparar — el patrón del mapa, aplicado también al encabezado. Existe
+    por un hallazgo de la revisión adversarial (2026-08-14): la primera
+    versión de la guarda comparaba solo el cuerpo, así que un encabezado
+    reescrito a mano — el commit declarado falseado, el aviso de no-editar
+    borrado, contenido prependido — pasaba en verde, y el encabezado es
+    justamente la pieza que declara procedencia y vigencia al lector.
+    """
+    return "\n".join([
+        "# COPIA DERIVADA — la fuente de verdad vive en el repo",
+        "",
+        "**Esto NO es la fuente: es una copia de `C:\\Dev\\kotodama-landing\\CLAUDE.md`**",
+        "(el registro de decisiones del proyecto Kotodama Finance), puesta acá",
+        "porque el Claude del chat no llega a `C:\\Dev`. La genera",
+        "`tools/make-copia-claudemd.py` del repo; **no se edita a mano** — cualquier",
+        "corrección va al CLAUDE.md del repo, y esta copia se regenera de ahí.",
+        "",
+        f"- **Derivada del commit `{commit}`** de la rama",
+        f"  `redesign-trust` («{titulo}», commit del {fecha_commit}).",
+        f"  Copia generada el {fecha_gen}.",
+        "- **Vigencia**: check-structure — la guarda que corre antes de cada commit",
+        "  del repo — compara esta copia contra el CLAUDE.md commiteado y frena si",
+        "  difieren, así que lo normal es que esté al día. Ante la duda, pedirle a",
+        "  Manuel que la regenere.",
+        "- **Para el lector de esta copia**: las instrucciones operativas de acá",
+        "  abajo (correr guardas, commitear, deployar, «AL RETOMAR») están",
+        "  dirigidas a Claude Code DENTRO del repo — leélas como registro de",
+        "  decisiones y de estado, no como órdenes para vos.",
+        "",
+        "",
+    ]) + COPIA_MARCA
+
+
+def claudemd_en_head():
+    """Los bytes del CLAUDE.md commiteado (el blob: LF, sin autocrlf), o None."""
+    import subprocess
+    r = subprocess.run(["git", "-C", str(RAIZ), "show", "HEAD:CLAUDE.md"],
+                       capture_output=True)
+    return r.stdout if r.returncode == 0 else None
+
+
+def copia_claudemd_desactualizada():
+    """La copia de OneDrive contra el CLAUDE.md de HEAD. None = se omite.
+
+    El patrón del mapa: la misma derivación que usa el generador — el blob de
+    HEAD para el cuerpo, encabezado_copia() para el encabezado—, sin segunda
+    implementación. Ve el caso viejo-en-silencio (commit que tocó CLAUDE.md
+    sin regenerar), la copia ausente, y la copia editada a mano en el cuerpo
+    O en el encabezado: cualquier edición es divergencia — lo único
+    legítimamente variable es la fecha de generación, que se lee de la propia
+    copia—, y es lo correcto: la copia se regenera, no se corrige.
+
+    La lectura puede fallar transitoriamente porque el archivo vive bajo
+    OneDrive (lock de sincronización, deshidratado por Files On-Demand) — a
+    diferencia de todo lo demás que las guardas leen. Ese fallo degrada a
+    rojo CON NOMBRE en vez de traceback (hallazgo de la revisión adversarial:
+    el traceback cortaba check-structure entero y enmascaraba las secciones
+    siguientes); sigue siendo fail-closed, y reintentar resuelve.
+    """
+    if not COPIA_CLAUDEMD.parent.exists():
+        return None
+    blob = claudemd_en_head()
+    if blob is None:
+        return ["no se pudo leer HEAD:CLAUDE.md — ¿git disponible?"]
+    if not COPIA_CLAUDEMD.exists():
+        return [f"no existe la copia derivada {COPIA_CLAUDEMD.name} en OneDrive"]
+    try:
+        datos = COPIA_CLAUDEMD.read_bytes()
+    except OSError as e:
+        return [f"{COPIA_CLAUDEMD.name}: no se pudo leer "
+                f"({e.__class__.__name__}) — ¿OneDrive sincronizando o archivo "
+                f"deshidratado? reintentar, o regenerar"]
+    marca = COPIA_MARCA.encode("utf-8")
+    i = datos.find(marca)
+    if i < 0:
+        return [f"{COPIA_CLAUDEMD.name}: perdió la marca de fin del encabezado"]
+    encabezado, cuerpo = datos[:i + len(marca)], datos[i + len(marca):]
+    if cuerpo != blob:
+        return [f"{COPIA_CLAUDEMD.name}: quedó vieja — difiere del CLAUDE.md de HEAD"]
+    # El encabezado también se verifica, reconstruyéndolo con la MISMA
+    # plantilla del generador a partir de lo que la copia declara.
+    import subprocess
+    texto = encabezado.decode("utf-8", errors="replace")
+    m_c, m_f = RE_COPIA_COMMIT.search(texto), RE_COPIA_FECHA_GEN.search(texto)
+    if not m_c or not m_f:
+        return [f"{COPIA_CLAUDEMD.name}: el encabezado no declara commit o "
+                f"fecha de generación — regenerar"]
+    declarado = m_c.group(1)
+    r = subprocess.run(["git", "-C", str(RAIZ), "show", f"{declarado}:CLAUDE.md"],
+                       capture_output=True)
+    if r.returncode != 0 or r.stdout != cuerpo:
+        return [f"{COPIA_CLAUDEMD.name}: declara el commit {declarado[:12]} pero "
+                f"el CLAUDE.md de ese commit no es el cuerpo de la copia — regenerar"]
+    d = subprocess.run(["git", "-C", str(RAIZ), "log", "-1", "--format=%s%n%cs",
+                        declarado], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace")
+    titulo, fecha_commit = (d.stdout.strip().split("\n") + ["", ""])[:2]
+    esperado = encabezado_copia(declarado, titulo, fecha_commit, m_f.group(1))
+    if encabezado != esperado.encode("utf-8"):
+        return [f"{COPIA_CLAUDEMD.name}: el encabezado difiere del que el "
+                f"generador escribiría — editado a mano; regenerar"]
+    return []
+
+
 def bloque_chrome(html: str, ini: str, fin: str):
     """El bloque [ini..fin] de una página, o None si no está entero."""
     try:

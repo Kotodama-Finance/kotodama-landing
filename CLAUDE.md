@@ -41,7 +41,32 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-14 (cierra el día): EL ENSAYO DEL ROLLBACK EN
+- Último cierre: **2026-08-14 (cierra el día, después del ensayo): LA COPIA
+  DERIVADA DE CLAUDE.md EN ONEDRIVE + LA REGLA DE CITAR EL REGISTRO — SIN
+  deploy: el artefacto de main NO cambió.** El problema (pedido del autor,
+  con evidencia): el Claude del chat de diseño NO llega a C:\Dev — su
+  alcance es la carpeta de Claude en OneDrive — y armaba prompts a ciegas
+  sobre el archivo que tiene las respuestas: en una sola sesión preguntó
+  TRES cosas ya registradas (el criterio de tags, el sitemap en robots.txt,
+  el charset), tres investigaciones redundantes. Lo nuevo: **la copia
+  ENTERA de CLAUDE.md, generada por `tools/make-copia-claudemd.py`** en la
+  carpeta de Kotodama Finance de OneDrive (`kotodama_CLAUDE_copia.md`, al
+  lado del context.md), con encabezado DERIVADA que declara fecha, commit y
+  título del fuente, **gatillo en el COMMIT** — no en el deploy: CLAUDE.md
+  cambia en tandas sin deploy, el punto del autor — y **el olvido cazado
+  por check-structure** (compara la copia contra HEAD:CLAUDE.md; en otra
+  máquina sin OneDrive se omite con aviso). Entera y no extracto: un
+  criterio de selección es el que deriva. Probada en verde y en rojo (17
+  casos) y pasada por revisión adversarial (3 lentes + refutadores): 2
+  hallazgos confirmados por reproducción, los 2 corregidos antes de
+  commitear — el encabezado ahora se verifica RECONSTRUYÉNDOLO con la
+  plantilla compartida del generador, y la lectura fallida en OneDrive
+  degrada a rojo con nombre — ver la decisión nueva, primera de la lista. Y **la regla de citar el registro** entró a «Otras reglas
+  vigentes» (pedido del autor): ante una pregunta sobre el repo, si ya está
+  registrado se responde CITÁNDOLO — «esto ya estaba escrito en X» — no
+  re-derivándolo. Guardas: structure y modes en verde.
+- Último cierre anterior: **2026-08-14 (después del título del fuente): EL
+  ENSAYO DEL ROLLBACK EN
   SECO — EJECUTADO ENTERO, con el dominio intacto (verificado byte a byte
   después del push).** Decisión del autor: variante en seco; sus dos
   razones extra quedaron en el README junto a la variante en vivo (la
@@ -818,6 +843,87 @@ sección con el detalle.
 ---
 
 ## Decisiones cerradas — no rediscutir
+
+### La copia derivada de CLAUDE.md en OneDrive: el registro al alcance del Claude del chat
+
+**2026-08-14, pedido del autor — SIN deploy: nada de esto toca el artefacto.**
+El problema, con evidencia: el Claude del chat de diseño NO puede leer
+CLAUDE.md — vive en C:\Dev, fuera de su alcance; él solo llega a la carpeta
+de Claude en OneDrive — así que armaba prompts a ciegas sobre el archivo que
+tiene las respuestas: en una sola sesión preguntó el criterio de tags (estaba
+escrito), si robots.txt declaraba el sitemap (estaba desde julio) y si el
+charset existía (estaba). Tres de tres, y cada una costó una investigación.
+
+- **La copia va ENTERA, no un extracto — y el motivo es el criterio**: un
+  extracto necesita un criterio escrito de qué entra, y ese criterio es el
+  que deriva (el pedido del autor lo anticipó). «Entero» no tiene criterio
+  que mantener; lo que al lector no le sirva no le estorba, y lo que un
+  extracto omitiera costaría exactamente la investigación que esto evita.
+  El encuadre lo hace el ENCABEZADO, no la selección: dice que las
+  instrucciones operativas de adentro (guardas, commits, deploys, AL
+  RETOMAR) van dirigidas a Claude Code dentro del repo — para el lector de
+  la copia son registro de decisiones, no órdenes.
+- **Destino**: `kotodama_CLAUDE_copia.md` en la carpeta de Kotodama Finance
+  de OneDrive (la misma del context.md — la ruta exacta vive en
+  `COPIA_CLAUDEMD` de `tools/_guardas.py`). El nombre lleva «copia» a
+  propósito; el encabezado abre con «COPIA DERIVADA — la fuente de verdad
+  vive en el repo», declara commit (hash completo), título y fecha del
+  fuente más la fecha de generación, avisa que NO se edita a mano, y cierra
+  con una marca fija que separa encabezado de cuerpo.
+- **La genera `tools/make-copia-claudemd.py`, SIEMPRE del CLAUDE.md de
+  HEAD** (los bytes del blob — sin autocrlf: lo copiado es lo commiteado,
+  byte a byte), y **ABORTA si el CLAUDE.md del árbol difiere de HEAD**:
+  «commitear primero» — una copia de un estado sin commitear haría mentir
+  al encabezado que declara fecha y commit. La escribe VOS (Code) directo
+  en OneDrive: Claude tiene lectura ahí y este lado escritura — pasársela a
+  Manuel para pegar sería el paso manual donde se desactualizaría (su
+  propia precisión).
+- **El gatillo es el COMMIT, no el deploy** (el punto del autor: CLAUDE.md
+  cambia en tandas que no terminan en deploy — la de la previsualización,
+  por ejemplo): tras cada commit que toque CLAUDE.md, correr el generador.
+  Está anotado también en el flujo obligatorio, y **el olvido tiene
+  guarda**: check-structure compara la copia contra HEAD:CLAUDE.md — misma
+  derivación que el generador, el patrón del mapa — y FRENA nombrando el
+  comando. Compara contra HEAD y no contra el árbol A PROPÓSITO: a mitad de
+  una tanda (CLAUDE.md editado sin commitear) la copia legítima es la del
+  commit anterior y la guarda sigue en verde; el rojo aparece recién si el
+  commit se hizo y la regeneración se olvidó — exactamente el olvido a
+  cazar. Como check-structure corre también AL RETOMAR, una copia vieja no
+  sobrevive al arranque de una sesión.
+- **En otra máquina (sin la carpeta de OneDrive) la guarda se OMITE con
+  aviso, no falla**: la copia es un artefacto de esta máquina, no del repo
+  — el mismo trato que el puntero al context.md.
+- **Probada en verde y en rojo (17 casos)**: cuerpo byte a byte igual al
+  blob, marca única, commit declarado; byte mutado (edición a mano), marca
+  perdida, copia ausente, hash falseado, prosa del encabezado reescrita,
+  contenido prependido y lectura fallida frenan nombrando cada uno; carpeta
+  inexistente se omite; el abort del generador con árbol sucio NO toca la
+  copia (sha idéntico antes/después); la regeneración vuelve al verde; y el
+  caso real de esta máquina — CLAUDE.md del árbol en CRLF por autocrlf —
+  genera en verde (la normalización antes de comparar existe por eso).
+- **La revisión adversarial (3 lentes + refutadores, 15 agentes) confirmó
+  DOS hallazgos por reproducción — corregidos antes de commitear**: (1) el
+  ENCABEZADO quedaba fuera de la comparación — un hash falseado, la prosa
+  reescrita o contenido prependido pasaban en VERDE, contradiciendo el
+  «cualquier edición es divergencia» del docstring; el cierre es la
+  plantilla compartida `encabezado_copia()` en `_guardas`: el generador la
+  escribe y la guarda la RECONSTRUYE para comparar (el patrón del mapa,
+  aplicado también al encabezado) — lo único legítimamente variable es la
+  fecha de generación, que se lee de la propia copia. (2) Una lectura
+  fallida del archivo (lock del sync de OneDrive, deshidratado por Files
+  On-Demand — el único archivo que las guardas leen fuera del repo) mataba
+  check-structure con traceback crudo enmascarando las secciones
+  siguientes; ahora degrada a rojo CON NOMBRE — sigue siendo fail-closed, y
+  reintentar resuelve. Los otros 9 hallazgos fueron refutados con
+  reproducción (latentes, teóricos o convención uniforme del repo).
+- **La copia NO se edita nunca — se regenera.** La guarda ve cualquier
+  edición como divergencia, y es lo correcto: «arreglar» la copia en vez de
+  la fuente es exactamente la deriva que la marca DERIVADA existe para
+  evitar. Si esto contradice al CLAUDE.md del repo, gana el repo.
+- **Si el Claude del chat sigue preguntando cosas que viven solo en el
+  README o en el fuente** (dos de sus tres preguntas eran de archivos del
+  repo, no de este registro), el mismo mecanismo se extiende con una
+  segunda copia — decisión del autor ese día, no de oficio.
 
 ### El JSON-LD de Organization en la portada: la definición de la entidad, desde el dominio
 
@@ -3257,6 +3363,14 @@ versión japonesa son un pase aparte del autor. Tampoco se inventan explicacione
 del sistema filosófico ni las razones de los nombres.
 
 ### Otras reglas vigentes
+- **Ante una pregunta sobre cómo funciona el repo — criterios, decisiones,
+  porqués — PRIMERO mirar si ya está registrado** (este archivo, el README,
+  los comentarios del fuente). Si lo está, responder CITÁNDOLO y decirlo
+  explícito — «esto ya estaba escrito en X» — en vez de re-derivarlo o
+  re-investigarlo. Pedido del autor (2026-08-14): el señalamiento le dice a
+  él que la pregunta era redundante, y calibra al Claude del chat, que arma
+  prompts sobre este registro vía la copia derivada de OneDrive (ver su
+  decisión, primera de la lista).
 - **Los rótulos de ayuda del cubo NO se cambian** — «Click a face to select
   it.» queda como está. Cerrado por el autor (2026-08-08); no volver a
   proponerlo.
@@ -3326,6 +3440,11 @@ partió en dos, con códigos de salida distintos:
 Cuando se redacta un placeholder el conteo baja: la guarda lo informa y **no**
 falla, pero hay que fijar el piso nuevo con
 `python tools/check-structure.py --actualizar-baseline`.
+
+**Tras cada commit que toque CLAUDE.md, regenerar la copia derivada de
+OneDrive** (`python tools/make-copia-claudemd.py`): el gatillo es el commit
+— no el deploy — y el olvido lo caza check-structure en la corrida
+siguiente. Ver la decisión de la copia derivada, primera de la lista.
 
 **Tags**: sólo en hitos, anotados. `v1-dark` (navy + oro con el cubo),
 **`v1-content-complete`** (sitio terminado de contenido: cero placeholders,

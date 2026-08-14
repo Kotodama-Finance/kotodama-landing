@@ -127,6 +127,18 @@ def main():
     else:
         print("  OK     los tres artefactos idénticos a lo que se generaría hoy")
 
+    print("\nCopia derivada de CLAUDE.md (OneDrive, para el Claude del chat)")
+    copia = G.copia_claudemd_desactualizada()
+    if copia is None:
+        print("  (omitida: la carpeta de OneDrive no está en esta máquina)")
+    elif copia:
+        for x in copia:
+            print(f"  FALLA  {x}")
+        problemas += copia
+        print("  -> regenerar: python tools/make-copia-claudemd.py")
+    else:
+        print("  OK     idéntica al CLAUDE.md de HEAD")
+
     print("\nCobertura del subset japonés")
     faltan = G.glifos_faltantes()
     if faltan is None:
