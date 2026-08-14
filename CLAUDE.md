@@ -1806,7 +1806,9 @@ salió de caché) y `performance.timeOrigin` (¿la pestaña cargó antes del pus
 
 Cerrado en la revisión de quince puntos (2026-08-04); **ACTUALIZADA el
 2026-08-08 con la calibración POR SECCIÓN de las anclas de la portada**
-(decisión del autor sobre capturas — deploy 7):
+(decisión del autor sobre capturas — deploy 7); **y el 2026-08-14 la flecha
+del hero DEJÓ DE SER ENLACE** (decisión del autor — viaja en el próximo
+deploy; ver el bullet de #cube):
 
 - **La regla global `scroll-margin-top: calc(var(--nav-h) + 12px)`** (= 96px)
   sobre `section`, **`footer`** y `.cube__layout` SIGUE, y es la que rige en
@@ -1824,10 +1826,20 @@ Cerrado en la revisión de quince puntos (2026-08-04); **ACTUALIZADA el
   aterrizaje PASA el encabezado** — conmutador 3D/Grid arriba, cubo ENTERO
   debajo, «Six faces...» y su párrafo fuera de pantalla, arriba. Esto
   REEMPLAZA al «quien llega por primera vez necesita el contexto» que decía
-  acá: el contexto queda scrolleando hacia arriba. La nav y la flecha del
-  hero SIGUEN apuntando a `/#cube` (no separarlas ni crear otra ancla — y
-  NO re-apuntarlas a `/#cube-view`: los dos anclas tienen margen distinto a
-  propósito). El margen suma un término por la ALTURA DE LA CABECERA DE
+  acá: el contexto queda scrolleando hacia arriba. La nav SIGUE apuntando a
+  `/#cube` (no crear otra ancla — y NO re-apuntarla a `/#cube-view`: los dos
+  anclas tienen margen distinto a propósito). **La flecha del hero DEJÓ DE
+  SER ENLACE el 2026-08-14 (decisión del autor): es decorativa,
+  aria-hidden, sin destino, visualmente idéntica.** El motivo, que es lo que
+  hay que recordar antes de «reponerle» el href: el camino hacia abajo es
+  SCROLLEAR, y el enlace PERJUDICABA a quien lo usaba — este aterrizaje
+  calibrado deja el encabezado «Six faces...» fuera de pantalla, correcto
+  para quien viene de la nav (ya sabe adónde va) pero le salteaba la
+  explicación del cubo justo al lector que bajaba por primera vez. Con el
+  enlace se fueron el aria-label «Scroll to the cube» (un decorativo no se
+  anuncia como acción), el `:hover` dorado del CSS (color de acción sin
+  destino) y la tabulabilidad; el destino no desaparece — «The Cube» sigue
+  en la nav de todas las páginas. El margen suma un término por la ALTURA DE LA CABECERA DE
   TEXTO, que CSS no puede medir: ajuste lineal sobre alturas MEDIDAS, con
   `min(6vw, 87px)` capeando donde los clamps de fuente topan y base móvil
   más gorda (el reflow del texto es un serrucho de ±31px) — **el error va

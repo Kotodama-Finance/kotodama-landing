@@ -150,9 +150,18 @@
         <p class="hero__lead">A financial system informs without revealing &mdash; the numbers are public and still opaque. Kotodama Finance reads them the other way: openly, from the primary source, in plain language. We begin with Japan, because a system you live inside is the one you have reason to understand first.</p>
       </div>
       <!-- Sin botones: «Enter the cube» y «Read the method» apuntaban a dos
-           secciones que ya están en la nav, y la flecha de abajo dice lo mismo
-           una tercera vez. La única salida del hero es esa flecha. -->
-      <a class="hero__scroll" href="#cube" aria-label="Scroll to the cube"><span aria-hidden="true">&darr;</span></a>
+           secciones que ya están en la nav. Y la flecha de abajo es DECORATIVA
+           desde el 2026-08-14 (decisión del autor) — era el enlace a #cube y
+           dejó de serlo: el camino hacia abajo es SCROLLEAR. El enlace además
+           PERJUDICABA a quien lo usaba: el aterrizaje de #cube está calibrado
+           para quien viene de la nav —conmutador arriba, cubo entero debajo,
+           el encabezado «Six faces, one level» y su párrafo FUERA de pantalla,
+           arriba—, así que al lector que bajaba por primera vez le salteaba
+           justo la explicación del cubo. La flecha queda como señal de que hay
+           más abajo, sin destino y sin anuncio a lectores de pantalla
+           (aria-hidden, como el resto de la ornamentación); el destino no
+           desaparece: «The Cube» sigue en la nav de todas las páginas. -->
+      <div class="hero__scroll" aria-hidden="true">&darr;</div>
     </section>
 
     <!-- THE CUBE -->
@@ -174,8 +183,9 @@
 
         <!-- id="cube-view": el destino de «Back to the Cube» desde las caras.
              Apunta al CUBO mismo y no a #cube (el título de la sección). La
-             nav y la flecha del hero siguen apuntando a #cube, pero DESDE EL
-             2026-08-08 su aterrizaje también cae acá: el scroll-margin-top
+             nav sigue apuntando a #cube (la flecha del hero dejó de ser
+             enlace el 2026-08-14 — ver su comentario en el hero), pero DESDE
+             EL 2026-08-08 su aterrizaje también cae acá: el scroll-margin-top
              NEGATIVO de #cube (decisión del autor, ver «Aterrizaje de
              anclas» en el CSS) pasa de largo el encabezado — el conmutador
              arriba y el cubo entero debajo, el contexto queda scrolleando

@@ -202,7 +202,10 @@
      cualquier ajuste de tono tumba sin que nadie lo note. A #6786a7 da 5.15:
      margen real, y sigue un escalón entero por debajo de --c-text-muted
      (6.83), así que la jerarquía muted > muted-2 se conserva. Lo usan el
-     disclaimer del footer, el hint del cubo y la flecha de scroll. */
+     hint del cubo y los registros menores del footer (rótulos de columna,
+     disclaimer, línea del ©, selector de idioma).
+     (La flecha de scroll NO: va en mist con alfa — la lista de acá había
+     quedado vieja, corregida 2026-08-14.) */
   --c-text-muted-2: #6786a7;
 
   /* Tripletas RGB para componer alfa (reemplazan todos los rgba() inline) */
@@ -328,8 +331,11 @@ section, footer, .cube__layout { scroll-margin-top: calc(var(--nav-h) + 12px); }
                 encabezado «Six faces...» y su párrafo FUERA de pantalla,
                 arriba. DELIBERADO Y DECIDIDO: por eso el margen es NEGATIVO
                 (scroll-margin-top admite negativos: el aterrizaje PASA el
-                tope de la sección). La nav y la flecha del hero SIGUEN
-                apuntando a #cube — no separarlas ni crear otra ancla.
+                tope de la sección). La nav SIGUE apuntando a #cube — no
+                crear otra ancla. (La flecha del hero dejó de ser enlace el
+                2026-08-14: este aterrizaje es para quien viene de la nav y
+                YA sabe adónde va — ver el comentario del hero en
+                index.html.)
      #method -> el rótulo METHOD pegado a la nav, las tres tarjetas enteras y
                 «How we work» asomando al pie (a 1440x900).
      #about  -> mismo criterio: su rótulo pegado a la nav.
@@ -673,6 +679,14 @@ button:focus-visible {
   color: var(--c-text-dim);
   max-width: 38rem;
 }
+/* Decorativa desde el 2026-08-14 (decisión del autor): era el enlace a #cube
+   y dejó de serlo — el camino hacia abajo es scrollear, y ese aterrizaje
+   saltea el encabezado del cubo a propósito (malo justo para quien baja por
+   primera vez; el motivo entero, en el comentario del hero en index.html).
+   El :hover dorado se fue CON el enlace: color de acción sobre algo que no
+   lleva a ningún lado prometería un destino que no hay. El cursor de mano y
+   el foco se fueron solos al dejar de ser <a>; el resto de la regla no
+   dependía del selector de enlace y lo visual queda idéntico. */
 .hero__scroll {
   position: absolute;
   bottom: 30px;
@@ -682,7 +696,6 @@ button:focus-visible {
   font-size: 1.4rem;
   animation: kf-bob 2.8s ease-in-out infinite;
 }
-.hero__scroll:hover { color: var(--c-gold); }
 
 /* -------------------------------------------------------------------------
    THE CUBE
