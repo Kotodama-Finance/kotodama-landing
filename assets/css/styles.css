@@ -350,7 +350,6 @@ button:focus-visible {
   font-size: 1.4rem;
   animation: kf-bob 2.8s ease-in-out infinite;
 }
-.hero__scroll:hover { color: var(--c-gold); }
 
 .cube {
   position: relative;
