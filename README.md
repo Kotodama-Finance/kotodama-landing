@@ -539,7 +539,21 @@ notas en 404), y después del paso 3 el push de la vuelta con la verificación
 de siempre. **Solo con decisión explícita del autor**, sabiendo la ventana y
 el riesgo de Search Console de arriba; el mejor tag para ensayar es
 `v1-published` (un sitio que ya estuvo servido; `v1-content-complete` es
-pre-publicación y saldría sin el juego de favicons).
+pre-publicación y saldría sin el juego de favicons). Dos cosas más que
+pesaron cuando el autor eligió EN SECO (2026-08-14), y que valen para
+cualquier reconsideración futura:
+
+- **La ventana de «15-30 minutos» es la ventana del caso FELIZ.** El
+  precedente del deploy 2 —un build encolado ~24 horas del lado de GitHub,
+  sin incidente declarado— la convierte en «hasta un día» si la cola de
+  Pages se traba justo en el medio. Y con un día entero sin la meta de
+  Search Console en la portada, la pérdida de la verificación deja de ser
+  improbable: el chequeo periódico de Google tiene todo ese tiempo para
+  caer adentro.
+- **Durante la ventana, el dominio sirve /method/ con el dominio VIEJO de
+  IMAJ** (toushin.or.jp — corregido en el deploy 6): un error citable en
+  vivo, en la página que abre un reclutador, en el sitio cuyo argumento es
+  la trazabilidad. El costo no es solo técnico.
 
 ## La rama `maintenance`: bajar el sitio para una obra grande
 
