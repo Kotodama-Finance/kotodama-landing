@@ -447,8 +447,11 @@ Desde `redesign-trust`, con el árbol limpio:
    `/README.md` y `/tools/check-ready.py` tienen que dar **404**, y la
    portada tiene que cargar entera (cubo incluido). **Y que los comentarios
    tampoco**: el ver-código de la portada servida sin ningún `<!--` (salvo
-   dentro de `<script>`/`<style>`, donde no hay), con la meta de Search
-   Console intacta.
+   dentro de `<script>`/`<style>`, donde no hay), con la meta de
+   verificación de Bing (`msvalidate.01`) intacta, token carácter por
+   carácter *(hasta el 2026-08-14 acá se verificaba la meta de Search
+   Console; hoy la verificación de Google es TXT en el DNS y esa meta ya no
+   existe — cero ocurrencias de `google-site-verification` es lo correcto)*.
 
 ### Rollback: volver a un estado bueno ya publicado
 
@@ -551,7 +554,7 @@ incertidumbre (Pages construye la rama que le den; ya construyó doce):
 y la verificación en el dominio (portada vieja en 200, /sitemap/ en 404,
 notas en 404), y después del paso 3 el push de la vuelta con la verificación
 de siempre. **Solo con decisión explícita del autor**, sabiendo la ventana y
-el riesgo de Search Console de arriba; el mejor tag para ensayar es
+el riesgo de la meta de verificación de arriba; el mejor tag para ensayar es
 `v1-published` (un sitio que ya estuvo servido; `v1-content-complete` es
 pre-publicación y saldría sin el juego de favicons). Dos cosas más que
 pesaron cuando el autor eligió EN SECO (2026-08-14), y que valen para

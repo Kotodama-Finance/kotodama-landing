@@ -721,8 +721,9 @@ autor contra los nameservers autoritativos; «Ownership verified», método
 «Domain name provider»), y la propiedad vieja de prefijo de URL — la que
 sostenía la meta — fue removida DESPUÉS de verificar la nueva, en el orden
 correcto. **Lo que NO se toca ahora es el TXT en el DNS, que es
-independiente de este repo.** La meta salió del `<head>` en el deploy del
-2026-08-14, y en su hueco entró la de BING (`msvalidate.01`): Bing había
+independiente de este repo.** La meta salió del `<head>` con el commit
+fuente del 2026-08-14 (el deploy de esa tanda la saca del dominio), y en su
+hueco entró la de BING (`msvalidate.01`): Bing había
 importado su propiedad desde Search Console — heredaba una verificación que
 acababa de morir — y se rehízo por HTML Meta Tag con cuenta propia. **LA
 META DE BING ES AHORA LA QUE NO SE TOCA**: Bing la lee al verificar y en
