@@ -41,7 +41,40 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-14 (todavía más tarde): el título del fuente en
+- Último cierre: **2026-08-14 (cierra el día): EL ENSAYO DEL ROLLBACK EN
+  SECO — EJECUTADO ENTERO, con el dominio intacto (verificado byte a byte
+  después del push).** Decisión del autor: variante en seco; sus dos
+  razones extra quedaron en el README junto a la variante en vivo (la
+  ventana «15-30 min» es la del caso feliz — el precedente del deploy 2 la
+  vuelve «hasta un día» si la cola de Pages se traba, y ahí perder la
+  verificación de Search Console deja de ser improbable—, y el IMAJ viejo
+  servido en /method/ durante la ventana es un error citable en la página
+  que abre un reclutador). Los cuatro pasos, cada uno con su evidencia:
+  **(1)** `--fuente v1-published` REAL — el commit de rollback `d46ffa0`
+  en main local (Fuente `6dc8214`, cuatro avisos esperables, «main
+  intacta» contra la Fuente del deploy 11 antes de apilar; y el formato
+  nuevo del mensaje ESTRENÓ con un rollback: «Publicar: La rama de
+  deploy...», el título del fuente de aquel día). **(2)** la preview del
+  sitio VIEJO verificada 22/22: byte a byte contra la punta-rollback, SIN
+  la meta de Search Console y SIN JSON-LD (confirmado en frío), la flecha
+  con href, /sitemap/ + seguros + favicon-192 en 404, toushin.or.jp de
+  vuelta en /method/, sitemap de 13 URLs, notas en 404, y CERO comentarios
+  — el stripper VIGENTE transforma también un fuente viejo. **(3)** la
+  VUELTA desde HEAD: `verificar_main_intacta` vio el ROLLBACK en la punta,
+  dio «intacta» regenerando desde v1-published — el detector ejercido en
+  el estado exacto de una emergencia real — y apiló `d619e20`. **(4)** la
+  preview del estado restaurado verificada 15/15, con LA PRUEBA DURA: el
+  OID del árbol de la vuelta == el OID del árbol del deploy 11
+  (restauración EXACTA, no aproximada) — Search Console, JSON-LD, la
+  flecha-div y las tres rutas de vuelta. El push publicó la punta (árbol
+  idéntico al servido — el dominio no vio ni un byte distinto, verificado
+  en vivo al primer intento) y los dos commits del ensayo quedaron en la
+  historia de main como registro fechado. **LO QUE EL ENSAYO NO PROBÓ,
+  escrito a pedido del autor**: que Pages construya y sirva un árbol viejo
+  (la única fase no ensayada — la de menor incertidumbre y toda la
+  exposición), y el loop humano bajo presión. Guardas: structure, modes y
+  pendulum (0.0959) en verde antes del push.
+- Último cierre anterior: **2026-08-14 (todavía más tarde): el título del fuente en
   el mensaje del deploy — SIN deploy: el artefacto de main NO cambió; el
   formato estrena con el próximo.** El autor aceptó ENTERA la refutación
   del esquema last-good y cerró: **los tags quedan como están**, y el
@@ -532,17 +565,10 @@ fallidos ya corregidos, y las capturas intermedias.
   fechado quedó entregado al autor (su archivo lo pega él); el diseño del
   acople de check-ready quedó entregado con sus costos — la elección es
   del autor, ver el bullet siguiente. Ver sus filas en los cabos.
-- **Decisiones del autor pendientes: DOS** — **la NUEVA (2026-08-14): el
-  ENSAYO DEL ROLLBACK, ¿en vivo o en seco?** La parada quedó entregada en
-  el chat con todo medido (qué desaparece del dominio — la meta de Search
-  Console y el JSON-LD entre eso—, la ventana de ~15-30 min con el
-  max-age=600 de Pages, el riesgo de la cola trabada, y la interacción de
-  la flecha, que se revierte sola); la recomendación de Code es la
-  variante EN SECO (rollback real + vuelta en main local con
-  --previsualizar en el medio, sin push del rollback — casi toda la
-  evidencia, exposición cero), y el procedimiento COMPLETO de las dos
-  variantes quedó documentado en el README («El ensayo del rollback»).
-  NADA ejecutado: se ejecuta lo que él decida. *(la
+- **Decisiones del autor pendientes: UNA (la tarjeta de sector)** — *(la
+  del ENSAYO DEL ROLLBACK se CERRÓ el mismo 2026-08-14: eligió EN SECO
+  con sus dos razones anotadas en el README, y el ensayo se EJECUTÓ
+  entero — ver el Último cierre; la
   del NOMBRADO de los deploys se CERRÓ el mismo 2026-08-14: el autor
   aceptó la refutación del esquema last-good ENTERA («importaba ceremonia
   de contextos con equipo», sus palabras), LOS TAGS QUEDAN COMO ESTÁN, y
@@ -646,12 +672,10 @@ abierta, ver su bullet en Estado; (2) la description y el gloss de
 /notes/ — redacción suya; (3) el TEXTO de la capa 1 de seguros — su
 andamiaje ya está servido con noindex, invisible; (4) la PRIMERA NOTA
 REAL — el sistema está construido, el pase de estreno vive en la decisión
-de notas; **(5) el ENSAYO DEL ROLLBACK (2026-08-14): decidir la variante**
-— la parada con las respuestas está entregada en el chat, el procedimiento
-de las dos variantes (en seco / en vivo) en el README («El ensayo del
-rollback»), y la recomendación es EN SECO; nada se ejecuta sin su
-decisión. *(La que estuvo acá unas horas — el NOMBRADO de los
-deploys para el rollback — se CERRÓ el mismo 2026-08-14: el autor aceptó
+de notas. *(Las DOS que estuvieron acá unas horas el 2026-08-14 se
+CERRARON el mismo día: el ENSAYO DEL ROLLBACK — eligió EN SECO y se
+ejecutó entero, ver el Último cierre y el README — y el NOMBRADO de los
+deploys para el rollback: el autor aceptó
 la recomendación, los tags quedan como están, y el título del commit
 fuente ya viaja en la primera línea del mensaje del deploy — ver el
 bullet en la decisión de la rama de deploy. La del acople de check-ready

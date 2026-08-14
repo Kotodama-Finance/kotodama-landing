@@ -486,11 +486,18 @@ git push origin main
 - Si lo que hace falta es **bajar el sitio**, eso no es un rollback: es la
   rama `maintenance` (sección siguiente).
 
-### El ensayo del rollback — el procedimiento, escrito ANTES de ejecutarlo
+### El ensayo del rollback — el procedimiento (ensayado EN SECO el 2026-08-14)
 
-Un rollback real nunca se ejecutó en el dominio (a la fecha de esta sección,
-2026-08-14): la capacidad está verificada por las guardas, por las pruebas en
-clon y por `--solo-verificar`, no por evidencia en vivo. Lo MEDIDO ese día
+**La variante en seco se EJECUTÓ entera el 2026-08-14, por decisión del
+autor** — los cuatro pasos, con el dominio intacto (verificado byte a byte
+después del push): el rollback real a `v1-published` quedó commiteado y
+verificado en la preview (22/22), la vuelta restauró EXACTAMENTE el estado
+del deploy 11 (mismo OID de árbol, 15/15), y los commits `d46ffa0`/`d619e20`
+en la historia de `main` son su registro. **Lo que el ensayo en seco NO
+prueba: que Pages construya y sirva un árbol viejo** (la única fase no
+ensayada — la de menor incertidumbre del sistema y toda la exposición) **y
+el loop humano bajo presión.** En el dominio, un rollback sigue sin
+ejecutarse nunca. Lo MEDIDO ese día
 para la parada del ensayo — todo en local y en solo lectura, sin tocar `main`
 ni el dominio:
 
