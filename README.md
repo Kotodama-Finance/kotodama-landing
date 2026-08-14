@@ -466,9 +466,15 @@ git push origin main
 
 - **¿Cuál es el commit bueno?** El fuente del último deploy sano. Cada commit
   de `main` lo declara en su mensaje —`git log main`, la línea
-  `Fuente: <hash>`— y los tags de publicación apuntan a esos mismos commits
-  en `redesign-trust`. `v1-content-complete` es el punto de restauración de
-  la migración de DNS.
+  `Fuente: <hash>`— y **desde el 2026-08-14 lleva además el TÍTULO de su
+  commit fuente en la primera línea: `git log --oneline main` es el menú de
+  rollback legible** (los deploys anteriores al cambio dicen todos «Publicar
+  el sitio — generado de `<hash>`»; el título entra con los que siguen — la
+  historia no se reescribe). Los tags de hito apuntan a fuentes de agosto de
+  2026 y valen como historia, no como retorno de emergencia: un rollback ahí
+  perdería la verificación de Search Console y las correcciones posteriores
+  (criterio revisado con el autor, 2026-08-14) — en el apuro, el commit
+  bueno se elige del menú.
 - **La historia no se reescribe**: el rollback es un commit NUEVO encima de
   `main`, sin force-push. Pages publica en un par de minutos.
 - **Los avisos del rollback son esperables, no errores**: si el commit bueno

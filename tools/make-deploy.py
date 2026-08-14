@@ -1377,7 +1377,22 @@ def main():
         print(f"{RAMA_DESTINO} ya está en este contenido; no se commitea de nuevo")
         return 0
 
-    mensaje = (f"Publicar el sitio — generado de {fuente[:12]}\n\n"
+    # La primera línea lleva el TÍTULO del commit fuente (2026-08-14,
+    # decisión del autor — cierra su pregunta de los tags de rollback): once
+    # deploys decían exactamente lo mismo y `git log --oneline main` era una
+    # lista de hexadecimales sin nombre; con el título, ese log ES el menú
+    # de rollback legible. La primera línea es PRESENTACIÓN: el detector de
+    # hotfix y verificar_main_intacta dependen SOLO de la línea `Fuente:`
+    # (MARCA_FUENTE, anclada a comienzo de línea — el prefijo «Publicar: »
+    # garantiza que un título que contenga ese texto no fabrique una marca)
+    # y de la comparación de ÁRBOLES. El título viaja ENTERO, sin truncar:
+    # recortarlo sería un truncado silencioso, y el largo lo disciplina el
+    # commit fuente, no este script. Si el fuente no tuviera título (mensaje
+    # vacío), cae al formato viejo — degradación visible y benigna.
+    titulo_fuente = git("log", "-1", "--format=%s", fuente).strip()
+    primera = (f"Publicar: {titulo_fuente}" if titulo_fuente
+               else f"Publicar el sitio — generado de {fuente[:12]}")
+    mensaje = (f"{primera}\n\n"
                f"Generado por tools/make-deploy.py desde la rama de desarrollo:\n"
                f"el sitio solo, sin las notas de trabajo. No editar esta rama a\n"
                f"mano — el próximo deploy lo detecta y frena; el flujo es siempre\n"

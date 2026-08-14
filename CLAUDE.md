@@ -41,7 +41,24 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-14 (más tarde): la previsualización del
+- Último cierre: **2026-08-14 (todavía más tarde): el título del fuente en
+  el mensaje del deploy — SIN deploy: el artefacto de main NO cambió; el
+  formato estrena con el próximo.** El autor aceptó ENTERA la refutación
+  del esquema last-good y cerró: **los tags quedan como están**, y el
+  arreglo del menú ilegible es el NOMBRE en el mensaje — la primera línea
+  del commit de deploy pasa a ser «Publicar: <título del fuente>», con lo
+  que `git log --oneline main` es el menú de rollback legible.
+  VERIFICADO ANTES DE TOCAR, como pidió: el detector de hotfix y
+  `verificar_main_intacta` NO dependen de la primera línea (leen solo la
+  línea `Fuente:` anclada y comparan árboles). Probado en CLON AISLADO
+  (T1-T5): título normal y raro (kanji, comillas, %, largo, y un
+  «Fuente: <hash40>» adentro que NO fabrica marca), hotfix frenando,
+  retrigger «intacta», fuente sin título cayendo al formato viejo. Los
+  deploys viejos conservan su mensaje — la historia no se reescribe. Ver
+  el bullet nuevo en la decisión de la rama de deploy; el README
+  («Rollback») quedó al día. Guardas: check-structure y --solo-verificar
+  en verde.
+- Último cierre anterior: **2026-08-14 (más tarde): la previsualización del
   artefacto — SIN deploy: el artefacto de main NO cambió.** El hueco que
   cierra (pedido del autor): desde el deploy 8 EL SERVIDO NO ES EL FUENTE
   y no había forma humana de VER el sitio como va a quedar antes del push.
@@ -63,9 +80,9 @@ fallidos ya corregidos, y las capturas intermedias.
   rollback ahí perdería Search Console, JSON-LD, favicons y las
   correcciones de bugs), y la recomendación fue ponerle NOMBRE a cada
   deploy en el MENSAJE del commit de main (hoy los once dicen lo mismo) en
-  vez de un tag móvil «last-good», que acá es ceremonia. La decisión es
-  suya — ver la pendiente nueva.
-- Último cierre anterior: **2026-08-14: la flecha del hero sin enlace — EL
+  vez de un tag móvil «last-good», que acá es ceremonia. *(La decidió el
+  mismo día: aceptada e implementada — ver el cierre de arriba.)*
+- Antes, el 2026-08-14: **la flecha del hero sin enlace — EL
   UNDÉCIMO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN VIVO: deploy
   `c9740a1` de fuente `87eb8b0`.** Decisión del autor: la flecha del hero
   dejó de ser el enlace a #cube y es un `<div>` decorativo — aria-hidden,
@@ -515,17 +532,14 @@ fallidos ya corregidos, y las capturas intermedias.
   fechado quedó entregado al autor (su archivo lo pega él); el diseño del
   acople de check-ready quedó entregado con sus costos — la elección es
   del autor, ver el bullet siguiente. Ver sus filas en los cabos.
-- **Decisiones del autor pendientes: DOS (desde el 2026-08-14)** — *(la del
-  acople de check-ready se CERRÓ el 2026-08-08: aprobó el diseño A y la
-  guarda quedó implementada — ver su decisión)*. **La nueva (2026-08-14):
-  el NOMBRADO de los deploys para el rollback** — la respuesta a sus tres
-  preguntas sobre los tags quedó entregada en el chat, sin implementar
-  (su instrucción): la recomendación es que el mensaje del commit de main
-  lleve el TÍTULO del commit fuente (hoy los once deploys dicen
-  exactamente lo mismo y elegir un rollback es excavar hexadecimales), en
-  vez de un tag móvil «last-good» que acá es ceremonia y choca con «UN TAG
-  NO SE MUEVE»; los tags de hito siguen como están. Si aprueba, es un
-  cambio chico en make-deploy.py. **La anterior: el
+- **Decisiones del autor pendientes: UNA (la tarjeta de sector)** — *(la
+  del NOMBRADO de los deploys se CERRÓ el mismo 2026-08-14: el autor
+  aceptó la refutación del esquema last-good ENTERA («importaba ceremonia
+  de contextos con equipo», sus palabras), LOS TAGS QUEDAN COMO ESTÁN, y
+  el título del fuente en el mensaje del deploy quedó IMPLEMENTADO Y
+  PROBADO — ver el bullet nuevo en la decisión de la rama de deploy. La
+  del acople de check-ready se cerró el 2026-08-08: diseño A
+  implementado.)* **El
   TÍTULO y la LÍNEA DE FUNCIÓN de la tarjeta de sector** en
   /hajime/yorozu/: el PATRÓN está construido (la variante sin kanji — ver
   la decisión del patrón de sector), pero **desde el 2026-08-08 el MARCADO
@@ -622,14 +636,12 @@ abierta, ver su bullet en Estado; (2) la description y el gloss de
 /notes/ — redacción suya; (3) el TEXTO de la capa 1 de seguros — su
 andamiaje ya está servido con noindex, invisible; (4) la PRIMERA NOTA
 REAL — el sistema está construido, el pase de estreno vive en la decisión
-de notas; **(5) el NOMBRADO de los deploys para el rollback (2026-08-14)**
-— la respuesta a sus tres preguntas sobre los tags está entregada en el
-chat, sin implementar por su instrucción: la recomendación es el título
-del commit fuente en el mensaje del deploy (ver su bullet en Estado,
-«Decisiones del autor pendientes»); si aprueba, es un cambio chico en
-make-deploy.py. *(La del acople
-de check-ready se CERRÓ el 2026-08-08: aprobó el diseño A y la
-guarda quedó implementada; ver la decisión primera de la lista.)*
+de notas. *(La quinta que estuvo acá unas horas — el NOMBRADO de los
+deploys para el rollback — se CERRÓ el mismo 2026-08-14: el autor aceptó
+la recomendación, los tags quedan como están, y el título del commit
+fuente ya viaja en la primera línea del mensaje del deploy — ver el
+bullet en la decisión de la rama de deploy. La del acople de check-ready
+se cerró el 2026-08-08: diseño A implementado.)*
 
 **EL DNS ES OTRO FRENTE, FUERA DEL REPO — no es pendiente de Code**: los
 pasos 2-4 de la migración (el detalle, más abajo en esta misma sección).
@@ -718,9 +730,9 @@ ella.
 
 **Sin decidir dentro del sitio queda UNA cosa (desde el 2026-08-08)**: el
 título y la línea de función de la tarjeta de sector en /hajime/yorozu/ (el
-patrón existe; el marcado se repone junto con su texto). *(Y UNA de
-TOOLING desde el 2026-08-14, fuera del sitio: el nombrado de los deploys —
-ver ESPERAN A MANUEL, punto 5.)* La decisión del
+patrón existe; el marcado se repone junto con su texto). *(La de TOOLING
+que estuvo acá unas horas — el nombrado de los deploys, 2026-08-14 — se
+cerró el mismo día: aceptada e implementada.)* La decisión del
 acople de check-ready se CERRÓ el mismo día — diseño A aprobado e
 implementado, ver la decisión primera de la lista. La vuelta de una nota
 se CERRÓ el 2026-08-08 — «← All notes» más el rótulo de cara enlazado en
@@ -1588,6 +1600,31 @@ igual que `maintenance`: un artefacto derivado no se mantiene, se regenera.
   además es una FOTO de la punta de main al abrirla — tras otro
   make-deploy se cierra y se relanza; está en el docstring y en el paso 4
   del README.
+- **El mensaje del deploy lleva el TÍTULO del commit fuente (2026-08-14,
+  propuesta de Code ACEPTADA por el autor — el cierre de su pregunta por
+  los tags de rollback)**: la primera línea es «Publicar: <título del
+  fuente>», y con eso `git log --oneline main` ES el menú de rollback
+  legible — once deploys decían exactamente lo mismo y elegir un rollback
+  era excavar hexadecimales. Lo que la respuesta descartó, con acuerdo
+  explícito del autor («importaba ceremonia de contextos con equipo», sus
+  palabras): el tag móvil «last-good» (todo deploy sale verificado, así
+  que el puntero coincidiría SIEMPRE con la punta y no informa nada; y el
+  día que un deploy resulte malo después, el last-good ya lo siguió — más
+  el choque con «UN TAG NO SE MUEVE») y el tag por deploy (rutina, contra
+  el criterio escrito). **Los tags de hito quedan como están.**
+  VERIFICADO ANTES DE TOCAR, como pidió: el detector de hotfix y
+  `verificar_main_intacta` NO dependen de la primera línea — leen SOLO la
+  línea `Fuente:` (MARCA_FUENTE, regex anclado a comienzo de línea) y
+  comparan ÁRBOLES regenerados. Probado en CLON AISLADO (T1-T5): subject
+  con el título; un título raro (largo, kanji, comillas, %, y un
+  «Fuente: <hash40>» ADENTRO) viaja entero SIN fabricar marca falsa — el
+  prefijo «Publicar: » garantiza que nunca quede a comienzo de línea—;
+  el hotfix a mano sigue frenando; el retrigger vacío sigue «intacta»; y
+  una fuente sin título cae al formato viejo (degradación visible). El
+  título viaja SIN truncar a propósito: recortarlo sería un truncado
+  silencioso, y el largo lo disciplina el commit fuente. Los deploys
+  viejos conservan su mensaje genérico — la historia no se reescribe, el
+  menú se puebla hacia adelante.
 - **Byte-idéntico por construcción — DESDE EL 2026-08-08, MÓDULO LA
   TRANSFORMACIÓN**: el deploy reusa los blobs del commit fuente para todo lo
   no transformable (plumbing, sin checkout, sin riesgo CRLF) y los
