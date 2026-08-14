@@ -76,7 +76,16 @@ fallidos ya corregidos, y las capturas intermedias.
   parseando (Organization), cero comentarios, import map y gc-pixel vivos,
   las cuatro rutas de notas y /CLAUDE.md y /tools/ en 404. **LO QUE QUEDA
   ES DE MANUEL: apretar «verificar» en Bing Webmaster Tools — la etiqueta
-  ya está SERVIDA.**
+  ya está SERVIDA.** Dos adendas del mismo día, después del cierre (pedido
+  del autor): **(1)** el cierre de la etiqueta quedó NORMALIZADO en el
+  fuente al estilo del resto del head (sin barra; el CONTENT intacto, DOM
+  idéntico — Bing ve lo mismo) y **viaja con el próximo deploy**, no con
+  uno propio: un build dedicado no cambiaría ni un byte del DOM (la regex
+  del contrato acepta las dos formas, verificado); **(2)** el TXT de Google
+  RE-CONFIRMADO en el DNS tras el deploy —
+  `google-site-verification=ZkRw...` respondiendo idéntico por resolución
+  normal Y directo contra ns1.xdomain.ne.jp — la única verificación de
+  Google viva quedó mirada justo después de tocar el head.
 - Último cierre anterior: **2026-08-14 (después del ensayo): LA COPIA
   DERIVADA DE CLAUDE.md EN ONEDRIVE + LA REGLA DE CITAR EL REGISTRO — SIN
   deploy: el artefacto de main NO cambió.** El problema (pedido del autor,
@@ -803,7 +812,12 @@ transferir → correo → merge:
    **directamente**, sin tocar todavía la delegación. Ojo: la zona a cargar
    ahora incluye los registros de iCloud+ (MX/SPF/DKIM), no los seis del
    inventario del paso 0 — el inventario vigente es el de después del paso 1.
-4. **Recién ahí, cambiar los nameservers.**
+4. **Recién ahí, cambiar los nameservers.** *(OBSERVADO por resolución el
+   2026-08-14, al re-confirmar el TXT de Google tras el deploy 12: la
+   delegación YA responde ns1-3.xdomain.ne.jp, y la zona sirve los
+   registros de iCloud más el TXT de Google — los pasos 3 y 4 se ven
+   EJECUTADOS del lado del autor; el paso 2 no es observable por DNS. El
+   detalle sigue fuera del repo.)*
 5. ~~Generar `main` + push + tag en el commit FUENTE.~~ **HECHO 2026-08-06 —
    ejecutado ANTES que 2-4, a propósito** (ver el párrafo de arriba: la
    transferencia no mueve los nameservers y el sitio publicado es la línea
