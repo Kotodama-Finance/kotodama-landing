@@ -9,6 +9,13 @@ const reduce = window.matchMedia
 const seaCanvas = document.getElementById('sea');
 const sea = initSea(seaCanvas, reduce);
 
+const nav = document.getElementById('nav');
+function onScroll() {
+  nav.classList.toggle('is-scrolled', window.scrollY > 60);
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+
 if (sea && sea.setHeroVisible) {
   const hero = document.getElementById('top');
   if (hero && 'IntersectionObserver' in window) {
