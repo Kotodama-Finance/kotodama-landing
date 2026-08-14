@@ -920,10 +920,11 @@ charset existía (estaba). Tres de tres, y cada una costó una investigación.
   edición como divergencia, y es lo correcto: «arreglar» la copia en vez de
   la fuente es exactamente la deriva que la marca DERIVADA existe para
   evitar. Si esto contradice al CLAUDE.md del repo, gana el repo.
-- **Si el Claude del chat sigue preguntando cosas que viven solo en el
-  README o en el fuente** (dos de sus tres preguntas eran de archivos del
-  repo, no de este registro), el mismo mecanismo se extiende con una
-  segunda copia — decisión del autor ese día, no de oficio.
+- **La segunda copia (README) quedó DECIDIDA el mismo día: NO por ahora**
+  (el autor, 2026-08-14): esperar a ver si con la copia de CLAUDE.md el
+  problema sigue apareciendo. **El criterio de reapertura quedó escrito**:
+  si Claude vuelve a preguntar algo que vivía en el README, el mismo
+  mecanismo se extiende — recién ahí, no antes.
 
 ### El JSON-LD de Organization en la portada: la definición de la entidad, desde el dominio
 
