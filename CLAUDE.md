@@ -44,8 +44,9 @@ fallidos ya corregidos, y las capturas intermedias.
 - Último cierre: **2026-08-20 (corrección al registro, dato del autor
   traído del chat de mantenimiento — SIN deploy: el artefacto de main NO
   cambió): SCROLL-DRIVEN ANIMATIONS CONFIRMADAS EN SAFARI DE iOS REAL.**
-  El autor probó la nav en su iPhone el 2026-08-08: arranca transparente
-  sobre el hero y SE VUELVE OPACA al scrollear. El discriminador que convierte la
+  El autor probó la nav en su iPhone el 2026-08-08 — sobre /musubi/,
+  precisado por él al cerrar la premisa—: arranca transparente arriba y
+  SE VUELVE OPACA al scrollear. El discriminador que convierte la
   observación en prueba: si el `@supports` hubiera caído al respaldo, la
   barra estaría opaca SIEMPRE, también arriba del hero — que haya
   TRANSICIÓN significa que la mejora progresiva se EJECUTA, no que el
@@ -60,9 +61,12 @@ fallidos ya corregidos, y las capturas intermedias.
   DECLARADO en la decisión como la premisa de la prueba**: el
   discriminador descarta el fallback pero NO una copia VIEJA — el
   mecanismo JS pre-deploy-5 daba el MISMO observable en la portada, y el
-  mensaje no dice hora ni URL—; el cierre es barato y es de Manuel: un
-  scroll en el iPhone HOY con carga fresca, con `is-scrolled` ya retirado
-  del dominio. Los otros tres: el paréntesis que re-caracterizaba el
+  mensaje no decía hora ni URL—, **y CERRADO por el autor el MISMO
+  2026-08-20 con un argumento mejor que la hora o el caché: el scroll de
+  hoy fue sobre /musubi/, que NUNCA tuvo el mecanismo JS (main.js solo
+  carga en la portada) — la alternativa descartada POR CONSTRUCCIÓN—, y
+  la verificación original del 08-08 también había sido sobre /musubi/:
+  faltaba el argumento, no el dato.** Los otros tres: el paréntesis que re-caracterizaba el
   congelado de Móvil como solo-rendimiento, «primera confirmación del
   stack» sin su calificador en dos lugares, y una cita con elisión sin
   marcar. El barrido de la incógnita
@@ -958,16 +962,20 @@ línea que la decisión de la nav registraba como incógnita («Safari de iOS
 NO se pudo ejecutar en esta máquina... el modo de fallo es el diseñado»),
 y se registra con alcance propio porque la consecuencia excede a la nav.
 
-- **Lo observado (iPhone real del autor, 2026-08-08)**: la nav arranca
-  TRANSPARENTE sobre el hero y SE VUELVE OPACA al scrollear.
+- **Lo observado (iPhone real del autor, 2026-08-08 — sobre /musubi/,
+  precisado por él el 2026-08-20 al cerrar la premisa: la pidió sobre esa
+  página, no sobre la portada; la relación inicial decía «sobre el hero»
+  y /musubi/ no tiene hero)**: la nav arranca TRANSPARENTE arriba y SE
+  VUELVE OPACA al scrollear.
 - **El discriminador, que es lo que convierte la observación en prueba**:
   si el `@supports` hubiera caído al respaldo, la barra estaría opaca
-  SIEMPRE — también arriba del hero: el fallback no tiene estado
-  transparente. Que haya TRANSICIÓN significa que arranca transparente, o
+  SIEMPRE — también con la página sin scrollear: el fallback no tiene
+  estado transparente. Que haya TRANSICIÓN significa que arranca transparente, o
   sea que la mejora progresiva se está EJECUTANDO — no que el fallback
   esté funcionando.
-- **La premisa que carga la prueba, DECLARADA — el hallazgo ALTA de la
-  revisión adversarial de esta corrección, confirmado por reproducción**:
+- **La premisa que cargaba la prueba — DECLARADA (el hallazgo ALTA de la
+  revisión adversarial de esta corrección, confirmado por reproducción) y
+  CERRADA el mismo día, más abajo**:
   el discriminador descarta al fallback del CSS NUEVO — NO descarta una
   copia VIEJA. El 2026-08-08 es justamente el día en que se INTERCAMBIÓ
   el mecanismo (el commit del intercambio es de las 09:30 JST; el deploy
@@ -979,14 +987,26 @@ y se registra con alcance propio porque la consecuencia excede a la nav.
   hora ni URL, así que la observación es prueba DADO que el iPhone
   ejecutaba el CSS del deploy 5 — y el patrón n.º 1 del propio registro
   es la copia vieja en el navegador del autor (tres casos documentados).
-  **El cierre es barato y es de Manuel: repetir el scroll en el iPhone
-  HOY contra el dominio, con carga fresca** — `is-scrolled` no existe en
-  lo servido desde el deploy 5, y Pages sirve `max-age=600` (medido
-  2026-08-20): una copia del 08-08 no sobrevive a una visita fresca, así
-  que cualquier transición observada hoy SOLO puede ser la mejora
-  ejecutándose. Hasta ese scroll, esta decisión registra la observación
-  CON su premisa declarada — el criterio del colofón: cada verbo con su
-  comprobación.
+  **CERRADA POR EL AUTOR EL MISMO 2026-08-20, con un argumento MEJOR que
+  la hora o el caché**: scrolleó /musubi/ hoy y funciona — transparente
+  arriba, opaca al scrollear — y **/musubi/ NUNCA tuvo el mecanismo JS**:
+  main.js solo carga en la portada (verificado contra el archivo: cero
+  `<script` en su HTML), así que en una página de prosa el observable no
+  puede venir de `is-scrolled` NI HOY NI EL 8 DE AGOSTO — la alternativa
+  queda descartada POR CONSTRUCCIÓN, no por descarte de caché. Sus
+  palabras, que son la regla de esta prueba: «la confirmación no depende
+  de la hora ni del caché, depende de que la página no tiene JS». En
+  /musubi/ el discriminador es además de TRES estados, cada uno
+  distinguible: el CSS viejo daba transparente SIEMPRE (el bug
+  documentado de las páginas de prosa), el nuevo sin soporte da opaca
+  SIEMPRE, y solo el nuevo CON soporte transiciona. **Y el bonus que
+  re-habilita el dato original**: la verificación del 2026-08-08 TAMBIÉN
+  fue sobre /musubi/ — el autor la pidió sobre esa página, no sobre la
+  portada—, así que aquella observación tampoco estaba contaminada: lo
+  que faltaba era el argumento, no el dato. *(El cierre por fecha-y-caché
+  que estuvo escrito acá unas horas — scroll con carga fresca +
+  `max-age=600` — quedó superado por éste, que no depende de ninguno de
+  los dos.)*
 - **El alcance, que es lo que hay que recordar**: es la PRIMERA
   confirmación de scroll-driven animations
   (`animation-timeline: scroll()`) en este stack, en el único navegador
@@ -1349,14 +1369,16 @@ prosa el texto se dibujaba encima del de la nav (capturas de iPhone en
   vía el chat de mantenimiento; esto CORRIGE el «Safari de iOS NO se pudo
   ejecutar en esta máquina (el riesgo aceptado de siempre): si su soporte
   falta o falla, el @supports lo deja en opaco» que decía acá—**: la barra
-  arranca transparente sobre el hero y se asienta al scrollear, y la
-  TRANSICIÓN es el discriminador — el respaldo estaría opaco SIEMPRE—, o
-  sea que la mejora progresiva se EJECUTA ahí. Es la primera confirmación
+  arranca transparente arriba y se asienta al scrollear, y la TRANSICIÓN
+  es el discriminador — el respaldo estaría opaco SIEMPRE—, o sea que la
+  mejora progresiva se EJECUTA ahí. La observación fue sobre /musubi/, que
+  no carga JS: la prueba es por CONSTRUCCIÓN — el observable no puede
+  venir del mecanismo `is-scrolled` retirado. Es la primera confirmación
   de scroll-driven animations del stack en el navegador que era la
   incógnita (Chrome ya la había ejecutado en headless, arriba); el alcance
-  completo — la técnica disponible, y LA PREMISA de la prueba con su
-  cierre — está en la decisión «Scroll-driven animations: CONFIRMADAS en
-  Safari de iOS real». El modo
+  completo — la técnica disponible, y la premisa de la prueba CERRADA —
+  está en la decisión «Scroll-driven animations: CONFIRMADAS en Safari de
+  iOS real». El modo
   de fallo diseñado sigue vigente para navegadores sin soporte: el
   @supports los deja en opaco.
   Longhands a propósito: el shorthand `animation` resetea

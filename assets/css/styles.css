@@ -551,12 +551,12 @@ button:focus-visible {
        hereda el bug.
    CONFIRMADA EN SAFARI DE iOS REAL (2026-08-08, iPhone del autor; registrado
    2026-08-20): arranca transparente y se asienta al scrollear. La TRANSICIÓN
-   es el discriminador — el respaldo estaría opaco SIEMPRE, también sobre el
-   hero—: la mejora ejecutándose en el navegador que era la incógnita, la
-   primera vez en este stack. La premisa que carga esa prueba (que el iPhone
-   ejecutara el CSS nuevo y no una copia vieja del mecanismo JS retirado) y
-   su cierre están declarados en CLAUDE.md. El default opaco sigue siendo la
-   red para navegadores sin soporte.
+   es el discriminador — el respaldo estaría opaco SIEMPRE—: la mejora
+   ejecutándose en el navegador que era la incógnita, la primera vez en este
+   stack. Y la prueba es por CONSTRUCCIÓN: la observación fue sobre /musubi/,
+   que no carga ningún JS — el observable no puede venir del mecanismo
+   is-scrolled retirado (el detalle y el cierre de la premisa, en CLAUDE.md).
+   El default opaco sigue siendo la red para navegadores sin soporte.
    El velo semitransparente con blur (--nav-scrim + backdrop-filter) se fue
    con .is-scrolled: sobre un fondo opaco el blur no tiene qué desenfocar.
    prefers-reduced-motion apaga la animación (animation: none global) y deja
