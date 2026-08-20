@@ -41,7 +41,43 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
-- Último cierre: **2026-08-14 (cierra el día): EL INTERCAMBIO DE METAS DE
+- Último cierre: **2026-08-20 (corrección al registro, dato del autor
+  traído del chat de mantenimiento — SIN deploy: el artefacto de main NO
+  cambió): SCROLL-DRIVEN ANIMATIONS CONFIRMADAS EN SAFARI DE iOS REAL.**
+  El autor probó la nav en su iPhone el 2026-08-08: arranca transparente
+  sobre el hero y SE VUELVE OPACA al scrollear. El discriminador que convierte la
+  observación en prueba: si el `@supports` hubiera caído al respaldo, la
+  barra estaría opaca SIEMPRE, también arriba del hero — que haya
+  TRANSICIÓN significa que la mejora progresiva se EJECUTA, no que el
+  fallback esté funcionando. Es la PRIMERA confirmación de
+  `animation-timeline: scroll()` en este stack, en el único navegador que
+  era la incógnita, y la consecuencia excede a la nav: **la técnica queda
+  DISPONIBLE para futuras decisiones de diseño** — efectos ligados al
+  scroll en CSS puro, sin romper el cero-JS de las páginas de lectura —
+  ver la decisión nueva, primera de la lista. **La revisión adversarial
+  (2 lentes + refutadores) confirmó 4 hallazgos de REGISTRO por
+  reproducción — los 4 corregidos antes de commitear, y el ALTA quedó
+  DECLARADO en la decisión como la premisa de la prueba**: el
+  discriminador descarta el fallback pero NO una copia VIEJA — el
+  mecanismo JS pre-deploy-5 daba el MISMO observable en la portada, y el
+  mensaje no dice hora ni URL—; el cierre es barato y es de Manuel: un
+  scroll en el iPhone HOY con carga fresca, con `is-scrolled` ya retirado
+  del dominio. Los otros tres: el paréntesis que re-caracterizaba el
+  congelado de Móvil como solo-rendimiento, «primera confirmación del
+  stack» sin su calificador en dos lugares, y una cita con elisión sin
+  marcar. El barrido de la incógnita
+  (el patrón del intercambio de metas) la encontró en DOS lugares del
+  registro — la línea de la decisión de la nav y la fila «Safari» de los
+  cabos, los dos corregidos — y la confirmación quedó ADEMÁS anotada
+  junto al `@supports` del bloque NAV de styles.css (ese comentario no
+  afirmaba la incógnita: describía el fallback, que sigue siendo cierto).
+  README, tools y docs no la mencionaban — sus «sin medir en dispositivo
+  real» son de RENDIMIENTO, que esta observación no mide (deslinde
+  verificado con barrido de agentes, no asumido). Lo que NO levanta: el
+  humo completo de Safari sigue sin correr — la fila sigue abierta — y el
+  congelado de Móvil queda como está. Guardas: structure, modes y
+  pendulum (0.0951) en verde.
+- Último cierre anterior: **2026-08-14 (cierra el día): EL INTERCAMBIO DE METAS DE
   VERIFICACIÓN — EL DUODÉCIMO DEPLOY, EJECUTADO ENTERO Y VERIFICADO EN VIVO
   14/14: deploy `3d28290` de fuente `bb22f27`.** Sale la meta de Google y
   entra la de Bing, en el mismo hueco (entre `twitter:card` y el bloque de
@@ -906,12 +942,87 @@ sección con el detalle.
 | **Rama `maintenance`** | **existe, está lista y NO está activa.** Se activa cambiando la rama que publica Pages. **Desde el 2026-08-08 sirve SIN comentarios**: el generador pasa el HTML por el MISMO `transformar()` de make-deploy (regenerada: `1b80019`; check-maintenance suma cero-`<!--` y cero-`/*`-en-`<style>`, probadas en rojo). **Pusheada a origin ese mismo día con autorización del autor** — la rama de emergencia remota ya es la versión sin comentarios. Ver la decisión cerrada más abajo. |
 | **Respaldo de `_dev/` y `_ref/`** | **HECHO 2026-08-06**: `kotodama_respaldo_dev-ref_2026-08-06.zip` (40,8 MB, 85/85 entradas verificadas) en la carpeta del proyecto en OneDrive — repetir por hito con el mismo patrón de nombre fechado. Dos hechos verificados que cierran los miedos de fondo, para no re-preguntarlos: **(1) `_ref/` no era única copia** — los 5 archivos son byte-idénticos (sha256) a copias dentro de `Kotodama Finance website.zip` en OneDrive; **(2) el merge NO borra archivos sin versionar** — git no toca untracked en merge ni checkout; el único riesgo era el disco, y quedó cubierto. Versionarlos se descartó: publicaría ~40 MB de capturas (y las fotos de WhatsApp) en el repo público. |
 | **`@media print`** | **nadie lo miró, pendiente SIN urgencia** (anotado 2026-08-06, pedido del autor): los navegadores quitan los fondos al imprimir y el texto claro queda sobre papel blanco. La única candidata real es /disclaimer/, que nadie imprime. No bloquea publicar. |
-| **Safari** | **sin verificar, riesgo aceptado** (2026-08-06): no corre en Windows. Firefox SÍ pasó un humo completo el mismo día (justificado —ahí con partición de palabras real: Firefox trae diccionarios de hyphens—, marca de agua vertical, multicol de /method/ en 2 columnas, lazy-init, cubo, folio con input confiable, vista explotada). El dato de método que dejó: geckodriver cuelga la creación de sesión en esta máquina — se manejó Firefox por Marionette directo, y un PointerEvent sintético con pointerId inventado muere en setPointerCapture ANTES de deseleccionar: para probar el arrastre hace falta input confiable (WebDriver:PerformActions), no eventos sintéticos. |
+| **Safari** | **el humo completo sigue SIN CORRER — riesgo aceptado** (2026-08-06: no corre en Windows). **Desde el 2026-08-08 hay UN dato de Safari real, el PRIMERO (registrado 2026-08-20): la mejora scroll-driven de la nav CONFIRMADA ejecutándose en el iPhone del autor** — la transición transparente→opaca es el discriminador (el fallback estaría opaco siempre); ver la decisión «Scroll-driven animations: CONFIRMADAS en Safari de iOS real». El resto (cubo, arrastre, folio, multicol) sigue sin verificar ahí. Firefox SÍ pasó un humo completo el 2026-08-06 — ANTERIOR a la nav scroll-driven: Firefox tampoco la vio — (justificado —ahí con partición de palabras real: Firefox trae diccionarios de hyphens—, marca de agua vertical, multicol de /method/ en 2 columnas, lazy-init, cubo, folio con input confiable, vista explotada). El dato de método que dejó: geckodriver cuelga la creación de sesión en esta máquina — se manejó Firefox por Marionette directo, y un PointerEvent sintético con pointerId inventado muere en setPointerCapture ANTES de deseleccionar: para probar el arrastre hace falta input confiable (WebDriver:PerformActions), no eventos sintéticos. |
 | ~~Link rot en /method/~~ | **CERRADO 2026-08-06, aprobado por el autor**: los 3 rotos se corrigieron **en los dos lugares** — /method/ y `§Fuentes de Datos Mapeadas` del `kotodama_finance_context.md` (la fuente de verdad de la que la lista se deriva: corregir solo la página lo habría reintroducido en la próxima derivación). Zenginkyo → `/en/statistics/`; GIAJ → `sonpo.or.jp/en/`; LIAJ → `seiho.or.jp/english/` — las tres verificadas en 200 tras el cambio. **Daiwa cerró después, con un TERCER modo de falla** (verificado a mano por el autor desde Japón, 2026-08-06): el apex `dir.co.jp` NO resuelve —sin registros A/AAAA—, solo existe `www.dir.co.jp`, que va por Imperva con geo-bloqueo fuera de Japón. Corregido en los dos lugares. **EL PATRÓN: son CUATRO enlaces mal anotados de la MISMA lista** (§Fuentes del context.md) — no es casualidad: esa lista se escribió sin verificar contra la fuente, y un dato viejo cuesta poco mientras es interno pero pasa a ser error citable al salir a /method/. **La pasada del catálogo completo CORRIÓ el 2026-08-06 (45 URLs): CERO rot nuevo** — los cuatro corregidos eran todo el rot real. El hallazgo estructural: **el catálogo escribe los dominios SIN www y en el Japón institucional el apex normalmente NO tiene registro A** (25 de 45) — la trampa Daiwa es la convención por defecto de la lista; las 25 variantes www verificadas vivas por HTTP. **Las dos decisiones se ejecutaron el mismo día con aprobación del autor**: el catálogo quedó NORMALIZADO a la forma www verificada viva (26 menciones; la convención quedó escrita arriba de la lista: «el catálogo guarda la forma que RESPONDE, no el nombre canónico»), y la nota envejecida de webland reescrita con el hecho actual fechado. **La nota gemela de tokiorisk se corrigió igual, con aprobación del autor** — hoy tokiorisk no resuelve ni con www; era la TERCERA nota-sobre-terceros caducada, y el patrón con sus tres casos quedó en los hallazgos de método. Nada pendiente en el catálogo. |
 
 ---
 
 ## Decisiones cerradas — no rediscutir
+
+### Scroll-driven animations: CONFIRMADAS en Safari de iOS real — la técnica queda disponible
+
+**2026-08-20, dato del autor traído del chat de mantenimiento; la
+observación es del 2026-08-08 («el 8 de agosto», sus palabras). SIN
+deploy: nada de esto toca el artefacto.** Esto CORRIGE la
+línea que la decisión de la nav registraba como incógnita («Safari de iOS
+NO se pudo ejecutar en esta máquina... el modo de fallo es el diseñado»),
+y se registra con alcance propio porque la consecuencia excede a la nav.
+
+- **Lo observado (iPhone real del autor, 2026-08-08)**: la nav arranca
+  TRANSPARENTE sobre el hero y SE VUELVE OPACA al scrollear.
+- **El discriminador, que es lo que convierte la observación en prueba**:
+  si el `@supports` hubiera caído al respaldo, la barra estaría opaca
+  SIEMPRE — también arriba del hero: el fallback no tiene estado
+  transparente. Que haya TRANSICIÓN significa que arranca transparente, o
+  sea que la mejora progresiva se está EJECUTANDO — no que el fallback
+  esté funcionando.
+- **La premisa que carga la prueba, DECLARADA — el hallazgo ALTA de la
+  revisión adversarial de esta corrección, confirmado por reproducción**:
+  el discriminador descarta al fallback del CSS NUEVO — NO descarta una
+  copia VIEJA. El 2026-08-08 es justamente el día en que se INTERCAMBIÓ
+  el mecanismo (el commit del intercambio es de las 09:30 JST; el deploy
+  5 que lo publicó, de las 10:23), y el mecanismo anterior — main.js con
+  `is-scrolled` + el velo `--nav-scrim` al 82% de navy — daba EL MISMO
+  observable en la portada, la única página con hero y la única que carga
+  JS: transparente arriba, velo que a ojo se lee opaco al scrollear. El
+  mensaje del autor dice «lo probó en su iPhone el 8 de agosto» y no dice
+  hora ni URL, así que la observación es prueba DADO que el iPhone
+  ejecutaba el CSS del deploy 5 — y el patrón n.º 1 del propio registro
+  es la copia vieja en el navegador del autor (tres casos documentados).
+  **El cierre es barato y es de Manuel: repetir el scroll en el iPhone
+  HOY contra el dominio, con carga fresca** — `is-scrolled` no existe en
+  lo servido desde el deploy 5, y Pages sirve `max-age=600` (medido
+  2026-08-20): una copia del 08-08 no sobrevive a una visita fresca, así
+  que cualquier transición observada hoy SOLO puede ser la mejora
+  ejecutándose. Hasta ese scroll, esta decisión registra la observación
+  CON su premisa declarada — el criterio del colofón: cada verbo con su
+  comprobación.
+- **El alcance, que es lo que hay que recordar**: es la PRIMERA
+  confirmación de scroll-driven animations
+  (`animation-timeline: scroll()`) en este stack, en el único navegador
+  que era la incógnita — Safari no corre en Windows y era el que no tenía
+  cómo contestarse acá (Chrome la ejecutó en headless al construirla; el
+  humo de Firefox es del 2026-08-06, ANTERIOR a la nav — Firefox tampoco
+  la había visto). **La técnica queda DISPONIBLE para futuras decisiones
+  de diseño**: efectos ligados al scroll en CSS puro, sin romper el
+  cero-JS de las páginas de lectura — la propiedad que ya descartó C1 del
+  mar en las subpáginas y el interruptor runtime de la transición. El
+  patrón probado viaja con la técnica: default seguro en CSS plano + la
+  mejora dentro de `@supports (animation-timeline: scroll())`, con el
+  orden default-seguro / mejora-condicionada NO negociable (ver la
+  decisión de la nav).
+- **Lo que la observación NO prueba, para no estirarla**: es UNA técnica
+  en UN dispositivo. No levanta la fila «Safari» de los cabos (el humo
+  completo — cubo, arrastre, folio, multicol — sigue sin correr ahí; la
+  fila quedó actualizada y sigue abierta), no toca el congelado de Móvil
+  — que abarca la verificación en dispositivo real ENTERA: rendimiento,
+  el FOV horizontal del encuadre y el maelstrom táctil; esta observación
+  es un dato que trajo el autor, no la reapertura del congelado, y los
+  «sin medir en dispositivo real» de README y docs/mediciones (todos de
+  rendimiento) siguen exactos —, y no dice nada de las OTRAS features con
+  nota de soporte propia (interpolate-size del folio, hyphens del
+  justificado, el propio maelstrom táctil). Y el fallback opaco SIGUE siendo parte del diseño: navegadores
+  sin soporte existen igual, y el orden no se invierte por esto.
+- **El barrido de la incógnita** (el patrón del intercambio de metas):
+  aparecía en DOS lugares del registro — la línea de la decisión de la
+  nav (corregida en su lugar, con la marca de corrección) y la fila
+  «Safari» de los cabos (actualizada: primer dato real, fila abierta) — y
+  la confirmación quedó ADEMÁS anotada donde vive el código, junto al
+  `@supports` del bloque NAV de styles.css (ese comentario no afirmaba la
+  incógnita — describía el fallback, que sigue siendo cierto — pero es el
+  ancla natural de una verificación, el estilo del repo). README, tools y
+  docs: CERO menciones de la incógnita — verificado con barrido de
+  agentes, no asumido; sus «sin medir» son de rendimiento.
 
 ### La copia derivada de CLAUDE.md en OneDrive: el registro al alcance del Claude del chat
 
@@ -1233,9 +1344,21 @@ prosa el texto se dibujaba encima del de la nav (capturas de iPhone en
   transparente a scroll 0, `rgba(4,13,24,0.5)` a 60px (la animación
   PROGRESA), opaco a 600; el fallback (animación anulada) opaco SIEMPRE;
   `prefers-reduced-motion` emulado → la regla global `animation: none` la
-  apaga y queda el opaco, correcto. **Safari de iOS NO se pudo ejecutar en
-  esta máquina (el riesgo aceptado de siempre)**: si su soporte falta o
-  falla, el @supports lo deja en opaco — el modo de fallo es el diseñado.
+  apaga y queda el opaco, correcto. **Y Safari de iOS quedó CONFIRMADO en
+  el iPhone real del autor el mismo 2026-08-08 — registrado el 2026-08-20,
+  vía el chat de mantenimiento; esto CORRIGE el «Safari de iOS NO se pudo
+  ejecutar en esta máquina (el riesgo aceptado de siempre): si su soporte
+  falta o falla, el @supports lo deja en opaco» que decía acá—**: la barra
+  arranca transparente sobre el hero y se asienta al scrollear, y la
+  TRANSICIÓN es el discriminador — el respaldo estaría opaco SIEMPRE—, o
+  sea que la mejora progresiva se EJECUTA ahí. Es la primera confirmación
+  de scroll-driven animations del stack en el navegador que era la
+  incógnita (Chrome ya la había ejecutado en headless, arriba); el alcance
+  completo — la técnica disponible, y LA PREMISA de la prueba con su
+  cierre — está en la decisión «Scroll-driven animations: CONFIRMADAS en
+  Safari de iOS real». El modo
+  de fallo diseñado sigue vigente para navegadores sin soporte: el
+  @supports los deja en opaco.
   Longhands a propósito: el shorthand `animation` resetea
   `animation-timeline` (trampa de orden anotada en el CSS).
 - **La compresión de la nav en teléfono (≤480px)**: nowrap en los rótulos

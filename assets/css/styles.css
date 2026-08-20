@@ -549,6 +549,14 @@ button:focus-visible {
        scroll (animation-timeline), CERO JavaScript. El orden opaco-default /
        transparente-mejora NO es negociable: al revés, el navegador viejo
        hereda el bug.
+   CONFIRMADA EN SAFARI DE iOS REAL (2026-08-08, iPhone del autor; registrado
+   2026-08-20): arranca transparente y se asienta al scrollear. La TRANSICIÓN
+   es el discriminador — el respaldo estaría opaco SIEMPRE, también sobre el
+   hero—: la mejora ejecutándose en el navegador que era la incógnita, la
+   primera vez en este stack. La premisa que carga esa prueba (que el iPhone
+   ejecutara el CSS nuevo y no una copia vieja del mecanismo JS retirado) y
+   su cierre están declarados en CLAUDE.md. El default opaco sigue siendo la
+   red para navegadores sin soporte.
    El velo semitransparente con blur (--nav-scrim + backdrop-filter) se fue
    con .is-scrolled: sobre un fondo opaco el blur no tiene qué desenfocar.
    prefers-reduced-motion apaga la animación (animation: none global) y deja
