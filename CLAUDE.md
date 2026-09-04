@@ -27,6 +27,14 @@ fallidos ya corregidos, y las capturas intermedias.
 ## Estado
 
 - Rama de trabajo: **`redesign-trust`**. `rebuild-static` está congelada.
+- **El repo vive en `Kotodama-Finance/kotodama-landing` desde el 2026-09-04
+  (05:36 UTC): la mudanza desde `RealShinka` se EJECUTÓ con el pase escrito
+  ese mismo día, con el autor mirando — mismo id (`1270699426`), mismo
+  certificado (serial `05F962AD…BAED3`), Pages sin redesplegar, 23 s de
+  exposición sin síntoma. El remoto local es
+  `https://github.com/Kotodama-Finance/kotodama-landing.git` (paso 5). La
+  URL vieja redirige (301) mientras nadie cree un repo con ese nombre bajo
+  `RealShinka` — NUNCA crearlo. Ver la decisión primera de la lista.**
 - **La vista explotada del cubo está INTEGRADA acá (2026-08-05)**: el merge
   `cube-exploded` → `redesign-trust` lo decidió explícitamente el autor, tras
   dos verificaciones previas (móvil emulado y no-divergencia). Fue
@@ -46,7 +54,32 @@ fallidos ya corregidos, y las capturas intermedias.
   tiene guardas, ni make-deploy, ni rama-artefacto, A PROPÓSITO: son dos
   archivos (`CNAME` + `index.html` con meta refresh). Nada de este repo lo
   mira ni tiene que mirarlo.
-- Último cierre: **2026-09-04 (cierra el día): EL PASE DE LA MUDANZA DEL
+- Último cierre: **2026-09-04 (cierra el día, más tarde): LA MUDANZA DEL
+  REPO A LA ORGANIZATION `Kotodama-Finance`, EJECUTADA CON EL PASE ESCRITO
+  — SIN deploy: el artefacto de main NO cambió, y el sitio sirvió los
+  MISMOS bytes durante toda la transferencia.** Con el «go» del autor y él
+  mirando. La sesión arrancó por el paso 0 y PARÓ antes del 1 por
+  instrucción suya («si algo del snapshot no coincide, pará»): el único
+  dato distinto era `redesign-trust` en `02caabc` — el commit que ESCRIBIÓ
+  el pase, que la tabla no podía contener; local = origin —, y él lo cerró
+  como esperable y dio el go. Lo demás coincidía exacto, serial incluido:
+  `05F962AD…BAED3` quedó como discriminador. Sonda de cola: build en
+  `built` a los 34 s (19 s de duración). Transferencia por API a las
+  **05:36:13 UTC, HTTP 202 inmediato**. Verificación en el mismo minuto:
+  repo bajo la org con el MISMO id, URL vieja en 301, Pages `built` con
+  cname e HTTPS forzado, **mismo serial en apex y www — certificado
+  CONSERVADO**, portada y /musubi/ byte a byte contra `main`, notas en
+  404, los siete refs idénticos por la URL nueva. **Exposición medida:
+  23 s, sin ningún síntoma; ninguna vía de recuperación aplicada; Pages
+  NO redesplegó** (el `Last-Modified` servido siguió siendo el de la
+  sonda). **Dos «sin verificar» del pase pasaron a VERIFICADOS hoy**: la
+  transferencia a una org donde uno es owner es INMEDIATA y sin aceptación
+  (202 + el correo de GitHub: «No further action is required», dato del
+  autor), y el certificado SE CONSERVA (el serial es la evidencia). Paso
+  5: remoto local a la URL nueva, fetch sin cambios, las cuatro ramas en
+  sync. Ver la decisión primera de la lista, que pasó a EJECUTADA.
+  Guardas: structure y modes en verde.
+- Último cierre anterior: **2026-09-04 (cierra el día): EL PASE DE LA MUDANZA DEL
   REPO A LA ORGANIZATION, ESCRITO SIN EJECUTAR — SIN deploy: el artefacto
   de main NO cambió; nada se transfirió, Pages y los settings de GitHub
   intactos.** Pedido del autor: el reconocimiento del día bajó a disco como
@@ -883,10 +916,11 @@ abierta, ver su bullet en Estado; (2) la description y el gloss de
 /notes/ — redacción suya; (3) el TEXTO de la capa 1 de seguros — su
 andamiaje ya está servido con noindex, invisible; (4) la PRIMERA NOTA
 REAL — el sistema está construido, el pase de estreno vive en la decisión
-de notas; **(5) la MUDANZA DEL REPO a la Organization `Kotodama-Finance`
-— el PASE está ESCRITO (2026-09-04, ver la decisión primera de la lista)
-y se ejecuta en una SESIÓN APARTE el día que él elija, con él mirando;
-Code no la arranca sin su «go»**. *(Las DOS que estuvieron acá unas horas el 2026-08-14 se
+de notas. *(El (5) que estuvo acá — la MUDANZA DEL REPO a la Organization
+`Kotodama-Finance` — se EJECUTÓ el mismo 2026-09-04, más tarde, con su
+«go» y él mirando: mismo id, mismo certificado, Pages sin redesplegar, 23 s
+de exposición; ver el Último cierre y la decisión primera de la lista.)*
+*(Las DOS que estuvieron acá unas horas el 2026-08-14 se
 CERRARON el mismo día: el ENSAYO DEL ROLLBACK — eligió EN SECO y se
 ejecutó entero, ver el Último cierre y el README — y el NOMBRADO de los
 deploys para el rollback: el autor aceptó
@@ -1033,7 +1067,7 @@ sección con el detalle.
 
 | Cabo | Estado |
 |---|---|
-| **Mudanza del repo a la Organization `Kotodama-Finance`** | **PASE ESCRITO el 2026-09-04, SIN ejecutar** — snapshot RE-MEDIDO (id `1270699426`, los siete refs, Pages, el serial del certificado), lo verificado que no se re-chequea, lo que GitHub NO promete, el procedimiento con la sonda de cola y el punto de exposición marcado, las tres vías de recuperación y lo que envejece afuera. Se ejecuta en SESIÓN APARTE, con Manuel mirando; el horario es irrelevante por decisión suya. Ver la decisión primera de la lista. |
+| ~~Mudanza del repo a la Organization `Kotodama-Finance`~~ | **EJECUTADA el 2026-09-04 a las 05:36:13 UTC, con el pase escrito ese mismo día y el autor mirando**: POST /transfer → 202 inmediato, sin aceptación; repo bajo la org con el MISMO id (`1270699426`); Pages `built` con cname e HTTPS forzado; **certificado CONSERVADO — serial `05F962AD…BAED3` idéntico antes y después, en apex y www**; **Pages NO redesplegó** (mismos bytes servidos durante la transferencia, sha256 contra `main`); los siete refs idénticos por la URL nueva; **exposición 23 s sin síntoma**, ninguna vía de recuperación. Remoto local ya en `Kotodama-Finance/kotodama-landing`. Lo que envejece afuera sigue afuera (el CNAME de www a `realshinka.github.io`, servido y verificado después; los enlaces de Manuel). Ver la decisión primera de la lista. |
 | ~~Re-barrido de seguridad del estático~~ | **CERRADO 2026-08-08 (el mismo día que se anotó)**: medido sobre EL ARTEFACTO —los blobs de main (deploy 8) y la rama maintenance regenerada—, como la regla «el servido no es el fuente» exige, y el texto con fecha nueva ENTREGADO al autor (su archivo lo pega él, no se edita). Resultado limpio: 84 `_blank` todos con noopener (80→84 = las DOS páginas nuevas desde el barrido viejo, /sitemap/ y seguros, × los 2 del footer — nada más cambió), 0 formularios, 0 handlers, 0 style=, 1 tercero por página (el pixel), import map único inline (67 bytes post-strip), 0 sumideros en el JS de la casa Y en el vendor. |
 | ~~Acople de check-ready al deploy~~ | **CERRADO 2026-08-08: el autor aprobó el diseño A y la guarda quedó IMPLEMENTADA** — `verificar_placeholders_indexables` en make-deploy: página INDEXABLE del artefacto no puede llevar placeholders TODO (la inversa de `noindex_olvidado`; seguros con su noindex pasa, la tarjeta de sector habría frenado), conteo COMPARTIDO vía `_guardas.placeholders_de`, FRENA desde HEAD y AVISA bajo `--fuente`. Probada en rojo end-to-end (worktree descartable con commit real). Ver la decisión, primera de la lista. |
 | **Capa 1 de seguros: el TEXTO** | **el frente activo (2026-08-07)**: andamiaje listo en `/hajime/yorozu/japan/seguros/` con 25 placeholders esperando el texto del autor, **con `noindex` mientras tanto** (exclusión del sitemap derivada; al redactar: sacar la meta + regenerar sitemap.xml y /sitemap/ —mismo comando— + baseline — el olvido tiene guarda). **Servido con su noindex desde el deploy 4 (2026-08-07): 200 en el dominio, fuera del sitemap servido — invisible, verificado.** La tarjeta desde /hajime/yorozu/: el PATRÓN existe (2026-08-07) pero **su marcado salió del archivo el 2026-08-08** (los TODOs quedaban visibles en ver-código de una página publicada) — **se repone junto con el título del autor**, y al sacar el noindex vuelve a ser requisito del mapa. Ver la decisión del patrón de sector. |
@@ -1056,7 +1090,59 @@ sección con el detalle.
 
 ## Decisiones cerradas — no rediscutir
 
-### La mudanza del repo a la Organization `Kotodama-Finance`: el pase, escrito ANTES de ejecutarlo
+### La mudanza del repo a la Organization `Kotodama-Finance`: el pase, escrito ANTES de ejecutarlo — y EJECUTADO
+
+**EJECUTADA el 2026-09-04, más tarde el mismo día en que se escribió, con
+el «go» del autor y él mirando. El registro de la ejecución va primero; el
+pase tal como se escribió — y como se ejecutó, leyéndolo, sin reconstruir
+nada — queda debajo sin reescribir.**
+
+| Paso | Hora (UTC) | Resultado |
+|---|---|---|
+| 0 · snapshot del día | antes de la sonda (lecturas) | Todo IDÉNTICO a la tabla (1) salvo `redesign-trust`, en `02caabc` — el commit que escribió el pase, que la tabla no podía contener; local = origin, árbol limpio. Serial en vivo `05F962AD0232C630E05D88D69CDB3F2BAED3`, sin renovar: quedó como discriminador. **PARADA antes del paso 1** por la instrucción del autor de ese día («si algo del snapshot no coincide, pará»); él cerró la diferencia como esperable, no deriva, y dio el go. |
+| 1 · sonda de cola | 05:33:37 | `POST /pages/builds` → 201 `queued`; build nuevo `building` a +15 s, `built` a +34 s (19.063 ms). Dentro de la referencia 18–27 s. El `Last-Modified` servido pasó a 05:33:57 GMT: la referencia del 4d. |
+| 2 · comprobación final | 05:34:44 | Árbol limpio y en sync; `ls-remote` idéntico al paso 0 (11 líneas); :8000 y :8001 libres; un solo worktree. |
+| 3 · transferencia | **05:36:13** | `POST /repos/RealShinka/kotodama-landing/transfer` con `new_owner: Kotodama-Finance` → **HTTP 202** (recibido 05:36:16). Inmediata, sin aceptación por correo. Nombre del repo sin cambiar. |
+| 4a | 05:36:18 | `GET /repos/Kotodama-Finance/kotodama-landing` → 200, **id `1270699426`** (el mismo), owner Organization, default `main`, has_pages. `GET` a la URL vieja → **301** a `/repositories/1270699426`. |
+| 4b | 05:36:22 | `/pages` bajo la org: `built` · cname `kotodamafinance.com` · `https_enforced: true` · legacy · `main` `/` · `protected_domain_state: null` · pending null · certificado approved (2026-11-13). `builds/latest` = el de la sonda (05:33:39): **Pages NO redesplegó**. |
+| 4c | 05:36:30 | **Serial en vivo `05F962AD0232C630E05D88D69CDB3F2BAED3` en apex Y en www — EL MISMO del paso 0. Certificado CONSERVADO, sin re-emisión; ningún handshake fallido, ni en el primer intento.** |
+| 4d | 05:36:30 | `Last-Modified` 05:33:57 GMT (el de la sonda: sin rebuild); portada (14.989 bytes) y /musubi/ sha256-idénticas a sus blobs de `main`; /CLAUDE.md, /notes/, /tools/ y /README.md en 404; www→apex 301. |
+| 4e | 05:36:35 | `git ls-remote` por la URL nueva: los siete refs IDÉNTICOS al paso 0. |
+| 5 · remoto local | 05:39:33 | `set-url` a `https://github.com/Kotodama-Finance/kotodama-landing.git`; fetch sin cambios; las cuatro ramas en sync; la credencial sin tocar (es por host). |
+
+**Exposición: del POST (05:36:13) al fin de la verificación (05:36:36), 23
+segundos, sin ningún síntoma observado. Ninguna de las tres vías de (5)
+hizo falta.** El sitio sirvió los MISMOS bytes durante toda la
+transferencia: Pages no redesplegó, y no había nada que redesplegar.
+
+**Lo que el pase tenía como «sin verificar» y hoy quedó VERIFICADO contra
+un caso propio** (los dos, marcados también en su lugar en (3)):
+
+- **La transferencia a una org donde uno es owner es INMEDIATA y sin
+  aceptación**: el POST devolvió 202 y el repo respondía bajo la org a los
+  5 s, sin ningún paso intermedio; el correo de GitHub al autor dice «No
+  further action is required» (dato suyo, del mismo día).
+- **El certificado SE CONSERVA**: el mismo serial antes y después, en apex
+  y en www, sin ventana de handshake. La evidencia es el serial, no la
+  ausencia de quejas.
+
+Y lo que la expectativa dejaba abierto se cerró con dato: **Pages NO
+redesplegó al transferir** — no es un fallo, es exactamente lo que había
+que medir; el `Last-Modified` y el último build son los de la sonda.
+
+**Lo que este caso NO prueba, para no estirarlo**: un repo cuya URL
+`*.github.io` esté en uso (acá manda el cname), un dominio verificado a
+nivel de cuenta u org (acá `protected_domain_state` era null), ni una
+transferencia que SÍ pida aceptación (a una org donde no se es owner). Una
+mudanza distinta re-lee (3) antes de dar por hecho lo de hoy.
+
+**Y el aviso duro de (6) rige DESDE HOY: NUNCA crear
+`RealShinka/kotodama-landing`.** El redirect de la URL vieja (301 medido)
+vive solo mientras ese nombre esté libre.
+
+---
+
+*El pase, tal como se escribió antes de ejecutarlo:*
 
 **2026-09-04, pedido del autor: ESCRIBIR el plan, no ejecutarlo. Nada se
 transfirió, Pages no se tocó, ningún setting cambió.** Lo que se mueve:
@@ -1140,8 +1226,10 @@ MUDANZA** (re-medido el 2026-09-04 salvo donde se dice «de memoria»):
   `8003::153`) — re-medido con nslookup. Un solo pool de IPs sirve a todos
   los dueños, o sea que el DNS del apex no tiene nada que cambiar.
 - **El remoto local NO está versionado y la credencial es por HOST**:
-  `origin = https://github.com/RealShinka/kotodama-landing.git` vive en
-  `.git/config` (re-leído); `credential.helper = manager` (Git Credential
+  `origin = https://github.com/RealShinka/kotodama-landing.git` vivía en
+  `.git/config` (re-leído; **desde el paso 5 de la ejecución apunta a
+  `https://github.com/Kotodama-Finance/kotodama-landing.git`**);
+  `credential.helper = manager` (Git Credential
   Manager, en el gitconfig del sistema — re-leído), cuya entrada es
   `github.com` sin dueño. Cambiar la URL del remoto no toca la credencial.
 - **El detector de hotfix y `verificar_main_intacta` no guardan URL ni
@@ -1183,14 +1271,22 @@ resuelto** (de memoria: la documentación de transferencia leída el
   garantía escrita.** Es coherente con «el sitio cuelga del id», pero no
   está prometido. Por eso el serial es el discriminador y por eso la
   verificación del paso 4 se hace en el mismo minuto, con él mirando.
+  *(VERIFICADO el 2026-09-04 al ejecutar: el certificado SE CONSERVÓ —
+  serial `05F962AD…BAED3` idéntico antes y después, en apex y www, sin
+  ventana de handshake — y Pages NO redesplegó: mismos bytes servidos y
+  mismo `Last-Modified`. Sigue sin ser garantía escrita de GitHub; es un
+  caso propio, medido, con la evidencia en el registro de arriba.)*
 - Los dos modos de fallo que la expectativa no cubre: una re-emisión abre
   una ventana con error de certificado (durante la cual `https_enforced`
   puede caer a `false`); un «domain already taken» dejaría el cname sin
   asignar hasta verificar el dominio a nombre de la org — la vía (c).
 - «La transferencia a una org donde uno tiene permiso de crear repos es
-  inmediata, sin aceptación por correo» — de memoria; **sin verificar**
-  contra un caso propio. Si pide aceptación, se acepta desde la org y el
-  reloj arranca ahí.
+  inmediata, sin aceptación por correo» — de memoria; ~~**sin verificar**
+  contra un caso propio~~ **VERIFICADO el 2026-09-04 contra este caso: el
+  POST devolvió 202 y el repo respondía bajo la org a los 5 s, sin ningún
+  paso de aceptación; el correo de GitHub al autor dice «No further action
+  is required» (dato suyo).** Si otra mudanza pide aceptación (una org
+  donde no se es owner), se acepta desde la org y el reloj arranca ahí.
 
 **(4) EL PROCEDIMIENTO, paso a paso.** Prerrequisitos: árbol limpio,
 `redesign-trust` y `main` en sync con origin, NADA a medio deployar (la
@@ -1295,6 +1391,9 @@ memoria; las dos primeras son mecanismos ya usados en este repo):
   verificar por Code contra la documentación). Retargetearlo a
   `kotodama-finance.github.io` es un cambio SIN ventana, en la zona de
   Xserver, para cuando se quiera — no forma parte de la mudanza.
+  *(Verificado EN CONDUCTA después de la mudanza, 2026-09-04 — no contra
+  la documentación: www→apex sigue en 301 y sirve con el mismo
+  certificado bajo la org, con el CNAME viejo intacto.)*
 - **Los enlaces al repo viejo** en LinkedIn, en X y en los `.md` de
   Manuel (`kotodama_infraestructura.md`, `kotodama_finance_context.md`):
   el redirect de GitHub los cubre mientras exista; se actualizan cuando
@@ -4105,8 +4204,9 @@ versión japonesa son un pase aparte del autor. Tampoco se inventan explicacione
 del sistema filosófico ni las razones de los nombres.
 
 ### Otras reglas vigentes
-- **DESPUÉS DE LA MUDANZA DEL REPO A LA ORGANIZATION, NUNCA crear un repo
-  `kotodama-landing` bajo `RealShinka`**: el redirect de la URL vieja vive
+- **LA MUDANZA DEL REPO A LA ORGANIZATION SE EJECUTÓ EL 2026-09-04; desde
+  entonces, NUNCA crear un repo `kotodama-landing` bajo `RealShinka`**: el
+  redirect de la URL vieja (301, medido ese día) vive
   solo mientras ese nombre esté libre, y crearlo lo borra para siempre —
   enlaces viejos y clones sin cambiar el remoto, muertos. Ver la decisión
   de la mudanza, primera de la lista.
