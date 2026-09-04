@@ -79,8 +79,8 @@ en CLAUDE.md, decisión de la rama de deploy):
    verificado por derivaciones INDEPENDIENTES del stripper: html.parser del
    stdlib (stream de eventos fuente↔artefacto, cero eventos de comentario),
    texto_visible de _guardas, el chrome idéntico ENTRE páginas del artefacto,
-   el contrato de supervivencia con nombre (meta de Bing, import
-   map, gc-pixel por página, las noindex, el @license del vendor) y la
+   el contrato de supervivencia con nombre (import map, gc-pixel por
+   página, las noindex, el @license del vendor) y la
    igualdad de tokens en CSS/JS. Es la red real contra un stripper con un
    bug: check-modes contra el artefacto solo navega la portada y /hajime/ —
    las otras páginas las cubre esto.
@@ -752,19 +752,23 @@ def verificar_identidad(arbol_pub, arbol_fuente):
     return problemas
 
 
-def verificar_transformacion(arbol_pub, leer_fuente, leer_pub, desde_head=True):
+def verificar_transformacion(arbol_pub, leer_fuente, leer_pub):
     """La guarda 4: cero comentarios y NADA MÁS cambiado, por derivaciones
     INDEPENDIENTES del stripper. Es la red real contra un bug del stripper —
     la identidad recomputa la misma función (tautológica) y check-modes solo
     navega la portada y /hajime/: el resto del artefacto lo cubre esto.
 
-    `desde_head=False` es el rollback (--fuente): las comprobaciones
-    COMPARATIVAS rigen igual (nada que el fuente tenga puede perderse), pero
-    las de PRESENCIA (la meta de verificación de Bing, los bloques de chrome
-    que ese árbol no tenía) siguen la partición del CONTRATO — «el sitio de
-    ese día se publica como era». Sin esto, el rollback documentado a
-    v1-published/v1-content-complete frenaba en seco (hallazgo ALTO de la
-    revisión adversarial, reproducido ejecutando)."""
+    TODAS sus comprobaciones son COMPARATIVAS (nada que el fuente tenga
+    puede perderse), así que rigen igual bajo --fuente: qué bloques de
+    chrome exigir se DERIVA del fuente, y el rollback publica «el sitio de
+    ese día como era». Hasta el 2026-09-04 había además UNA comprobación de
+    PRESENCIA — la meta de verificación de buscador de la portada, exigida
+    solo desde HEAD (parámetro `desde_head`) para no frenar el rollback
+    documentado a v1-published/v1-content-complete (hallazgo ALTO de la
+    revisión adversarial del deploy 8, reproducido ejecutando). Salió con
+    la meta: hoy ninguna vive en el HTML. Si vuelve a hacer falta exigir
+    algo que los fuentes viejos no tienen, vuelve esa partición — el caller
+    sabe si publica HEAD (`fuente_ref is None`)."""
     problemas = []
     htmls = [r for r in sorted(arbol_pub) if r.endswith(".html")]
 
@@ -859,32 +863,17 @@ def verificar_transformacion(arbol_pub, leer_fuente, leer_pub, desde_head=True):
 
     # 5. El contrato de supervivencia, con nombre: piezas que el punto 2 ya
     #    cubre pero cuyo rojo tiene que nombrar la pieza — el diagnóstico
-    #    «cambió un evento» no le dice al operador que perdió la verificación
-    #    de Bing. (Hasta el 2026-08-14 la pieza era la meta de Search
-    #    Console; Google migró a propiedad de DOMINIO por TXT en el DNS —
-    #    independiente del HTML — y la meta que ahora sostiene una
-    #    verificación es la de Bing Webmaster Tools.)
+    #    «cambió un evento» no le dice al operador que el cubo se murió.
+    #    (Hasta el 2026-09-04 la primera pieza era la meta de verificación
+    #    de buscador de la portada — Search Console hasta el 2026-08-14,
+    #    Bing después —, exigida desde HEAD y verificada tras la
+    #    transformación. Salió del contrato con la meta: Google es propiedad
+    #    de DOMINIO por TXT en el DNS y Bing se importa desde Search
+    #    Console, así que ninguna meta de verificación vive en el HTML.
+    #    Nada la exige, y nada la reclama si alguien la repone.)
     if "index.html" in arbol_pub:
         fuente = leer_fuente("index.html").decode("utf-8")
         pub = leer_pub("index.html").decode("utf-8")
-        m = re.search(r'<meta name="msvalidate\.01" content="[^"]*"\s*/?>',
-                      fuente)
-        if not m:
-            # PRESENCIA solo desde HEAD: bajo --fuente rige la partición del
-            # CONTRATO («el sitio de ese día se publica como era») — los
-            # fuentes anteriores a este cambio no tienen la meta de Bing, y
-            # exigirla incondicional mataría el rollback documentado (el
-            # hallazgo ALTO de la revisión del deploy 8, con la meta de
-            # Google: --fuente v1-published frenaba y --pisar no exime de la
-            # guarda).
-            if desde_head:
-                problemas.append("index.html (fuente): sin la meta msvalidate.01 "
-                                 "— si falta en la portada se pierde la verificación de "
-                                 "Bing Webmaster Tools (regla de CLAUDE.md)")
-        elif m.group(0) not in pub:
-            problemas.append("index.html: la meta msvalidate.01 NO "
-                             "sobrevivió a la transformación — publicarla así pierde "
-                             "la verificación de Bing Webmaster Tools")
         if ('<script type="importmap">' in fuente
                 and '<script type="importmap">' not in pub):
             problemas.append("index.html: el import map no sobrevivió — el cubo "
@@ -1338,8 +1327,7 @@ def main():
     problemas = (verificar_sin_notas(arbol_pub)
                  + verificar_completo(arbol_pub, leer, requeridos)
                  + verificar_identidad(arbol_pub, arbol_todo)
-                 + verificar_transformacion(arbol_pub, leer_fuente, leer,
-                                            desde_head=fuente_ref is None))
+                 + verificar_transformacion(arbol_pub, leer_fuente, leer))
     # Placeholders en página indexable: FRENA desde HEAD, AVISA bajo --fuente
     # (un rollback publica el sitio de aquel día como era — decisión del
     # autor, 2026-08-08; el detalle en el docstring de la función).

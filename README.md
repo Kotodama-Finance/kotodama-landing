@@ -319,8 +319,8 @@ lo verificado es lo publicado), que **no lleve notas** (por tipo —cero
 blob fuente), que **la transformación no haya tocado nada más que
 comentarios** (la guarda de contenido: cero comentarios en el artefacto por
 `html.parser`, mismo stream de eventos, mismo texto visible, el chrome
-idéntico entre páginas del artefacto, la meta de verificación de Bing/import
-map/JSON-LD de Organization/gc-pixel/noindex vivos — el JSON-LD además BYTE
+idéntico entre páginas del artefacto, import map/JSON-LD de
+Organization/gc-pixel/noindex vivos — el JSON-LD además BYTE
 A BYTE, porque mal formado Google lo ignora en silencio—, tokens de CSS/JS
 intactos), que **ninguna página
 INDEXABLE del artefacto lleve placeholders TODO** (desde el 2026-08-08 — el
@@ -447,11 +447,14 @@ Desde `redesign-trust`, con el árbol limpio:
    `/README.md` y `/tools/check-ready.py` tienen que dar **404**, y la
    portada tiene que cargar entera (cubo incluido). **Y que los comentarios
    tampoco**: el ver-código de la portada servida sin ningún `<!--` (salvo
-   dentro de `<script>`/`<style>`, donde no hay), con la meta de
-   verificación de Bing (`msvalidate.01`) intacta, token carácter por
-   carácter *(hasta el 2026-08-14 acá se verificaba la meta de Search
-   Console; hoy la verificación de Google es TXT en el DNS y esa meta ya no
-   existe — cero ocurrencias de `google-site-verification` es lo correcto)*.
+   dentro de `<script>`/`<style>`, donde no hay), con CERO metas de
+   verificación de buscadores — cero `google-site-verification` (desde el
+   2026-08-14 la verificación de Google es TXT en el DNS) y cero
+   `msvalidate.01` (desde el 2026-09-04: Bing se importa desde Search
+   Console y su meta salió); si alguna reaparece, alguien la repuso
+   creyendo que faltaba — y con el pixel de GoatCounter apuntando a
+   `kotodamafinance.goatcounter.com` (el código del sitio desde el
+   2026-09-04; el viejo, `realshinka`, ya no existe).
 
 ### Rollback: volver a un estado bueno ya publicado
 
@@ -475,10 +478,11 @@ git push origin main
   el sitio — generado de `<hash>`»; el título entra con los que siguen — la
   historia no se reescribe). Los tags de hito apuntan a fuentes de agosto de
   2026 y valen como historia, no como retorno de emergencia: un rollback ahí
-  perdería la meta de verificación de Bing, el JSON-LD y las correcciones
-  posteriores (criterio revisado con el autor, 2026-08-14; la verificación
-  de GOOGLE ya no depende del HTML — desde ese día es TXT en el DNS) — en el
-  apuro, el commit bueno se elige del menú.
+  perdería el JSON-LD, el host vigente del pixel de GoatCounter y las
+  correcciones posteriores (criterio revisado con el autor, 2026-08-14;
+  ninguna verificación de buscador depende ya del HTML — Google es TXT en
+  el DNS desde ese día, y Bing se importa desde Search Console desde el
+  2026-09-04) — en el apuro, el commit bueno se elige del menú.
 - **La historia no se reescribe**: el rollback es un commit NUEVO encima de
   `main`, sin force-push. Pages publica en un par de minutos.
 - **Los avisos del rollback son esperables, no errores**: si el commit bueno
@@ -507,10 +511,14 @@ ni el dominio:
 
 - **Qué mostraría el dominio con `--fuente v1-published`**: desaparecen
   `/sitemap/`, `/hajime/yorozu/japan/seguros/` y `/favicon-192x192.png`
-  (404); la portada pierde **LA META DE VERIFICACIÓN VIGENTE y el JSON-LD de
-  Organization** — los dos son posteriores al tag (medido contra el árbol
-  del tag el 2026-08-14, entonces con la meta de Search Console: cero
-  ocurrencias; hoy la meta vigente es la de Bing, también posterior)—;
+  (404); la portada pierde **el JSON-LD de Organization** — posterior al
+  tag (medido contra el árbol del tag el 2026-08-14: cero ocurrencias;
+  entonces perdía además la meta de Search Console, y hasta el 2026-09-04
+  la de Bing — hoy el HEAD tampoco lleva ninguna meta de verificación, así
+  que ahí no queda nada que perder)—; **el pixel de GoatCounter vuelve al
+  host viejo `realshinka`** en todas las páginas (código que no existe
+  desde el 2026-09-04: las visitas de la ventana no se cuentan — o las
+  cuenta quien haya registrado ese código);
   `/method/` vuelve al dominio viejo de IMAJ
   (toushin.or.jp); la flecha del hero vuelve a ser enlace; la nav vuelve al
   fondo por JS (el bug móvil del deploy 5). El sitio viejo es un sitio SANO
@@ -525,15 +533,18 @@ ni el dominio:
   repo**: el precedente del deploy 2 quedó encolado ~24 h, y la palanca es
   el commit VACÍO de retrigger (con su `Fuente:` — ver la decisión de la
   rama de deploy en CLAUDE.md).
-- **El riesgo que manda** *(REVISADO el 2026-08-14, después del ensayo)*:
-  cuando se midió, era la meta de Search Console ausente durante la ventana.
-  **Ese riesgo ya no existe**: la verificación de Google es propiedad de
-  DOMINIO por TXT en el DNS, independiente de lo que sirva el HTML. El
-  equivalente hoy, más chico, es **la meta de verificación de BING ausente**
-  (`msvalidate.01`, en la portada desde el 2026-08-14): Bing la re-chequea
-  periódicamente; si el chequeo cae en la ventana, re-verificar con el mismo
-  token (que vuelve con el paso de vuelta) la recupera. Ventana corta =
-  riesgo bajo; cola trabada = crece con las horas.
+- **El riesgo que manda** *(REVISADO el 2026-08-14 después del ensayo, y
+  otra vez el 2026-09-04)*: cuando se midió, era la meta de Search Console
+  ausente durante la ventana. **Ese riesgo ya no existe, y el que lo
+  reemplazó tampoco**: la verificación de Google es propiedad de DOMINIO
+  por TXT en el DNS y la de Bing se importa desde Search Console — desde el
+  2026-09-04 ninguna meta de verificación vive en el HTML, así que un fuente
+  sin ella no pierde nada *(hasta ese día el equivalente era la meta de
+  Bing ausente, re-verificable con el mismo token)*. Lo que queda en la
+  ventana de un rollback a un fuente anterior al 2026-09-04 es **el pixel
+  de GoatCounter apuntando al código viejo** (`realshinka`): las visitas de
+  esa ventana no se cuentan, y si alguien registró ese código, las cuenta
+  él. Ventana corta = riesgo bajo; cola trabada = crece con las horas.
 
 **La variante EN SECO — casi toda la evidencia, exposición cero.** Ensaya
 todo el camino salvo el build de Pages, que es la parte de MENOR

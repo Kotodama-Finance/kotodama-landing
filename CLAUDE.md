@@ -46,7 +46,39 @@ fallidos ya corregidos, y las capturas intermedias.
   tiene guardas, ni make-deploy, ni rama-artefacto, A PROPÓSITO: son dos
   archivos (`CNAME` + `index.html` con meta refresh). Nada de este repo lo
   mira ni tiene que mirarlo.
-- Último cierre: **2026-09-04: EL LOCK DE LA OG-IMAGE VIGILA LOS CINCO
+- Último cierre: **2026-09-04 (más tarde): LA META DE BING SALE DEL HEAD Y
+  EL PIXEL DE GOATCOUNTER SE MUDA A `kotodamafinance` — COMMITEADO EN EL
+  FUENTE Y PREPARADO PARA PUBLICAR, CON PARADA: EL DEPLOY ESPERA EL «GO»
+  DEL AUTOR.** Dos cambios chicos en un solo deploy (ninguno justificaba
+  uno propio; juntos sí), sin revisión adversarial ni agentes, a pedido.
+  **(1)** La meta `msvalidate.01` quedó REDUNDANTE — Bing terminó
+  reimportándose desde Search Console, cuya propiedad es de DOMINIO por TXT
+  en el DNS — y sale del `<head>` de la portada: **hoy NINGUNA meta de
+  verificación de buscador vive en el HTML**, y la regla «la meta de Bing
+  NO se toca» (escrita el 2026-08-14, cuando SÍ sostenía la verificación)
+  quedó DEROGADA en todos sus lugares — el comentario pegado a la línea, AL
+  RETOMAR, SEARCH CONSOLE, el contrato de `make-deploy.py` (que la exigía
+  desde HEAD y habría FRENADO el deploy), el paso 7 y el análisis del
+  rollback del README, y las notas en los registros de los deploys 6 y 12
+  y en las decisiones del JSON-LD y de la transformación. **(2)** El host
+  del pixel pasa de `realshinka.goatcounter.com` a
+  `kotodamafinance.goatcounter.com` en las DIECIOCHO páginas del fuente
+  (`p=` intacto, el `<img>` en su lugar, la guarda del deploy cuenta la
+  clase y no el host) — el último servicio del sitio colgado del alias
+  personal. **LA PARADA Y SU MOTIVO**: GoatCounter renombra el código del
+  sitio al instante y conserva el histórico; desde que el autor aprieta
+  «Change», el pixel viejo servido apunta a un código que no existe — él
+  aceptó perder las visitas de esa ventana (tráfico casi nulo) y DESCARTÓ
+  la vía de dos pixeles simultáneos por desproporcionada. El orden: fuente
+  listo → él renombra → «go» → push, con la ventana en minutos (el código
+  viejo queda LIBRE: si alguien lo registra, el pixel viejo le mandaría
+  visitas — motivo extra para no demorar). **EL DOMINIO TODAVÍA SIRVE EL
+  PIXEL VIEJO, que es el código vigente hasta el renombre.** Ver la
+  decisión nueva, primera de la lista. Guardas antes del commit: structure,
+  modes y pendulum (0.0909) en verde, ready `2` esperado; `--solo-verificar`
+  lee HEAD y corre después del commit — su resultado, el artefacto y la
+  verificación en vivo van en el registro del deploy.
+- Último cierre anterior: **2026-09-04: EL LOCK DE LA OG-IMAGE VIGILA LOS CINCO
   TOKENS QUE DIBUJA, NO EL `:root` ENTERO — SIN deploy: el PNG es
   byte-idéntico (sha256 verificado antes y después) y `tools/` no se
   publica.** Consulta de diseño del autor sobre un síntoma del deploy 11:
@@ -142,7 +174,9 @@ fallidos ya corregidos, y las capturas intermedias.
   parseando (Organization), cero comentarios, import map y gc-pixel vivos,
   las cuatro rutas de notas y /CLAUDE.md y /tools/ en 404. **LO QUE QUEDA
   ES DE MANUEL: apretar «verificar» en Bing Webmaster Tools — la etiqueta
-  ya está SERVIDA.** Dos adendas del mismo día, después del cierre (pedido
+  ya está SERVIDA.** *(CERRADO DE OTRO MODO el 2026-09-04: Bing terminó
+  reimportándose desde Search Console y la meta quedó redundante — sale del
+  head; ver la decisión primera de la lista.)* Dos adendas del mismo día, después del cierre (pedido
   del autor): **(1)** el cierre de la etiqueta quedó NORMALIZADO en el
   fuente al estilo del resto del head (sin barra; el CONTENT intacto, DOM
   idéntico — Bing ve lo mismo) y **viaja con el próximo deploy**, no con
@@ -454,7 +488,8 @@ fallidos ya corregidos, y las capturas intermedias.
   TOCA**: si desaparece del `<head>` de la portada, se pierde la
   verificación. **DEROGADO el 2026-08-14**: Search Console migró a
   propiedad de DOMINIO por TXT en el DNS y la meta salió del head — en su
-  lugar vive la de Bing; ver SEARCH CONSOLE en AL RETOMAR)*; **(2) IMAJ
+  lugar vivió la de Bing hasta el 2026-09-04, cuando también salió: hoy
+  ninguna; ver SEARCH CONSOLE en AL RETOMAR)*; **(2) IMAJ
   renombrado y re-dominado**:
   資産運用業協会 / www.imaj.or.jp (la fusión del 1/4/2026; la sigla IMAJ
   sigue siendo correcta), cero restos de toushin.or.jp ni del nombre viejo
@@ -806,10 +841,13 @@ y el diseño del acople de check-ready (entregado con costos; la elección
 es suya, ver el grupo siguiente).
 
 **ESPERAN A MANUEL (Code no puede avanzarlos):**
-**(0) APRETAR «VERIFICAR» EN BING WEBMASTER TOOLS — lo más inmediato**: la
-etiqueta `msvalidate.01` está SERVIDA desde el deploy 12 (2026-08-14),
-verificada en vivo con el token exacto; solo falta el clic (no se podía
-antes del deploy — Bing tiene que ver la etiqueta servida);
+**(0) EL «GO» DEL DEPLOY PREPARADO EL 2026-09-04 — lo más inmediato**: el
+fuente lleva la meta de Bing afuera y el pixel en `kotodamafinance`; él
+renombra el código del sitio en GoatCounter, da el «go», y ahí se pushea
+(ver el Último cierre y la decisión primera de la lista). *(El (0)
+anterior — apretar «verificar» en Bing Webmaster Tools, desde el
+2026-08-14 — se CERRÓ de otro modo: Bing se reimportó desde Search Console
+y la meta salió.)*
 (1) el TÍTULO y la LÍNEA DE FUNCIÓN de la tarjeta de sector — decisión
 abierta, ver su bullet en Estado; (2) la description y el gloss de
 /notes/ — redacción suya; (3) el TEXTO de la capa 1 de seguros — su
@@ -841,10 +879,15 @@ independiente de este repo.** La meta salió del `<head>` en el deploy 12
 hueco entró la de BING (`msvalidate.01`): Bing había
 importado su propiedad desde Search Console — heredaba una verificación que
 acababa de morir — y se rehízo por HTML Meta Tag con cuenta propia. **LA
-META DE BING ES AHORA LA QUE NO SE TOCA**: Bing la lee al verificar y en
-re-chequeos posteriores — si desaparece del `<head>` de la portada, se
-pierde la verificación (la regla vive también en el comentario junto a la
-meta en index.html, y el contrato del deploy la exige por nombre). La
+META DE BING FUE LA QUE NO SE TOCÓ hasta el 2026-09-04 — y ese día quedó
+DEROGADA a su vez**: Bing terminó reimportándose desde Search Console
+(propiedad de DOMINIO, TXT en el DNS), la meta ya no sostenía nada y SALIÓ
+del `<head>` con el commit fuente de ese día (el registro del deploy, en
+Estado). **HOY NINGUNA META DE VERIFICACIÓN DE BUSCADOR VIVE EN EL HTML, y
+es lo correcto**: las dos verificaciones cuelgan del TXT de Google en el
+DNS — lo único que no se toca, y vive fuera del repo. El contrato del
+deploy ya no exige ninguna; si una meta de verificación reaparece en el
+head, alguien la repuso creyendo que faltaba. La
 publicación (el paso 5) se ejecutó **ANTES de los pasos 2-4, por decisión del
 autor, y el orden es correcto**: una transferencia de registrador NO cambia
 los nameservers — Namecheap sigue sirviendo la zona durante los ~5 días de la
@@ -978,6 +1021,69 @@ sección con el detalle.
 ---
 
 ## Decisiones cerradas — no rediscutir
+
+### Ninguna meta de verificación de buscador en el HTML, y el pixel en `kotodamafinance`
+
+**2026-09-04, instrucción del autor — dos cambios chicos en UN deploy
+(ninguno justificaba uno propio; juntos sí), sin revisión adversarial ni
+agentes, a pedido. Preparado con PARADA antes de publicar; el registro del
+deploy va en Estado cuando exista.**
+
+- **La meta de Bing (`msvalidate.01`) SALE del `<head>` de la portada**:
+  quedó REDUNDANTE — Bing terminó reimportándose desde Search Console, cuya
+  propiedad es de DOMINIO verificada por TXT en el DNS — y ya no sostenía
+  nada. Con esto **NINGUNA meta de verificación de buscador vive en el
+  HTML** (la de Google salió el 2026-08-14; la de Bing, hoy): las dos
+  verificaciones cuelgan del TXT de Google en la zona del DNS, fuera del
+  repo, que es lo único que no se toca. La regla «la meta de Bing NO se
+  toca» se escribió el 2026-08-14 cuando SÍ sostenía la verificación, y
+  quedó DEROGADA donde vivía — el barrido (la lección de la flecha del
+  hero: el dato aparece en más lugares que el obvio) la encontró en el
+  fuente, en tools, en cuatro pasajes del README y en seis de este archivo:
+  el comentario pegado a la línea en index.html (reemplazado por uno que
+  dice el estado real — sin metas, a propósito, y por qué), el (0) de AL
+  RETOMAR (apretar «verificar» en Bing — cerrado de otro modo), el párrafo
+  SEARCH CONSOLE de AL RETOMAR, el contrato de `make-deploy.py` (la exigía
+  por nombre desde HEAD y habría FRENADO el deploy como «sin la meta»; el
+  punto 5 de `verificar_transformacion` conserva el import map, y el
+  parámetro `desde_head` se fue con la única comprobación de PRESENCIA que
+  lo usaba — la partición queda descrita en el docstring por si vuelve a
+  hacer falta), el paso 7 del procedimiento de publicar, el análisis de
+  riesgo del rollback y la nota de los tags en el README, la nota en el
+  registro del deploy 6, el cierre del deploy 12 («lo que queda es de
+  Manuel: apretar verificar»), y las menciones en las decisiones del JSON-LD
+  y de la transformación. **Si una meta de verificación reaparece en el
+  head, alguien la repuso creyendo que faltaba: no la exige nadie.**
+- **El pixel de GoatCounter cambia de HOST: `realshinka.goatcounter.com` →
+  `kotodamafinance.goatcounter.com`**, en las DIECIOCHO páginas del fuente
+  (las dieciséis publicadas más /notes/ y la nota-fixture, que están fuera
+  del artefacto y salen con el host vigente el día del estreno). El `p=` de
+  cada página NO cambia; el `<img>` sigue donde estaba — antes de `</body>`,
+  FUERA de los bloques que compara `chrome_divergente`—; y la guarda del
+  deploy cuenta `class="gc-pixel"`, no el host, así que no hubo que
+  tocarla. Era el último servicio del sitio colgado del alias personal.
+- **La PARADA, y por qué**: GoatCounter renombra el código del sitio al
+  instante y conserva el histórico. Desde que el autor aprieta «Change», el
+  pixel viejo servido en las dieciséis páginas apunta a un código que ya no
+  existe. **Él eligió la vía simple a sabiendas**: acepta perder las
+  visitas de la ventana entre el renombre y el deploy, porque el tráfico
+  hoy es casi nulo. **La vía de los dos pixeles simultáneos se evaluó y se
+  DESCARTÓ por desproporcionada — no volver a proponerla.** El orden es:
+  fuente commiteado + guardas en verde + `--solo-verificar` en verde →
+  PARAR y avisar → él renombra y da el «go» → push sin más pasos. **Motivo
+  extra para no demorar entre una cosa y la otra**: el código viejo queda
+  LIBRE y cualquiera puede registrarlo — si alguien tomara `realshinka`, el
+  pixel viejo le estaría mandando visitas.
+- **Consecuencia para el ROLLBACK, escrita en el README**: un `--fuente`
+  anterior a este cambio publica el pixel con el host viejo — las visitas de
+  esa ventana no se cuentan (o las cuenta quien haya registrado el código).
+  Y ya no hay meta de verificación que perder en ningún rollback: el
+  «riesgo que manda» del análisis quedó revisado por segunda vez.
+- **Lo que envejece FUERA del repo (no se edita de oficio)**: el `.md` de
+  infraestructura del autor pide `img-src realshinka.goatcounter.com` para
+  la CSP del PaaS (§3, anotado el 2026-08-06) — hoy es `kotodamafinance`—, y
+  su context.md nombra el host viejo. Los dos son suyos; la copia derivada
+  de este archivo en OneDrive se regenera sola con el commit.
 
 ### El lock de la og-image vigila los cinco tokens que dibuja, no el `:root` entero
 
@@ -1257,11 +1363,12 @@ es dar la definición desde el propio dominio, que es el hueco que llenaba
 LinkedIn.
 
 - **Un `<script type="application/ld+json">` con schema.org Organization en
-  el `<head>` de la PORTADA, y solo ahí** — entre la meta de verificación
-  (hoy la de Bing; hasta el 2026-08-14, la de Search Console) y el bloque de
-  iconos: FUERA de los tres bloques que compara `chrome_divergente` (el de
-  iconos empieza en el `<link>` del .ico), el mismo lugar y por el mismo
-  motivo que esa meta.
+  el `<head>` de la PORTADA, y solo ahí** — entre `twitter:card` y el
+  bloque de iconos (hasta el 2026-09-04, entre la meta de verificación de
+  buscador vigente — Search Console hasta el 2026-08-14, Bing después — y
+  ese bloque): FUERA de los tres bloques que compara `chrome_divergente`
+  (el de iconos empieza en el `<link>` del .ico), el mismo lugar y por el
+  mismo motivo que tuvieron esas metas.
 - **La description NO se redactó: DERIVA de la meta description — que a su
   vez deriva del hero — CON UN RECORTE deliberado del autor (2026-08-10,
   deploy 10): va SIN la frase final «We begin with Japan.»** La frase es el
@@ -1427,10 +1534,11 @@ KB); main.js 14 de 22 KB; cube.js 26,6 de 48,7.
   EXACTOS, texto normalizado), `texto_visible` idéntico, el chrome idéntico
   ENTRE páginas del artefacto (los marcadores ahora viven en
   `_guardas.BLOQUES_CHROME`, compartidos con chrome_divergente — una sola
-  lista), el contrato de supervivencia con nombre (la meta de verificación
-  — la de Search Console hasta el 2026-08-14, hoy la de Bing—, el import
-  map, el gc-pixel por página, las noindex, el @license
-  del vendor) y la igualdad de tokens en CSS/JS. **Probada EN ROJO**: 11
+  lista), el contrato de supervivencia con nombre (el import map, el
+  gc-pixel por página, las noindex, el @license del vendor — y, hasta el
+  2026-09-04, la meta de verificación de buscador vigente: Search Console
+  hasta el 2026-08-14, Bing después; hoy no hay ninguna en el HTML y el
+  contrato no exige ninguna) y la igualdad de tokens en CSS/JS. **Probada EN ROJO**: 11
   mutaciones dirigidas (cada una frena nombrando la pieza), 17 fixtures del
   stripper con las líneas trampa REALES del repo (regex tras `||` en
   main.js, `*/` dentro de un regex, el template GLSL opaco, string con URL,
@@ -2123,7 +2231,13 @@ igual que `maintenance`: un artefacto derivado no se mantiene, se regenera.
 
 *(Desde el 2026-08-07 son QUINCE: toda página nueva entra con su pixel, y
 el andamiaje de seguros lo lleva con `p=/hajime/yorozu/japan/seguros/`. El
-registro de abajo describe la implementación original sobre 14.)*
+registro de abajo describe la implementación original sobre 14. **Y desde
+el 2026-09-04 el HOST del pixel es `kotodamafinance.goatcounter.com`**: el
+código del sitio en GoatCounter se renombró de `realshinka` — el alias
+personal — a `kotodamafinance`, el histórico se conservó, y el `<img>`
+cambió SOLO el host en las dieciocho páginas del fuente (`p=` y lugar,
+intactos). Ver la decisión primera de la lista; abajo, la cuenta y el host
+originales quedan como registro de la ejecución.)*
 
 **Decidido por el autor el 2026-08-06, contra la documentación primaria del
 servicio (leída del repo arp242/goatcounter; goatcounter.com estaba caído ese
@@ -2132,8 +2246,9 @@ día — dato en sí mismo). IMPLEMENTADO EL MISMO DÍA**, con la cuenta
 primer push. El registro de la ejecución, primero; las reglas con las que se
 hizo, después:
 
-- **La forma final**: `<img src="https://realshinka.goatcounter.com/count?p=/ruta"
-  alt="" width="1" height="1" loading="eager" class="gc-pixel">` antes de
+- **La forma final**: `<img src="https://kotodamafinance.goatcounter.com/count?p=/ruta"
+  alt="" width="1" height="1" loading="eager" class="gc-pixel">` (el host,
+  desde el 2026-09-04; hasta entonces `realshinka.goatcounter.com`) antes de
   `</body>` en las 14. La clase (y no `style=` inline) conserva el «`style=`
   en lo publicado: 0» del inventario de seguridad; el `loading="eager"` es
   contrato, no default — un pixel lazy solo mediría si entra al viewport; el
@@ -2183,8 +2298,10 @@ Las reglas con las que se ejecutó (cumplidas):
   contaría como visita. **CUMPLIDO y verificado por header del servidor.**
 - **La revisión de seguridad quedó actualizada** en el `.md` de
   infraestructura del autor (§3: de «0 cargas de terceros» a «1 por página»,
-  fechado), y la CSP del PaaS necesita `img-src` con
-  `realshinka.goatcounter.com` (su doc lo pide) — anotado allá y acá.
+  fechado), y la CSP del PaaS necesita `img-src` con el host del pixel —
+  hoy `kotodamafinance.goatcounter.com`; su doc todavía dice
+  `realshinka.goatcounter.com` (lo anotado allá el 2026-08-06; actualizarlo
+  es suyo) — anotado allá y acá.
 - **La retención quedó CONFIRMADA al crear la cuenta: 0 = nunca borrar** —
   cierra la duda que su doc dejaba abierta, y es lo que Cloudflare no ofrecía
   (30 días). El panel confirmó además Sessions activo (únicas server-side,
