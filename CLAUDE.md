@@ -41,6 +41,11 @@ fallidos ya corregidos, y las capturas intermedias.
   LA PUBLICACIÓN YA OCURRIÓ** — deploy `824fada` generado del fuente
   `6dc8214` (tag `v1-published`), verificado en el dominio real.
 - El sitio es estático: sin backend, sin frameworks, sin build step.
+- **Existe un SEGUNDO repo con Pages: `Kotodama-Finance/kotodamafinance-jp-redirect`**
+  (2026-09-03) — sirve la redirección de kotodamafinance.jp al .com, y NO
+  tiene guardas, ni make-deploy, ni rama-artefacto, A PROPÓSITO: son dos
+  archivos (`CNAME` + `index.html` con meta refresh). Nada de este repo lo
+  mira ni tiene que mirarlo.
 - Último cierre: **2026-08-20 (corrección al registro, dato del autor
   traído del chat de mantenimiento — SIN deploy: el artefacto de main NO
   cambió): SCROLL-DRIVEN ANIMATIONS CONFIRMADAS EN SAFARI DE iOS REAL.**
