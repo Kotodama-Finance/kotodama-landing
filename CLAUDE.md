@@ -46,7 +46,28 @@ fallidos ya corregidos, y las capturas intermedias.
   tiene guardas, ni make-deploy, ni rama-artefacto, A PROPÓSITO: son dos
   archivos (`CNAME` + `index.html` con meta refresh). Nada de este repo lo
   mira ni tiene que mirarlo.
-- Último cierre: **2026-08-20 (corrección al registro, dato del autor
+- Último cierre: **2026-09-04: EL LOCK DE LA OG-IMAGE VIGILA LOS CINCO
+  TOKENS QUE DIBUJA, NO EL `:root` ENTERO — SIN deploy: el PNG es
+  byte-idéntico (sha256 verificado antes y después) y `tools/` no se
+  publica.** Consulta de diseño del autor sobre un síntoma del deploy 11:
+  editar la PROSA de un comentario del `:root` pidió regenerar la og-image.
+  El diagnóstico se confirmó leyendo: la guarda hasheaba el bloque crudo
+  (34 tokens, 98 líneas, tres cuartos prosa) y el generador lee CINCO por
+  nombre. La evidencia dio vuelta el criterio «si fue el único, no lo
+  toques»: la entrada del `:root` disparó OCHO veces en la historia y las
+  ocho fueron falsas — una por prosa, siete por tokens que la imagen no
+  lee — y nunca una verdadera. El argumento que cerró, en palabras del
+  autor: «el costo no es el resellado sino el reflejo de resellar sin
+  mirar, que aplicado a un cambio real publica la imagen vieja en
+  silencio. Eso es la guarda erosionándose sola». La vía fue la barata,
+  sin parser: la lista de nombres y la lectura ya existían en el
+  generador y pasaron a `_guardas` (`OG_TOKENS`, `og_tokens`) con DOS
+  consumidores — el patrón de `placeholders_de` — y el lock hashea los
+  VALORES. Probado: 3 rojos + 8 verdes, PNG idéntico, guardas structure y
+  modes en verde. Ver la decisión nueva, primera de la lista. Lo que NO
+  se tocó, de acuerdo con el autor: la prosa dentro del script y la
+  entrada de las fuentes.
+- Último cierre anterior: **2026-08-20 (corrección al registro, dato del autor
   traído del chat de mantenimiento — SIN deploy: el artefacto de main NO
   cambió): SCROLL-DRIVEN ANIMATIONS CONFIRMADAS EN SAFARI DE iOS REAL.**
   El autor probó la nav en su iPhone el 2026-08-08 — sobre /musubi/,
@@ -957,6 +978,99 @@ sección con el detalle.
 ---
 
 ## Decisiones cerradas — no rediscutir
+
+### El lock de la og-image vigila los cinco tokens que dibuja, no el `:root` entero
+
+**2026-09-04, consulta de diseño del autor, aprobada e implementada el mismo
+día. SIN deploy: og-image.png quedó byte-idéntica (sha256
+`5aa48e00…3b38855a` antes y después) y `tools/` no se publica.** Sin
+revisión adversarial, a pedido: veinte líneas y una derivación compartida.
+
+- **El síntoma (deploy 11, 2026-08-14)**: editar la prosa de un comentario
+  que vive dentro del `:root` hizo que la guarda pidiera regenerar el PNG.
+  Salió byte-idéntico y solo hubo que resellar el lock.
+- **El diagnóstico, confirmado leyendo**: `og_entradas()` hasheaba el
+  bloque `:root` CRUDO, comentarios y espacios incluidos — la única
+  normalización era la de saltos de línea—, y el generador lee
+  exactamente cinco tokens por nombre (navy, surface-cube, gold, text,
+  text-mist). El `:root` tenía 34 tokens en 98 líneas, y el 75 % de sus
+  caracteres era prosa. O sea que la guarda avisaba por prosa Y por
+  cualquiera de los 29 tokens que la imagen nunca dibuja.
+- **La evidencia, que es lo que decidió** (el criterio previo del autor
+  era «si fue el único falso positivo, no lo toques»): el PNG cambió por
+  última vez en `bf70085` (2026-08-04). Desde entonces el lock se reselló
+  17 veces con el PNG intacto. La entrada del `:root` disparó OCHO veces
+  y las ocho fueron falsas — **ninguna verdadera en toda la historia**;
+  las dos únicas regeneraciones reales (`5c27675`, `bf70085`) vinieron de
+  la entrada del script:
+
+  | Commit | Qué cambió en el `:root` |
+  |---|---|
+  | `87eb8b0` (deploy 11) | solo prosa: el comentario de `--c-text-muted-2` |
+  | `f81ffcd` | `--nav-scrim` (retirado con el mecanismo `is-scrolled`) |
+  | `e1b68ac` | `--c-text-muted-2` (el contraste al filo) |
+  | `1573691`, `f6707b9` | `--halo-alpha` y `--wm-alpha` (los costados; el halo puesto y sacado) |
+  | `c98954f`, `a2ffa34`, `d769b61` | `--c-gold-ink` (las tandas de la tinta de la vista explotada) |
+
+  Ninguno de esos tokens lo consume la imagen. Clasificación hecha
+  comparando, commit por commit, los valores de los cinco tokens
+  consumidos antes y después (idénticos en los ocho) contra el resto del
+  bloque.
+- **El argumento que cerró, en palabras del autor**: «el costo no es el
+  resellado sino el reflejo de resellar sin mirar, que aplicado a un
+  cambio real publica la imagen vieja en silencio. Eso es la guarda
+  erosionándose sola.» `--sellar` no necesita Pillow ni nada externo, pero
+  usarlo bien exigía comparar el `:root` a mano en cada aviso — el juicio
+  que la guarda existe para hacer. Y el propio docstring de la guarda ya
+  había fallado la clase: el falso positivo del CRLF se arregló porque «una
+  señal falsa es exactamente el modo de fallo que esta guarda existe para
+  no tener»; el encabezado agrega que una entrada de más es señal falsa.
+  La entrada del `:root` era 29 tokens de más y tres cuartos de prosa.
+- **La refutación de la presunción del autor — «afinarla exige parsear
+  CSS, pieza nueva»**: el parseo YA EXISTÍA. La lectura de tokens del
+  generador es un regex por nombre sobre el bloque más una lista de cinco
+  nombres; la guarda no la usaba. La línea gruesa correcta ya estaba
+  trazada (hashear el `:root` y no styles.css entero) — lo que faltaba era
+  que, dentro del `:root`, la guarda consumiera el conocimiento que el
+  generador ya declaraba.
+- **Lo que cambió**: `OG_TOKENS` (la lista de nombres) y `og_tokens(css)`
+  (la lectura) viven en `_guardas.py`, con DOS consumidores — el
+  generador (`tokens()` los llama y aborta nombrando el token si falta o
+  no está como `#rrggbb`, sin fallback, como siempre) y el lock, que
+  hashea los VALORES de los cinco pares nombre=valor. Una derivación, no
+  dos que derivan: el patrón de `placeholders_de`. La deriva se cura sola:
+  si el generador pasa a dibujar un sexto token y se agrega a la lista,
+  cambia el hash del script, la guarda dispara y el lock se resella con
+  seis. La clave del lock pasó a `styles.css :root (tokens de la
+  og-image)`. Y la lectura busca sobre el MARCADO VIVO del bloque (sin
+  comentarios): un comentario del `:root` que cite «--c-gold: #000000;»
+  como ejemplo no puede pisar la declaración real — el mismo criterio que
+  el mapa y las notas (`sin_comentarios`), y el generador heredó la
+  corrección (antes buscaba sobre el bloque crudo).
+- **Probado EJECUTANDO, 11/11**: TRES ROJOS — `--c-gold` cambia de valor;
+  `--c-gold` desaparece; `--c-gold` en otra forma que `#rrggbb` — cada uno
+  dispara nombrando la entrada. OCHO VERDES — solo prosa de un comentario
+  del `:root`; `--nav-h` (token que la imagen no lee) cambia; el archivo en
+  LF y en CRLF (cubierto por construcción: se extraen valores, no bytes);
+  un comentario que cita `--c-gold` ANTES de la declaración real (verde, y
+  `og_tokens` devuelve el valor real, no el del comentario); el mismo
+  valor en mayúsculas. Más el PNG regenerado con el código nuevo:
+  byte-idéntico al anterior — el refactor no movió la lectura. Guardas:
+  structure y modes en verde.
+- **Lo que NO se tocó, de acuerdo con el autor**: la prosa dentro del
+  SCRIPT (un caso en tres cambios — el comentario de puntuación de `LINEA`
+  del 2026-08-06—, y una edición al generador merece una mirada igual;
+  arreglarlo exigiría un stripper de Python) y la entrada de las FUENTES
+  (siete resellados con PNG intacto, pero no puede saber si los glifos
+  usados cambiaron sin rasterizar, y el woff2 no es determinista — ya
+  registrado).
+- **Descartada la vía de dos líneas** (quitar comentarios del bloque antes
+  de hashear): cerraba 1 de los 8 casos — los otros 7 eran tokens no
+  consumidos, no prosa.
+- **De paso, una pista falsa corregida en el mensaje de check-structure**:
+  decía «necesita el sitio en :8000» al pedir regenerar la og-image, y el
+  generador es solo tipografía desde julio (sin navegador ni servidor —
+  lo dice su propio docstring). Ahora dice eso.
 
 ### Scroll-driven animations: CONFIRMADAS en Safari de iOS real — la técnica queda disponible
 
@@ -3410,9 +3524,11 @@ real de la imagen.
   alguna cambió. **La lista tiene que ser exacta en las dos direcciones**: una
   entrada de más avisa por cambios que no influyen —señal falsa, el mismo mal que
   partir `check-ready` vino a curar— y una de menos deja la imagen vieja en
-  silencio. Hoy son: el script, el `:root` de styles.css, y las fuentes Inter y
-  Zen Kaku. Salieron al sacar el cubo de la tarjeta: **cube.js** y **Cormorant**.
-  Se hashea sólo el `:root` y no el CSS entero, que cambia por cosas ajenas.
+  silencio. Hoy son: el script, los VALORES de los cinco tokens del `:root`
+  que el script dibuja (`OG_TOKENS` en `_guardas`, desde el 2026-09-04 —
+  antes el bloque `:root` entero, ver la decisión «El lock de la og-image
+  vigila los cinco tokens que dibuja»), y las fuentes Inter y Zen Kaku.
+  Salieron al sacar el cubo de la tarjeta: **cube.js** y **Cormorant**.
 - **Los archivos de texto del lock se hashean NORMALIZADOS; los binarios, por
   bytes.** `core.autocrlf=true` es el valor por defecto en Windows: git guarda
   LF y escribe CRLF al hacer checkout. Hasheando los bytes crudos del `.py`, la

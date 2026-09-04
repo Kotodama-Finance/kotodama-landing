@@ -1222,17 +1222,22 @@ que es el fallo que esto viene a tapar. Vigentes:
 | Entrada | Por qué |
 |---|---|
 | `tools/make-og-image.py` | define la composición entera |
-| el `:root` de `styles.css` | de ahí lee los colores |
+| los cinco tokens del `:root` de `styles.css` que el script dibuja (`OG_TOKENS`) | sus VALORES, no el bloque: ni la prosa ni los otros tokens mueven un píxel |
 | `inter-latin.woff2` | el nombre y la bajada |
 | `zen-kaku-…-500-subset.woff2` | el 言霊 |
 
 Salieron de la lista cuando la tarjeta dejó de llevar el cubo: **`cube.js`**, que
 ya no aparece en la imagen, y **Cormorant**, que ya no se usa.
 
-Se hashea **sólo el `:root`** y no `styles.css` entero: el CSS cambia todo el
-tiempo por cosas que no tocan la tarjeta. Verificado en las dos direcciones:
-cambiar `--c-gold` avisa **y regenerar produce un PNG distinto**; cambiar la luz
-del cubo o la opacidad del footer no avisa.
+Se hashean **los valores de los cinco tokens que el script lee** —no el `:root`
+entero, y menos `styles.css`— (2026-09-04; antes se hasheaba el bloque `:root`
+crudo, y en la historia esa entrada disparó ocho veces, las ocho por prosa o por
+tokens que la imagen no dibuja — el registro con los ocho casos está en
+`CLAUDE.md`). La lista de nombres y la lectura viven en `_guardas.py`
+(`OG_TOKENS`, `og_tokens`) y las consumen el generador y el lock: una
+derivación, no dos. Verificado en las dos direcciones: cambiar `--c-gold` avisa
+**y regenerar produce un PNG distinto**; cambiar un comentario del `:root`, otro
+token (`--nav-h`), la luz del cubo o la opacidad del footer no avisa.
 
 Y los archivos de **texto se hashean normalizando los saltos de línea**; las
 fuentes, por bytes crudos. En Windows `core.autocrlf=true` hace que git guarde LF

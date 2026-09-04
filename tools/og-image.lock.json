@@ -3,7 +3,7 @@
  "entradas": {
   "fuente inter-latin.woff2": "c7da65b0808901c4",
   "fuente zen-kaku-gothic-new-500-subset.woff2": "d7146ab6072c61aa",
-  "make-og-image.py": "1f04b3559ed5dea2",
-  "styles.css :root": "cdd95118d20b519e"
+  "make-og-image.py": "10a3a04d96303ebf",
+  "styles.css :root (tokens de la og-image)": "2cb0de7b07b35aa1"
  }
 }

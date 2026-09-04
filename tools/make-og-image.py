@@ -29,7 +29,6 @@ un 42% las astas desaparecen. Cormorant es la voz de marca en el sitio, donde el
 texto se ve a tamaño real; una tarjeta social no es ese medio.
 """
 import os
-import re
 import sys
 
 from PIL import Image, ImageDraw, ImageFont
@@ -40,6 +39,8 @@ except Exception:
     pass
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import _guardas as G  # noqa: E402 — la lista de tokens y el sello del lock viven allá
 SALIDA = os.path.join(RAIZ, "og-image.png")
 PRUEBA = os.path.join(RAIZ, "_dev", "og-image-500px.png")
 
@@ -48,7 +49,7 @@ ANCHO_FEED = 500                 # cómo se ve en un feed de escritorio
 
 
 def tokens():
-    """Lee la paleta del :root de styles.css.
+    """Lee la paleta del :root de styles.css: los tokens de G.OG_TOKENS, por nombre.
 
     NO se copian los colores acá. make-favicon.py sí los copia, porque un icono
     de 16 px no puede depender de parsear un CSS, pero acá la copia tendría dos
@@ -57,25 +58,23 @@ def tokens():
     avisa que la og-image quedó vieja avisaría por cambios que no la afectan, o
     peor, no avisaría por los que sí.
 
+    LA LISTA DE NOMBRES Y LA LECTURA VIVEN EN _guardas (OG_TOKENS, og_tokens),
+    no acá (2026-09-04): son las mismas que hashea el lock, así que la guarda
+    vigila EXACTAMENTE lo que este script lee — ni la prosa del :root ni sus
+    otros tokens. Un token nuevo que se dibuje se agrega allá.
+
     Sin fallback, igual que cube.js: si falta un token, falla con su nombre en
     vez de disfrazarlo con un hex de repuesto.
     """
     css = open(os.path.join(RAIZ, "assets", "css", "styles.css"),
                encoding="utf-8").read()
-    m = re.search(r":root\s*\{.*?\n\}", css, flags=re.S)
-    if not m:
+    t = G.og_tokens(css)
+    if t is None:
         sys.exit("no se encontró el bloque :root en styles.css")
-    bloque = m.group(0)
-
-    def tok(nombre):
-        h = re.search(rf"{re.escape(nombre)}\s*:\s*(#[0-9a-fA-F]{{6}})\s*;", bloque)
-        if not h:
-            sys.exit(f"falta el token {nombre} en :root")
-        v = h.group(1).lstrip("#")
-        return tuple(int(v[i:i + 2], 16) for i in (0, 2, 4))
-
-    return {n: tok(n) for n in (
-        "--c-navy", "--c-surface-cube", "--c-gold", "--c-text", "--c-text-mist")}
+    for nombre, v in t.items():
+        if v is None:
+            sys.exit(f"falta el token {nombre} en :root (o no está como #rrggbb)")
+    return {n: tuple(int(v[i:i + 2], 16) for i in (1, 3, 5)) for n, v in t.items()}
 
 
 _convertidas = {}
@@ -206,8 +205,6 @@ def componer():
 
 
 def main():
-    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    import _guardas as G
 
     if "--sellar" in sys.argv:
         # Para cuando la imagen la pone el autor a mano y no este script.

@@ -92,7 +92,7 @@ def main():
         for x in vieja:
             print(f"  FALLA  {x}")
         problemas += vieja
-        print("  -> regenerar: python tools/make-og-image.py   (necesita el sitio en :8000)")
+        print("  -> regenerar: python tools/make-og-image.py   (sólo fuentes: sin navegador ni servidor)")
         print("     o, si la imagen la pusiste vos a mano: --sellar")
     else:
         print("  OK     generada contra las entradas actuales")

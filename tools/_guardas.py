@@ -827,16 +827,56 @@ def urls_no_absolutas():
 #
 # Vigentes desde que la tarjeta es puramente tipográfica (sin captura del cubo):
 #   - el script, que define la composición entera;
-#   - el :root de styles.css, que es de donde el script LEE los colores (por eso
-#     no los copia: si los copiara, :root dejaría de ser una entrada real);
+#   - los VALORES de los tokens del :root que el script dibuja (OG_TOKENS, abajo)
+#     — no el bloque :root entero. El script los LEE del :root (por eso no los
+#     copia: si los copiara, :root dejaría de ser una entrada real);
 #   - las dos fuentes que se dibujan.
 # Salieron de la lista al sacar el cubo:
 #   - cube.js, que ya no aparece en la imagen;
 #   - Cormorant, que ya no se usa (la bajada pasó a Inter por legibilidad).
-# Se hashea el :root y no styles.css entero: el CSS cambia todo el tiempo por
-# cosas que no tocan la tarjeta.
+# Se hashean los tokens y no el :root entero, y menos styles.css (2026-09-04):
+# el bloque :root eran 34 tokens y 98 líneas, tres cuartos de ellas prosa, y el
+# script dibuja CINCO. Hasheándolo entero la entrada disparó OCHO veces en la
+# historia y las ocho fueron falsas — una por prosa, siete por tokens que la
+# imagen no lee (--c-gold-ink, --halo-alpha, --wm-alpha, --c-text-muted-2,
+# --nav-scrim) — y NUNCA una verdadera: las dos regeneraciones reales vinieron
+# del script. El costo no era el resellado sino el reflejo de resellar sin
+# mirar, que sobre un cambio real deja la imagen vieja en silencio: la guarda
+# erosionándose sola. Los ocho casos, en la decisión de CLAUDE.md.
 OG_LOCK = RAIZ / "tools" / "og-image.lock.json"
 OG_FUENTES = ("zen-kaku-gothic-new-500", "inter-")
+
+# LOS TOKENS DEL :root QUE LA IMAGEN DIBUJA, por nombre. Es LA lista, con dos
+# consumidores: el generador los lee de acá (make-og-image.py -> tokens()) y el
+# lock hashea sus VALORES. Una derivación, no dos que derivan — el patrón de
+# placeholders_de. Si el generador pasa a dibujar un token más, se agrega ACÁ;
+# el olvido no queda mudo: cambia el hash del script, la guarda dispara y el
+# lock se resella con la lista nueva.
+OG_TOKENS = ("--c-navy", "--c-surface-cube", "--c-gold", "--c-text", "--c-text-mist")
+RE_ROOT = re.compile(r":root\s*\{.*?\n\}", re.S)
+
+
+def og_tokens(css: str):
+    """{token: "#rrggbb"} de OG_TOKENS, leídos del :root de un styles.css.
+
+    None si no hay bloque :root. Un token ausente, o escrito en otra forma que
+    #rrggbb, vale None dentro del dict: el generador aborta nombrándolo (sin
+    fallback, igual que cube.js) y el lock lo hashea distinto de cualquier valor.
+
+    Busca sobre el MARCADO VIVO del bloque (sin comentarios): un comentario del
+    :root que cite «--c-gold: #000000;» como ejemplo no puede pisar la
+    declaración real — el mismo criterio que el mapa y las notas (sin_comentarios).
+    El :root no tiene strings, así que el regex de comentarios alcanza.
+    """
+    m = RE_ROOT.search(css)
+    if not m:
+        return None
+    vivo = re.sub(r"/\*.*?\*/", "", m.group(0), flags=re.S)
+    out = {}
+    for nombre in OG_TOKENS:
+        h = re.search(rf"{re.escape(nombre)}\s*:\s*(#[0-9a-fA-F]{{6}})\s*;", vivo)
+        out[nombre] = h.group(1).lower() if h else None
+    return out
 
 
 def og_entradas() -> dict:
@@ -868,8 +908,14 @@ def og_entradas() -> dict:
     entradas = {}
     css = RAIZ / "assets" / "css" / "styles.css"
     if css.exists():
-        m = re.search(r":root\s*\{.*?\n\}", css.read_text(encoding="utf-8"), flags=re.S)
-        entradas["styles.css :root"] = sha(m.group(0).encode("utf-8")) if m else "SIN-:root"
+        # Se hashean los VALORES de los tokens que la imagen dibuja, no el
+        # bloque :root: ni su prosa ni los otros tokens mueven un píxel (ver
+        # OG_TOKENS). Un token ausente entra como SIN-VALOR — hashea distinto de
+        # cualquier valor, la guarda dispara y la regeneración dice cuál falta.
+        t = og_tokens(css.read_text(encoding="utf-8"))
+        entradas["styles.css :root (tokens de la og-image)"] = (
+            "SIN-:root" if t is None else
+            sha(";".join(f"{k}={v or 'SIN-VALOR'}" for k, v in t.items()).encode("utf-8")))
 
     gen = RAIZ / "tools" / "make-og-image.py"
     if gen.exists():
