@@ -78,6 +78,13 @@ fallidos ya corregidos, y las capturas intermedias.
   autor), y el certificado SE CONSERVA (el serial es la evidencia). Paso
   5: remoto local a la URL nueva, fetch sin cambios, las cuatro ramas en
   sync. Ver la decisión primera de la lista, que pasó a EJECUTADA.
+  **Adenda del mismo día, después del cierre: de lo que envejecía FUERA
+  del repo, el autor cerró DOS** — el CNAME de `www` retargeteado a
+  `kotodama-finance.github.io` en Xserver (re-medido acá por resolución
+  normal Y directo contra `ns1.xdomain.ne.jp`; www→apex sigue en 301 con
+  el mismo serial), y su `.md` de infraestructura al día con el host nuevo
+  del pixel y la CSP (verificado: pide `img-src
+  kotodamafinance.goatcounter.com`, cero menciones del host viejo).
   Guardas: structure y modes en verde.
 - Último cierre anterior: **2026-09-04 (cierra el día): EL PASE DE LA MUDANZA DEL
   REPO A LA ORGANIZATION, ESCRITO SIN EJECUTAR — SIN deploy: el artefacto
@@ -1067,7 +1074,7 @@ sección con el detalle.
 
 | Cabo | Estado |
 |---|---|
-| ~~Mudanza del repo a la Organization `Kotodama-Finance`~~ | **EJECUTADA el 2026-09-04 a las 05:36:13 UTC, con el pase escrito ese mismo día y el autor mirando**: POST /transfer → 202 inmediato, sin aceptación; repo bajo la org con el MISMO id (`1270699426`); Pages `built` con cname e HTTPS forzado; **certificado CONSERVADO — serial `05F962AD…BAED3` idéntico antes y después, en apex y www**; **Pages NO redesplegó** (mismos bytes servidos durante la transferencia, sha256 contra `main`); los siete refs idénticos por la URL nueva; **exposición 23 s sin síntoma**, ninguna vía de recuperación. Remoto local ya en `Kotodama-Finance/kotodama-landing`. Lo que envejece afuera sigue afuera (el CNAME de www a `realshinka.github.io`, servido y verificado después; los enlaces de Manuel). Ver la decisión primera de la lista. |
+| ~~Mudanza del repo a la Organization `Kotodama-Finance`~~ | **EJECUTADA el 2026-09-04 a las 05:36:13 UTC, con el pase escrito ese mismo día y el autor mirando**: POST /transfer → 202 inmediato, sin aceptación; repo bajo la org con el MISMO id (`1270699426`); Pages `built` con cname e HTTPS forzado; **certificado CONSERVADO — serial `05F962AD…BAED3` idéntico antes y después, en apex y www**; **Pages NO redesplegó** (mismos bytes servidos durante la transferencia, sha256 contra `main`); los siete refs idénticos por la URL nueva; **exposición 23 s sin síntoma**, ninguna vía de recuperación. Remoto local ya en `Kotodama-Finance/kotodama-landing`. De lo que envejecía afuera, el autor cerró DOS el mismo día: el CNAME de www retargeteado a `kotodama-finance.github.io` (re-medido por resolución y contra el NS autoritativo) y su `.md` de infraestructura al día con el host nuevo del pixel y la CSP. Quedan los enlaces al repo viejo en LinkedIn, X y sus `.md`, suyos, cubiertos por el redirect. Ver la decisión primera de la lista. |
 | ~~Re-barrido de seguridad del estático~~ | **CERRADO 2026-08-08 (el mismo día que se anotó)**: medido sobre EL ARTEFACTO —los blobs de main (deploy 8) y la rama maintenance regenerada—, como la regla «el servido no es el fuente» exige, y el texto con fecha nueva ENTREGADO al autor (su archivo lo pega él, no se edita). Resultado limpio: 84 `_blank` todos con noopener (80→84 = las DOS páginas nuevas desde el barrido viejo, /sitemap/ y seguros, × los 2 del footer — nada más cambió), 0 formularios, 0 handlers, 0 style=, 1 tercero por página (el pixel), import map único inline (67 bytes post-strip), 0 sumideros en el JS de la casa Y en el vendor. |
 | ~~Acople de check-ready al deploy~~ | **CERRADO 2026-08-08: el autor aprobó el diseño A y la guarda quedó IMPLEMENTADA** — `verificar_placeholders_indexables` en make-deploy: página INDEXABLE del artefacto no puede llevar placeholders TODO (la inversa de `noindex_olvidado`; seguros con su noindex pasa, la tarjeta de sector habría frenado), conteo COMPARTIDO vía `_guardas.placeholders_de`, FRENA desde HEAD y AVISA bajo `--fuente`. Probada en rojo end-to-end (worktree descartable con commit real). Ver la decisión, primera de la lista. |
 | **Capa 1 de seguros: el TEXTO** | **el frente activo (2026-08-07)**: andamiaje listo en `/hajime/yorozu/japan/seguros/` con 25 placeholders esperando el texto del autor, **con `noindex` mientras tanto** (exclusión del sitemap derivada; al redactar: sacar la meta + regenerar sitemap.xml y /sitemap/ —mismo comando— + baseline — el olvido tiene guarda). **Servido con su noindex desde el deploy 4 (2026-08-07): 200 en el dominio, fuera del sitemap servido — invisible, verificado.** La tarjeta desde /hajime/yorozu/: el PATRÓN existe (2026-08-07) pero **su marcado salió del archivo el 2026-08-08** (los TODOs quedaban visibles en ver-código de una página publicada) — **se repone junto con el título del autor**, y al sacar el noindex vuelve a ser requisito del mapa. Ver la decisión del patrón de sector. |
@@ -1194,7 +1201,7 @@ local (`redesign-trust` en sync, árbol limpio).
 | Último build de Pages | `built`, creado 2026-09-04T02:43:27Z, 20.070 ms (el deploy 13); los cinco últimos, 17.873–26.645 ms | `GET /repos/…/pages/builds/latest` y `…/pages/builds?per_page=5` |
 | Lo servido (línea base) | portada `Last-Modified: Fri, 04 Sep 2026 02:43:46 GMT`, `ETag "6a9a3062-3a8d"`, 14.989 bytes, `Cache-Control: max-age=600`; portada y /musubi/ sha256-idénticas a sus blobs de `main` | `curl -sI` / `curl -s \| sha256sum` vs `git show main:…` |
 | Los cuatro A del apex | `185.199.108.153` · `185.199.109.153` · `185.199.110.153` · `185.199.111.153` | `nslookup kotodamafinance.com` |
-| CNAME de www | `www.kotodamafinance.com → realshinka.github.io` | `nslookup -type=CNAME` |
+| CNAME de www | `www.kotodamafinance.com → realshinka.github.io` *(el valor del snapshot; retargeteado por el autor a `kotodama-finance.github.io` el mismo 2026-09-04, DESPUÉS de la mudanza — re-medido)* | `nslookup -type=CNAME` |
 | NS | `ns1` / `ns2` / `ns3.xdomain.ne.jp` | `nslookup -type=NS` |
 | La org | id `324381644` · `members_can_create_public_pages: true` · `members_can_create_pages: true` | `GET /orgs/Kotodama-Finance` |
 
@@ -1385,15 +1392,16 @@ memoria; las dos primeras son mecanismos ya usados en este repo):
 
 **(6) LO QUE ENVEJECE FUERA DEL REPO y no bloquea:**
 
-- **El CNAME de `www` apunta a `realshinka.github.io` y sigue funcionando
-  después**: el chequeo de salud de Pages acepta cualquier `*.github.io`
-  sin exigir el dueño (dato del autor, 2026-09-04 — de memoria, sin
-  verificar por Code contra la documentación). Retargetearlo a
-  `kotodama-finance.github.io` es un cambio SIN ventana, en la zona de
-  Xserver, para cuando se quiera — no forma parte de la mudanza.
-  *(Verificado EN CONDUCTA después de la mudanza, 2026-09-04 — no contra
-  la documentación: www→apex sigue en 301 y sirve con el mismo
-  certificado bajo la org, con el CNAME viejo intacto.)*
+- **El CNAME de `www` apuntaba a `realshinka.github.io` y siguió
+  funcionando después** (verificado EN CONDUCTA tras la mudanza: www→apex
+  en 301 con el mismo certificado, con el CNAME viejo intacto — el chequeo
+  de salud de Pages acepta cualquier `*.github.io` sin exigir el dueño,
+  dato del autor; no verificado contra la documentación). **CERRADO el
+  mismo 2026-09-04, después de la mudanza: el autor lo retargeteó a
+  `kotodama-finance.github.io` en la zona de Xserver y lo probó; re-medido
+  acá por resolución normal Y directo contra `ns1.xdomain.ne.jp`, con
+  www→apex en 301 y el mismo serial servido.** Fue, como decía el pase, un
+  cambio sin ventana y fuera de la mudanza.
 - **Los enlaces al repo viejo** en LinkedIn, en X y en los `.md` de
   Manuel (`kotodama_infraestructura.md`, `kotodama_finance_context.md`):
   el redirect de GitHub los cubre mientras exista; se actualizan cuando
@@ -1466,10 +1474,14 @@ el artefacto ANTES del «go» convierte la ventana en el tiempo de un push.**
   Y ya no hay meta de verificación que perder en ningún rollback: el
   «riesgo que manda» del análisis quedó revisado por segunda vez.
 - **Lo que envejece FUERA del repo (no se edita de oficio)**: el `.md` de
-  infraestructura del autor pide `img-src realshinka.goatcounter.com` para
-  la CSP del PaaS (§3, anotado el 2026-08-06) — hoy es `kotodamafinance`—, y
-  su context.md nombra el host viejo. Los dos son suyos; la copia derivada
-  de este archivo en OneDrive se regenera sola con el commit.
+  infraestructura del autor pedía `img-src realshinka.goatcounter.com` para
+  la CSP del PaaS (§3, anotado el 2026-08-06) — **lo puso al día él el
+  mismo 2026-09-04 (verificado leyendo: pide `img-src
+  kotodamafinance.goatcounter.com`; cero menciones del host viejo del
+  pixel)**—, y su context.md nombraba el host viejo (**ya tampoco:
+  verificado leyendo el mismo día, cero menciones de
+  `realshinka.goatcounter`**). Los dos son suyos; la copia derivada de
+  este archivo en OneDrive se regenera sola con el commit.
 
 ### El lock de la og-image vigila los cinco tokens que dibuja, no el `:root` entero
 
@@ -2685,9 +2697,10 @@ Las reglas con las que se ejecutó (cumplidas):
 - **La revisión de seguridad quedó actualizada** en el `.md` de
   infraestructura del autor (§3: de «0 cargas de terceros» a «1 por página»,
   fechado), y la CSP del PaaS necesita `img-src` con el host del pixel —
-  hoy `kotodamafinance.goatcounter.com`; su doc todavía dice
-  `realshinka.goatcounter.com` (lo anotado allá el 2026-08-06; actualizarlo
-  es suyo) — anotado allá y acá.
+  hoy `kotodamafinance.goatcounter.com`; su doc lo decía con el host viejo
+  (anotado allá el 2026-08-06) y **quedó al día el 2026-09-04, por él**
+  (verificado leyendo: `img-src kotodamafinance.goatcounter.com`) —
+  anotado allá y acá.
 - **La retención quedó CONFIRMADA al crear la cuenta: 0 = nunca borrar** —
   cierra la duda que su doc dejaba abierta, y es lo que Cloudflare no ofrecía
   (30 días). El panel confirmó además Sessions activo (únicas server-side,
