@@ -35,6 +35,11 @@ fallidos ya corregidos, y las capturas intermedias.
   `https://github.com/Kotodama-Finance/kotodama-landing.git` (paso 5). La
   URL vieja redirige (301) mientras nadie cree un repo con ese nombre bajo
   `RealShinka` — NUNCA crearlo. Ver la decisión primera de la lista.**
+- **La identidad de git del proyecto es `kotodamafinance-dev` desde el
+  2026-09-04** — `user.name` Y `user.email`, los dos —, y el push va con la
+  credencial de esa cuenta. **La historia anterior NO se reescribe**: los
+  commits hasta `938b6e1` inclusive siguen con `RealShinka` como autor, a
+  sabiendas. El porqué, en «Otras reglas vigentes».
 - **La vista explotada del cubo está INTEGRADA acá (2026-08-05)**: el merge
   `cube-exploded` → `redesign-trust` lo decidió explícitamente el autor, tras
   dos verificaciones previas (móvil emulado y no-divergencia). Fue
@@ -4223,6 +4228,26 @@ del sistema filosófico ni las razones de los nombres.
   solo mientras ese nombre esté libre, y crearlo lo borra para siempre —
   enlaces viejos y clones sin cambiar el remoto, muertos. Ver la decisión
   de la mudanza, primera de la lista.
+- **LA IDENTIDAD DE GIT DEL PROYECTO ES `kotodamafinance-dev` DESDE EL
+  2026-09-04** — la cuenta de GitHub del proyecto (id `324799195`, creada
+  ese mismo día): `user.name kotodamafinance-dev` y `user.email
+  324799195+kotodamafinance-dev@users.noreply.github.com` en el
+  `~/.gitconfig` de esta máquina, **los DOS campos a la vez**: con el email
+  nuevo y el nombre viejo, GitHub atribuiría el commit a la cuenta nueva y
+  `git log` mostraría `RealShinka` — lo peor de los dos mundos. El push va
+  con la credencial de esa cuenta en Git Credential Manager; la de
+  `RealShinka` se retiró. (Una credencial se asienta recién cuando un push
+  o un fetch REAL termina bien: `git credential fill` solo obtiene y no
+  guarda — medido el 2026-09-04, cuando dos logins hechos en el prompt de
+  GCM a pedido de un helper de la API no dejaron nada guardado.)
+  **Y LA DECISIÓN QUE LA ACOMPAÑA: LA HISTORIA DE COMMITS NO SE
+  REESCRIBE.** Los commits anteriores — hasta `938b6e1` inclusive — siguen
+  con `RealShinka` como autor, y se acepta a sabiendas. Motivo: el proyecto
+  entero cita hashes — este archivo, los pases, los mensajes de deploy con
+  su `Fuente:`, el rollback y el detector de hotfix — y reescribir la
+  historia los invalida todos, para un beneficio parcial: GitHub cachea los
+  commits viejos igual. Si alguna vez alguien propone «limpiarlo», que se
+  encuentre con este razonamiento y no lo redescubra.
 - **Ante una pregunta sobre cómo funciona el repo — criterios, decisiones,
   porqués — PRIMERO mirar si ya está registrado** (este archivo, el README,
   los comentarios del fuente). Si lo está, responder CITÁNDOLO y decirlo
