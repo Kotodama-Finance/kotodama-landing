@@ -3908,6 +3908,10 @@ servido contiene «Drag to turn…» y la guarda lo mide en verde) y las subpág
 «descentradas» a 1920/2560 (medidas contra `:8000`: left = right exactos, 600 y
 920px). Cuando un reporte visual no reproduce contra el servidor con perfil
 limpio, el diagnóstico es DOM-contra-red, no una búsqueda de regresión.
+**(Con una premisa que hay que verificar ANTES de aplicarlo: que la
+observación venga de un navegador. Si vino de un `web_fetch` del lado del
+servidor no hay DOM, y el diagnóstico es otro — ver el último hallazgo de
+método, 2026-09-04.)**
 Ya pasó, el 2026-08-04: la
 consola devolvía **seis** reglas de view-transition mientras el servidor
 entregaba un `styles.css` sin ninguna. Las dos cosas eran ciertas sobre archivos
@@ -4943,3 +4947,38 @@ que produjeron conclusiones equivocadas:
   «puse hyphens: auto» pasa por verificado. Corolario de diseño: una página
   con justificado se acepta midiendo el caso SIN partición, porque una
   fracción real de los lectores no la va a tener.
+- **UN PATRÓN TIENE PREMISAS, Y APLICARLO POR PARECIDO DEL OBSERVABLE ES EL
+  ERROR DE «ENUMERAR HIPÓTESIS» EN LA OTRA DIRECCIÓN.** El 2026-09-04 el
+  Claude del chat reportó (vía el autor) el pixel de GoatCounter «partido en
+  dos» en el dominio: portada y /method/ con el host viejo (`realshinka`),
+  /sugao/ y /disclaimer/ con el nuevo. Code cerró la hipótesis del deploy
+  incompleto POR CONSTRUCCIÓN — `main` tiene cero ocurrencias de la cadena
+  y Pages construye desde `main`: si no está en el artefacto, ninguna
+  página servida puede tenerla — y lo confirmó por segunda vía (las
+  dieciséis páginas con `Cache-Control: no-cache`, byte a byte contra los
+  blobs, `X-Cache: MISS` desde el edge). Hasta ahí, bien. Después le puso
+  CAUSA: «copia vieja en tu navegador», el patrón DOM-contra-red, con
+  snippet de consola y Ctrl+Shift+R. **Y no aplicaba**: la observación
+  venía de `web_fetch`, una petición del lado del servidor — sin DOM, sin
+  pestañas, sin historial, sin `performance.timeOrigin`. El patrón tiene
+  una premisa (que haya un navegador) y este caso no la cumplía; se aplicó
+  por el parecido del síntoma. Es la misma forma de error que la regla de
+  enumerar todas las hipótesis corrige, en la dirección opuesta: allá se
+  descarta de más, acá se explica de más — y archivarlo así habría dejado
+  el problema real sin nombre (corrección del autor, aceptada entera). Lo
+  que queda, como HIPÓTESIS PRINCIPAL y no como hecho — no se puede
+  confirmar desde acá —: una caché entre el dominio y la herramienta, casi
+  seguro la de la propia herramienta, que ignora el `max-age=600` del
+  origen (la copia tenía más de ocho horas). Encaja con lo medible: las dos
+  URLs «viejas» se pidieron tal cual (`/` y `/method/`, 200 directo) y las
+  dos «frescas» son las que un pedido sin barra final alcanza por 301
+  (`/sugao` → `/sugao/`, `/disclaimer` → `/disclaimer/`), o sea con OTRA
+  clave de caché. **La consecuencia firme, que es la regla nueva: un
+  `web_fetch` sobre el dominio NO es testigo de los bytes servidos ahora.**
+  Sirve para leer contenido; no sirve para fechar un deploy ni para
+  verificar que un cambio salió — para eso, el artefacto (`main`), o un
+  `curl` con `Cache-Control: no-cache` mirando `X-Cache` y `Last-Modified`.
+  Es «el servido no es el fuente» con un piso más: ni siquiera lo que la
+  herramienta ve es lo servido. **Y antes de aplicar DOM-contra-red, la
+  pregunta previa: ¿qué instrumento hizo la observación?** Sin navegador no
+  hay DOM, y el diagnóstico es otro.
