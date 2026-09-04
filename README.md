@@ -548,7 +548,8 @@ ni el dominio:
 
 **La variante EN SECO — casi toda la evidencia, exposición cero.** Ensaya
 todo el camino salvo el build de Pages, que es la parte de MENOR
-incertidumbre (Pages construye la rama que le den; ya construyó doce):
+incertidumbre (Pages construye la rama que le den; ya construyó trece al
+2026-09-04):
 
 1. `python tools/make-deploy.py --fuente v1-published` — el rollback REAL,
    commiteado en `main` local (no `--solo-verificar`: el camino entero).

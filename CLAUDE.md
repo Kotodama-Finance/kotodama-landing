@@ -47,9 +47,9 @@ fallidos ya corregidos, y las capturas intermedias.
   archivos (`CNAME` + `index.html` con meta refresh). Nada de este repo lo
   mira ni tiene que mirarlo.
 - Último cierre: **2026-09-04 (más tarde): LA META DE BING SALE DEL HEAD Y
-  EL PIXEL DE GOATCOUNTER SE MUDA A `kotodamafinance` — COMMITEADO EN EL
-  FUENTE Y PREPARADO PARA PUBLICAR, CON PARADA: EL DEPLOY ESPERA EL «GO»
-  DEL AUTOR.** Dos cambios chicos en un solo deploy (ninguno justificaba
+  EL PIXEL DE GOATCOUNTER SE MUDA A `kotodamafinance` — EL DECIMOTERCER
+  DEPLOY, EJECUTADO ENTERO TRAS EL «GO» DEL AUTOR Y VERIFICADO EN VIVO
+  16/16: deploy `ffe7486` de fuente `0b76303`.** Dos cambios chicos en un solo deploy (ninguno justificaba
   uno propio; juntos sí), sin revisión adversarial ni agentes, a pedido.
   **(1)** La meta `msvalidate.01` quedó REDUNDANTE — Bing terminó
   reimportándose desde Search Console, cuya propiedad es de DOMINIO por TXT
@@ -72,12 +72,28 @@ fallidos ya corregidos, y las capturas intermedias.
   la vía de dos pixeles simultáneos por desproporcionada. El orden: fuente
   listo → él renombra → «go» → push, con la ventana en minutos (el código
   viejo queda LIBRE: si alguien lo registra, el pixel viejo le mandaría
-  visitas — motivo extra para no demorar). **EL DOMINIO TODAVÍA SIRVE EL
-  PIXEL VIEJO, que es el código vigente hasta el renombre.** Ver la
-  decisión nueva, primera de la lista. Guardas antes del commit: structure,
-  modes y pendulum (0.0909) en verde, ready `2` esperado; `--solo-verificar`
-  lee HEAD y corre después del commit — su resultado, el artefacto y la
-  verificación en vivo van en el registro del deploy.
+  visitas — motivo extra para no demorar). **LA SECUENCIA SE CUMPLIÓ COMO
+  SE DISEÑÓ, y dejó una forma mejor que la pedida**: todo lo verificable
+  se verificó ANTES de la parada — fuente commiteado, guardas en verde
+  (structure, modes, pendulum 0.0909, ready `2` esperado,
+  `--solo-verificar`), `main` generada LOCAL sin push, check-modes contra
+  el árbol real de main servido en :8000, los 16 blobs del artefacto
+  leídos de git (pixel nuevo con su `p=`, cero msvalidate/realshinka/
+  comentarios, JSON-LD parseando, notas afuera), la preview en :8001 —
+  así que entre el renombre y la publicación quedó SOLO el push: push a
+  las 02:43:30 UTC, Last-Modified del artefacto servido 02:43:46 (16 s),
+  verificación en vivo 16/16 AL PRIMER INTENTO cuatro minutos después:
+  las dieciséis páginas BYTE A BYTE idénticas a sus blobs de main, cero
+  `msvalidate.01`, cero `realshinka`, cero comentarios, el pixel apuntando
+  a `kotodamafinance.goatcounter.com` con su `p=` correcto en cada página,
+  JSON-LD parseando (Organization, sin «We begin»), cero
+  google-site-verification, las cuatro rutas de notas y /CLAUDE.md,
+  /tools/ y /README.md en 404. **El pixel nuevo responde desde el
+  dominio: HTTP 202 `image/gif` con el header «X-Goatcounter: ignored
+  because <IP> is in the IP ignore list» — el endpoint acepta el código
+  nuevo y la exclusión de la IP de esta máquina sigue viva—; el código
+  viejo `realshinka` responde 400: ya no existe.** Ver la decisión nueva,
+  primera de la lista.
 - Último cierre anterior: **2026-09-04: EL LOCK DE LA OG-IMAGE VIGILA LOS CINCO
   TOKENS QUE DIBUJA, NO EL `:root` ENTERO — SIN deploy: el PNG es
   byte-idéntico (sha256 verificado antes y después) y `tools/` no se
@@ -822,9 +838,9 @@ ninguna de las cuatro guardas la mira; su decisión cerrada está más abajo.
 —tiene que dar verde—.** Si da rojo, eso es lo primero: algo cambió fuera de
 sesión.
 
-**EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 11 — la flecha
-del hero sin enlace, decorativa — 2026-08-14, verificado en vivo 23/23
-byte a byte contra el artefacto; desde el deploy 8 rige LA REGLA
+**EL SITIO ESTÁ PUBLICADO (2026-08-06; último deploy: el 13 — la meta de
+Bing afuera y el pixel de GoatCounter en `kotodamafinance` — 2026-09-04,
+verificado en vivo 16/16 byte a byte contra el artefacto; desde el deploy 8 rige LA REGLA
 «EL SERVIDO NO ES EL FUENTE», ver la decisión «CERO comentarios en lo
 SERVIDO»).**
 
@@ -841,13 +857,9 @@ y el diseño del acople de check-ready (entregado con costos; la elección
 es suya, ver el grupo siguiente).
 
 **ESPERAN A MANUEL (Code no puede avanzarlos):**
-**(0) EL «GO» DEL DEPLOY PREPARADO EL 2026-09-04 — lo más inmediato**: el
-fuente lleva la meta de Bing afuera y el pixel en `kotodamafinance`; él
-renombra el código del sitio en GoatCounter, da el «go», y ahí se pushea
-(ver el Último cierre y la decisión primera de la lista). *(El (0)
-anterior — apretar «verificar» en Bing Webmaster Tools, desde el
-2026-08-14 — se CERRÓ de otro modo: Bing se reimportó desde Search Console
-y la meta salió.)*
+*(El (0) que estuvo acá — apretar «verificar» en Bing Webmaster Tools,
+desde el 2026-08-14 — se CERRÓ de otro modo el 2026-09-04: Bing se
+reimportó desde Search Console y la meta salió con el deploy 13.)*
 (1) el TÍTULO y la LÍNEA DE FUNCIÓN de la tarjeta de sector — decisión
 abierta, ver su bullet en Estado; (2) la description y el gloss de
 /notes/ — redacción suya; (3) el TEXTO de la capa 1 de seguros — su
@@ -1026,8 +1038,10 @@ sección con el detalle.
 
 **2026-09-04, instrucción del autor — dos cambios chicos en UN deploy
 (ninguno justificaba uno propio; juntos sí), sin revisión adversarial ni
-agentes, a pedido. Preparado con PARADA antes de publicar; el registro del
-deploy va en Estado cuando exista.**
+agentes, a pedido. Ejecutado el mismo día con la PARADA: deploy `ffe7486`
+de fuente `0b76303`, verificado en vivo 16/16 — el registro completo, en
+Estado. Lo que la parada dejó de método: generar `main` local y verificar
+el artefacto ANTES del «go» convierte la ventana en el tiempo de un push.**
 
 - **La meta de Bing (`msvalidate.01`) SALE del `<head>` de la portada**:
   quedó REDUNDANTE — Bing terminó reimportándose desde Search Console, cuya
